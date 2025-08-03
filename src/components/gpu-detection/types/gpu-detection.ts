@@ -1,3 +1,3 @@
-export interface GpuDetectionForm {
+export interface GpuDetectionFormProps {
   gpu: number;
 }

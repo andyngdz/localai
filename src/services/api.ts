@@ -1,8 +1,9 @@
 import axios from "axios";
 import type {
-  DeviceIndexResponse,
   HardwareResponse,
   HealthResponse,
+  MaxMemoryRequest,
+  MemoryResponse,
   SelectDeviceRequest,
 } from "../types/api";
 
@@ -38,8 +39,12 @@ class API {
     return data;
   }
 
-  async getDeviceIndex(): Promise<DeviceIndexResponse> {
-    const { data } = await client.get("/hardware/device");
+  async setMaxMemory(request: MaxMemoryRequest): Promise<void> {
+    await client.post("/hardware/max-memory", request);
+  }
+
+  async getMemory(): Promise<MemoryResponse> {
+    const { data } = await client.get("/hardware/memory");
 
     return data;
   }

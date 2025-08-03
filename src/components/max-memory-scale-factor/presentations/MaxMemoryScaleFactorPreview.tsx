@@ -1,0 +1,37 @@
+import { formatter } from "@/services/formatter";
+import { useMemoryQuery } from "@/services/queries";
+import { useFormContext } from "react-hook-form";
+import { MaxMemoryFormProps } from "../types";
+
+export const MaxMemoryScaleFactorPreview = () => {
+  const { data } = useMemoryQuery();
+  const { watch } = useFormContext<MaxMemoryFormProps>();
+  const scaleFactor = watch("scaleFactor");
+
+  if (!data) {
+    return (
+      <div className="card bg-base-200 shadow-sm">
+        <div className="card-body">
+          <p className="text-base-content/60">
+            Select a memory option to see preview
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-1">
+      <div className="text-center">Memory Usage Preview</div>
+      <div className="flex gap-2">
+        <div className="font-bold">
+          GPU: {formatter.formatBytes(data.gpu * scaleFactor)}
+        </div>
+        <div>/</div>
+        <div className="font-bold">
+          RAM: {formatter.formatBytes(data.ram * scaleFactor)}
+        </div>
+      </div>
+    </div>
+  );
+};

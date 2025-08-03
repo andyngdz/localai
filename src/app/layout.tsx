@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Providers } from "./providers";
 
-const inter = Inter({
+const font = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
 });
@@ -21,8 +21,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} antialiased`}>
+    <html lang="en" data-theme="night">
+      <body className={`${font.className} antialiased`}>
         <Providers>{children}</Providers>
       </body>
     </html>

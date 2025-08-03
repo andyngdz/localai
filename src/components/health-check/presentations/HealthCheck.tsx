@@ -1,9 +1,9 @@
 "use client";
 
-import { HealthCheckContentSuccess } from "./HealthCheckContentSuccess";
-import { SetupLayout } from "../../layout/SetupLayout";
-import { useHealthQuery } from "../../../services/queries";
 import { useRouter } from "next/navigation";
+import { useHealthQuery } from "../../../services/queries";
+import { SetupLayout } from "../../layout/presentations/SetupLayout";
+import { HealthCheckContentSuccess } from "./HealthCheckContentSuccess";
 
 export const HealthCheck = () => {
   const router = useRouter();

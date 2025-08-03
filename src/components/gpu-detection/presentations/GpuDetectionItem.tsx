@@ -4,7 +4,7 @@ import { FC } from "react";
 import { useFormContext } from "react-hook-form";
 import { formatter } from "../../../services/formatter";
 import { GpuInfo } from "../../../types/api";
-import { GpuDetectionForm } from "../types/gpu-detection";
+import { GpuDetectionFormProps } from "../types/gpu-detection";
 
 export interface GpuDetectionItemProps {
   gpu: GpuInfo;
@@ -12,7 +12,7 @@ export interface GpuDetectionItemProps {
 }
 
 export const GpuDetectionItem: FC<GpuDetectionItemProps> = ({ gpu, index }) => {
-  const { register } = useFormContext<GpuDetectionForm>();
+  const { register } = useFormContext<GpuDetectionFormProps>();
   const { name, cuda_compute_capability, memory, is_primary } = gpu;
 
   return (
@@ -26,13 +26,20 @@ export const GpuDetectionItem: FC<GpuDetectionItemProps> = ({ gpu, index }) => {
           className="radio"
         />
         <div className="flex flex-col">
-          <span className="text-sm font-semibold">{name}</span>
-          <span className="text-xs text-base-content/80">
-            Cuda compute capability {cuda_compute_capability}
+          <span className="text-sm font-semibold text-base-content">
+            {name}
+          </span>
+          <span className="flex gap-1 text-xs">
+            <span className="text-base-content/70">
+              Cuda compute capability
+            </span>
+            <span className="font-bold text-base-content">
+              {cuda_compute_capability}
+            </span>
           </span>
         </div>
       </div>
-      <span className="text-sm text-base-content/80">
+      <span className="text-sm text-base-content font-bold">
         {formatter.formatBytes(memory)}
       </span>
     </div>
