@@ -1,10 +1,10 @@
 import "./globals.css";
 
 import type { Metadata } from "next";
-import { Roboto } from "next/font/google";
+import { Inter } from "next/font/google";
 import { Providers } from "./providers";
 
-const font = Roboto({
+const font = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
 });
