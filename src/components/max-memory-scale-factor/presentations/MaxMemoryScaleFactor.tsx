@@ -2,17 +2,11 @@
 
 import { SetupLayout } from "@/components/layout/presentations/SetupLayout";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { MEMORY_OPTIONS } from "../constants";
-import { MemoryOptionItem } from "./MemoryOptionItem";
+import { MEMORY_OPTIONS } from "../constants/constant";
+import { MaxMemoryScaleFactorItem } from "./MaxMemoryScaleFactorItem";
 
-export const MaxMemory = () => {
+export const MaxMemoryScaleFactor = () => {
   const router = useRouter();
-  const [selectedMemory, setSelectedMemory] = useState<number>(50);
-
-  const handleMemorySelect = (value: number) => {
-    setSelectedMemory(value);
-  };
 
   const onNext = () => {};
 
@@ -26,12 +20,7 @@ export const MaxMemory = () => {
       <div>
         <div className="flex flex-col items-center gap-4">
           {MEMORY_OPTIONS.map((option) => (
-            <MemoryOptionItem
-              key={option.value}
-              option={option}
-              isSelected={selectedMemory === option.value}
-              onSelect={() => handleMemorySelect(option.value)}
-            />
+            <MaxMemoryScaleFactorItem key={option.value} option={option} />
           ))}
         </div>
         {/* <MemoryPreview selectedValue={selectedMemory} totalMemory={16} /> */}

@@ -18,12 +18,6 @@ export interface MaxMemoryProps {
   onBack?: () => void;
 }
 
-export interface MemoryOptionItemProps {
-  option: MemoryOption;
-  isSelected: boolean;
-  onSelect: () => void;
-}
-
 export interface MemoryPreviewProps {
   selectedValue?: number;
   totalMemory?: number;

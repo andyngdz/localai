@@ -1,8 +1,8 @@
 import { FC } from "react";
-import { MEMORY_OPTIONS } from "../constants";
+import { MEMORY_OPTIONS } from "../constants/constant";
 import { MemoryPreviewProps } from "../types";
 
-export const MemoryPreview: FC<MemoryPreviewProps> = ({
+export const MaxMemoryScaleFactorPreview: FC<MemoryPreviewProps> = ({
   selectedValue,
   totalMemory = 16,
 }) => {
