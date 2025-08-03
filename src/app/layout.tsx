@@ -1,10 +1,10 @@
 import "./globals.css";
 
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Roboto } from "next/font/google";
 import { Providers } from "./providers";
 
-const inter = Inter({
+const font = Roboto({
   variable: "--font-inter",
   subsets: ["latin"],
 });
@@ -21,8 +21,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme="sunset">
-      <body className={`${inter.className} antialiased`}>
+    <html lang="en" data-theme="night">
+      <body className={`${font.className} antialiased`}>
         <Providers>{children}</Providers>
       </body>
     </html>

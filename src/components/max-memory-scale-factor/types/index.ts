@@ -1,24 +1,14 @@
-export interface MaxMemoryConfig {
-  ram_scale_factor: number;
-  gpu_scale_factor: number;
-}
-
-export interface MemoryResponse {
-  ram: number;
-  gpu: number;
-}
-
 export interface MemoryOption {
-  value: number;
+  scaleFactor: number;
   label: string;
 }
 
-export interface MaxMemoryProps {
-  onNext?: (config: MaxMemoryConfig) => void;
-  onBack?: () => void;
+export interface MaxMemoryFormProps {
+  scaleFactor: number;
 }
 
-export interface MemoryPreviewProps {
-  selectedValue?: number;
-  totalMemory?: number;
+export interface MemoryColorClasses {
+  bgClassName: string;
+  textClassName: string;
+  radioClassName: string;
 }

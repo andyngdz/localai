@@ -1,11 +1,25 @@
+import { MemoryColorClasses } from "../types";
+
 class MaxMemoryScaleFactorService {
-  memoryColor(scaleFactor: number) {
+  memoryColor(scaleFactor: number): MemoryColorClasses {
     if (scaleFactor <= 0.5) {
-      return ["bg-success/10", "text-success/80", "radio-success"];
+      return {
+        bgClassName: "bg-success/10",
+        textClassName: "text-success/80",
+        radioClassName: "radio-success",
+      };
     } else if (scaleFactor <= 0.7) {
-      return ["bg-warning/10", "text-warning/80", "radio-warning"];
+      return {
+        bgClassName: "bg-warning/10",
+        textClassName: "text-warning/80",
+        radioClassName: "radio-warning",
+      };
     } else {
-      return ["bg-error/10", "text-error/80", "radio-error"];
+      return {
+        bgClassName: "bg-error/10",
+        textClassName: "text-error/80",
+        radioClassName: "radio-error",
+      };
     }
   }
 }

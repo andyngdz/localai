@@ -22,6 +22,11 @@ export interface DeviceIndexResponse {
   device_index: number;
 }
 
+export interface MemoryResponse {
+  gpu: number;
+  ram: number;
+}
+
 export interface SelectDeviceRequest {
   device_index: number;
 }

@@ -1,5 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import type { ApiError, HardwareResponse, HealthResponse } from "../types/api";
+import type {
+  ApiError,
+  HardwareResponse,
+  HealthResponse,
+  MemoryResponse,
+} from "../types/api";
 import { api } from "./api";
 
 export const useHealthQuery = () => {
@@ -15,5 +20,12 @@ export const useHardwareQuery = () => {
   return useQuery<HardwareResponse, ApiError>({
     queryKey: ["hardware"],
     queryFn: () => api.getHardwareStatus(),
+  });
+};
+
+export const useMemoryQuery = () => {
+  return useQuery<MemoryResponse, ApiError>({
+    queryKey: ["memory"],
+    queryFn: () => api.getMemory(),
   });
 };

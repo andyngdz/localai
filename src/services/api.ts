@@ -2,6 +2,7 @@ import axios from "axios";
 import type {
   HardwareResponse,
   HealthResponse,
+  MemoryResponse,
   SelectDeviceRequest,
 } from "../types/api";
 
@@ -33,6 +34,12 @@ class API {
 
   async getHardwareStatus(): Promise<HardwareResponse> {
     const { data } = await client.get("/hardware/");
+
+    return data;
+  }
+
+  async getMemory(): Promise<MemoryResponse> {
+    const { data } = await client.get("/hardware/memory");
 
     return data;
   }
