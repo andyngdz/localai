@@ -2,7 +2,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { FC, ReactNode } from "react";
 import { SetupLayoutHeader } from "./SetupLayoutHeader";
 
-interface SetupLayoutProps {
+export interface SetupLayoutProps {
   title: string;
   description: string;
   children: ReactNode;
