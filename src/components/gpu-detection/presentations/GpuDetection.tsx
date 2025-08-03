@@ -4,7 +4,7 @@ import { api } from "@/services/api";
 import { useRouter } from "next/navigation";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { useHardwareQuery } from "../../../services/queries";
-import { SetupLayout } from "../../layout/SetupLayout";
+import { SetupLayout } from "../../layout/presentations/SetupLayout";
 import { GpuDetectionForm } from "../types/gpu-detection";
 import { GpuDetectionContent } from "./GpuDetectionContent";
 
