@@ -1,5 +1,5 @@
 import { HealthCheck } from "@/components/health-check";
 
-export default function Home() {
+export default function HomeScreen() {
   return <HealthCheck />;
 }

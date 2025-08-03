@@ -1,13 +1,15 @@
 "use client";
 
-import { SetupLayout } from "../../layout/SetupLayout";
-import { GpuDetectionContent } from "./GpuDetectionContent";
-import { useHardwareQuery } from "../../../services/queries";
-import { FormProvider, useForm } from "react-hook-form";
+import { api } from "@/services/api";
 import { useRouter } from "next/navigation";
+import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import { useHardwareQuery } from "../../../services/queries";
+import { SetupLayout } from "../../layout/SetupLayout";
+import { GpuDetectionForm } from "../types/gpu-detection";
+import { GpuDetectionContent } from "./GpuDetectionContent";
 
 export const GpuDetection = () => {
-  const methods = useForm();
+  const methods = useForm<GpuDetectionForm>();
   const router = useRouter();
   const { data, isLoading: isHardwareLoading } = useHardwareQuery();
 
@@ -16,7 +18,10 @@ export const GpuDetection = () => {
     const isCudaAvailable = data.is_cuda;
     const canProceed = !isLoading && (isCudaAvailable || data);
 
-    const onSubmit = () => {};
+    const onSubmit: SubmitHandler<GpuDetectionForm> = async (values) => {
+      await api.selectDevice({ device_index: values.gpu });
+      router.push("/max-memory");
+    };
 
     return (
       <FormProvider {...methods}>

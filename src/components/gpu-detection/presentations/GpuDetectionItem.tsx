@@ -1,9 +1,10 @@
 "use client";
 
 import { FC } from "react";
+import { useFormContext } from "react-hook-form";
 import { formatter } from "../../../services/formatter";
 import { GpuInfo } from "../../../types/api";
-import { useFormContext } from "react-hook-form";
+import { GpuDetectionForm } from "../types/gpu-detection";
 
 export interface GpuDetectionItemProps {
   gpu: GpuInfo;
@@ -11,7 +12,7 @@ export interface GpuDetectionItemProps {
 }
 
 export const GpuDetectionItem: FC<GpuDetectionItemProps> = ({ gpu, index }) => {
-  const { register } = useFormContext();
+  const { register } = useFormContext<GpuDetectionForm>();
   const { name, cuda_compute_capability, memory, is_primary } = gpu;
 
   return (

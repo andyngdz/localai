@@ -1,8 +1,8 @@
 import axios from "axios";
 import type {
-  HealthResponse,
-  HardwareResponse,
   DeviceIndexResponse,
+  HardwareResponse,
+  HealthResponse,
   SelectDeviceRequest,
 } from "../types/api";
 

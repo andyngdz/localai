@@ -1,5 +1,5 @@
 import { GpuDetection } from "@/components/gpu-detection";
 
-export default function GPUDetection() {
+export default function GPUDetectionScreen() {
   return <GpuDetection />;
 }
