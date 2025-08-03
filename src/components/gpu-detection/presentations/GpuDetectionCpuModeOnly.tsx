@@ -2,7 +2,7 @@ import { FC } from "react";
 
 export const GpuDetectionCpuModeOnly: FC = () => {
   return (
-    <div className="rounded-m">
+    <div className="rounded-md">
       <div className="flex">
         <div className="ml-3">
           <h3 className="text-sm font-medium">CPU Mode Only</h3>

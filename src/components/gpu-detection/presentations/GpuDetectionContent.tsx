@@ -1,6 +1,6 @@
 import { FC } from "react";
 import type { HardwareResponse } from "../../../types/api";
-import { GpuDetectionCpuModeOnly } from "./GpuDectectionCpuModeOnly";
+import { GpuDetectionCpuModeOnly } from "./GpuDetectionCpuModeOnly";
 import { GpuDetectionVersion } from "./GpuDetectionVersion";
 import { GpuDetectionItem } from "./GpuDetectionItem";
 
