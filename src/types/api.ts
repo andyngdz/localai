@@ -31,6 +31,11 @@ export interface SelectDeviceRequest {
   device_index: number;
 }
 
+export interface MaxMemoryRequest {
+  gpu_scale_factor: number;
+  ram_scale_factor: number;
+}
+
 export interface ApiError {
   message: string;
   status?: number;
