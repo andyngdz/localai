@@ -10,16 +10,18 @@ import { MaxMemoryScaleFactorItem } from "./MaxMemoryScaleFactorItem";
 import { MaxMemoryScaleFactorPreview } from "./MaxMemoryScaleFactorPreview";
 
 export const MaxMemoryScaleFactor = () => {
+  const router = useRouter();
   const methods = useForm<MaxMemoryFormProps>({
     defaultValues: { scaleFactor: 0.5 },
   });
-  const router = useRouter();
 
   const onSubmit: SubmitHandler<MaxMemoryFormProps> = async (values) => {
     await api.setMaxMemory({
       gpu_scale_factor: values.scaleFactor,
       ram_scale_factor: values.scaleFactor,
     });
+
+    router.push("/download-default-model");
   };
 
   return (
