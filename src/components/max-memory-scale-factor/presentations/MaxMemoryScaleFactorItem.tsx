@@ -20,7 +20,7 @@ export const MaxMemoryScaleFactorItem: FC<MemoryOptionItemProps> = ({
   const { bgClassName, textClassName, radioClassName } = colors;
 
   return (
-    <div className={clsx("badge p-5", bgClassName)}>
+    <label className={clsx("cursor-pointer badge p-5", bgClassName)}>
       <div className="flex items-center gap-4">
         <input
           type="radio"
@@ -35,6 +35,6 @@ export const MaxMemoryScaleFactorItem: FC<MemoryOptionItemProps> = ({
           {percent}% GPU / {percent}% RAM
         </span>
       </div>
-    </div>
+    </label>
   );
 };
