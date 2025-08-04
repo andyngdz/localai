@@ -1,18 +1,16 @@
 import clsx from "clsx";
 import { FC } from "react";
-import { RecommendedBadge } from "./RecommendedBadge";
+import { ModelRecommendationsBadge } from "./ModelRecommendationsBadge";
 
-interface SectionHeaderProps {
+interface ModelRecommendationsHeaderProps {
   title: string;
   description: string;
   isRecommended: boolean;
 }
 
-export const SectionHeader: FC<SectionHeaderProps> = ({
-  title,
-  description,
-  isRecommended,
-}) => {
+export const ModelRecommendationsHeader: FC<
+  ModelRecommendationsHeaderProps
+> = ({ title, description, isRecommended }) => {
   return (
     <div className="flex flex-col">
       <div className="flex items-center gap-2">
@@ -24,7 +22,7 @@ export const SectionHeader: FC<SectionHeaderProps> = ({
         >
           {title}
         </h3>
-        {isRecommended && <RecommendedBadge />}
+        {isRecommended && <ModelRecommendationsBadge />}
       </div>
       <span className="text-base-content/80 leading-relaxed">
         {description}

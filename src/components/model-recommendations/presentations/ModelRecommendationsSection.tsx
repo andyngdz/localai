@@ -1,27 +1,26 @@
 import { ModelRecommendationSection } from "@/types/api";
 import { FC } from "react";
-import { ModelCard } from "./ModelCard";
-import { SectionHeader } from "./SectionHeader";
+import { ModelRecommendationsCard } from "./ModelRecommendationsCard";
+import { ModelRecommendationsHeader } from "./ModelRecommendationsHeader";
 
-interface ModelSectionProps {
+interface ModelRecommendationsSectionProps {
   section: ModelRecommendationSection;
   isDefaultRecommended: boolean;
 }
 
-export const ModelSection: FC<ModelSectionProps> = ({
-  section,
-  isDefaultRecommended,
-}) => {
+export const ModelRecommendationsSection: FC<
+  ModelRecommendationsSectionProps
+> = ({ section, isDefaultRecommended }) => {
   return (
     <div className="flex flex-col gap-4">
-      <SectionHeader
+      <ModelRecommendationsHeader
         title={section.name}
         description={section.description}
         isRecommended={section.is_recommended || isDefaultRecommended}
       />
       <div className="flex flex-col gap-4">
         {section.models.map((model) => (
-          <ModelCard key={model.id} model={model} />
+          <ModelRecommendationsCard key={model.id} model={model} />
         ))}
       </div>
     </div>

@@ -1,6 +1,6 @@
 import { ModelRecommendationSection } from "@/types/api";
 import { FC } from "react";
-import { ModelSection } from "./ModelSection";
+import { ModelRecommendationsSection } from "./ModelRecommendationsSection";
 
 interface ModelRecommendationsListProps {
   sections: ModelRecommendationSection[];
@@ -14,7 +14,7 @@ export const ModelRecommendationsList: FC<ModelRecommendationsListProps> = ({
   return (
     <div className="flex flex-col gap-8">
       {sections.map((section) => (
-        <ModelSection
+        <ModelRecommendationsSection
           key={section.id}
           section={section}
           isDefaultRecommended={section.id === defaultRecommendSection}

@@ -6,14 +6,16 @@ import { Cpu, HardDrive } from "lucide-react";
 import { FC } from "react";
 import { useFormContext } from "react-hook-form";
 import { ModelRecommendationFormProps } from "../types";
-import { ModelTags } from "./ModelTags";
-import { RecommendedBadge } from "./RecommendedBadge";
+import { ModelRecommendationsBadge } from "./ModelRecommendationsBadge";
+import { ModelRecommendationsTags } from "./ModelRecommendationsTags";
 
-interface ModelCardProps {
+interface ModelRecommendationsCardProps {
   model: ModelRecommendationItem;
 }
 
-export const ModelCard: FC<ModelCardProps> = ({ model }) => {
+export const ModelRecommendationsCard: FC<ModelRecommendationsCardProps> = ({
+  model,
+}) => {
   const { register, watch } = useFormContext<ModelRecommendationFormProps>();
   const selectedModel = watch("selectedModel");
   const isSelected = selectedModel === model.id;
@@ -47,7 +49,7 @@ export const ModelCard: FC<ModelCardProps> = ({ model }) => {
                 >
                   {model.name}
                 </h4>
-                {model.is_recommended && <RecommendedBadge />}
+                {model.is_recommended && <ModelRecommendationsBadge />}
               </div>
               <div className="w-24 flex items-center gap-2 ">
                 <span className="text-base-content/80">
@@ -70,7 +72,7 @@ export const ModelCard: FC<ModelCardProps> = ({ model }) => {
               </div>
             </div>
             <div>
-              <ModelTags tags={model.tags} />
+              <ModelRecommendationsTags tags={model.tags} />
             </div>
           </div>
         </div>
