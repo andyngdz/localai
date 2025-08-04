@@ -21,7 +21,7 @@ export const MaxMemoryScaleFactor = () => {
       ram_scale_factor: values.scaleFactor,
     });
 
-    router.push("/download-default-model");
+    router.push("/model-recommendations");
   };
 
   return (

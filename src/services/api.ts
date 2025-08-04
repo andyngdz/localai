@@ -4,6 +4,7 @@ import type {
   HealthResponse,
   MaxMemoryRequest,
   MemoryResponse,
+  ModelRecommendationResponse,
   SelectDeviceRequest,
 } from "../types/api";
 
@@ -51,6 +52,16 @@ class API {
 
   async selectDevice(request: SelectDeviceRequest): Promise<void> {
     await client.post("/hardware/device", request);
+  }
+
+  async getModelRecommendations(): Promise<ModelRecommendationResponse> {
+    const { data } = await client.get("/models/recommendations");
+    return data;
+  }
+
+  async downloadModel(modelId: string): Promise<{ download_id: string }> {
+    const { data } = await client.post("/downloads/", { model_id: modelId });
+    return data;
   }
 }
 
