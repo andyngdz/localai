@@ -18,11 +18,9 @@ export const ModelRecommendationsSection: FC<
         description={section.description}
         isRecommended={section.is_recommended || isDefaultRecommended}
       />
-      <div className="flex flex-col gap-4">
-        {section.models.map((model) => (
-          <ModelRecommendationsCard key={model.id} model={model} />
-        ))}
-      </div>
+      {section.models.map((model) => (
+        <ModelRecommendationsCard key={model.id} model={model} />
+      ))}
     </div>
   );
 };

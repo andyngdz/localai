@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { FC, ReactNode } from "react";
-import { SetupLayoutHeader } from "./SetupLayoutHeader";
+import { SetupLayoutContent } from "./SetupLayoutContent";
 
 export interface SetupLayoutProps {
   title: string;
@@ -23,9 +23,9 @@ export const SetupLayout: FC<SetupLayoutProps> = ({
 }) => {
   return (
     <div className="min-h-screen bg-base-200 flex flex-col items-center">
-      <SetupLayoutHeader title={title} description={description}>
+      <SetupLayoutContent title={title} description={description}>
         {children}
-      </SetupLayoutHeader>
+      </SetupLayoutContent>
       <div className="w-full border-t border-gray-800">
         <div className="flex justify-center items-center gap-8 py-2">
           {onBack && (

@@ -1,12 +1,12 @@
 import { FC, PropsWithChildren } from "react";
 
-export interface SetupLayoutHeaderProps {
+export interface SetupLayoutContentProps {
   title: string;
   description: string;
 }
 
-export const SetupLayoutHeader: FC<
-  PropsWithChildren<SetupLayoutHeaderProps>
+export const SetupLayoutContent: FC<
+  PropsWithChildren<SetupLayoutContentProps>
 > = ({ title, description, children }) => {
   return (
     <div className="max-w-4xl flex flex-1 items-center justify-center">
@@ -16,7 +16,7 @@ export const SetupLayoutHeader: FC<
           <span className="text-base-content/70">{description}</span>
         </div>
         <div className="flex justify-center">
-          <div className="w-full">{children}</div>
+          <div className="container">{children}</div>
         </div>
       </div>
     </div>
