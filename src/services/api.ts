@@ -15,51 +15,41 @@ export const client = axios.create({
   },
 });
 
-client.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    const apiError = {
-      message:
-        error.response?.data?.message || error.message || "Network error",
-      status: error.response?.status,
-    };
-    return Promise.reject(apiError);
-  }
-);
-
 class API {
-  async health(): Promise<HealthResponse> {
-    const { data } = await client.get("/");
+  async health() {
+    const { data } = await client.get<HealthResponse>("/");
 
     return data;
   }
 
-  async getHardwareStatus(): Promise<HardwareResponse> {
-    const { data } = await client.get("/hardware/");
+  async getHardwareStatus() {
+    const { data } = await client.get<HardwareResponse>("/hardware/");
 
     return data;
   }
 
-  async setMaxMemory(request: MaxMemoryRequest): Promise<void> {
+  async setMaxMemory(request: MaxMemoryRequest) {
     await client.post("/hardware/max-memory", request);
   }
 
-  async getMemory(): Promise<MemoryResponse> {
-    const { data } = await client.get("/hardware/memory");
+  async getMemory() {
+    const { data } = await client.get<MemoryResponse>("/hardware/memory");
 
     return data;
   }
 
-  async selectDevice(request: SelectDeviceRequest): Promise<void> {
+  async selectDevice(request: SelectDeviceRequest) {
     await client.post("/hardware/device", request);
   }
 
-  async getModelRecommendations(): Promise<ModelRecommendationResponse> {
-    const { data } = await client.get("/models/recommendations");
+  async getModelRecommendations() {
+    const { data } = await client.get<ModelRecommendationResponse>(
+      "/models/recommendations"
+    );
     return data;
   }
 
-  async downloadModel(modelId: string): Promise<{ download_id: string }> {
+  async downloadModel(modelId: string) {
     const { data } = await client.post("/downloads/", { model_id: modelId });
     return data;
   }
