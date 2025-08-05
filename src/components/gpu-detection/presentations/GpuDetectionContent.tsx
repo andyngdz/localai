@@ -1,8 +1,8 @@
 import { FC } from "react";
 import type { HardwareResponse } from "../../../types/api";
 import { GpuDetectionCpuModeOnly } from "./GpuDetectionCpuModeOnly";
-import { GpuDetectionVersion } from "./GpuDetectionVersion";
 import { GpuDetectionItem } from "./GpuDetectionItem";
+import { GpuDetectionVersion } from "./GpuDetectionVersion";
 
 interface GpuDetectionContentProps {
   hardwareData: HardwareResponse;

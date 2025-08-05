@@ -1,20 +1,14 @@
 "use client";
 
 import { SetupLayout } from "@/components/layout/presentations/SetupLayout";
-import { useModelRecommendationsQuery } from "@/services/queries";
 import { useRouter } from "next/navigation";
-import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { ModelRecommendationFormProps } from "../types";
+import { FormProvider } from "react-hook-form";
+import { useModelRecommendation } from "../states/useModelRecommendation";
 import { ModelRecommendationsList } from "./ModelRecommendationsList";
 
 export const ModelRecommendations = () => {
   const router = useRouter();
-  const { data } = useModelRecommendationsQuery();
-  const methods = useForm<ModelRecommendationFormProps>();
-
-  const onSubmit: SubmitHandler<ModelRecommendationFormProps> = (values) => {
-    console.log("Selected model:", values.selectedModel);
-  };
+  const { methods, onSubmit, data } = useModelRecommendation();
 
   return (
     <FormProvider {...methods}>
@@ -24,10 +18,12 @@ export const ModelRecommendations = () => {
         onNext={methods.handleSubmit(onSubmit)}
         onBack={router.back}
       >
-        <ModelRecommendationsList
-          sections={data?.sections || []}
-          defaultRecommendSection={data?.default_recommend_section || ""}
-        />
+        {data && (
+          <ModelRecommendationsList
+            sections={data.sections}
+            defaultRecommendSection={data.default_recommend_section}
+          />
+        )}
       </SetupLayout>
     </FormProvider>
   );

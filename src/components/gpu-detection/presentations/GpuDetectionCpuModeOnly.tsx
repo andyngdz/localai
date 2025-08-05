@@ -1,6 +1,4 @@
-import { FC } from "react";
-
-export const GpuDetectionCpuModeOnly: FC = () => {
+export const GpuDetectionCpuModeOnly = () => {
   return (
     <div className="rounded-md">
       <div className="flex">

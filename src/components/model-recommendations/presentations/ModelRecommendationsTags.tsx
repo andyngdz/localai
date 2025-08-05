@@ -10,7 +10,7 @@ export const ModelRecommendationsTags: FC<ModelRecommendationsTagsProps> = ({
   tags,
 }) => {
   return (
-    <div className="flex flex-wrap gap-2">
+    <section className="flex flex-wrap gap-2">
       {tags.map((tag, index) => (
         <span
           key={tag}
@@ -22,6 +22,6 @@ export const ModelRecommendationsTags: FC<ModelRecommendationsTagsProps> = ({
           {tag}
         </span>
       ))}
-    </div>
+    </section>
   );
 };

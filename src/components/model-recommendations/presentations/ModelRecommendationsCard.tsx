@@ -39,7 +39,7 @@ export const ModelRecommendationsCard: FC<ModelRecommendationsCardProps> = ({
             {...register("selectedModel", { required: true })}
           />
           <div className="flex flex-col gap-2 flex-1">
-            <div className="flex justify-between items-center">
+            <section className="flex justify-between items-center">
               <div className="flex items-center gap-2">
                 <h4
                   className={clsx(
@@ -59,8 +59,8 @@ export const ModelRecommendationsCard: FC<ModelRecommendationsCardProps> = ({
                   {model.model_size}
                 </span>
               </div>
-            </div>
-            <div className="flex justify-between">
+            </section>
+            <section className="flex justify-between">
               <span className="text-muted-content">{model.description}</span>
               <div className="w-24 flex items-center gap-2">
                 <span className="text-muted-content">
@@ -70,10 +70,8 @@ export const ModelRecommendationsCard: FC<ModelRecommendationsCardProps> = ({
                   {model.memory_requirement_gb} GB
                 </span>
               </div>
-            </div>
-            <div>
-              <ModelRecommendationsTags tags={model.tags} />
-            </div>
+            </section>
+            <ModelRecommendationsTags tags={model.tags} />
           </div>
         </div>
       </div>
