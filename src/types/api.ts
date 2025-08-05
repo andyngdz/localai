@@ -36,6 +36,30 @@ export interface MaxMemoryRequest {
   ram_scale_factor: number;
 }
 
+export interface ModelRecommendationItem {
+  id: string;
+  name: string;
+  description: string;
+  memory_requirement_gb: number;
+  model_size: string;
+  tags: string[];
+  is_recommended: boolean;
+}
+
+export interface ModelRecommendationSection {
+  id: string;
+  name: string;
+  description: string;
+  models: ModelRecommendationItem[];
+  is_recommended: boolean;
+}
+
+export interface ModelRecommendationResponse {
+  sections: ModelRecommendationSection[];
+  default_recommend_section: string;
+  default_selected_model: string;
+}
+
 export interface ApiError {
   message: string;
   status?: number;

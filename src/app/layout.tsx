@@ -2,6 +2,7 @@ import "./globals.css";
 
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { unstable_ViewTransition as ViewTransition } from "react";
 import { Providers } from "./providers";
 
 const font = Inter({
@@ -23,7 +24,9 @@ export default function RootLayout({
   return (
     <html lang="en" data-theme="night">
       <body className={`${font.className} antialiased`}>
-        <Providers>{children}</Providers>
+        <Providers>
+          <ViewTransition>{children}</ViewTransition>
+        </Providers>
       </body>
     </html>
   );

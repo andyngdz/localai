@@ -1,9 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
   ApiError,
   HardwareResponse,
   HealthResponse,
   MemoryResponse,
+  ModelRecommendationResponse,
 } from "../types/api";
 import { api } from "./api";
 
@@ -27,5 +28,18 @@ export const useMemoryQuery = () => {
   return useQuery<MemoryResponse, ApiError>({
     queryKey: ["memory"],
     queryFn: () => api.getMemory(),
+  });
+};
+
+export const useModelRecommendationsQuery = () => {
+  return useQuery<ModelRecommendationResponse, ApiError>({
+    queryKey: ["model-recommendations"],
+    queryFn: () => api.getModelRecommendations(),
+  });
+};
+
+export const useDownloadModelMutation = () => {
+  return useMutation({
+    mutationFn: (modelId: string) => api.downloadModel(modelId),
   });
 };

@@ -30,9 +30,7 @@ export const GpuDetectionItem: FC<GpuDetectionItemProps> = ({ gpu, index }) => {
             {name}
           </span>
           <span className="flex gap-1 text-xs">
-            <span className="text-base-content/70">
-              Cuda compute capability
-            </span>
+            <span className="text-muted-content">Cuda compute capability</span>
             <span className="font-bold text-base-content">
               {cuda_compute_capability}
             </span>

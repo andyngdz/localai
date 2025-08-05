@@ -5,3 +5,17 @@
 @plugin "daisyui" {
   themes: light --default, dark --prefersdark, night;
 }
+
+@plugin "daisyui/theme" {
+  name: "light";
+  --swiper-pagination-bullet-inactive-color: var(--color-gray-200);
+}
+
+@plugin "daisyui/theme" {
+  name: "night";
+  --swiper-pagination-bullet-inactive-color: var(--color-gray-200);
+}
+
+@utility text-muted-content {
+  @apply text-base-content/80;
+}
