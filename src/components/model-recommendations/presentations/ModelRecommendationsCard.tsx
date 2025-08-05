@@ -6,6 +6,7 @@ import { Cpu, HardDrive } from "lucide-react";
 import { FC } from "react";
 import { useFormContext } from "react-hook-form";
 import { ModelRecommendationFormProps } from "../types";
+import { ModelRecommendationMemoryBox } from "./ModelRecommendationMemoryBox";
 import { ModelRecommendationsBadge } from "./ModelRecommendationsBadge";
 import { ModelRecommendationsTags } from "./ModelRecommendationsTags";
 
@@ -51,25 +52,17 @@ export const ModelRecommendationsCard: FC<ModelRecommendationsCardProps> = ({
                 </h4>
                 {model.is_recommended && <ModelRecommendationsBadge />}
               </div>
-              <div className="w-24 flex items-center gap-2 ">
-                <span className="text-muted-content">
-                  <HardDrive />
-                </span>
-                <span className="text-sm font-bold text-base-content">
-                  {model.model_size}
-                </span>
-              </div>
+              <ModelRecommendationMemoryBox
+                icon={<HardDrive />}
+                content={model.model_size}
+              />
             </section>
             <section className="flex justify-between">
               <span className="text-muted-content">{model.description}</span>
-              <div className="w-24 flex items-center gap-2">
-                <span className="text-muted-content">
-                  <Cpu />
-                </span>
-                <span className="text-sm font-bold text-base-content">
-                  {model.memory_requirement_gb} GB
-                </span>
-              </div>
+              <ModelRecommendationMemoryBox
+                icon={<Cpu />}
+                content={`${model.memory_requirement_gb} GB`}
+              />
             </section>
             <ModelRecommendationsTags tags={model.tags} />
           </div>
