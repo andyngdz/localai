@@ -24,9 +24,7 @@ export const ModelRecommendationsHeader: FC<
         </h3>
         {isRecommended && <ModelRecommendationsBadge />}
       </div>
-      <span className="text-base-content/80 leading-relaxed">
-        {description}
-      </span>
+      <span className="text-muted-content leading-relaxed">{description}</span>
     </div>
   );
 };

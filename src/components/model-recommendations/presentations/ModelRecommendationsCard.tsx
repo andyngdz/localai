@@ -52,7 +52,7 @@ export const ModelRecommendationsCard: FC<ModelRecommendationsCardProps> = ({
                 {model.is_recommended && <ModelRecommendationsBadge />}
               </div>
               <div className="w-24 flex items-center gap-2 ">
-                <span className="text-base-content/80">
+                <span className="text-muted-content">
                   <HardDrive />
                 </span>
                 <span className="text-sm font-bold text-base-content">
@@ -61,9 +61,9 @@ export const ModelRecommendationsCard: FC<ModelRecommendationsCardProps> = ({
               </div>
             </div>
             <div className="flex justify-between">
-              <span className="text-base-content/80">{model.description}</span>
+              <span className="text-muted-content">{model.description}</span>
               <div className="w-24 flex items-center gap-2">
-                <span className="text-base-content/80">
+                <span className="text-muted-content">
                   <Cpu />
                 </span>
                 <span className="text-sm font-bold text-base-content">
