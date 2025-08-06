@@ -11,16 +11,16 @@ import { ModelRecommendationsSection } from "./ModelRecommendationsSection";
 
 interface ModelRecommendationsListProps {
   sections: ModelRecommendationSection[];
-  defaultRecommendSection: string;
+  defaultSection: string;
 }
 
 export const ModelRecommendationsList: FC<ModelRecommendationsListProps> = ({
   sections,
-  defaultRecommendSection,
+  defaultSection,
 }) => {
   const initialSlide = findIndex(
     sections,
-    (section) => section.id === defaultRecommendSection
+    (section) => section.id === defaultSection
   );
 
   return (
@@ -37,7 +37,7 @@ export const ModelRecommendationsList: FC<ModelRecommendationsListProps> = ({
           <SwiperSlide key={section.id} className="max-w-4/5 pb-8">
             <ModelRecommendationsSection
               section={section}
-              isDefaultRecommended={section.id === defaultRecommendSection}
+              isDefaultRecommended={section.id === defaultSection}
             />
           </SwiperSlide>
         ))}

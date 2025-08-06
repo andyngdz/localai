@@ -5,8 +5,8 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { ModelRecommendationFormProps } from "../types";
 
 export const useModelRecommendation = () => {
-  const { data } = useModelRecommendationsQuery();
   const methods = useForm<ModelRecommendationFormProps>();
+  const { data } = useModelRecommendationsQuery();
   const { watch, setValue } = methods;
   const id = watch("id");
 
@@ -22,7 +22,7 @@ export const useModelRecommendation = () => {
 
   useEffect(() => {
     if (data) {
-      setValue("id", data.default_selected_model);
+      setValue("id", data.default_selected_id);
     }
   }, [data, id, setValue]);
 

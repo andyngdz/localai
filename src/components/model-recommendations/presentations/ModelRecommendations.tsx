@@ -21,7 +21,7 @@ export const ModelRecommendations = () => {
         {data && (
           <ModelRecommendationsList
             sections={data.sections}
-            defaultRecommendSection={data.default_recommend_section}
+            defaultSection={data.default_section}
           />
         )}
       </SetupLayout>

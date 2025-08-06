@@ -56,8 +56,8 @@ export interface ModelRecommendationSection {
 
 export interface ModelRecommendationResponse {
   sections: ModelRecommendationSection[];
-  default_recommend_section: string;
-  default_selected_model: string;
+  default_section: string;
+  default_selected_id: string;
 }
 
 export interface ApiError {
