@@ -8,12 +8,12 @@ export const useModelRecommendation = () => {
   const { data } = useModelRecommendationsQuery();
   const methods = useForm<ModelRecommendationFormProps>();
   const { watch, setValue } = methods;
-  const selectedModel = watch("selectedModel");
+  const id = watch("id");
 
   const onSubmit: SubmitHandler<ModelRecommendationFormProps> = async (
     values
   ) => {
-    const id = values.selectedModel;
+    const id = values.id;
 
     if (id) {
       await api.downloadModel(id);
@@ -21,10 +21,10 @@ export const useModelRecommendation = () => {
   };
 
   useEffect(() => {
-    if (data && !selectedModel) {
-      setValue("selectedModel", data.default_selected_model);
+    if (data) {
+      setValue("id", data.default_selected_model);
     }
-  }, [data, selectedModel, setValue]);
+  }, [data, id, setValue]);
 
   return { methods, onSubmit, data };
 };

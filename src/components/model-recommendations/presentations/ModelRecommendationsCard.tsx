@@ -18,8 +18,8 @@ export const ModelRecommendationsCard: FC<ModelRecommendationsCardProps> = ({
   model,
 }) => {
   const { register, watch } = useFormContext<ModelRecommendationFormProps>();
-  const selectedModel = watch("selectedModel");
-  const isSelected = selectedModel === model.id;
+  const id = watch("id");
+  const isSelected = id === model.id;
 
   return (
     <label
@@ -37,7 +37,7 @@ export const ModelRecommendationsCard: FC<ModelRecommendationsCardProps> = ({
             type="radio"
             value={model.id}
             className="radio radio-primary"
-            {...register("selectedModel", { required: true })}
+            {...register("id", { required: true })}
           />
           <div className="flex flex-col gap-2 flex-1">
             <section className="flex justify-between items-center">
