@@ -1,5 +1,6 @@
 import "./globals.css";
 
+import { StreamingMessage } from "@/components/streaming-messages/presentations/StreamingMessage";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { unstable_ViewTransition as ViewTransition } from "react";
@@ -26,6 +27,7 @@ export default function RootLayout({
       <body className={`${font.className} antialiased`}>
         <Providers>
           <ViewTransition>{children}</ViewTransition>
+          <StreamingMessage />
         </Providers>
       </body>
     </html>
