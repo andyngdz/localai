@@ -7,8 +7,7 @@ import { ModelRecommendationFormProps } from "../types";
 export const useModelRecommendation = () => {
   const methods = useForm<ModelRecommendationFormProps>();
   const { data } = useModelRecommendationsQuery();
-  const { watch, setValue } = methods;
-  const id = watch("id");
+  const { setValue } = methods;
 
   const onSubmit: SubmitHandler<ModelRecommendationFormProps> = async (
     values
@@ -24,7 +23,7 @@ export const useModelRecommendation = () => {
     if (data) {
       setValue("id", data.default_selected_id);
     }
-  }, [data, id, setValue]);
+  }, [data, setValue]);
 
   return { methods, onSubmit, data };
 };
