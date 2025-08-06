@@ -5,8 +5,12 @@ export const useStreamingMessage = () => {
   const [message, setMessage] = useState<string>("");
 
   useEffect(() => {
-    socket.on(SocketEvents.DOWNLOAD_START, (data) => {
-      setMessage(data.message);
+    socket.on(SocketEvents.DOWNLOAD_START, () => {
+      setMessage("Downloading model");
+    });
+
+    socket.on(SocketEvents.MODEL_LOAD_COMPLETED, () => {
+      setMessage("");
     });
   }, []);
 

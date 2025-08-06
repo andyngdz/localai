@@ -1,3 +1,4 @@
+import { api } from "@/services/api";
 import { useModelRecommendationsQuery } from "@/services/queries";
 import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -9,8 +10,14 @@ export const useModelRecommendation = () => {
   const { watch, setValue } = methods;
   const selectedModel = watch("selectedModel");
 
-  const onSubmit: SubmitHandler<ModelRecommendationFormProps> = (values) => {
-    console.log("Selected model:", values.selectedModel);
+  const onSubmit: SubmitHandler<ModelRecommendationFormProps> = async (
+    values
+  ) => {
+    const id = values.selectedModel;
+
+    if (id) {
+      await api.downloadModel(id);
+    }
   };
 
   useEffect(() => {

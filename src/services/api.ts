@@ -49,8 +49,8 @@ class API {
     return data;
   }
 
-  async downloadModel(modelId: string) {
-    const { data } = await client.post("/downloads/", { model_id: modelId });
+  async downloadModel(id: string) {
+    const { data } = await client.post("/downloads/", { id });
     return data;
   }
 }
