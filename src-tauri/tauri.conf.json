@@ -12,6 +12,7 @@
   "app": {
     "windows": [
       {
+        "theme": "Dark",
         "title": "LocalAI",
         "resizable": true,
         "fullscreen": false,
@@ -19,8 +20,9 @@
         "height": 720,
         "minWidth": 800,
         "minHeight": 600,
+        "transparent": true,
         "decorations": true,
-        "transparent": true
+        "devtools": true
       }
     ],
     "security": {

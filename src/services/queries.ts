@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import type {
   ApiError,
   HardwareResponse,
@@ -8,38 +8,38 @@ import type {
 } from "../types/api";
 import { api } from "./api";
 
-export const useHealthQuery = () => {
+const useHealthQuery = () => {
   return useQuery<HealthResponse, ApiError>({
     queryKey: ["health"],
-    queryFn: () => api.health(),
-    refetchInterval: 10000,
-    staleTime: 10000,
+    queryFn: api.health,
+    refetchInterval: 3000,
   });
 };
 
-export const useHardwareQuery = () => {
+const useHardwareQuery = () => {
   return useQuery<HardwareResponse, ApiError>({
     queryKey: ["hardware"],
     queryFn: () => api.getHardwareStatus(),
   });
 };
 
-export const useMemoryQuery = () => {
+const useMemoryQuery = () => {
   return useQuery<MemoryResponse, ApiError>({
     queryKey: ["memory"],
     queryFn: () => api.getMemory(),
   });
 };
 
-export const useModelRecommendationsQuery = () => {
+const useModelRecommendationsQuery = () => {
   return useQuery<ModelRecommendationResponse, ApiError>({
     queryKey: ["model-recommendations"],
     queryFn: () => api.getModelRecommendations(),
   });
 };
 
-export const useDownloadModelMutation = () => {
-  return useMutation({
-    mutationFn: (modelId: string) => api.downloadModel(modelId),
-  });
+export {
+  useHardwareQuery,
+  useHealthQuery,
+  useMemoryQuery,
+  useModelRecommendationsQuery,
 };

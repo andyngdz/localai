@@ -1,0 +1,24 @@
+import { socket, SocketEvents } from "@/sockets";
+import { useEffect, useState } from "react";
+
+export const useStreamingMessage = () => {
+  const [message, setMessage] = useState<string>("");
+
+  useEffect(() => {
+    socket.on(SocketEvents.DOWNLOAD_START, () => {
+      setMessage("Downloading model");
+    });
+
+    socket.on(SocketEvents.MODEL_LOAD_COMPLETED, () => {
+      setMessage("");
+    });
+
+    return () => {
+      socket.off(SocketEvents.DOWNLOAD_START);
+      socket.off(SocketEvents.MODEL_LOAD_COMPLETED);
+      socket.off(SocketEvents.IMAGE_GENERATION_STEP_END);
+    };
+  }, []);
+
+  return { message };
+};

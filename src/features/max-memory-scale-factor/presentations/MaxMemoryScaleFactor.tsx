@@ -1,6 +1,6 @@
 "use client";
 
-import { SetupLayout } from "@/components/layout/presentations/SetupLayout";
+import { SetupLayout } from "@/features/layout/presentations/SetupLayout";
 import { api } from "@/services/api";
 import { useRouter } from "next/navigation";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
