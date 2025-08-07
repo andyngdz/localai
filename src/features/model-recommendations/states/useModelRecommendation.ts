@@ -1,7 +1,7 @@
 import { api } from "@/services/api";
 import { useModelRecommendationsQuery } from "@/services/queries";
 import { socket, SocketEvents } from "@/sockets";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { ModelRecommendationFormProps } from "../types";

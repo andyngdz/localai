@@ -1,6 +1,6 @@
 "use client";
 
-import { SetupLayout } from "@/components/layout/presentations/SetupLayout";
+import { SetupLayout } from "@/features/layout/presentations/SetupLayout";
 import { useRouter } from "next/navigation";
 import { FormProvider } from "react-hook-form";
 import { useModelRecommendation } from "../states/useModelRecommendation";

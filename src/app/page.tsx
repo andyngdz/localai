@@ -1,4 +1,4 @@
-import { HealthCheck } from "@/components/health-check";
+import { HealthCheck } from "@/features/health-check";
 
 export default function HomeScreen() {
   return <HealthCheck />;
