@@ -1,3 +1,5 @@
+import { Divider } from "@heroui/divider";
+import { Button } from "@heroui/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { FC, ReactNode } from "react";
 import { SetupLayoutContent } from "./SetupLayoutContent";
@@ -22,29 +24,22 @@ export const SetupLayout: FC<SetupLayoutProps> = ({
   isBackDisabled = false,
 }) => {
   return (
-    <div className="min-h-screen bg-base-200 flex flex-col items-center">
+    <div className="min-h-screen flex flex-col items-center">
       <SetupLayoutContent title={title} description={description}>
         {children}
       </SetupLayoutContent>
-      <div className="w-full border-t border-gray-800">
+      <Divider />
+      <div className="w-full">
         <div className="flex justify-center items-center gap-8 py-2">
           {onBack && (
-            <button
-              className="btn btn-soft btn-circle gap-2"
-              onClick={onBack}
-              disabled={isBackDisabled}
-            >
+            <Button onPress={onBack} isIconOnly disabled={isBackDisabled}>
               <ChevronLeft />
-            </button>
+            </Button>
           )}
           {onNext && (
-            <button
-              className="btn btn-soft btn-circle gap-2"
-              onClick={onNext}
-              disabled={isNextDisabled}
-            >
+            <Button onPress={onNext} isIconOnly disabled={isNextDisabled}>
               <ChevronRight />
-            </button>
+            </Button>
           )}
         </div>
       </div>

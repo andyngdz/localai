@@ -1,3 +1,6 @@
+"use client";
+
+import { Chip } from "@heroui/react";
 import { FC, useMemo } from "react";
 
 export interface HealthCheckContentProps {
@@ -10,18 +13,18 @@ export const HealthCheckContent: FC<HealthCheckContentProps> = ({
   const children = useMemo(() => {
     if (isHealthy) {
       return (
-        <div className="badge badge-success">
+        <Chip color="success">
           <span>LocalAI backend is running and ready to use</span>
-        </div>
+        </Chip>
       );
     }
 
     return (
-      <div className="badge badge-error">
+      <Chip color="danger">
         <span>LocalAI backend is not running</span>
-      </div>
+      </Chip>
     );
   }, [isHealthy]);
 
-  return <div className="card-body items-center">{children}</div>;
+  return <div className="flex justify-center">{children}</div>;
 };
