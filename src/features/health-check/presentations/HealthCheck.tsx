@@ -22,7 +22,7 @@ export const HealthCheck = () => {
   const onCheckDeviceIndex = useCallback(async () => {
     const { device_index } = await api.getDeviceIndex();
 
-    if (device_index != DeviceSelection.NOT_FOUND) {
+    if (device_index !== DeviceSelection.NOT_FOUND) {
       router.push("/dashboard");
     }
   }, [router]);
