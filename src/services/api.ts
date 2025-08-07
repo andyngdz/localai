@@ -1,12 +1,13 @@
 import axios from "axios";
 import type {
+  DeviceIndexResponse,
   HardwareResponse,
   HealthResponse,
   MaxMemoryRequest,
   MemoryResponse,
   ModelRecommendationResponse,
   SelectDeviceRequest,
-} from "../types/api";
+} from "../types";
 
 export const client = axios.create({
   baseURL: "http://localhost:8000",
@@ -42,6 +43,12 @@ class API {
     await client.post("/hardware/device", request);
   }
 
+  async getDeviceIndex() {
+    const { data } = await client.get<DeviceIndexResponse>("/hardware/device");
+
+    return data;
+  }
+
   async getModelRecommendations() {
     const { data } = await client.get<ModelRecommendationResponse>(
       "/models/recommendations"
@@ -51,6 +58,7 @@ class API {
 
   async downloadModel(id: string) {
     const { data } = await client.post("/downloads/", { id });
+
     return data;
   }
 }
