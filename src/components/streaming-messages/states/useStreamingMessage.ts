@@ -12,6 +12,12 @@ export const useStreamingMessage = () => {
     socket.on(SocketEvents.MODEL_LOAD_COMPLETED, () => {
       setMessage("");
     });
+
+    return () => {
+      socket.off(SocketEvents.DOWNLOAD_START);
+      socket.off(SocketEvents.MODEL_LOAD_COMPLETED);
+      socket.off(SocketEvents.IMAGE_GENERATION_STEP_END);
+    };
   }, []);
 
   return { message };
