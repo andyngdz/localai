@@ -11,9 +11,8 @@ import { api } from "./api";
 export const useHealthQuery = () => {
   return useQuery<HealthResponse, ApiError>({
     queryKey: ["health"],
-    queryFn: () => api.health(),
-    refetchInterval: 10000,
-    staleTime: 10000,
+    queryFn: api.health,
+    refetchInterval: 3000,
   });
 };
 

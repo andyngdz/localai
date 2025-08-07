@@ -7,6 +7,7 @@ import { useStreamingMessage } from "../states/useStreamingMessage";
 
 export const StreamingMessage = () => {
   const { message } = useStreamingMessage();
+  console.info("StreamingMessage", message);
 
   if (message.length > 0) {
     return (

@@ -14,6 +14,7 @@ export const useStreamingMessage = () => {
     });
 
     return () => {
+      console.info("Cleaning up socket listeners for streaming messages");
       socket.off(SocketEvents.DOWNLOAD_START);
       socket.off(SocketEvents.MODEL_LOAD_COMPLETED);
       socket.off(SocketEvents.IMAGE_GENERATION_STEP_END);

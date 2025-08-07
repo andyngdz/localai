@@ -3,12 +3,14 @@
 import { useRouter } from "next/navigation";
 import { useHealthQuery } from "../../../services/queries";
 import { SetupLayout } from "../../layout/presentations/SetupLayout";
-import { HealthCheckContentSuccess } from "./HealthCheckContentSuccess";
+import { HealthCheckContent } from "./HealthCheckContent";
 
 export const HealthCheck = () => {
   const router = useRouter();
   const { data } = useHealthQuery();
-  const isHealthy = data?.status === "ok" || data?.status === "healthy";
+  const isHealthy = !!data;
+
+  console.info(isHealthy);
 
   const onNext = () => {
     if (isHealthy) {
@@ -23,7 +25,7 @@ export const HealthCheck = () => {
       onNext={onNext}
       isNextDisabled={!isHealthy}
     >
-      <HealthCheckContentSuccess />
+      <HealthCheckContent isHealthy={isHealthy} />
     </SetupLayout>
   );
 };

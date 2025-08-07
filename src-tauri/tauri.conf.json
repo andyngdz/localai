@@ -12,6 +12,7 @@
   "app": {
     "windows": [
       {
+        "theme": "Dark",
         "title": "LocalAI",
         "resizable": true,
         "fullscreen": false,
