@@ -5,13 +5,14 @@ import { MaxMemoryFormProps } from "../types";
 import { MaxMemoryScaleFactorItem } from "./MaxMemoryScaleFactorItem";
 
 export const MaxMemoryScaleFactorItems = () => {
-  const { setValue } = useFormContext<MaxMemoryFormProps>();
+  const { setValue, getValues } = useFormContext<MaxMemoryFormProps>();
 
   return (
     <RadioGroup
       onValueChange={(value) => {
         setValue("scaleFactor", Number(value));
       }}
+      defaultValue={getValues("scaleFactor").toString()}
     >
       {MEMORY_OPTIONS.map((option) => {
         return (

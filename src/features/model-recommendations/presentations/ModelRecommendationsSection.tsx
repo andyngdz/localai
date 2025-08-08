@@ -1,3 +1,5 @@
+"use client";
+
 import { ModelRecommendationSection } from "@/types/api";
 import { FC } from "react";
 import { ModelRecommendationsCard } from "./ModelRecommendationsCard";
@@ -18,6 +20,7 @@ export const ModelRecommendationsSection: FC<
         description={section.description}
         isRecommended={section.is_recommended || isDefaultRecommended}
       />
+
       {section.models.map((model) => (
         <ModelRecommendationsCard key={model.id} model={model} />
       ))}

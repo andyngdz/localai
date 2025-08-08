@@ -1,7 +1,7 @@
 "use client";
 
 import { ModelRecommendationItem } from "@/types/api";
-import { Card, Radio } from "@heroui/react";
+import { Card } from "@heroui/react";
 import clsx from "clsx";
 import { Cpu, HardDrive } from "lucide-react";
 import { FC } from "react";
@@ -18,7 +18,7 @@ interface ModelRecommendationsCardProps {
 export const ModelRecommendationsCard: FC<ModelRecommendationsCardProps> = ({
   model,
 }) => {
-  const { watch } = useFormContext<ModelRecommendationFormProps>();
+  const { watch, register } = useFormContext<ModelRecommendationFormProps>();
   const id = watch("id");
   const isSelected = id === model.id;
 
@@ -29,37 +29,35 @@ export const ModelRecommendationsCard: FC<ModelRecommendationsCardProps> = ({
         "hover:border-primary/50": !isSelected,
       })}
     >
-      <Radio value={model.id} className="cursor-pointer rounded-2xl">
-        <div className="flex items-center gap-4">
-          <div className="flex flex-col gap-2 flex-1">
-            <section className="flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                <h4
-                  className={clsx(
-                    "font-bold text-lg",
-                    isSelected ? "text-primary" : "text-base-content"
-                  )}
-                >
-                  {model.name}
-                </h4>
-                {model.is_recommended && <ModelRecommendationsBadge />}
-              </div>
-              <ModelRecommendationMemoryBox
-                icon={<HardDrive />}
-                content={model.model_size}
-              />
-            </section>
-            <section className="flex justify-between">
-              <span className="text-muted-content">{model.description}</span>
-              <ModelRecommendationMemoryBox
-                icon={<Cpu />}
-                content={`${model.memory_requirement_gb} GB`}
-              />
-            </section>
-            <ModelRecommendationsTags tags={model.tags} />
-          </div>
+      <div className="flex items-center gap-4">
+        <div className="flex flex-col gap-2 flex-1">
+          <section className="flex justify-between items-center">
+            <div className="flex items-center gap-2">
+              <h4
+                className={clsx(
+                  "font-bold text-lg",
+                  isSelected ? "text-primary" : "text-base-content"
+                )}
+              >
+                {model.name}
+              </h4>
+              {model.is_recommended && <ModelRecommendationsBadge />}
+            </div>
+            <ModelRecommendationMemoryBox
+              icon={<HardDrive />}
+              content={model.model_size}
+            />
+          </section>
+          <section className="flex justify-between">
+            <span className="text-muted-content">{model.description}</span>
+            <ModelRecommendationMemoryBox
+              icon={<Cpu />}
+              content={`${model.memory_requirement_gb} GB`}
+            />
+          </section>
+          <ModelRecommendationsTags tags={model.tags} />
         </div>
-      </Radio>
+      </div>
     </Card>
   );
 };
