@@ -20,7 +20,11 @@ export const MaxMemoryScaleFactorItem: FC<MaxMemoryScaleFactorItemProps> = ({
       key={option.scaleFactor}
       className={clsx("border-none shadow-none", bgClassName)}
     >
-      <Radio value={`${option.scaleFactor}`} color={color} className="p-5">
+      <Radio
+        value={option.scaleFactor.toString()}
+        color={color}
+        className="p-5"
+      >
         <span className={clsx("font-medium", textClassName)}>
           {percent}% GPU / {percent}% RAM
         </span>
