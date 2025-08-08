@@ -1,6 +1,7 @@
 "use client";
 
 import { ModelRecommendationItem } from "@/types/api";
+import { Card, Radio } from "@heroui/react";
 import clsx from "clsx";
 import { Cpu, HardDrive } from "lucide-react";
 import { FC } from "react";
@@ -17,28 +18,19 @@ interface ModelRecommendationsCardProps {
 export const ModelRecommendationsCard: FC<ModelRecommendationsCardProps> = ({
   model,
 }) => {
-  const { register, watch } = useFormContext<ModelRecommendationFormProps>();
+  const { watch } = useFormContext<ModelRecommendationFormProps>();
   const id = watch("id");
   const isSelected = id === model.id;
 
   return (
-    <label
-      className={clsx(
-        "card cursor-pointer transition-all border-2 border-neutral",
-        {
-          "bg-primary/10 border-primary": isSelected,
-          "hover:border-primary/50": !isSelected,
-        }
-      )}
+    <Card
+      className={clsx("p-4 border-2 border-foreground/10 transition-all", {
+        "bg-primary/10 border-primary": isSelected,
+        "hover:border-primary/50": !isSelected,
+      })}
     >
-      <div className="card-body p-4">
+      <Radio value={model.id} className="cursor-pointer rounded-2xl">
         <div className="flex items-center gap-4">
-          <input
-            type="radio"
-            value={model.id}
-            className="radio radio-primary"
-            {...register("id", { required: true })}
-          />
           <div className="flex flex-col gap-2 flex-1">
             <section className="flex justify-between items-center">
               <div className="flex items-center gap-2">
@@ -67,7 +59,7 @@ export const ModelRecommendationsCard: FC<ModelRecommendationsCardProps> = ({
             <ModelRecommendationsTags tags={model.tags} />
           </div>
         </div>
-      </div>
-    </label>
+      </Radio>
+    </Card>
   );
 };

@@ -1,12 +1,16 @@
 "use client";
+
 import "swiper/css";
 import "swiper/css/pagination";
 
 import { ModelRecommendationSection } from "@/types/api";
+import { RadioGroup } from "@heroui/react";
 import { findIndex } from "es-toolkit/compat";
 import { FC } from "react";
+import { useFormContext } from "react-hook-form";
 import { Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { ModelRecommendationFormProps } from "../types";
 import { ModelRecommendationsSection } from "./ModelRecommendationsSection";
 
 interface ModelRecommendationsListProps {
@@ -18,10 +22,8 @@ export const ModelRecommendationsList: FC<ModelRecommendationsListProps> = ({
   sections,
   defaultSection,
 }) => {
-  const initialSlide = findIndex(
-    sections,
-    (section) => section.id === defaultSection
-  );
+  const { setValue } = useFormContext<ModelRecommendationFormProps>();
+  const initialSlide = findIndex(sections, (s) => s.id === defaultSection);
 
   return (
     <div className="max-w-2xl">
@@ -33,14 +35,24 @@ export const ModelRecommendationsList: FC<ModelRecommendationsListProps> = ({
         initialSlide={initialSlide}
         loop
       >
-        {sections.map((section) => (
-          <SwiperSlide key={section.id} className="max-w-4/5 pb-8">
-            <ModelRecommendationsSection
-              section={section}
-              isDefaultRecommended={section.id === defaultSection}
-            />
-          </SwiperSlide>
-        ))}
+        <RadioGroup
+          onValueChange={(id) => {
+            setValue("id", id);
+          }}
+        >
+          {sections.map((section) => {
+            const { id } = section;
+
+            return (
+              <SwiperSlide key={id} className="max-w-4/5 pb-8">
+                <ModelRecommendationsSection
+                  section={section}
+                  isDefaultRecommended={id === defaultSection}
+                />
+              </SwiperSlide>
+            );
+          })}
+        </RadioGroup>
       </Swiper>
     </div>
   );
