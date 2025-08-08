@@ -16,7 +16,7 @@ export const GpuDetection = () => {
   if (data) {
     const isLoading = isHardwareLoading;
     const isCudaAvailable = data.is_cuda;
-    const canProceed = !isLoading && (isCudaAvailable || data);
+    const canProceed = !isLoading && isCudaAvailable;
 
     const onSubmit: SubmitHandler<GpuDetectionFormProps> = async (values) => {
       await api.selectDevice({ device_index: values.gpu });

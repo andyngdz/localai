@@ -1,10 +1,9 @@
 "use client";
 
-import { Card, RadioGroup } from "@heroui/react";
+import { HardwareResponse } from "@/types";
 import { FC } from "react";
-import type { HardwareResponse } from "../../../types/api";
 import { GpuDetectionCpuModeOnly } from "./GpuDetectionCpuModeOnly";
-import { GpuDetectionItem } from "./GpuDetectionItem";
+import { GpuDetectionItems } from "./GpuDetectionItems";
 import { GpuDetectionVersion } from "./GpuDetectionVersion";
 
 interface GpuDetectionContentProps {
@@ -26,15 +25,7 @@ export const GpuDetectionContent: FC<GpuDetectionContentProps> = ({
             nvidia_driver_version={nvidia_driver_version}
           />
         )}
-        <Card>
-          <RadioGroup>
-            {hardwareData.gpus.map((gpu, index) => {
-              return (
-                <GpuDetectionItem key={index} gpu={gpu} value={`${index}`} />
-              );
-            })}
-          </RadioGroup>
-        </Card>
+        <GpuDetectionItems gpus={hardwareData.gpus} />
         {!is_cuda && <GpuDetectionCpuModeOnly />}
       </div>
     );
