@@ -10,7 +10,7 @@ export interface GpuDetectionItemsProps {
 }
 
 export const GpuDetectionItems: FC<GpuDetectionItemsProps> = ({ gpus }) => {
-  const { setValue } = useFormContext<GpuDetectionFormProps>();
+  const { register } = useFormContext<GpuDetectionFormProps>();
   const defaultValue = gpus.findIndex((g) => g.is_primary);
 
   const items = useMemo(() => {
@@ -23,9 +23,7 @@ export const GpuDetectionItems: FC<GpuDetectionItemsProps> = ({ gpus }) => {
     <Card>
       <RadioGroup
         defaultValue={`${defaultValue}`}
-        onChange={(event) => {
-          setValue("gpu", event.target.value);
-        }}
+        {...register("gpu", { required: true })}
       >
         {items}
       </RadioGroup>

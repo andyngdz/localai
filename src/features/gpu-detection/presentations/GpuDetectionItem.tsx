@@ -11,7 +11,6 @@ export interface GpuDetectionItemProps extends RadioProps {
 
 export const GpuDetectionItem: FC<GpuDetectionItemProps> = ({
   gpu,
-  value,
   ...restProps
 }) => {
   const { name, cuda_compute_capability, memory } = gpu;
@@ -19,7 +18,6 @@ export const GpuDetectionItem: FC<GpuDetectionItemProps> = ({
   return (
     <Radio
       {...restProps}
-      value={value}
       description={
         <span className="flex gap-1 text-xs">
           <span>Cuda compute capability</span>

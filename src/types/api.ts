@@ -28,7 +28,7 @@ export interface MemoryResponse {
 }
 
 export interface SelectDeviceRequest {
-  device_index: string;
+  device_index: number;
 }
 
 export interface MaxMemoryRequest {

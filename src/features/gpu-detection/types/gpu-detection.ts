@@ -1,3 +1,3 @@
 export interface GpuDetectionFormProps {
-  gpu: string;
+  gpu: number;
 }
