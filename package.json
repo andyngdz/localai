@@ -8,6 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "ci:format": "prettier --check .",
+    "ci:lint": "npm run lint",
     "test": "vitest",
     "test:coverage": "vitest --coverage"
   },
