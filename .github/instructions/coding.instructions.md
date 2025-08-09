@@ -48,6 +48,7 @@ src/
 
 ### Coding standards
 
+- Reusable code is a must, if a part of code needs to be used more than 2 places, make it reusable
 - Frontend using feature-first layer
 - Consistent use of TypeScript for type safety
 - Follow accessibility best practices (e.g., ARIA roles, keyboard navigation)

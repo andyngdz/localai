@@ -2,21 +2,11 @@ import { api } from "@/services/api";
 import { useModelRecommendationsQuery } from "@/services/queries";
 import { socket, SocketEvents } from "@/sockets";
 import { act, renderHook } from "@testing-library/react";
-import { useRouter } from "next/navigation";
+import { setupRouterMock } from "@/cores/test-utils";
 import { useForm, UseFormReturn } from "react-hook-form";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { ModelRecommendationFormProps } from "../../types";
 import { useModelRecommendation } from "../useModelRecommendation";
-
-// Minimal router type for mocking
-type MockRouter = {
-  back: VoidFunction;
-  forward: VoidFunction;
-  refresh: VoidFunction;
-  push: (url: string) => void;
-  prefetch: (url: string) => Promise<void>;
-  replace: (url: string) => void;
-};
 
 vi.mock("@/services/api");
 vi.mock("@/services/queries");
@@ -42,26 +32,19 @@ vi.mock("react-hook-form", () => ({
 describe("useModelRecommendation", () => {
   const setValue =
     vi.fn() as UseFormReturn<ModelRecommendationFormProps>["setValue"];
-  const replace = vi.fn() as (url: string) => void;
-  // Provide a full mock for AppRouterInstance
-  const mockRouter: MockRouter = {
-    back: vi.fn(),
-    forward: vi.fn(),
-    refresh: vi.fn(),
-    push: vi.fn(),
-    prefetch: vi.fn().mockResolvedValue({}),
-    replace,
-  };
   const mockForm: Partial<UseFormReturn<ModelRecommendationFormProps>> = {
     setValue,
   };
 
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.clearAllMocks();
+
+    // Setup router mock with proper replace function
+    await setupRouterMock();
+
     vi.mocked(useForm).mockReturnValue(
       mockForm as UseFormReturn<ModelRecommendationFormProps>
     );
-    vi.mocked(useRouter).mockReturnValue(mockRouter);
   });
 
   it("should set default id from data", () => {
@@ -90,10 +73,13 @@ describe("useModelRecommendation", () => {
     expect(api.downloadModel).toHaveBeenCalledWith("model-123");
   });
 
-  it("should navigate to dashboard on MODEL_LOAD_COMPLETED and clean up on unmount", () => {
+  it("should navigate to dashboard on MODEL_LOAD_COMPLETED and clean up on unmount", async () => {
     vi.mocked(useModelRecommendationsQuery).mockReturnValue({
       data: {},
     } as ReturnType<typeof useModelRecommendationsQuery>);
+
+    // Set up router mock
+    const { mockReplace } = await setupRouterMock();
 
     // Mock the socket.on and socket.off methods
     vi.spyOn(socket, "on").mockImplementation(
@@ -108,7 +94,7 @@ describe("useModelRecommendation", () => {
     const { unmount } = renderHook(() => useModelRecommendation());
 
     // Check that navigation happened
-    expect(replace).toHaveBeenCalledWith("/dashboard");
+    expect(mockReplace).toHaveBeenCalledWith("/dashboard");
     expect(socket.on).toHaveBeenCalledWith(
       SocketEvents.MODEL_LOAD_COMPLETED,
       expect.any(Function)

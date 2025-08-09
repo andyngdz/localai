@@ -1,20 +1,14 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { GpuDetection } from "../GpuDetection";
-import { createQueryClientWrapper } from "@/cores/test-utils";
+import {
+  createMockQuery,
+  renderWithAct,
+  setupRouterMock,
+} from "@/cores/test-utils";
 import { HardwareResponse } from "@/types";
-
-// Create a simple mock for useHardwareQuery
-const createMockHardwareQuery = (data: HardwareResponse | null) => {
-  return {
-    data,
-    isLoading: false,
-    isError: false,
-    error: null,
-  } as any;
-};
 
 // Mock the modules
 vi.mock("next/navigation", () => ({
@@ -93,37 +87,31 @@ describe("GpuDetection", () => {
     message: "Hardware detected successfully",
   };
 
-  const mockPush = vi.fn();
-  const mockBack = vi.fn();
-
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("renders nothing when hardware data is not available", async () => {
+  // Reusable helper to set up hardware query mock
+  const setupHardwareQueryMock = async (data: HardwareResponse | null) => {
     const { useHardwareQuery } = await import("@/services/queries");
-    vi.mocked(useHardwareQuery).mockReturnValue(createMockHardwareQuery(null));
+    vi.mocked(useHardwareQuery).mockReturnValue(createMockQuery(data));
+    return { useHardwareQuery };
+  };
 
-    const { container } = render(<GpuDetection />, {
-      wrapper: createQueryClientWrapper(),
-    });
+  it("renders nothing when hardware data is not available", async () => {
+    await setupHardwareQueryMock(null);
+    await setupRouterMock();
+
+    const { container } = await renderWithAct(<GpuDetection />);
 
     expect(container.firstChild).toBeNull();
   });
 
   it("renders correctly when hardware data is available", async () => {
-    const { useHardwareQuery } = await import("@/services/queries");
-    const { useRouter } = await import("next/navigation");
+    await setupHardwareQueryMock(mockHardwareData);
+    await setupRouterMock();
 
-    vi.mocked(useHardwareQuery).mockReturnValue(
-      createMockHardwareQuery(mockHardwareData)
-    );
-    vi.mocked(useRouter).mockReturnValue({
-      push: mockPush,
-      back: mockBack,
-    } as any);
-
-    render(<GpuDetection />, { wrapper: createQueryClientWrapper() });
+    await renderWithAct(<GpuDetection />);
 
     expect(screen.getByText("GPU & Hardware Detection")).toBeInTheDocument();
     expect(
@@ -140,36 +128,39 @@ describe("GpuDetection", () => {
   });
 
   it("provides form context to children", async () => {
-    const { useHardwareQuery } = await import("@/services/queries");
-    const { useRouter } = await import("next/navigation");
+    await setupHardwareQueryMock(mockHardwareData);
+    await setupRouterMock();
 
-    vi.mocked(useHardwareQuery).mockReturnValue(
-      createMockHardwareQuery(mockHardwareData)
-    );
-    vi.mocked(useRouter).mockReturnValue({
-      push: mockPush,
-      back: mockBack,
-    } as any);
-
-    render(<GpuDetection />, { wrapper: createQueryClientWrapper() });
+    await renderWithAct(<GpuDetection />);
 
     // FormProvider should wrap the content
     expect(screen.getByTestId("mock-setup-layout")).toBeInTheDocument();
   });
 
+  // This test has a specific implementation due to form state initialization timing
   it("disables next button when form is invalid", async () => {
     const { useHardwareQuery } = await import("@/services/queries");
     const { useRouter } = await import("next/navigation");
 
+    const mockPush = vi.fn();
+    const mockBack = vi.fn();
+
     vi.mocked(useHardwareQuery).mockReturnValue(
-      createMockHardwareQuery(mockHardwareData)
+      createMockQuery(mockHardwareData)
     );
+
     vi.mocked(useRouter).mockReturnValue({
       push: mockPush,
       back: mockBack,
-    } as any);
+      forward: vi.fn(),
+      refresh: vi.fn(),
+      replace: vi.fn(),
+      prefetch: vi.fn(),
+    });
 
-    render(<GpuDetection />, { wrapper: createQueryClientWrapper() });
+    const { render: renderOriginal } = await import("@testing-library/react");
+    const { createQueryClientWrapper } = await import("@/cores/test-utils");
+    renderOriginal(<GpuDetection />, { wrapper: createQueryClientWrapper() });
 
     const nextButton = screen.getByTestId("next-button");
     expect(nextButton).toBeDisabled();
@@ -177,18 +168,10 @@ describe("GpuDetection", () => {
 
   it("calls router.back when back button is clicked", async () => {
     const user = userEvent.setup();
-    const { useHardwareQuery } = await import("@/services/queries");
-    const { useRouter } = await import("next/navigation");
+    await setupHardwareQueryMock(mockHardwareData);
+    const { mockBack } = await setupRouterMock();
 
-    vi.mocked(useHardwareQuery).mockReturnValue(
-      createMockHardwareQuery(mockHardwareData)
-    );
-    vi.mocked(useRouter).mockReturnValue({
-      push: mockPush,
-      back: mockBack,
-    } as any);
-
-    render(<GpuDetection />, { wrapper: createQueryClientWrapper() });
+    await renderWithAct(<GpuDetection />);
 
     const backButton = screen.getByTestId("back-button");
     await user.click(backButton);
@@ -197,20 +180,13 @@ describe("GpuDetection", () => {
   });
 
   it("handles form submission correctly", async () => {
-    const { useHardwareQuery } = await import("@/services/queries");
-    const { useRouter } = await import("next/navigation");
-    const { api } = await import("@/services/api");
+    await setupHardwareQueryMock(mockHardwareData);
+    await setupRouterMock();
 
-    vi.mocked(useHardwareQuery).mockReturnValue(
-      createMockHardwareQuery(mockHardwareData)
-    );
-    vi.mocked(useRouter).mockReturnValue({
-      push: mockPush,
-      back: mockBack,
-    } as any);
+    const { api } = await import("@/services/api");
     vi.mocked(api.selectDevice).mockResolvedValue(undefined);
 
-    render(<GpuDetection />, { wrapper: createQueryClientWrapper() });
+    await renderWithAct(<GpuDetection />);
 
     // This test is simplified since testing form submission with react-hook-form
     // requires more complex mocking. The key behavior is tested in integration.
@@ -218,18 +194,10 @@ describe("GpuDetection", () => {
   });
 
   it("passes hardware data to GpuDetectionContent", async () => {
-    const { useHardwareQuery } = await import("@/services/queries");
-    const { useRouter } = await import("next/navigation");
+    await setupHardwareQueryMock(mockHardwareData);
+    await setupRouterMock();
 
-    vi.mocked(useHardwareQuery).mockReturnValue(
-      createMockHardwareQuery(mockHardwareData)
-    );
-    vi.mocked(useRouter).mockReturnValue({
-      push: mockPush,
-      back: mockBack,
-    } as any);
-
-    render(<GpuDetection />, { wrapper: createQueryClientWrapper() });
+    await renderWithAct(<GpuDetection />);
 
     expect(
       screen.getByText("Hardware Data: Hardware detected successfully")

@@ -1,5 +1,7 @@
 import { formatter } from "@/services/formatter";
 import { useMemoryQuery } from "@/services/queries";
+import { MemoryResponse, ApiError } from "@/types/api";
+import { UseQueryResult } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { FormProvider, useForm } from "react-hook-form";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -22,12 +24,14 @@ describe("MaxMemoryScaleFactorPreview", () => {
     const methods = useForm<MaxMemoryFormProps>({
       defaultValues: { scaleFactor: 0.6 },
     });
-    
+
     return <FormProvider {...methods}>{children}</FormProvider>;
   };
 
   beforeEach(() => {
-    vi.mocked(formatter.formatBytes).mockImplementation((bytes) => `${bytes} bytes`);
+    vi.mocked(formatter.formatBytes).mockImplementation(
+      (bytes) => `${bytes} bytes`
+    );
   });
 
   afterEach(() => {
@@ -35,9 +39,9 @@ describe("MaxMemoryScaleFactorPreview", () => {
   });
 
   it("displays a message when no data is available", () => {
-    vi.mocked(useMemoryQuery).mockReturnValue({
-      data: undefined,
-    } as any);
+    vi.mocked(useMemoryQuery).mockReturnValue(
+      {} as UseQueryResult<MemoryResponse, ApiError>
+    );
 
     render(
       <FormWrapper>
@@ -45,13 +49,15 @@ describe("MaxMemoryScaleFactorPreview", () => {
       </FormWrapper>
     );
 
-    expect(screen.getByText("Select a memory option to see preview")).toBeInTheDocument();
+    expect(
+      screen.getByText("Select a memory option to see preview")
+    ).toBeInTheDocument();
   });
 
   it("displays memory usage preview when data is available", () => {
     vi.mocked(useMemoryQuery).mockReturnValue({
       data: { gpu: 8000000000, ram: 16000000000 },
-    } as any);
+    } as UseQueryResult<MemoryResponse, ApiError>);
 
     render(
       <FormWrapper>
@@ -74,7 +80,7 @@ describe("MaxMemoryScaleFactorPreview", () => {
   it("updates the preview when scale factor changes", () => {
     vi.mocked(useMemoryQuery).mockReturnValue({
       data: { gpu: 8000000000, ram: 16000000000 },
-    } as any);
+    } as UseQueryResult<MemoryResponse, ApiError>);
 
     const { rerender } = render(
       <FormWrapper>
@@ -91,7 +97,7 @@ describe("MaxMemoryScaleFactorPreview", () => {
       const methods = useForm<MaxMemoryFormProps>({
         defaultValues: { scaleFactor: 0.8 },
       });
-      
+
       return <FormProvider {...methods}>{children}</FormProvider>;
     };
 

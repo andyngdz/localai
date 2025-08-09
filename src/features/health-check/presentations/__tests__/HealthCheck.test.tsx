@@ -1,30 +1,20 @@
 import React from "react";
 import { DeviceSelection } from "@/cores/constants";
-import { createQueryClientWrapper } from "@/cores/test-utils";
+import {
+  createMockQuery,
+  renderWithAct,
+  setupRouterMock,
+} from "@/cores/test-utils";
 import { api } from "@/services/api";
 import * as queries from "@/services/queries";
-import { ApiError, HealthResponse } from "@/types/api";
-import { render, screen } from "@testing-library/react";
-import { useRouter } from "next/navigation";
+import { HealthResponse } from "@/types/api";
+import { screen } from "@testing-library/react";
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { HealthCheck } from "../HealthCheck";
-import { UseQueryResult } from "@tanstack/react-query";
-
-// Create a simple mock for useHealthQuery
-const createMockHealthQuery = (data: HealthResponse | null) => {
-  return {
-    data,
-    isLoading: false,
-    isError: false,
-    error: null,
-  } as UseQueryResult<HealthResponse, ApiError>;
-};
 
 // Mock the modules
 vi.mock("next/navigation", () => ({
-  useRouter: vi.fn(() => ({
-    push: vi.fn(),
-  })),
+  useRouter: vi.fn(),
 }));
 
 vi.mock("../../../layout/presentations/SetupLayout", () => ({
@@ -81,16 +71,19 @@ describe("HealthCheck", () => {
     });
   });
 
-  it("renders with correct title and description", () => {
-    // Mock the useHealthQuery hook to return healthy state
-    vi.spyOn(queries, "useHealthQuery").mockReturnValue(
-      createMockHealthQuery({
-        status: "ok",
-        message: "Server is running",
-      })
-    );
+  // Helper to setup health query mock
+  const setupHealthQueryMock = (data: HealthResponse | null) => {
+    vi.spyOn(queries, "useHealthQuery").mockReturnValue(createMockQuery(data));
+  };
 
-    render(<HealthCheck />, { wrapper: createQueryClientWrapper() });
+  it("renders with correct title and description", async () => {
+    // Mock the useHealthQuery hook to return healthy state
+    setupHealthQueryMock({
+      status: "ok",
+      message: "Server is running",
+    });
+
+    await renderWithAct(<HealthCheck />);
 
     expect(screen.getByText("Health Check")).toBeInTheDocument();
     expect(
@@ -98,70 +91,60 @@ describe("HealthCheck", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders HealthCheckContent with isHealthy=true when backend is healthy", () => {
+  it("renders HealthCheckContent with isHealthy=true when backend is healthy", async () => {
     // Mock the useHealthQuery hook to return healthy state
-    vi.spyOn(queries, "useHealthQuery").mockReturnValue(
-      createMockHealthQuery({
-        status: "ok",
-        message: "Server is running",
-      })
-    );
+    setupHealthQueryMock({
+      status: "ok",
+      message: "Server is running",
+    });
 
-    render(<HealthCheck />, { wrapper: createQueryClientWrapper() });
+    await renderWithAct(<HealthCheck />);
 
     const content = screen.getByTestId("mock-health-check-content");
     expect(content).toHaveTextContent("Healthy");
   });
 
-  it("renders HealthCheckContent with isHealthy=false when backend is not healthy", () => {
+  it("renders HealthCheckContent with isHealthy=false when backend is not healthy", async () => {
     // Mock the useHealthQuery hook to return null data (not healthy)
-    vi.spyOn(queries, "useHealthQuery").mockReturnValue(
-      createMockHealthQuery(null)
-    );
+    setupHealthQueryMock(null);
 
-    render(<HealthCheck />, { wrapper: createQueryClientWrapper() });
+    await renderWithAct(<HealthCheck />);
 
     const content = screen.getByTestId("mock-health-check-content");
     expect(content).toHaveTextContent("Not Healthy");
   });
 
-  it("enables the Next button when backend is healthy", () => {
+  it("enables the Next button when backend is healthy", async () => {
     // Mock the useHealthQuery hook to return healthy state
-    vi.spyOn(queries, "useHealthQuery").mockReturnValue(
-      createMockHealthQuery({
-        status: "ok",
-        message: "Server is running",
-      })
-    );
+    setupHealthQueryMock({
+      status: "ok",
+      message: "Server is running",
+    });
 
-    render(<HealthCheck />, { wrapper: createQueryClientWrapper() });
+    await renderWithAct(<HealthCheck />);
 
     const nextButton = screen.getByTestId("next-button");
     expect(nextButton).not.toBeDisabled();
   });
 
-  it("disables the Next button when backend is not healthy", () => {
+  it("disables the Next button when backend is not healthy", async () => {
     // Mock the useHealthQuery hook to return null data (not healthy)
-    vi.spyOn(queries, "useHealthQuery").mockReturnValue(
-      createMockHealthQuery(null)
-    );
+    setupHealthQueryMock(null);
 
-    render(<HealthCheck />, { wrapper: createQueryClientWrapper() });
+    await renderWithAct(<HealthCheck />);
 
     const nextButton = screen.getByTestId("next-button");
     expect(nextButton).toBeDisabled();
   });
 
-  it("checks device index on mount", () => {
+  it("checks device index on mount", async () => {
     // Mock the useHealthQuery hook
-    vi.spyOn(queries, "useHealthQuery").mockReturnValue(
-      createMockHealthQuery({
-        status: "ok",
-        message: "Server is running",
-      })
-    );
+    setupHealthQueryMock({
+      status: "ok",
+      message: "Server is running",
+    });
 
-    render(<HealthCheck />, { wrapper: createQueryClientWrapper() });
+    await renderWithAct(<HealthCheck />);
 
     expect(api.getDeviceIndex).toHaveBeenCalledTimes(1);
   });
@@ -171,20 +154,15 @@ describe("HealthCheck", () => {
     vi.mocked(api.getDeviceIndex).mockResolvedValue({ device_index: 0 });
 
     // Mock router
-    const mockPush = vi.fn();
-    vi.mocked(useRouter).mockReturnValue({
-      push: mockPush,
-    } as any);
+    const { mockPush } = await setupRouterMock();
 
     // Mock the useHealthQuery hook
-    vi.spyOn(queries, "useHealthQuery").mockReturnValue(
-      createMockHealthQuery({
-        status: "ok",
-        message: "Server is running",
-      })
-    );
+    setupHealthQueryMock({
+      status: "ok",
+      message: "Server is running",
+    });
 
-    render(<HealthCheck />, { wrapper: createQueryClientWrapper() });
+    await renderWithAct(<HealthCheck />);
 
     // Use flush promises to wait for the async operation
     await vi.waitFor(() => {

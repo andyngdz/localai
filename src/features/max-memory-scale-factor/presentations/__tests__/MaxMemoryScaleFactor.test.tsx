@@ -19,7 +19,17 @@ vi.mock("@/services/api", () => ({
 }));
 
 vi.mock("@/features/layout/presentations/SetupLayout", () => ({
-  SetupLayout: ({ children, onNext, title, description }: any) => (
+  SetupLayout: ({
+    children,
+    onNext,
+    title,
+    description,
+  }: {
+    children: React.ReactNode;
+    onNext?: VoidFunction;
+    title: string;
+    description: string;
+  }) => (
     <div data-testid="setup-layout">
       <h1>{title}</h1>
       <p>{description}</p>
@@ -55,13 +65,15 @@ describe("MaxMemoryScaleFactor", () => {
 
     // Check that child components are rendered
     expect(screen.getByTestId("memory-scale-factor-items")).toBeInTheDocument();
-    expect(screen.getByTestId("memory-scale-factor-preview")).toBeInTheDocument();
+    expect(
+      screen.getByTestId("memory-scale-factor-preview")
+    ).toBeInTheDocument();
   });
 
   it("calls API and navigates on form submission", async () => {
-    vi.mocked(api.setMaxMemory).mockResolvedValue({} as any);
+    vi.mocked(api.setMaxMemory).mockResolvedValue();
     const user = userEvent.setup();
-    
+
     render(<MaxMemoryScaleFactor />);
 
     // Click the next button to submit the form
