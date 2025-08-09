@@ -3,7 +3,7 @@
 import { ModelRecommendationItem } from "@/types/api";
 import { Card } from "@heroui/react";
 import clsx from "clsx";
-import { Cpu, HardDrive } from "lucide-react";
+import { Gpu, HardDrive } from "lucide-react";
 import { FC } from "react";
 import { useFormContext } from "react-hook-form";
 import { ModelRecommendationFormProps } from "../types";
@@ -46,14 +46,14 @@ export const ModelRecommendationsCard: FC<ModelRecommendationsCardProps> = ({
               {model.is_recommended && <ModelRecommendationsBadge />}
             </div>
             <ModelRecommendationMemoryBox
-              icon={<HardDrive />}
+              icon={<HardDrive size={16} />}
               content={model.model_size}
             />
           </section>
           <section className="flex justify-between">
-            <span className="text-muted-content">{model.description}</span>
+            <span className="text-foreground-500">{model.description}</span>
             <ModelRecommendationMemoryBox
-              icon={<Cpu />}
+              icon={<Gpu size={16} />}
               content={`${model.memory_requirement_gb} GB`}
             />
           </section>
