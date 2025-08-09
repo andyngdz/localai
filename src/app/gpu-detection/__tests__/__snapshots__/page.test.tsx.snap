@@ -1,0 +1,9 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`GPUDetectionScreen > matches snapshot 1`] = `
+<div
+  data-testid="gpu-detection"
+>
+  GPU Detection Component
+</div>
+`;

@@ -1,0 +1,19 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Providers > matches snapshot 1`] = `
+<div
+  data-testid="heroui-provider"
+>
+  <div
+    data-testid="query-client-provider"
+  >
+    <div>
+      Test Content
+    </div>
+    <div
+      data-initial-open="false"
+      data-testid="react-query-devtools"
+    />
+  </div>
+</div>
+`;
