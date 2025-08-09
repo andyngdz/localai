@@ -11,7 +11,10 @@ export const StreamingMessage = () => {
   if (message.length > 0) {
     return (
       <div
-        className={clsx("fixed inset-0 z-10", "backdrop-blur-md bg-black/90")}
+        className={clsx(
+          "fixed inset-0 z-10",
+          "backdrop-blur-md bg-background/90"
+        )}
       >
         <div
           className={clsx(
