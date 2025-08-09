@@ -7,11 +7,12 @@ import { useForm, UseFormReturn } from "react-hook-form";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { ModelRecommendationFormProps } from "../../types";
 import { useModelRecommendation } from "../useModelRecommendation";
+import { Socket } from "socket.io-client";
 
 vi.mock("@/services/api");
 vi.mock("@/services/queries");
-vi.mock("@/sockets", () => {
-  const actual = vi.importActual("@/sockets");
+vi.mock("@/sockets", async (originalImport: () => Promise<Socket>) => {
+  const actual = await originalImport();
   return {
     ...actual,
     socket: {

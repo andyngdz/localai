@@ -1,6 +1,5 @@
-import React from "react";
+import React, { act } from "react";
 import { render, RenderOptions, RenderResult } from "@testing-library/react";
-import { act } from "react";
 import { createQueryClientWrapper } from "./query-client";
 
 /**
