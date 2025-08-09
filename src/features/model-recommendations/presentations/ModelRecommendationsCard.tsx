@@ -18,7 +18,7 @@ interface ModelRecommendationsCardProps {
 export const ModelRecommendationsCard: FC<ModelRecommendationsCardProps> = ({
   model,
 }) => {
-  const { watch, register } = useFormContext<ModelRecommendationFormProps>();
+  const { watch, setValue } = useFormContext<ModelRecommendationFormProps>();
   const id = watch("id");
   const isSelected = id === model.id;
 
@@ -28,10 +28,12 @@ export const ModelRecommendationsCard: FC<ModelRecommendationsCardProps> = ({
         "bg-primary/10 border-primary": isSelected,
         "hover:border-primary/50": !isSelected,
       })}
+      onPress={() => setValue("id", model.id)}
+      isPressable
     >
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 w-full">
         <div className="flex flex-col gap-2 flex-1">
-          <section className="flex justify-between items-center">
+          <section className="flex justify-between">
             <div className="flex items-center gap-2">
               <h4
                 className={clsx(

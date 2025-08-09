@@ -1,7 +1,9 @@
-class ModelTagService {
-  variants = ["badge-primary", "badge-secondary", "badge-accent"];
+import { ChipProps } from "@heroui/react";
 
-  getTagVariant(index: number): string {
+class ModelTagService {
+  variants: Array<ChipProps["color"]> = ["success", "warning", "default"];
+
+  getChipColor(index: number): ChipProps["color"] {
     return this.variants[index % this.variants.length];
   }
 }
