@@ -1,3 +1,7 @@
+---
+applyTo: "**"
+---
+
 # LocalAI Coding Guidelines
 
 This document provides essential knowledge for working effectively with the LocalAI codebase.
@@ -9,10 +13,12 @@ LocalAI is a React application built with Next.js, focusing on providing a front
 ### Key Components
 
 - **Features**: Self-contained modules with their own presentations and states
+
   - Each feature has its own directory in `src/features/`
   - Examples: `streaming-messages`, `gpu-detection`, `model-recommendations`
 
 - **Services**: API integration and data formatting
+
   - `api.ts`: Axios-based client for backend communication
   - `formatter.ts`: Data transformation utilities
   - `queries.ts`: React Query definitions
@@ -26,7 +32,7 @@ LocalAI is a React application built with Next.js, focusing on providing a front
 ```
 src/
 ├── app/            # Next.js app router components
-├── cores/          # Core utilities and constants 
+├── cores/          # Core utilities and constants
 ├── features/       # Feature modules (feature-first architecture)
 │   └── feature-name/
 │       ├── presentations/ # UI components
@@ -41,6 +47,7 @@ src/
 ## Development Patterns
 
 ### Coding standards
+
 - Frontend using feature-first layer
 - Consistent use of TypeScript for type safety
 - Follow accessibility best practices (e.g., ARIA roles, keyboard navigation)
@@ -61,6 +68,7 @@ src/
 
 - **Zustand** is used for state management
 - Store definition pattern:
+
 ```typescript
 // Example from src/features/streaming-messages/states/useMessageStores.ts
 export const useMessageStore = create<MessageStoreProps>(
@@ -76,6 +84,7 @@ export const useMessageStore = create<MessageStoreProps>(
 
 - React 19 functional components with hooks
 - Tailwind CSS for styling with `clsx` for conditional classes
+
 ```typescript
 // Example from src/features/streaming-messages/presentations/StreamingMessage.tsx
 <div
@@ -91,13 +100,14 @@ export const useMessageStore = create<MessageStoreProps>(
 - Socket.io for real-time updates
 - Use the socket instance from `@/sockets` and event constants from `SocketEvents`
 - Hook pattern for socket subscriptions:
+
 ```typescript
 // Example from useStreamingMessage.ts
 useEffect(() => {
   socket.on(SocketEvents.DOWNLOAD_START, () => {
     setMessage("Downloading model");
   });
-  
+
   return () => {
     socket.off(SocketEvents.DOWNLOAD_START);
   };
@@ -117,32 +127,33 @@ useEffect(() => {
   1. Direct module mocking with `vi.mock`
   2. Spy on module functions with `vi.spyOn`
   3. Clean up between tests with `afterEach`
+- After each test, you should run and check if the tests work
 
 ```typescript
-  // Example break to newline
-  vi.mocked(useModelRecommendationsQuery).mockReturnValue({
-    data: { default_selected_id: "test-id" },
-  } as ReturnType<typeof useModelRecommendationsQuery>);
-  
-  renderHook(() => useModelRecommendation());
+// Example break to newline
+vi.mocked(useModelRecommendationsQuery).mockReturnValue({
+  data: { default_selected_id: "test-id" },
+} as ReturnType<typeof useModelRecommendationsQuery>);
 
-  expect(setValue).toHaveBeenCalledWith("id", "test-id");
+renderHook(() => useModelRecommendation());
+
+expect(setValue).toHaveBeenCalledWith("id", "test-id");
 ```
 
 ```typescript
- // Example break to newline
-  vi.mocked(useModelRecommendationsQuery).mockReturnValue({
-    data: {},
-  } as ReturnType<typeof useModelRecommendationsQuery>);
-  vi.mocked(api.downloadModel).mockResolvedValue({});
+// Example break to newline
+vi.mocked(useModelRecommendationsQuery).mockReturnValue({
+  data: {},
+} as ReturnType<typeof useModelRecommendationsQuery>);
+vi.mocked(api.downloadModel).mockResolvedValue({});
 
-  const { result } = renderHook(() => useModelRecommendation());
-  
-  await act(async () => {
-    await result.current.onSubmit({ id: "model-123" });
-  });
-  
-  expect(api.downloadModel).toHaveBeenCalledWith("model-123");
+const { result } = renderHook(() => useModelRecommendation());
+
+await act(async () => {
+  await result.current.onSubmit({ id: "model-123" });
+});
+
+expect(api.downloadModel).toHaveBeenCalledWith("model-123");
 ```
 
 ```typescript

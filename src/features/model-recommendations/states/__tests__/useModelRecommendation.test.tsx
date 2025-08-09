@@ -93,20 +93,37 @@ describe("useModelRecommendation", () => {
     expect(api.downloadModel).toHaveBeenCalledWith("model-123");
   });
 
-  it("should navigate to dashboard on MODEL_LOAD_COMPLETED", () => {
+  it("should navigate to dashboard on MODEL_LOAD_COMPLETED and clean up on unmount", () => {
     vi.mocked(useModelRecommendationsQuery).mockReturnValue({
       data: {},
     } as ReturnType<typeof useModelRecommendationsQuery>);
 
+    // Mock the socket.on and socket.off methods
     vi.spyOn(socket, "on").mockImplementation(
       (event: string, cb: VoidFunction) => {
-        if (event === SocketEvents.MODEL_LOAD_COMPLETED) cb();
-        return socket;
+        if (event === SocketEvents.MODEL_LOAD_COMPLETED) {
+          cb(); // Immediately call the callback to trigger navigation
+        }
+        return socket; // Return the socket object as per socket.io API
       }
     );
 
-    renderHook(() => useModelRecommendation());
+    const { unmount } = renderHook(() => useModelRecommendation());
 
+    // Check that navigation happened
     expect(replace).toHaveBeenCalledWith("/dashboard");
+    expect(socket.on).toHaveBeenCalledWith(
+      SocketEvents.MODEL_LOAD_COMPLETED,
+      expect.any(Function)
+    );
+
+    // Unmount the hook to trigger cleanup
+    unmount();
+
+    // Verify that socket.off was called with the correct event
+    expect(socket.off).toHaveBeenCalledWith(
+      SocketEvents.MODEL_LOAD_COMPLETED,
+      expect.any(Function)
+    );
   });
 });
