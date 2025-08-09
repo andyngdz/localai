@@ -50,9 +50,7 @@ class API {
   }
 
   async getModelRecommendations() {
-    const { data } = await client.get<ModelRecommendationResponse>(
-      "/models/recommendations"
-    );
+    const { data } = await client.get<ModelRecommendationResponse>("/models/recommendations");
     return data;
   }
 

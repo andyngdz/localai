@@ -1,0 +1,9 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`DashboardScreen > matches snapshot 1`] = `
+<div
+  data-testid="dashboard"
+>
+  Dashboard Component
+</div>
+`;

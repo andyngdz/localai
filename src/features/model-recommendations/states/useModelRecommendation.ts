@@ -2,7 +2,7 @@ import { api } from "@/services/api";
 import { useModelRecommendationsQuery } from "@/services/queries";
 import { socket, SocketEvents } from "@/sockets";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { ModelRecommendationFormProps } from "../types";
 
@@ -12,9 +12,7 @@ export const useModelRecommendation = () => {
   const { data } = useModelRecommendationsQuery();
   const { setValue } = methods;
 
-  const onSubmit: SubmitHandler<ModelRecommendationFormProps> = async (
-    values
-  ) => {
+  const onSubmit: SubmitHandler<ModelRecommendationFormProps> = async (values) => {
     const id = values.id;
 
     if (id) {
@@ -22,15 +20,17 @@ export const useModelRecommendation = () => {
     }
   };
 
+  const onModelLoadCompleted = useCallback(() => {
+    router.replace("/dashboard");
+  }, [router]);
+
   useEffect(() => {
-    const subscription = socket.on(SocketEvents.MODEL_LOAD_COMPLETED, () => {
-      router.replace("/dashboard");
-    });
+    socket.on(SocketEvents.MODEL_LOAD_COMPLETED, onModelLoadCompleted);
 
     return () => {
-      subscription.off();
+      socket.off(SocketEvents.MODEL_LOAD_COMPLETED, onModelLoadCompleted);
     };
-  }, [router]);
+  }, [onModelLoadCompleted, router]);
 
   useEffect(() => {
     if (data) {

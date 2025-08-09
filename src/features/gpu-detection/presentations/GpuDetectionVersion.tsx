@@ -1,3 +1,6 @@
+"use client";
+
+import { Card, Divider } from "@heroui/react";
 import { FC } from "react";
 
 export interface GpuDetectionVersionProps {
@@ -10,16 +13,16 @@ export const GpuDetectionVersion: FC<GpuDetectionVersionProps> = ({
   nvidia_driver_version,
 }) => {
   return (
-    <div className="flex flex-col items-center py-4">
+    <Card className="py-4 flex flex-col gap-4">
       <div className="flex items-center justify-between w-full px-4">
-        <span className="text-muted-content">Cuda version</span>
+        <span className="text-foreground-500">Cuda version</span>
         <span className="text-sm font-bold">{cuda_runtime_version}</span>
       </div>
-      <div className="divider"></div>
+      <Divider />
       <div className="flex items-center justify-between w-full px-4">
-        <span className="text-muted-content">Driver version</span>
+        <span className="text-foreground-500">Driver version</span>
         <span className="text-sm font-bold">{nvidia_driver_version}</span>
       </div>
-    </div>
+    </Card>
   );
 };

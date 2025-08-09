@@ -1,3 +1,5 @@
+import { RadioProps } from "@heroui/react";
+
 export interface MemoryOption {
   scaleFactor: number;
   label: string;
@@ -10,5 +12,5 @@ export interface MaxMemoryFormProps {
 export interface MemoryColorClasses {
   bgClassName: string;
   textClassName: string;
-  radioClassName: string;
+  color: RadioProps["color"];
 }

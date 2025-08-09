@@ -6,8 +6,8 @@ export const GpuDetectionCpuModeOnly = () => {
           <h3 className="text-sm font-medium">CPU Mode Only</h3>
           <div className="mt-2 text-sm">
             <p>
-              LocalAI will run on CPU. This will be slower but still functional.
-              Consider installing CUDA drivers for better performance.
+              LocalAI will run on CPU. This will be slower but still functional. Consider installing
+              CUDA drivers for better performance.
             </p>
           </div>
         </div>

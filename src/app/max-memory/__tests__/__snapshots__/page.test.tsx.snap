@@ -1,0 +1,9 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`MaxMemoryScreen > matches snapshot 1`] = `
+<div
+  data-testid="max-memory-scale-factor"
+>
+  Max Memory Scale Factor Component
+</div>
+`;

@@ -1,5 +1,5 @@
 import { Star } from "lucide-react";
 
 export const ModelRecommendationsBadge = () => {
-  return <Star size={16} className="text-primary fill-primary" />;
+  return <Star data-testid="lucide-icon" className="text-primary fill-primary" size={16} />;
 };

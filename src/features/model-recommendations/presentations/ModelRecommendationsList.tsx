@@ -1,4 +1,5 @@
 "use client";
+
 import "swiper/css";
 import "swiper/css/pagination";
 
@@ -18,10 +19,7 @@ export const ModelRecommendationsList: FC<ModelRecommendationsListProps> = ({
   sections,
   defaultSection,
 }) => {
-  const initialSlide = findIndex(
-    sections,
-    (section) => section.id === defaultSection
-  );
+  const initialSlide = findIndex(sections, (s) => s.id === defaultSection);
 
   return (
     <div className="max-w-2xl">
@@ -33,14 +31,18 @@ export const ModelRecommendationsList: FC<ModelRecommendationsListProps> = ({
         initialSlide={initialSlide}
         loop
       >
-        {sections.map((section) => (
-          <SwiperSlide key={section.id} className="max-w-4/5 pb-8">
-            <ModelRecommendationsSection
-              section={section}
-              isDefaultRecommended={section.id === defaultSection}
-            />
-          </SwiperSlide>
-        ))}
+        {sections.map((section) => {
+          const { id } = section;
+
+          return (
+            <SwiperSlide key={id} className="max-w-4/5 pb-8">
+              <ModelRecommendationsSection
+                section={section}
+                isDefaultRecommended={id === defaultSection}
+              />
+            </SwiperSlide>
+          );
+        })}
       </Swiper>
     </div>
   );

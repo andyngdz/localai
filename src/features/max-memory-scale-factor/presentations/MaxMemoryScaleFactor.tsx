@@ -2,11 +2,11 @@
 
 import { SetupLayout } from "@/features/layout/presentations/SetupLayout";
 import { api } from "@/services/api";
+import { Divider } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { MEMORY_OPTIONS } from "../constants";
 import { MaxMemoryFormProps } from "../types";
-import { MaxMemoryScaleFactorItem } from "./MaxMemoryScaleFactorItem";
+import { MaxMemoryScaleFactorItems } from "./MaxMemoryScaleFactorItems";
 import { MaxMemoryScaleFactorPreview } from "./MaxMemoryScaleFactorPreview";
 
 export const MaxMemoryScaleFactor = () => {
@@ -32,16 +32,9 @@ export const MaxMemoryScaleFactor = () => {
         onNext={methods.handleSubmit(onSubmit)}
         onBack={router.back}
       >
-        <div className="flex flex-col items-center">
-          <div className="flex flex-col items-center gap-4">
-            {MEMORY_OPTIONS.map((option) => (
-              <MaxMemoryScaleFactorItem
-                key={option.scaleFactor}
-                option={option}
-              />
-            ))}
-          </div>
-          <div className="divider" />
+        <div className="flex flex-col items-center gap-8">
+          <MaxMemoryScaleFactorItems />
+          <Divider />
           <MaxMemoryScaleFactorPreview />
         </div>
       </SetupLayout>
