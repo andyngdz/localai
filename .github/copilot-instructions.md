@@ -40,6 +40,23 @@ src/
 
 ## Development Patterns
 
+### Coding standards
+- Frontend using feature-first layer
+- Consistent use of TypeScript for type safety
+- Follow accessibility best practices (e.g., ARIA roles, keyboard navigation)
+- Write unit tests for all new features and bug fixes
+- Keep components small and focused
+- Use descriptive names for variables and functions
+- Avoid deeply nested components and hooks
+- Prefer composition over inheritance
+- Modular architecture with clear boundaries
+- Should use predefined types from TypeScript
+
+```typescript
+   // Example using the predefined types from TypeScript
+   () => void: VoidFunction;
+```
+
 ### State Management
 
 - **Zustand** is used for state management
@@ -91,11 +108,42 @@ useEffect(() => {
 
 - **Vitest** is used as the testing framework
 - **@testing-library/react** for component testing
+- Use correct types, avoid using `any`, if possible
+- Avoid using `unknown` if you can find the types, if possible
+- Test should cover necessary cases, not over-testing
+- Break to newline to make the tests easy to read
 - Test file structure mirrors source file structure in `__tests__` folders
 - Mock patterns:
   1. Direct module mocking with `vi.mock`
   2. Spy on module functions with `vi.spyOn`
   3. Clean up between tests with `afterEach`
+
+```typescript
+  // Example break to newline
+  vi.mocked(useModelRecommendationsQuery).mockReturnValue({
+    data: { default_selected_id: "test-id" },
+  } as ReturnType<typeof useModelRecommendationsQuery>);
+  
+  renderHook(() => useModelRecommendation());
+
+  expect(setValue).toHaveBeenCalledWith("id", "test-id");
+```
+
+```typescript
+ // Example break to newline
+  vi.mocked(useModelRecommendationsQuery).mockReturnValue({
+    data: {},
+  } as ReturnType<typeof useModelRecommendationsQuery>);
+  vi.mocked(api.downloadModel).mockResolvedValue({});
+
+  const { result } = renderHook(() => useModelRecommendation());
+  
+  await act(async () => {
+    await result.current.onSubmit({ id: "model-123" });
+  });
+  
+  expect(api.downloadModel).toHaveBeenCalledWith("model-123");
+```
 
 ```typescript
 // Example test structure
