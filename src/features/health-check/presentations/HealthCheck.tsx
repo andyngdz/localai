@@ -23,7 +23,7 @@ export const HealthCheck = () => {
     const { device_index } = await api.getDeviceIndex();
 
     if (device_index !== DeviceSelection.NOT_FOUND) {
-      // router.push("/dashboard");
+      router.push("/dashboard");
     }
   }, [router]);
 

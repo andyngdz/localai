@@ -34,13 +34,10 @@ vi.mock("@/sockets", () => {
   };
 });
 vi.mock("next/navigation", () => ({ useRouter: vi.fn() }));
-vi.mock("react-hook-form", async () => {
-  const actual = await vi.importActual("react-hook-form");
-  return {
-    ...actual,
-    useForm: vi.fn(),
-  };
-});
+// Simple direct mock for react-hook-form
+vi.mock("react-hook-form", () => ({
+  useForm: vi.fn(),
+}));
 
 describe("useModelRecommendation", () => {
   const setValue =
