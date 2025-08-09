@@ -42,9 +42,7 @@ vi.mock("@/features/layout/presentations/SetupLayout", () => ({
 }));
 
 vi.mock("../MaxMemoryScaleFactorItems", () => ({
-  MaxMemoryScaleFactorItems: () => (
-    <div data-testid="memory-scale-factor-items">Memory Items</div>
-  ),
+  MaxMemoryScaleFactorItems: () => <div data-testid="memory-scale-factor-items">Memory Items</div>,
 }));
 
 vi.mock("../MaxMemoryScaleFactorPreview", () => ({
@@ -65,9 +63,7 @@ describe("MaxMemoryScaleFactor", () => {
 
     // Check that child components are rendered
     expect(screen.getByTestId("memory-scale-factor-items")).toBeInTheDocument();
-    expect(
-      screen.getByTestId("memory-scale-factor-preview")
-    ).toBeInTheDocument();
+    expect(screen.getByTestId("memory-scale-factor-preview")).toBeInTheDocument();
   });
 
   it("calls API and navigates on form submission", async () => {

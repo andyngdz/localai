@@ -5,9 +5,7 @@ import ModelRecommendationsPage from "../page";
 // Mock the ModelRecommendations component
 vi.mock("@/features/model-recommendations", () => ({
   ModelRecommendations: () => (
-    <div data-testid="model-recommendations">
-      Model Recommendations Component
-    </div>
+    <div data-testid="model-recommendations">Model Recommendations Component</div>
   ),
 }));
 
@@ -16,9 +14,7 @@ describe("ModelRecommendationsPage", () => {
     render(<ModelRecommendationsPage />);
 
     expect(screen.getByTestId("model-recommendations")).toBeInTheDocument();
-    expect(
-      screen.getByText("Model Recommendations Component")
-    ).toBeInTheDocument();
+    expect(screen.getByText("Model Recommendations Component")).toBeInTheDocument();
   });
 
   it("returns ModelRecommendations as default export", () => {

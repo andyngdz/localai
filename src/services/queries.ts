@@ -37,9 +37,4 @@ const useModelRecommendationsQuery = () => {
   });
 };
 
-export {
-  useHardwareQuery,
-  useHealthQuery,
-  useMemoryQuery,
-  useModelRecommendationsQuery,
-};
+export { useHardwareQuery, useHealthQuery, useMemoryQuery, useModelRecommendationsQuery };

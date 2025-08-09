@@ -21,10 +21,7 @@ describe("StreamingMessage", () => {
   let useStreamingMessageSpy: MockInstance;
 
   beforeEach(() => {
-    useStreamingMessageSpy = vi.spyOn(
-      useStreamingMessageModule,
-      "useStreamingMessage"
-    );
+    useStreamingMessageSpy = vi.spyOn(useStreamingMessageModule, "useStreamingMessage");
   });
 
   afterEach(() => {

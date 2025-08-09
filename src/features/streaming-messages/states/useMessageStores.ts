@@ -6,10 +6,8 @@ export interface MessageStoreProps {
   reset: VoidFunction;
 }
 
-export const useMessageStore = create<MessageStoreProps>(
-  (set, _get, store) => ({
-    message: "",
-    setMessage: (message) => set({ message }),
-    reset: () => set(store.getInitialState()),
-  })
-);
+export const useMessageStore = create<MessageStoreProps>((set, _get, store) => ({
+  message: "",
+  setMessage: (message) => set({ message }),
+  reset: () => set(store.getInitialState()),
+}));

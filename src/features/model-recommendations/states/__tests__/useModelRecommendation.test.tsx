@@ -30,8 +30,7 @@ vi.mock("react-hook-form", () => ({
 }));
 
 describe("useModelRecommendation", () => {
-  const setValue =
-    vi.fn() as UseFormReturn<ModelRecommendationFormProps>["setValue"];
+  const setValue = vi.fn() as UseFormReturn<ModelRecommendationFormProps>["setValue"];
   const mockForm: Partial<UseFormReturn<ModelRecommendationFormProps>> = {
     setValue,
   };
@@ -42,9 +41,7 @@ describe("useModelRecommendation", () => {
     // Setup router mock with proper replace function
     await setupRouterMock();
 
-    vi.mocked(useForm).mockReturnValue(
-      mockForm as UseFormReturn<ModelRecommendationFormProps>
-    );
+    vi.mocked(useForm).mockReturnValue(mockForm as UseFormReturn<ModelRecommendationFormProps>);
   });
 
   it("should set default id from data", () => {
@@ -82,23 +79,18 @@ describe("useModelRecommendation", () => {
     const { mockReplace } = await setupRouterMock();
 
     // Mock the socket.on and socket.off methods
-    vi.spyOn(socket, "on").mockImplementation(
-      (event: string, cb: VoidFunction) => {
-        if (event === SocketEvents.MODEL_LOAD_COMPLETED) {
-          cb(); // Immediately call the callback to trigger navigation
-        }
-        return socket; // Return the socket object as per socket.io API
+    vi.spyOn(socket, "on").mockImplementation((event: string, cb: VoidFunction) => {
+      if (event === SocketEvents.MODEL_LOAD_COMPLETED) {
+        cb(); // Immediately call the callback to trigger navigation
       }
-    );
+      return socket; // Return the socket object as per socket.io API
+    });
 
     const { unmount } = renderHook(() => useModelRecommendation());
 
     // Check that navigation happened
     expect(mockReplace).toHaveBeenCalledWith("/dashboard");
-    expect(socket.on).toHaveBeenCalledWith(
-      SocketEvents.MODEL_LOAD_COMPLETED,
-      expect.any(Function)
-    );
+    expect(socket.on).toHaveBeenCalledWith(SocketEvents.MODEL_LOAD_COMPLETED, expect.any(Function));
 
     // Unmount the hook to trigger cleanup
     unmount();

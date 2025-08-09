@@ -8,17 +8,11 @@ interface ModelRecommendationsTagsProps {
   tags: string[];
 }
 
-export const ModelRecommendationsTags: FC<ModelRecommendationsTagsProps> = ({
-  tags,
-}) => {
+export const ModelRecommendationsTags: FC<ModelRecommendationsTagsProps> = ({ tags }) => {
   return (
     <section className="flex flex-wrap gap-2">
       {tags.map((tag, index) => (
-        <Chip
-          key={tag}
-          color={modelTagService.getChipColor(index)}
-          className="font-medium text-xs"
-        >
+        <Chip key={tag} color={modelTagService.getChipColor(index)} className="font-medium text-xs">
           {tag}
         </Chip>
       ))}

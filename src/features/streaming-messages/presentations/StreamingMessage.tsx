@@ -10,23 +10,9 @@ export const StreamingMessage = () => {
 
   if (message.length > 0) {
     return (
-      <div
-        className={clsx(
-          "fixed inset-0 z-10",
-          "backdrop-blur-md bg-background/90"
-        )}
-      >
-        <div
-          className={clsx(
-            "flex flex-col gap-2 items-center justify-center",
-            "h-full w-full"
-          )}
-        >
-          <Lottie
-            options={{ animationData: AIAnimationData }}
-            width={48}
-            height={48}
-          />
+      <div className={clsx("fixed inset-0 z-10", "backdrop-blur-md bg-background/90")}>
+        <div className={clsx("flex flex-col gap-2 items-center justify-center", "h-full w-full")}>
+          <Lottie options={{ animationData: AIAnimationData }} width={48} height={48} />
           <span className="text-sm font-medium">{message}</span>
         </div>
       </div>

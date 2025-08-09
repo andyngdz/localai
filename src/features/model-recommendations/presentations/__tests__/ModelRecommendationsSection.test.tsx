@@ -1,7 +1,4 @@
-import {
-  ModelRecommendationItem,
-  ModelRecommendationSection,
-} from "@/types/api";
+import { ModelRecommendationItem, ModelRecommendationSection } from "@/types/api";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { ModelRecommendationsSection } from "../ModelRecommendationsSection";
@@ -30,11 +27,7 @@ vi.mock("../ModelRecommendationsHeader", () => ({
 
 vi.mock("../ModelRecommendationsCard", () => ({
   ModelRecommendationsCard: ({ model }: { model: ModelRecommendationItem }) => (
-    <div
-      data-testid="mock-card"
-      data-model-id={model.id}
-      data-model-name={model.name}
-    >
+    <div data-testid="mock-card" data-model-id={model.id} data-model-name={model.name}>
       {model.name}
     </div>
   ),
@@ -72,10 +65,7 @@ describe("ModelRecommendationsSection", () => {
 
   it("renders section with correct structure", () => {
     const { container } = render(
-      <ModelRecommendationsSection
-        section={mockSection}
-        isDefaultRecommended={false}
-      />
+      <ModelRecommendationsSection section={mockSection} isDefaultRecommended={false} />
     );
 
     // Check the main container has the expected classes
@@ -86,20 +76,12 @@ describe("ModelRecommendationsSection", () => {
   });
 
   it("passes correct props to ModelRecommendationsHeader", () => {
-    render(
-      <ModelRecommendationsSection
-        section={mockSection}
-        isDefaultRecommended={false}
-      />
-    );
+    render(<ModelRecommendationsSection section={mockSection} isDefaultRecommended={false} />);
 
     const header = screen.getByTestId("mock-header");
     expect(header).toBeInTheDocument();
     expect(header).toHaveAttribute("data-title", "Test Section");
-    expect(header).toHaveAttribute(
-      "data-description",
-      "Test Section Description"
-    );
+    expect(header).toHaveAttribute("data-description", "Test Section Description");
     expect(header).toHaveAttribute("data-is-recommended", "false");
   });
 
@@ -110,10 +92,7 @@ describe("ModelRecommendationsSection", () => {
     };
 
     render(
-      <ModelRecommendationsSection
-        section={recommendedSection}
-        isDefaultRecommended={false}
-      />
+      <ModelRecommendationsSection section={recommendedSection} isDefaultRecommended={false} />
     );
 
     const header = screen.getByTestId("mock-header");
@@ -121,24 +100,14 @@ describe("ModelRecommendationsSection", () => {
   });
 
   it("renders header with isRecommended=true when isDefaultRecommended is true", () => {
-    render(
-      <ModelRecommendationsSection
-        section={mockSection}
-        isDefaultRecommended={true}
-      />
-    );
+    render(<ModelRecommendationsSection section={mockSection} isDefaultRecommended={true} />);
 
     const header = screen.getByTestId("mock-header");
     expect(header).toHaveAttribute("data-is-recommended", "true");
   });
 
   it("renders all model cards in the section", () => {
-    render(
-      <ModelRecommendationsSection
-        section={mockSection}
-        isDefaultRecommended={false}
-      />
-    );
+    render(<ModelRecommendationsSection section={mockSection} isDefaultRecommended={false} />);
 
     const cards = screen.getAllByTestId("mock-card");
     expect(cards).toHaveLength(2);
@@ -156,12 +125,7 @@ describe("ModelRecommendationsSection", () => {
       models: [],
     };
 
-    render(
-      <ModelRecommendationsSection
-        section={emptySection}
-        isDefaultRecommended={false}
-      />
-    );
+    render(<ModelRecommendationsSection section={emptySection} isDefaultRecommended={false} />);
 
     const cards = screen.queryAllByTestId("mock-card");
     expect(cards).toHaveLength(0);

@@ -5,9 +5,7 @@ import { HardwareResponse, GpuInfo } from "@/types";
 
 // Mock child components
 vi.mock("../GpuDetectionCpuModeOnly", () => ({
-  GpuDetectionCpuModeOnly: () => (
-    <div data-testid="cpu-mode-only">CPU Mode Only Component</div>
-  ),
+  GpuDetectionCpuModeOnly: () => <div data-testid="cpu-mode-only">CPU Mode Only Component</div>,
 }));
 
 vi.mock("../GpuDetectionItems", () => ({
@@ -60,9 +58,7 @@ describe("GpuDetectionContent", () => {
     render(<GpuDetectionContent hardwareData={mockHardwareDataWithCuda} />);
 
     expect(screen.getByTestId("gpu-version")).toBeInTheDocument();
-    expect(
-      screen.getByText("CUDA: 12.2, Driver: 535.104.05")
-    ).toBeInTheDocument();
+    expect(screen.getByText("CUDA: 12.2, Driver: 535.104.05")).toBeInTheDocument();
   });
 
   it("does not render GPU version when CUDA is not available", () => {
@@ -92,9 +88,7 @@ describe("GpuDetectionContent", () => {
   });
 
   it("renders with proper structure and styling", () => {
-    const { container } = render(
-      <GpuDetectionContent hardwareData={mockHardwareDataWithCuda} />
-    );
+    const { container } = render(<GpuDetectionContent hardwareData={mockHardwareDataWithCuda} />);
 
     const mainDiv = container.firstChild as HTMLElement;
     expect(mainDiv).toHaveClass("flex", "flex-col", "gap-4");
@@ -112,9 +106,7 @@ describe("GpuDetectionContent", () => {
   });
 
   it("renders all components in correct order when CUDA is available", () => {
-    const { container } = render(
-      <GpuDetectionContent hardwareData={mockHardwareDataWithCuda} />
-    );
+    const { container } = render(<GpuDetectionContent hardwareData={mockHardwareDataWithCuda} />);
 
     const mainDiv = container.firstChild as HTMLElement;
     const children = Array.from(mainDiv.children);

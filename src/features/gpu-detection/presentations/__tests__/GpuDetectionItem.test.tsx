@@ -7,9 +7,7 @@ import { RadioGroup } from "@heroui/react";
 // Mock the formatter service
 vi.mock("@/services/formatter", () => ({
   formatter: {
-    formatBytes: vi.fn(
-      (bytes: number) => `${(bytes / 1024 / 1024 / 1024).toFixed(1)} GB`
-    ),
+    formatBytes: vi.fn((bytes: number) => `${(bytes / 1024 / 1024 / 1024).toFixed(1)} GB`),
   },
 }));
 
@@ -79,12 +77,7 @@ describe("GpuDetectionItem", () => {
   it("passes through additional props to Radio component", () => {
     render(
       <RadioGroupWrapper>
-        <GpuDetectionItem
-          gpu={mockGpu}
-          value="0"
-          isDisabled={true}
-          data-testid="gpu-radio"
-        />
+        <GpuDetectionItem gpu={mockGpu} value="0" isDisabled={true} data-testid="gpu-radio" />
       </RadioGroupWrapper>
     );
 
@@ -104,10 +97,6 @@ describe("GpuDetectionItem", () => {
     expect(gpuName).toHaveClass("font-bold");
 
     const memoryText = screen.getByText("24.0 GB");
-    expect(memoryText).toHaveClass(
-      "text-sm",
-      "text-foreground-500",
-      "font-medium"
-    );
+    expect(memoryText).toHaveClass("text-sm", "text-foreground-500", "font-medium");
   });
 });

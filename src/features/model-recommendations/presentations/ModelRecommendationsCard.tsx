@@ -15,9 +15,7 @@ interface ModelRecommendationsCardProps {
   model: ModelRecommendationItem;
 }
 
-export const ModelRecommendationsCard: FC<ModelRecommendationsCardProps> = ({
-  model,
-}) => {
+export const ModelRecommendationsCard: FC<ModelRecommendationsCardProps> = ({ model }) => {
   const { watch, setValue } = useFormContext<ModelRecommendationFormProps>();
   const id = watch("id");
   const isSelected = id === model.id;

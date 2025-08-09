@@ -15,9 +15,7 @@ export const MaxMemoryScaleFactorItems = () => {
       defaultValue={getValues("scaleFactor").toString()}
     >
       {MEMORY_OPTIONS.map((option) => {
-        return (
-          <MaxMemoryScaleFactorItem key={option.scaleFactor} option={option} />
-        );
+        return <MaxMemoryScaleFactorItem key={option.scaleFactor} option={option} />;
       })}
     </RadioGroup>
   );

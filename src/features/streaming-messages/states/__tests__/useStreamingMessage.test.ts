@@ -44,14 +44,8 @@ describe("useStreamingMessage", () => {
   it("subscribes to socket events on mount", () => {
     renderHook(() => useStreamingMessage());
 
-    expect(socket.on).toHaveBeenCalledWith(
-      SocketEvents.DOWNLOAD_START,
-      expect.any(Function)
-    );
-    expect(socket.on).toHaveBeenCalledWith(
-      SocketEvents.MODEL_LOAD_COMPLETED,
-      expect.any(Function)
-    );
+    expect(socket.on).toHaveBeenCalledWith(SocketEvents.DOWNLOAD_START, expect.any(Function));
+    expect(socket.on).toHaveBeenCalledWith(SocketEvents.MODEL_LOAD_COMPLETED, expect.any(Function));
   });
 
   it("sets message on DOWNLOAD_START", () => {
@@ -85,8 +79,6 @@ describe("useStreamingMessage", () => {
 
     expect(socket.off).toHaveBeenCalledWith(SocketEvents.DOWNLOAD_START);
     expect(socket.off).toHaveBeenCalledWith(SocketEvents.MODEL_LOAD_COMPLETED);
-    expect(socket.off).toHaveBeenCalledWith(
-      SocketEvents.IMAGE_GENERATION_STEP_END
-    );
+    expect(socket.off).toHaveBeenCalledWith(SocketEvents.IMAGE_GENERATION_STEP_END);
   });
 });

@@ -9,10 +9,7 @@ export interface GpuDetectionItemProps extends RadioProps {
   gpu: GpuInfo;
 }
 
-export const GpuDetectionItem: FC<GpuDetectionItemProps> = ({
-  gpu,
-  ...restProps
-}) => {
+export const GpuDetectionItem: FC<GpuDetectionItemProps> = ({ gpu, ...restProps }) => {
   const { name, cuda_compute_capability, memory } = gpu;
 
   return (

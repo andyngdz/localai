@@ -8,9 +8,7 @@ describe("GpuDetectionCpuModeOnly", () => {
 
     expect(screen.getByText("CPU Mode Only")).toBeInTheDocument();
     expect(screen.getByText(/LocalAI will run on CPU/)).toBeInTheDocument();
-    expect(
-      screen.getByText(/Consider installing CUDA drivers/)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/Consider installing CUDA drivers/)).toBeInTheDocument();
   });
 
   it("has correct structure and classes", () => {

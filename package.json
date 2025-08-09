@@ -8,8 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "ci:format": "prettier --check .",
-    "ci:lint": "npm run lint",
+    "ci:lint": "eslint src --ext .ts,.tsx,.js,.jsx --max-warnings=0 -f json -o eslint-report.json",
+    "ci:format": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json}\"",
     "test": "vitest",
     "test:coverage": "vitest --coverage"
   },
@@ -51,6 +51,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.4.6",
     "jsdom": "^26.1.0",
+    "prettier": "^3.6.2",
     "tailwindcss": "^4",
     "typescript": "^5",
     "vite-tsconfig-paths": "^5.1.4",

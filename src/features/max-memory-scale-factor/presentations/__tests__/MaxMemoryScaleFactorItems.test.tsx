@@ -8,9 +8,7 @@ import { MaxMemoryScaleFactorItems } from "../MaxMemoryScaleFactorItems";
 // Mock the MaxMemoryScaleFactorItem component
 vi.mock("../MaxMemoryScaleFactorItem", () => ({
   MaxMemoryScaleFactorItem: ({ option }: { option: { scaleFactor: number } }) => (
-    <div data-testid={`memory-item-${option.scaleFactor}`}>
-      Memory Item {option.scaleFactor}
-    </div>
+    <div data-testid={`memory-item-${option.scaleFactor}`}>Memory Item {option.scaleFactor}</div>
   ),
 }));
 
@@ -19,7 +17,7 @@ describe("MaxMemoryScaleFactorItems", () => {
     const methods = useForm<MaxMemoryFormProps>({
       defaultValues: { scaleFactor: 0.5 },
     });
-    
+
     return <FormProvider {...methods}>{children}</FormProvider>;
   };
 

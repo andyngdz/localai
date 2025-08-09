@@ -7,9 +7,7 @@ export interface HealthCheckContentProps {
   isHealthy: boolean;
 }
 
-export const HealthCheckContent: FC<HealthCheckContentProps> = ({
-  isHealthy,
-}) => {
+export const HealthCheckContent: FC<HealthCheckContentProps> = ({ isHealthy }) => {
   const children = useMemo(() => {
     if (isHealthy) {
       return (

@@ -21,10 +21,7 @@ export const GpuDetectionItems: FC<GpuDetectionItemsProps> = ({ gpus }) => {
 
   return (
     <Card>
-      <RadioGroup
-        defaultValue={`${defaultValue}`}
-        {...register("gpu", { required: true })}
-      >
+      <RadioGroup defaultValue={`${defaultValue}`} {...register("gpu", { required: true })}>
         {items}
       </RadioGroup>
     </Card>

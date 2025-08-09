@@ -10,12 +10,9 @@ interface GpuDetectionContentProps {
   hardwareData: HardwareResponse;
 }
 
-export const GpuDetectionContent: FC<GpuDetectionContentProps> = ({
-  hardwareData,
-}) => {
+export const GpuDetectionContent: FC<GpuDetectionContentProps> = ({ hardwareData }) => {
   if (hardwareData) {
-    const { is_cuda, cuda_runtime_version, nvidia_driver_version } =
-      hardwareData;
+    const { is_cuda, cuda_runtime_version, nvidia_driver_version } = hardwareData;
 
     return (
       <div className="flex flex-col gap-4">

@@ -19,9 +19,7 @@ describe("ModelRecommendationMemoryBox", () => {
   });
 
   it("applies the correct styling classes", () => {
-    const { container } = render(
-      <ModelRecommendationMemoryBox {...defaultProps} />
-    );
+    const { container } = render(<ModelRecommendationMemoryBox {...defaultProps} />);
 
     // Check main container has the expected classes
     const mainDiv = container.firstChild;

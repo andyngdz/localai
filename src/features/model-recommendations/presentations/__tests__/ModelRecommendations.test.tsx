@@ -1,8 +1,5 @@
 import { createQueryClientWrapper } from "@/cores/test-utils";
-import {
-  ModelRecommendationResponse,
-  ModelRecommendationSection,
-} from "@/types/api";
+import { ModelRecommendationResponse, ModelRecommendationSection } from "@/types/api";
 import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ModelRecommendations } from "../ModelRecommendations";
@@ -48,11 +45,7 @@ vi.mock("@/features/layout/presentations/SetupLayout", () => ({
     onBack: () => void;
     children: React.ReactNode;
   }) => (
-    <div
-      data-testid="mock-setup-layout"
-      data-title={title}
-      data-description={description}
-    >
+    <div data-testid="mock-setup-layout" data-title={title} data-description={description}>
       <button data-testid="mock-next-button" onClick={onNext}>
         Next
       </button>
@@ -179,9 +172,7 @@ describe("ModelRecommendations", () => {
 
     render(<ModelRecommendations />, { wrapper: createQueryClientWrapper() });
 
-    expect(
-      screen.queryByTestId("mock-recommendations-list")
-    ).not.toBeInTheDocument();
+    expect(screen.queryByTestId("mock-recommendations-list")).not.toBeInTheDocument();
   });
 
   it("passes form submission handler to SetupLayout", () => {

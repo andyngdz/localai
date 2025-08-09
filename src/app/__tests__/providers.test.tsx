@@ -18,10 +18,7 @@ vi.mock("@tanstack/react-query", () => ({
 
 vi.mock("@tanstack/react-query-devtools", () => ({
   ReactQueryDevtools: (props: { initialIsOpen: boolean }) => (
-    <div
-      data-testid="react-query-devtools"
-      data-initial-open={props.initialIsOpen}
-    />
+    <div data-testid="react-query-devtools" data-initial-open={props.initialIsOpen} />
   ),
 }));
 

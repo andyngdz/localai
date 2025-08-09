@@ -57,13 +57,7 @@ vi.mock("react-hook-form", () => {
 
 // Mock the child components
 vi.mock("../ModelRecommendationMemoryBox", () => ({
-  ModelRecommendationMemoryBox: ({
-    icon,
-    content,
-  }: {
-    icon: React.ReactNode;
-    content: string;
-  }) => (
+  ModelRecommendationMemoryBox: ({ icon, content }: { icon: React.ReactNode; content: string }) => (
     <div data-testid="memory-box" data-content={content}>
       {icon}
     </div>
@@ -71,9 +65,7 @@ vi.mock("../ModelRecommendationMemoryBox", () => ({
 }));
 
 vi.mock("../ModelRecommendationsBadge", () => ({
-  ModelRecommendationsBadge: () => (
-    <div data-testid="recommendations-badge">Star</div>
-  ),
+  ModelRecommendationsBadge: () => <div data-testid="recommendations-badge">Star</div>,
 }));
 
 vi.mock("../ModelRecommendationsTags", () => ({
@@ -143,9 +135,7 @@ describe("ModelRecommendationsCard", () => {
 
     render(<ModelRecommendationsCard model={nonRecommendedModel} />);
 
-    expect(
-      screen.queryByTestId("recommendations-badge")
-    ).not.toBeInTheDocument();
+    expect(screen.queryByTestId("recommendations-badge")).not.toBeInTheDocument();
   });
 
   it("displays memory boxes with correct content", () => {

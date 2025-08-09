@@ -4,9 +4,7 @@ import GPUDetectionScreen from "../page";
 
 // Mock the GpuDetection component
 vi.mock("@/features/gpu-detection", () => ({
-  GpuDetection: () => (
-    <div data-testid="gpu-detection">GPU Detection Component</div>
-  ),
+  GpuDetection: () => <div data-testid="gpu-detection">GPU Detection Component</div>,
 }));
 
 describe("GPUDetectionScreen", () => {

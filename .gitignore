@@ -12,6 +12,7 @@
 
 # testing
 /coverage
+eslint-report.json
 
 # next.js
 /.next/
