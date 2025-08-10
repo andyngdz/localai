@@ -10,7 +10,7 @@
     "lint": "next lint",
     "ci:lint": "eslint src --ext .ts,.tsx,.js,.jsx --max-warnings=0 -f json -o eslint-report.json",
     "ci:format": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json}\"",
-    "test": "vitest",
+    "test": "vitest --run",
     "test:coverage": "vitest --coverage"
   },
   "dependencies": {
@@ -20,6 +20,7 @@
     "@tanstack/react-query": "^5.84.1",
     "@tanstack/react-query-devtools": "^5.84.1",
     "@testing-library/user-event": "^14.6.1",
+    "allotment": "^1.20.4",
     "axios": "^1.11.0",
     "clsx": "^2.1.1",
     "es-toolkit": "^1.39.8",
