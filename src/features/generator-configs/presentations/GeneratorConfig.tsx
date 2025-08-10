@@ -2,6 +2,7 @@ import { GeneratorConfigExtra } from "@/features/generator-config-extras/present
 import { GeneratorConfigFormat } from "@/features/generator-config-formats/presentations/GeneratorConfigFormat";
 import { GeneratorConfigQuantity } from "@/features/generator-config-quantities/presentations/GeneratorConfigQuantity";
 import { GeneratorConfigSampling } from "@/features/generator-config-sampling/presentations/GeneratorConfigSampling";
+import { GeneratorConfigSeed } from "@/features/generator-config-seed/presentations/GeneratorConfigSeed";
 import { Divider } from "@heroui/react";
 import { FormProvider, useForm } from "react-hook-form";
 import { GeneratorConfigFormValues } from "../types/generator-config";
@@ -20,7 +21,7 @@ export const GeneratorConfig = () => {
 
   return (
     <FormProvider {...methods}>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col h-full overflow-auto">
         <GeneratorConfigFormat />
         <Divider />
         <GeneratorConfigExtra />
@@ -28,6 +29,8 @@ export const GeneratorConfig = () => {
         <GeneratorConfigQuantity />
         <Divider />
         <GeneratorConfigSampling />
+        <Divider />
+        <GeneratorConfigSeed />
       </div>
     </FormProvider>
   );

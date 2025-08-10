@@ -5,4 +5,5 @@ export interface GeneratorConfigFormValues {
   number_of_images: number;
   steps: number;
   cfg_scale: number;
+  seed: number;
 }

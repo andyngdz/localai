@@ -5,7 +5,7 @@ export const GeneratorConfigCommonSteps = () => {
   return (
     <div className="flex">
       {COMMON_STEPS.map((step) => (
-        <Button key={step} radius="full" variant="light" className="text-foreground-500" isIconOnly>
+        <Button key={step} variant="light" className="text-foreground-500" isIconOnly>
           {step}
         </Button>
       ))}
