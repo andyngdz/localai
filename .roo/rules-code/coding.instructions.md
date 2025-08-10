@@ -1,7 +1,3 @@
----
-applyTo: "**"
----
-
 # LocalAI Coding Guidelines
 
 This document provides essential knowledge for working effectively with the LocalAI codebase.
