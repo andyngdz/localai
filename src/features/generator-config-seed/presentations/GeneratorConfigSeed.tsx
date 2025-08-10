@@ -1,24 +1,28 @@
+import { NumberInputController } from "@/cores/presentations/NumberInputController";
 import { GeneratorConfigFormValues } from "@/features/generator-configs/types/generator-config";
-import { Button, Input } from "@heroui/react";
+import { Button } from "@heroui/react";
 import { Dices } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import { seedService } from "../services/seed";
 
 export const GeneratorConfigSeed = () => {
-  const { register, setValue } = useFormContext<GeneratorConfigFormValues>();
+  const { setValue, control } = useFormContext<GeneratorConfigFormValues>();
 
   return (
     <div className="flex flex-col gap-4 p-4">
       <span className="font-semibold text-sm">Seed</span>
       <div className="flex gap-4">
-        <Input
+        <NumberInputController
+          aria-label="Seed"
+          control={control}
+          controlName="seed"
+          minValue={-1}
           startContent={<span className="text-sm text-foreground-500">Value</span>}
-          {...register("seed")}
         />
         <Button
           variant="light"
           onPress={() => {
-            setValue("seed", seedService.generate());
+            setValue("seed", seedService.generate(), { shouldValidate: true, shouldTouch: true });
           }}
           isIconOnly
         >

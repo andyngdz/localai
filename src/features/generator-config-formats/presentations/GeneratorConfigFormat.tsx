@@ -1,7 +1,7 @@
-import { IntNumberInput } from "@/cores/presentations/IntNumberInput";
+import { NumberInputController } from "@/cores/presentations/NumberInputController";
 import { GeneratorConfigFormValues } from "@/features/generator-configs/types/generator-config";
 import { Checkbox } from "@heroui/react";
-import { Controller, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 
 export const GeneratorConfigFormat = () => {
   const { register, control } = useFormContext<GeneratorConfigFormValues>();
@@ -10,41 +10,19 @@ export const GeneratorConfigFormat = () => {
     <div className="flex flex-col gap-4 p-4">
       <span className="font-semibold text-sm">Format</span>
       <div className="flex gap-4">
-        <Controller
+        <NumberInputController
+          aria-label="Width"
           control={control}
-          name="width"
-          render={({ field }) => {
-            return (
-              <IntNumberInput
-                isRequired
-                aria-label="Width"
-                defaultValue={field.value}
-                minValue={64}
-                startContent={<span className="text-sm text-foreground-500">W</span>}
-                onValueChange={(value) => {
-                  field.onChange(value);
-                }}
-              />
-            );
-          }}
+          controlName="width"
+          minValue={64}
+          startContent={<span className="text-sm text-foreground-500">W</span>}
         />
-        <Controller
+        <NumberInputController
+          aria-label="Height"
           control={control}
-          name="height"
-          render={({ field }) => {
-            return (
-              <IntNumberInput
-                isRequired
-                aria-label="height"
-                minValue={64}
-                defaultValue={field.value}
-                startContent={<span className="text-sm text-foreground-500">H</span>}
-                onValueChange={(value) => {
-                  field.onChange(value);
-                }}
-              />
-            );
-          }}
+          controlName="height"
+          minValue={64}
+          startContent={<span className="text-sm text-foreground-500">H</span>}
         />
       </div>
       <Checkbox

@@ -10,6 +10,7 @@ import { GeneratorConfigFormValues } from "../types/generator-config";
 
 export const GeneratorConfig = () => {
   const methods = useForm<GeneratorConfigFormValues>({
+    mode: "onChange",
     defaultValues: {
       width: 512,
       height: 512,
