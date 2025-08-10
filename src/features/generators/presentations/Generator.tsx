@@ -7,7 +7,7 @@ import "allotment/dist/style.css";
 export const Generator = () => {
   return (
     <Allotment>
-      <Allotment.Pane minSize={300} maxSize={400}>
+      <Allotment.Pane minSize={300} maxSize={350}>
         <GeneratorConfig />
       </Allotment.Pane>
       <Allotment.Pane>

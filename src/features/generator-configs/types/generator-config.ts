@@ -3,4 +3,6 @@ export interface GeneratorConfigFormValues {
   height: number;
   hires_fix: boolean;
   number_of_images: number;
+  steps: number;
+  cfg_scale: number;
 }

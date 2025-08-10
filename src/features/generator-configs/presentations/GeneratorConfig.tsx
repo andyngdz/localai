@@ -1,6 +1,7 @@
 import { GeneratorConfigExtra } from "@/features/generator-config-extras/presentations/GeneratorConfigExtra";
 import { GeneratorConfigFormat } from "@/features/generator-config-formats/presentations/GeneratorConfigFormat";
 import { GeneratorConfigQuantity } from "@/features/generator-config-quantities/presentations/GeneratorConfigQuantity";
+import { GeneratorConfigSampling } from "@/features/generator-config-sampling/presentations/GeneratorConfigSampling";
 import { Divider } from "@heroui/react";
 import { FormProvider, useForm } from "react-hook-form";
 import { GeneratorConfigFormValues } from "../types/generator-config";
@@ -12,6 +13,8 @@ export const GeneratorConfig = () => {
       height: 512,
       hires_fix: false,
       number_of_images: 4,
+      steps: 24,
+      cfg_scale: 7.5,
     },
   });
 
@@ -23,6 +26,8 @@ export const GeneratorConfig = () => {
         <GeneratorConfigExtra />
         <Divider />
         <GeneratorConfigQuantity />
+        <Divider />
+        <GeneratorConfigSampling />
       </div>
     </FormProvider>
   );

@@ -11,12 +11,10 @@ export const GeneratorConfigFormat = () => {
       <div className="flex gap-4">
         <Input
           startContent={<span className="text-sm text-foreground-500">W</span>}
-          variant="underlined"
           {...register("width")}
         />
         <Input
           startContent={<span className="text-sm text-foreground-500">H</span>}
-          variant="underlined"
           {...register("height")}
         />
       </div>

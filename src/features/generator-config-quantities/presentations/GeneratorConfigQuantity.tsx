@@ -10,10 +10,7 @@ export const GeneratorConfigQuantity = () => {
       <span className="font-semibold text-sm">Quantity</span>
       <div className="flex gap-4">
         <Input
-          startContent={
-            <span className="text-sm text-foreground-500 w-full">Number of images</span>
-          }
-          variant="underlined"
+          label={<span className="text-sm text-foreground-500  min-w-fit">Number of images</span>}
           {...register("number_of_images")}
         />
       </div>
