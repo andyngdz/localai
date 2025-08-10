@@ -21,7 +21,7 @@ export const ModelSelector = () => {
     return (
       <Dropdown>
         <DropdownTrigger>
-          <Button variant="light" endContent={<ChevronDown size={16} />}>
+          <Button variant="light" color="primary" endContent={<ChevronDown size={16} />}>
             {id}
           </Button>
         </DropdownTrigger>
