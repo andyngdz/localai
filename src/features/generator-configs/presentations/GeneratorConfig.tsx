@@ -16,6 +16,7 @@ export const GeneratorConfig = () => {
       hires_fix: false,
       number_of_images: 4,
       steps: 24,
+      seed: -1,
       cfg_scale: 7.5,
     },
   });
