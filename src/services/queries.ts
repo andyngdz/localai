@@ -1,9 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import type {
+import {
   ApiError,
   HardwareResponse,
   HealthResponse,
   MemoryResponse,
+  ModelDownloaded,
   ModelRecommendationResponse,
 } from "../types/api";
 import { api } from "./api";
@@ -37,4 +38,17 @@ const useModelRecommendationsQuery = () => {
   });
 };
 
-export { useHardwareQuery, useHealthQuery, useMemoryQuery, useModelRecommendationsQuery };
+const useDownloadedModels = () => {
+  return useQuery<ModelDownloaded[], ApiError>({
+    queryKey: ["downloaded-models"],
+    queryFn: () => api.getDownloadedModels(),
+  });
+};
+
+export {
+  useDownloadedModels,
+  useHardwareQuery,
+  useHealthQuery,
+  useMemoryQuery,
+  useModelRecommendationsQuery,
+};

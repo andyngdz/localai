@@ -139,7 +139,7 @@ describe("HealthCheck", () => {
     expect(api.getDeviceIndex).toHaveBeenCalledTimes(1);
   });
 
-  it("redirects to dashboard if device index is already set", async () => {
+  it("redirects to editor if device index is already set", async () => {
     // Mock getDeviceIndex to return a valid device index
     vi.mocked(api.getDeviceIndex).mockResolvedValue({ device_index: 0 });
 
@@ -156,7 +156,7 @@ describe("HealthCheck", () => {
 
     // Use flush promises to wait for the async operation
     await vi.waitFor(() => {
-      expect(mockPush).toHaveBeenCalledWith("/dashboard");
+      expect(mockPush).toHaveBeenCalledWith("/editor");
     });
   });
 });

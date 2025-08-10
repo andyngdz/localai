@@ -71,7 +71,7 @@ describe("useModelRecommendation", () => {
     expect(api.downloadModel).toHaveBeenCalledWith("model-123");
   });
 
-  it("should navigate to dashboard on MODEL_LOAD_COMPLETED and clean up on unmount", async () => {
+  it("should navigate to editor on MODEL_LOAD_COMPLETED and clean up on unmount", async () => {
     vi.mocked(useModelRecommendationsQuery).mockReturnValue({
       data: {},
     } as ReturnType<typeof useModelRecommendationsQuery>);
@@ -90,7 +90,7 @@ describe("useModelRecommendation", () => {
     const { unmount } = renderHook(() => useModelRecommendation());
 
     // Check that navigation happened
-    expect(mockReplace).toHaveBeenCalledWith("/dashboard");
+    expect(mockReplace).toHaveBeenCalledWith("/editor");
     expect(socket.on).toHaveBeenCalledWith(SocketEvents.MODEL_LOAD_COMPLETED, expect.any(Function));
 
     // Unmount the hook to trigger cleanup

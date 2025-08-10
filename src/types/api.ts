@@ -60,6 +60,14 @@ export interface ModelRecommendationResponse {
   default_selected_id: string;
 }
 
+export interface ModelDownloaded {
+  created_at: string;
+  id: number;
+  model_id: string;
+  model_dir: string;
+  updated_at: string;
+}
+
 export interface ApiError {
   message: string;
   status?: number;

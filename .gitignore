@@ -13,6 +13,7 @@
 # testing
 /coverage
 eslint-report.json
+sonar-report.xml
 
 
 # next.js
