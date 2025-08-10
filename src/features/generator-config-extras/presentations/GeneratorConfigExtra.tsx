@@ -6,7 +6,7 @@ export const GeneratorConfigExtra = () => {
     <div className="flex flex-col gap-4 p-4">
       <div className="flex items-center justify-between">
         <span className="font-semibold text-sm">Extra</span>
-        <Button size="sm" variant="light" radius="full" aria-label="Add Extra" isIconOnly>
+        <Button variant="light" aria-label="Add Extra" isIconOnly>
           <Plus />
         </Button>
       </div>

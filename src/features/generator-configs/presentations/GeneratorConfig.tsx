@@ -3,6 +3,7 @@ import { GeneratorConfigFormat } from "@/features/generator-config-formats/prese
 import { GeneratorConfigQuantity } from "@/features/generator-config-quantities/presentations/GeneratorConfigQuantity";
 import { GeneratorConfigSampling } from "@/features/generator-config-sampling/presentations/GeneratorConfigSampling";
 import { GeneratorConfigSeed } from "@/features/generator-config-seed/presentations/GeneratorConfigSeed";
+import { GeneratorConfigStyle } from "@/features/generator-config-styles/presentations/GeneratorConfigStyle";
 import { Divider } from "@heroui/react";
 import { FormProvider, useForm } from "react-hook-form";
 import { GeneratorConfigFormValues } from "../types/generator-config";
@@ -31,6 +32,8 @@ export const GeneratorConfig = () => {
         <GeneratorConfigSampling />
         <Divider />
         <GeneratorConfigSeed />
+        <Divider />
+        <GeneratorConfigStyle />
       </div>
     </FormProvider>
   );
