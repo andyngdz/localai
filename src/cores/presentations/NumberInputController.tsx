@@ -22,8 +22,6 @@ export const NumberInputController = <T extends FieldValues, C>({
         if (isNaN(value)) {
           return "Input is required";
         }
-
-        return;
       },
     },
   });

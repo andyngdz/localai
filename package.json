@@ -10,7 +10,7 @@
     "lint": "next lint",
     "ci:lint": "eslint src --ext .ts,.tsx,.js,.jsx --max-warnings=0 -f json -o eslint-report.json",
     "ci:format": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json}\"",
-    "test": "vitest",
+    "test": "vitest --run",
     "test:coverage": "vitest --coverage"
   },
   "dependencies": {
