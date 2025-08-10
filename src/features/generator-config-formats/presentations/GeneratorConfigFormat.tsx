@@ -1,5 +1,5 @@
 import { GeneratorConfigFormValues } from "@/features/generator-configs/types/generator-config";
-import { Checkbox, Input } from "@heroui/react";
+import { Checkbox, NumberInput } from "@heroui/react";
 import { useFormContext } from "react-hook-form";
 
 export const GeneratorConfigFormat = () => {
@@ -9,13 +9,23 @@ export const GeneratorConfigFormat = () => {
     <div className="flex flex-col gap-4 p-4">
       <span className="font-semibold text-sm">Format</span>
       <div className="flex gap-4">
-        <Input
+        <NumberInput
+          isRequired
+          hideStepper
+          minValue={64}
+          classNames={{
+            inputWrapper: "max-h-8",
+          }}
           startContent={<span className="text-sm text-foreground-500">W</span>}
-          {...register("width")}
         />
-        <Input
+        <NumberInput
+          isRequired
+          hideStepper
+          minValue={64}
+          classNames={{
+            inputWrapper: "max-h-8",
+          }}
           startContent={<span className="text-sm text-foreground-500">H</span>}
-          {...register("height")}
         />
       </div>
       <Checkbox
