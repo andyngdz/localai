@@ -21,7 +21,7 @@ export const useModelRecommendation = () => {
   };
 
   const onModelLoadCompleted = useCallback(() => {
-    router.replace("/dashboard");
+    router.replace("/editor");
   }, [router]);
 
   useEffect(() => {

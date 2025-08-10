@@ -1,7 +1,0 @@
-// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
-
-exports[`Dashboard > matches snapshot 1`] = `
-<div>
-  Dashboard
-</div>
-`;
