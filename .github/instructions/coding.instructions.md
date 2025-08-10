@@ -13,12 +13,10 @@ LocalAI is a React application built with Next.js, focusing on providing a front
 ### Key Components
 
 - **Features**: Self-contained modules with their own presentations and states
-
   - Each feature has its own directory in `src/features/`
   - Examples: `streaming-messages`, `gpu-detection`, `model-recommendations`
 
 - **Services**: API integration and data formatting
-
   - `api.ts`: Axios-based client for backend communication
   - `formatter.ts`: Data transformation utilities
   - `queries.ts`: React Query definitions
@@ -72,13 +70,11 @@ src/
 
 ```typescript
 // Example from src/features/streaming-messages/states/useMessageStores.ts
-export const useMessageStore = create<MessageStoreProps>(
-  (set, _get, store) => ({
-    message: "",
-    setMessage: (message) => set({ message }),
-    reset: () => set(store.getInitialState()),
-  })
-);
+export const useMessageStore = create<MessageStoreProps>((set, _get, store) => ({
+  message: "",
+  setMessage: (message) => set({ message }),
+  reset: () => set(store.getInitialState()),
+}));
 ```
 
 ### Component Structure
