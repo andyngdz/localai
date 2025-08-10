@@ -5,6 +5,7 @@ import type {
   HealthResponse,
   MaxMemoryRequest,
   MemoryResponse,
+  ModelDownloaded,
   ModelRecommendationResponse,
   SelectDeviceRequest,
 } from "../types";
@@ -56,6 +57,12 @@ class API {
 
   async downloadModel(id: string) {
     const { data } = await client.post("/downloads/", { id });
+
+    return data;
+  }
+
+  async getDownloadedModels() {
+    const { data } = await client.get<ModelDownloaded[]>("/models/downloaded");
 
     return data;
   }
