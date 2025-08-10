@@ -1,3 +1,4 @@
+import { GeneratorConfigExtra } from "@/features/generator-config-extras/presentations/GeneratorConfigExtra";
 import { GeneratorConfigFormat } from "@/features/generator-config-formats/presentations/GeneratorConfigFormat";
 import { Divider } from "@heroui/react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -14,9 +15,10 @@ export const GeneratorConfig = () => {
 
   return (
     <FormProvider {...methods}>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-2">
         <GeneratorConfigFormat />
         <Divider />
+        <GeneratorConfigExtra />
       </div>
     </FormProvider>
   );
