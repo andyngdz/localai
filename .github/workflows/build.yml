@@ -155,7 +155,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report # Name of the artifact
-          path: coverage # Path to the coverage directory
+          path: sonar-report.xml # Path to the coverage directory
           retention-days: 7 # Keep artifact for 7 days
 
       # Step 6: Report test results as a PR comment
