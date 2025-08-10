@@ -155,10 +155,20 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report # Name of the artifact
+          path: coverage # Path to the coverage directory
+          retention-days: 7 # Keep artifact for 7 days
+      
+      # Step 6: Upload sonar coverage report artifact
+      - name: Upload sonar coverage reports
+        # Only upload if the test/coverage step succeeded
+        if: steps.test_coverage.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-sonar-report # Name of the artifact
           path: sonar-report.xml # Path to the coverage directory
           retention-days: 7 # Keep artifact for 7 days
 
-      # Step 6: Report test results as a PR comment
+      # Step 7: Report test results as a PR comment
       - name: Report test results
         if: always()
         uses: actions/github-script@v6
@@ -261,11 +271,11 @@ jobs:
         continue-on-error: true
 
       # Step 3: Download Coverage report artifact (if available)
-      - name: Download Coverage Report
+      - name: Download Sonar Coverage Report
         uses: actions/download-artifact@v4
         with:
-          name: coverage-report
-          path: coverage # Download to the 'coverage' directory
+          name: coverage-sonar-report
+          path: sonar-report.xml # Download to the 'coverage' directory
         # Continue even if the artifact doesn't exist (e.g., test job failed early)
         continue-on-error: true
 
