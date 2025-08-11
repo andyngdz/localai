@@ -1,10 +1,10 @@
-import { useDownloadedModels } from "@/services/queries";
+import { useDownloadedModelsQuery } from "@/services/queries";
 import { first, isEmpty } from "es-toolkit/compat";
 import { useEffect } from "react";
 import { useModelSelectorStore } from "./useModelSelectorStores";
 
 export const useModelSelectors = () => {
-  const { data = [] } = useDownloadedModels();
+  const { data = [] } = useDownloadedModelsQuery();
   const { id, setId } = useModelSelectorStore((state) => state);
 
   useEffect(() => {

@@ -8,6 +8,7 @@ import type {
   ModelDownloaded,
   ModelRecommendationResponse,
   SelectDeviceRequest,
+  StyleSection,
 } from "../types";
 
 export const client = axios.create({
@@ -57,6 +58,12 @@ class API {
 
   async downloadModel(id: string) {
     const { data } = await client.post("/downloads/", { id });
+
+    return data;
+  }
+
+  async styles() {
+    const { data } = await client.get<StyleSection[]>("/styles");
 
     return data;
   }
