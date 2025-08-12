@@ -19,6 +19,7 @@ export const GeneratorConfig = () => {
       steps: 24,
       seed: -1,
       cfg_scale: 7.5,
+      styles: [],
     },
   });
 

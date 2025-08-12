@@ -6,4 +6,5 @@ export interface GeneratorConfigFormValues {
   steps: number;
   cfg_scale: number;
   seed: number;
+  styles: string[];
 }
