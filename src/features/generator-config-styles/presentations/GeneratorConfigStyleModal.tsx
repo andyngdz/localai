@@ -7,7 +7,9 @@ import {
   ModalContent,
   ModalHeader,
   ModalProps,
+  Tooltip,
 } from "@heroui/react";
+import NextImage from "next/image";
 import { FC } from "react";
 
 export interface GeneratorConfigStyleModalProps extends Omit<ModalProps, "children"> {
@@ -31,19 +33,37 @@ export const GeneratorConfigStyleModal: FC<GeneratorConfigStyleModalProps> = ({
                 <div className="flex flex-wrap gap-2 p-2">
                   {s.styles.map((style) => {
                     return (
-                      <Chip
-                        avatar={
-                          <Avatar
+                      <Tooltip
+                        key={style.id}
+                        classNames={{
+                          content: "p-0 rounded-lg overflow-hidden",
+                        }}
+                        content={
+                          <NextImage
                             src={`http://localhost:8000/static/${style.image}`}
+                            width={128}
+                            height={128}
                             alt={style.name}
-                            size="sm"
                           />
                         }
-                        variant="bordered"
-                        key={style.id}
                       >
-                        {style.name}
-                      </Chip>
+                        <Chip
+                          avatar={
+                            <Avatar
+                              src={`http://localhost:8000/static/${style.image}`}
+                              alt={style.name}
+                              size="sm"
+                            />
+                          }
+                          variant="bordered"
+                          className="cursor-pointer"
+                          onClick={() => {
+                            console.info(style);
+                          }}
+                        >
+                          {style.name}
+                        </Chip>
+                      </Tooltip>
                     );
                   })}
                 </div>
