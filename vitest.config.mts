@@ -7,6 +7,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "jsdom",
+    pool: "threads",
     include: ["src/**/*.test.{ts,tsx,js}", "**/__tests__/**/*.{test,spec}.{ts,tsx,js}"],
     exclude: [
       "**/node_modules/**",

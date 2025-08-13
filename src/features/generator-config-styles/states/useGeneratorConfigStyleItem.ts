@@ -3,7 +3,7 @@ import { useFormContext } from "react-hook-form";
 
 export const useGeneratorConfigStyle = (styleId: string) => {
   const { setValue, watch } = useFormContext<GeneratorConfigFormValues>();
-  const styles = watch("styles");
+  const styles = watch("styles", []);
   const isSelected = styles.includes(styleId);
 
   const onClick = () => {
