@@ -15,6 +15,17 @@ export const GeneratorConfigStyleItem: FC<GeneratorConfigStyleItemProps> = ({ st
   const styles = watch("styles");
   const isSelected = styles.includes(styleItem.id);
 
+  const onClick = () => {
+    if (isSelected) {
+      setValue(
+        "styles",
+        styles.filter((id) => id !== styleItem.id)
+      );
+    } else {
+      setValue("styles", [...styles, styleItem.id]);
+    }
+  };
+
   return (
     <Tooltip
       key={styleItem.id}
@@ -42,16 +53,7 @@ export const GeneratorConfigStyleItem: FC<GeneratorConfigStyleItemProps> = ({ st
         className={clsx("cursor-pointer transition-all", {
           "border-primary": isSelected,
         })}
-        onClick={() => {
-          if (isSelected) {
-            setValue(
-              "styles",
-              styles.filter((id) => id !== styleItem.id)
-            );
-          } else {
-            setValue("styles", [...styles, styleItem.id]);
-          }
-        }}
+        onClick={onClick}
       >
         {styleItem.name}
       </Chip>
