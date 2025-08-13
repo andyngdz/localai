@@ -1,30 +1,16 @@
-import { GeneratorConfigFormValues } from "@/features/generator-configs/types/generator-config";
 import { StyleItem } from "@/types";
 import { Avatar, Chip, Tooltip } from "@heroui/react";
 import clsx from "clsx";
 import NextImage from "next/image";
 import { FC } from "react";
-import { useFormContext } from "react-hook-form";
+import { useGeneratorConfigStyle } from "../states";
 
 export interface GeneratorConfigStyleItemProps {
   styleItem: StyleItem;
 }
 
 export const GeneratorConfigStyleItem: FC<GeneratorConfigStyleItemProps> = ({ styleItem }) => {
-  const { setValue, watch } = useFormContext<GeneratorConfigFormValues>();
-  const styles = watch("styles");
-  const isSelected = styles.includes(styleItem.id);
-
-  const onClick = () => {
-    if (isSelected) {
-      setValue(
-        "styles",
-        styles.filter((id) => id !== styleItem.id)
-      );
-    } else {
-      setValue("styles", [...styles, styleItem.id]);
-    }
-  };
+  const { isSelected, onClick } = useGeneratorConfigStyle(styleItem.id);
 
   return (
     <Tooltip
