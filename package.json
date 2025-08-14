@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json}\"",
     "ci:lint": "eslint src --ext .ts,.tsx,.js,.jsx --max-warnings=0 -f json -o eslint-report.json",
     "ci:format": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json}\"",
     "test": "vitest --run",
