@@ -31,6 +31,10 @@ vi.mock("next/font/google", () => ({
     variable: "--font-inter",
     className: "font-inter",
   }),
+  JetBrains_Mono: () => ({
+    variable: "--font-mono",
+    className: "font-mono",
+  }),
 }));
 
 describe("RootLayout", () => {

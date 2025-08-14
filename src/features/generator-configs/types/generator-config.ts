@@ -7,4 +7,6 @@ export interface GeneratorConfigFormValues {
   cfg_scale: number;
   seed: number;
   styles: string[];
+  prompt: string;
+  negative_prompt: string;
 }
