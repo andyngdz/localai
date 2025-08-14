@@ -7,9 +7,9 @@ import { Allotment } from "allotment";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { FORM_DEFAULT_VALUES } from "../constants";
 
 import "allotment/dist/style.css";
-import { FORM_DEFAULT_VALUES } from "../constants/generator";
 
 export const Generator = () => {
   const methods = useForm<GeneratorConfigFormValues>({
