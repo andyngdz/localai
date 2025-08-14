@@ -1,5 +1,5 @@
 import { createMockQueryResult } from "@/cores/test-utils";
-import { useDownloadedModels } from "@/services/queries";
+import { useDownloadedModelsQuery } from "@/services/queries";
 import { ModelDownloaded } from "@/types/api";
 import { renderHook, waitFor } from "@testing-library/react";
 import * as esToolkit from "es-toolkit/compat";
@@ -9,7 +9,7 @@ import { useModelSelectorStore } from "../useModelSelectorStores";
 
 // Mock dependencies
 vi.mock("@/services/queries", () => ({
-  useDownloadedModels: vi.fn(),
+  useDownloadedModelsQuery: vi.fn(),
 }));
 
 vi.mock("../useModelSelectorStores", () => ({
@@ -51,7 +51,7 @@ describe("useModelSelectors", () => {
     });
 
     // Mock the query result with test utility
-    vi.mocked(useDownloadedModels).mockReturnValue(createMockQueryResult(mockModels));
+    vi.mocked(useDownloadedModelsQuery).mockReturnValue(createMockQueryResult(mockModels));
 
     // Mock the first function from es-toolkit
     vi.mocked(esToolkit.first).mockImplementation((arr) => {
@@ -62,7 +62,7 @@ describe("useModelSelectors", () => {
     });
   });
 
-  it("should return data from useDownloadedModels", () => {
+  it("should return data from useDownloadedModelsQuery", () => {
     const { result } = renderHook(() => useModelSelectors());
 
     expect(result.current.data).toEqual(mockModels);
@@ -93,7 +93,9 @@ describe("useModelSelectors", () => {
   });
 
   it("should not set id when data is empty", () => {
-    vi.mocked(useDownloadedModels).mockReturnValue(createMockQueryResult([] as ModelDownloaded[]));
+    vi.mocked(useDownloadedModelsQuery).mockReturnValue(
+      createMockQueryResult([] as ModelDownloaded[])
+    );
 
     renderHook(() => useModelSelectors());
 
@@ -102,7 +104,7 @@ describe("useModelSelectors", () => {
 
   it("should handle undefined data gracefully", () => {
     // undefined is treated as empty data
-    vi.mocked(useDownloadedModels).mockReturnValue(createMockQueryResult([]));
+    vi.mocked(useDownloadedModelsQuery).mockReturnValue(createMockQueryResult([]));
 
     const { result } = renderHook(() => useModelSelectors());
 

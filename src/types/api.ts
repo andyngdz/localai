@@ -68,6 +68,21 @@ export interface ModelDownloaded {
   updated_at: string;
 }
 
+export interface StyleItem {
+  id: string;
+  name: string;
+  origin: string;
+  license: string;
+  positive: string;
+  negative?: string;
+  image: string;
+}
+
+export interface StyleSection {
+  id: string;
+  styles: StyleItem[];
+}
+
 export interface ApiError {
   message: string;
   status?: number;

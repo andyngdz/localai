@@ -19,12 +19,13 @@ export const GeneratorConfig = () => {
       steps: 24,
       seed: -1,
       cfg_scale: 7.5,
+      styles: [],
     },
   });
 
   return (
-    <FormProvider {...methods}>
-      <div className="flex flex-col h-full overflow-auto">
+    <div className="h-full overflow-auto">
+      <FormProvider {...methods}>
         <GeneratorConfigFormat />
         <Divider />
         <GeneratorConfigExtra />
@@ -36,7 +37,7 @@ export const GeneratorConfig = () => {
         <GeneratorConfigSeed />
         <Divider />
         <GeneratorConfigStyle />
-      </div>
-    </FormProvider>
+      </FormProvider>
+    </div>
   );
 };

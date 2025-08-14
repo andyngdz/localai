@@ -6,6 +6,7 @@ import {
   MemoryResponse,
   ModelDownloaded,
   ModelRecommendationResponse,
+  StyleSection,
 } from "../types/api";
 import { api } from "./api";
 
@@ -38,17 +39,25 @@ const useModelRecommendationsQuery = () => {
   });
 };
 
-const useDownloadedModels = () => {
+const useDownloadedModelsQuery = () => {
   return useQuery<ModelDownloaded[], ApiError>({
     queryKey: ["downloaded-models"],
     queryFn: () => api.getDownloadedModels(),
   });
 };
 
+const useStyleSectionsQuery = () => {
+  return useQuery<StyleSection[], ApiError>({
+    queryKey: ["style-section"],
+    queryFn: () => api.styles(),
+  });
+};
+
 export {
-  useDownloadedModels,
+  useDownloadedModelsQuery,
   useHardwareQuery,
   useHealthQuery,
   useMemoryQuery,
   useModelRecommendationsQuery,
+  useStyleSectionsQuery,
 };
