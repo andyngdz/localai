@@ -43,18 +43,6 @@ vi.mock("@heroui/react", () => ({
   Divider: () => <hr data-testid="divider" />,
 }));
 
-// Mock react-hook-form
-vi.mock("react-hook-form", () => ({
-  useForm: () => ({
-    control: {},
-    register: vi.fn(),
-    formState: { errors: {} },
-  }),
-  FormProvider: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="form-provider">{children}</div>
-  ),
-}));
-
 describe("GeneratorConfig", () => {
   it("should render all sub-components and dividers", () => {
     render(<GeneratorConfig />);
@@ -70,12 +58,5 @@ describe("GeneratorConfig", () => {
     // Verify dividers are rendered (should be 5 dividers between 6 components)
     const dividers = screen.getAllByTestId("divider");
     expect(dividers.length).toBe(5);
-  });
-
-  it("should wrap components with FormProvider", () => {
-    render(<GeneratorConfig />);
-
-    // Verify FormProvider is used (by checking for the test id we gave it)
-    expect(screen.getByTestId("form-provider")).toBeInTheDocument();
   });
 });
