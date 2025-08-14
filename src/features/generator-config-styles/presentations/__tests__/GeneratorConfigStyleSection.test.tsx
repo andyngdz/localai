@@ -259,3 +259,4 @@ describe("GeneratorConfigStyleSection", () => {
     expect(realisticStyle1).toHaveAttribute("data-style-name", "Realistic Style 1");
   });
 });
+
