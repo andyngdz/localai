@@ -9,20 +9,12 @@ import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
 import "allotment/dist/style.css";
+import { FORM_DEFAULT_VALUES } from "../constants/generator";
 
 export const Generator = () => {
   const methods = useForm<GeneratorConfigFormValues>({
     mode: "onChange",
-    defaultValues: {
-      width: 512,
-      height: 512,
-      hires_fix: false,
-      number_of_images: 4,
-      steps: 24,
-      seed: -1,
-      cfg_scale: 7.5,
-      styles: [],
-    },
+    defaultValues: FORM_DEFAULT_VALUES,
   });
   const [mounted, setMounted] = useState(false);
 
