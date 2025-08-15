@@ -10,13 +10,16 @@ import { FormProvider, useForm } from "react-hook-form";
 import { FORM_DEFAULT_VALUES } from "../constants";
 
 import "allotment/dist/style.css";
+import { useGenerator } from "../states";
 
 export const Generator = () => {
   const methods = useForm<GeneratorConfigFormValues>({
-    mode: "onChange",
+    mode: "all",
+    reValidateMode: "onChange",
     defaultValues: FORM_DEFAULT_VALUES,
   });
   const [mounted, setMounted] = useState(false);
+  const { onGenerate } = useGenerator();
 
   useEffect(() => {
     setMounted(true);
@@ -24,7 +27,9 @@ export const Generator = () => {
 
   return (
     <FormProvider {...methods}>
-      <div
+      <form
+        name="generator"
+        onSubmit={methods.handleSubmit(onGenerate)}
         className={clsx("w-full h-full opacity-0 transition-opacity", {
           "opacity-100": mounted,
         })}
@@ -38,7 +43,7 @@ export const Generator = () => {
             <GeneratorActions />
           </Allotment.Pane>
         </Allotment>
-      </div>
+      </form>
     </FormProvider>
   );
 };

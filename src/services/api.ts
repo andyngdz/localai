@@ -1,3 +1,4 @@
+import { GeneratorConfigFormValues } from "@/features/generator-configs";
 import axios from "axios";
 import type {
   DeviceIndexResponse,
@@ -70,6 +71,12 @@ class API {
 
   async getDownloadedModels() {
     const { data } = await client.get<ModelDownloaded[]>("/models/downloaded");
+
+    return data;
+  }
+
+  async addHistory(config: GeneratorConfigFormValues) {
+    const { data } = await client.post<number>("/histories", config);
 
     return data;
   }
