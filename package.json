@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "tauri": "WEBKIT_DISABLE_COMPOSITING_MODE=1 tauri",
+    "tauri": "tauri",
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
