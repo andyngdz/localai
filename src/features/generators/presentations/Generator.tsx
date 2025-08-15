@@ -1,8 +1,8 @@
 "use client";
 
-import { GeneratorConfig } from "@/features/generator-configs/presentations/GeneratorConfig";
-import { GeneratorConfigFormValues } from "@/features/generator-configs/types/generator-config";
-import { GeneratorPrompt } from "@/features/generator-prompts/presentations/GeneratorPrompt";
+import { GeneratorActions } from "@/features/generator-actions";
+import { GeneratorConfig, GeneratorConfigFormValues } from "@/features/generator-configs";
+import { GeneratorPrompt } from "@/features/generator-prompts";
 import { Allotment } from "allotment";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
@@ -35,6 +35,7 @@ export const Generator = () => {
           </Allotment.Pane>
           <Allotment.Pane>
             <GeneratorPrompt />
+            <GeneratorActions />
           </Allotment.Pane>
         </Allotment>
       </div>
