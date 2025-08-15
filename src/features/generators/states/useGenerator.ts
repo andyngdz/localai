@@ -1,15 +1,20 @@
 import { GeneratorConfigFormValues } from "@/features/generator-configs";
+import { api } from "@/services/api";
 import { useMutation } from "@tanstack/react-query";
 import { SubmitHandler } from "react-hook-form";
 
 export const useGenerator = () => {
-  const {} = useMutation({
+  const { mutate } = useMutation({
     mutationKey: ["addHistory"],
-    mutationFn: async () => {},
+    mutationFn: async (config: GeneratorConfigFormValues) => {
+      return api.addHistory(config);
+    },
+    onSuccess() {},
+    onError() {},
   });
 
   const onGenerate: SubmitHandler<GeneratorConfigFormValues> = (config) => {
-    console.info(config);
+    mutate(config);
   };
 
   return { onGenerate };
