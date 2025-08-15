@@ -151,4 +151,75 @@ describe("API Service", () => {
       expect(result).toEqual(mockResponse);
     });
   });
+
+  describe("styles", () => {
+    it("fetches styles", async () => {
+      const mockResponse = [
+        {
+          id: "style1",
+          name: "Style 1",
+          description: "Test style",
+          preprompt: "preprompt",
+          prompt: "prompt",
+          negative_prompt: "negative_prompt",
+          model_id: "model1",
+        },
+      ];
+      vi.spyOn(client, "get").mockResolvedValueOnce({ data: mockResponse });
+
+      const result = await api.styles();
+
+      expect(client.get).toHaveBeenCalledWith("/styles");
+      expect(result).toEqual(mockResponse);
+    });
+  });
+
+  describe("getDownloadedModels", () => {
+    it("fetches downloaded models", async () => {
+      const mockResponse = [
+        {
+          id: "model1",
+          name: "Model 1",
+          description: "Test model",
+          memory_requirement_gb: 4,
+          model_size: "Medium",
+          tags: ["tag1", "tag2"],
+          is_recommended: true,
+        },
+      ];
+      vi.spyOn(client, "get").mockResolvedValueOnce({ data: mockResponse });
+
+      const result = await api.getDownloadedModels();
+
+      expect(client.get).toHaveBeenCalledWith("/models/downloaded");
+      expect(result).toEqual(mockResponse);
+    });
+  });
+
+  describe("addHistory", () => {
+    it("adds a history entry", async () => {
+      const mockConfig = {
+        prompt: "a cat",
+        negative_prompt: "a dog",
+        seed: 123,
+        steps: 20,
+        width: 512,
+        height: 512,
+        styles: ["style1"],
+        model: "model1",
+        guidance_scale: 7.5,
+        sampler: "Euler a",
+        number_of_images: 1,
+        hires_fix: false,
+        cfg_scale: 7,
+      };
+      const mockResponse = 1;
+      vi.spyOn(client, "post").mockResolvedValueOnce({ data: mockResponse });
+
+      const result = await api.addHistory(mockConfig);
+
+      expect(client.post).toHaveBeenCalledWith("/histories", mockConfig);
+      expect(result).toEqual(mockResponse);
+    });
+  });
 });
