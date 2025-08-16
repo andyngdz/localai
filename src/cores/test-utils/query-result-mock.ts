@@ -1,10 +1,10 @@
-import { ApiError } from "@/types/api";
-import { UseQueryResult } from "@tanstack/react-query";
-import { vi } from "vitest";
+import { ApiError } from '@/types/api';
+import { UseQueryResult } from '@tanstack/react-query';
+import { vi } from 'vitest';
 
 export const createMockQueryResult = <T>(
   data?: T,
-  overrides: Partial<UseQueryResult<T, ApiError>> = {}
+  overrides: Partial<UseQueryResult<T, ApiError>> = {},
 ): UseQueryResult<T, ApiError> =>
   ({
     data,
@@ -13,8 +13,8 @@ export const createMockQueryResult = <T>(
     error: null,
     isSuccess: !!data,
     refetch: vi.fn(),
-    fetchStatus: "idle",
-    status: "success",
+    fetchStatus: 'idle',
+    status: 'success',
     isFetching: false,
     isPending: false,
     isStale: false,

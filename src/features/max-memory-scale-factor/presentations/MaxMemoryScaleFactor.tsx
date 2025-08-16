@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { SetupLayout } from "@/features/layout/presentations/SetupLayout";
-import { api } from "@/services/api";
-import { Divider } from "@heroui/react";
-import { useRouter } from "next/navigation";
-import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { MaxMemoryFormProps } from "../types";
-import { MaxMemoryScaleFactorItems } from "./MaxMemoryScaleFactorItems";
-import { MaxMemoryScaleFactorPreview } from "./MaxMemoryScaleFactorPreview";
+import { SetupLayout } from '@/features/layout/presentations/SetupLayout';
+import { api } from '@/services/api';
+import { Divider } from '@heroui/react';
+import { useRouter } from 'next/navigation';
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
+import { MaxMemoryFormProps } from '../types';
+import { MaxMemoryScaleFactorItems } from './MaxMemoryScaleFactorItems';
+import { MaxMemoryScaleFactorPreview } from './MaxMemoryScaleFactorPreview';
 
 export const MaxMemoryScaleFactor = () => {
   const router = useRouter();
@@ -21,7 +21,7 @@ export const MaxMemoryScaleFactor = () => {
       ram_scale_factor: values.scaleFactor,
     });
 
-    router.push("/model-recommendations");
+    router.push('/model-recommendations');
   };
 
   return (

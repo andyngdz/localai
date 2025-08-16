@@ -1,6 +1,6 @@
-import { GeneratorConfigFormValues } from "@/features/generator-configs/types/generator-config";
-import { Textarea } from "@heroui/input";
-import { useFormContext } from "react-hook-form";
+import { GeneratorConfigFormValues } from '@/features/generator-configs/types/generator-config';
+import { Textarea } from '@heroui/input';
+import { useFormContext } from 'react-hook-form';
 
 export const GeneratorPrompt = () => {
   const { register, formState } = useFormContext<GeneratorConfigFormValues>();
@@ -13,13 +13,13 @@ export const GeneratorPrompt = () => {
           label="Prompt"
           maxLength={1000}
           isInvalid={!!formState.errors.prompt}
-          {...register("prompt", { required: true })}
+          {...register('prompt', { required: true })}
         />
         <Textarea
           className="font-mono"
           label="Negative prompt"
           maxLength={1000}
-          {...register("negative_prompt")}
+          {...register('negative_prompt')}
         />
       </div>
     </div>

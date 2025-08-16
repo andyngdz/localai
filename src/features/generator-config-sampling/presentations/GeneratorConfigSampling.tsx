@@ -1,7 +1,7 @@
-import { NumberInputController } from "@/cores/presentations/NumberInputController";
-import { GeneratorConfigFormValues } from "@/features/generator-configs/types/generator-config";
-import { useFormContext } from "react-hook-form";
-import { GeneratorConfigCommonSteps } from "./GeneratorConfigCommonSteps";
+import { NumberInputController } from '@/cores/presentations/NumberInputController';
+import { GeneratorConfigFormValues } from '@/features/generator-configs/types/generator-config';
+import { useFormContext } from 'react-hook-form';
+import { GeneratorConfigCommonSteps } from './GeneratorConfigCommonSteps';
 
 export const GeneratorConfigSampling = () => {
   const { control } = useFormContext<GeneratorConfigFormValues>();

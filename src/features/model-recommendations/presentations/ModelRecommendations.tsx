@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { SetupLayout } from "@/features/layout/presentations/SetupLayout";
-import { useRouter } from "next/navigation";
-import { FormProvider } from "react-hook-form";
-import { useModelRecommendation } from "../states/useModelRecommendation";
-import { ModelRecommendationsList } from "./ModelRecommendationsList";
+import { SetupLayout } from '@/features/layout/presentations/SetupLayout';
+import { useRouter } from 'next/navigation';
+import { FormProvider } from 'react-hook-form';
+import { useModelRecommendation } from '../states/useModelRecommendation';
+import { ModelRecommendationsList } from './ModelRecommendationsList';
 
 export const ModelRecommendations = () => {
   const router = useRouter();

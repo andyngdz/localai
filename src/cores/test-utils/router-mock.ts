@@ -1,5 +1,5 @@
-import { vi } from "vitest";
-import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { vi } from 'vitest';
+import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
 /**
  * Sets up a mocked router for Next.js tests.
@@ -12,7 +12,7 @@ export const setupRouterMock = async () => {
   const mockReplace = vi.fn();
   const mockPrefetch = vi.fn();
 
-  const { useRouter } = await import("next/navigation");
+  const { useRouter } = await import('next/navigation');
 
   vi.mocked(useRouter).mockReturnValue({
     push: mockPush,

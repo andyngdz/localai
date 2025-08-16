@@ -1,5 +1,5 @@
-import { Button } from "@heroui/react";
-import { Plus } from "lucide-react";
+import { Button } from '@heroui/react';
+import { Plus } from 'lucide-react';
 
 export const GeneratorConfigExtra = () => {
   return (

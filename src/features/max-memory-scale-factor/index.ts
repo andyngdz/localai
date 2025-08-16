@@ -1,5 +1,5 @@
-export * from "./constants";
-export { MaxMemoryScaleFactor as MaxMemory } from "./presentations/MaxMemoryScaleFactor";
-export { MaxMemoryScaleFactorItems as MemoryOptionItem } from "./presentations/MaxMemoryScaleFactorItems";
-export { MaxMemoryScaleFactorPreview as MemoryPreview } from "./presentations/MaxMemoryScaleFactorPreview";
-export * from "./types";
+export * from './constants';
+export { MaxMemoryScaleFactor as MaxMemory } from './presentations/MaxMemoryScaleFactor';
+export { MaxMemoryScaleFactorItems as MemoryOptionItem } from './presentations/MaxMemoryScaleFactorItems';
+export { MaxMemoryScaleFactorPreview as MemoryPreview } from './presentations/MaxMemoryScaleFactorPreview';
+export * from './types';

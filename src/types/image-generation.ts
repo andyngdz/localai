@@ -1,4 +1,4 @@
-import { GeneratorConfigFormValues } from "@/features/generator-configs";
+import { GeneratorConfigFormValues } from '@/features/generator-configs';
 
 interface ImageGenerationRequest {
   history_id: number;

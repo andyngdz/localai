@@ -1,9 +1,9 @@
-import { GpuInfo } from "@/types";
-import { Card, RadioGroup } from "@heroui/react";
-import { FC, useMemo } from "react";
-import { useFormContext } from "react-hook-form";
-import { GpuDetectionFormProps } from "../types/gpu-detection";
-import { GpuDetectionItem } from "./GpuDetectionItem";
+import { GpuInfo } from '@/types';
+import { Card, RadioGroup } from '@heroui/react';
+import { FC, useMemo } from 'react';
+import { useFormContext } from 'react-hook-form';
+import { GpuDetectionFormProps } from '../types/gpu-detection';
+import { GpuDetectionItem } from './GpuDetectionItem';
 
 export interface GpuDetectionItemsProps {
   gpus: GpuInfo[];
@@ -21,7 +21,7 @@ export const GpuDetectionItems: FC<GpuDetectionItemsProps> = ({ gpus }) => {
 
   return (
     <Card>
-      <RadioGroup defaultValue={`${defaultValue}`} {...register("gpu", { required: true })}>
+      <RadioGroup defaultValue={`${defaultValue}`} {...register('gpu', { required: true })}>
         {items}
       </RadioGroup>
     </Card>

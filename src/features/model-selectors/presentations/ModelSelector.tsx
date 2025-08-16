@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@heroui/react";
-import { map } from "es-toolkit/compat";
-import { ChevronDown } from "lucide-react";
-import { useMemo } from "react";
-import { useModelSelectors } from "../states/useModelSelectors";
-import { useModelSelectorStore } from "../states/useModelSelectorStores";
+import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@heroui/react';
+import { map } from 'es-toolkit/compat';
+import { ChevronDown } from 'lucide-react';
+import { useMemo } from 'react';
+import { useModelSelectors } from '../states/useModelSelectors';
+import { useModelSelectorStore } from '../states/useModelSelectorStores';
 
 export const ModelSelector = () => {
   const { data } = useModelSelectors();

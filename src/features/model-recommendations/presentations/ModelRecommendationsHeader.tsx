@@ -1,6 +1,6 @@
-import clsx from "clsx";
-import { FC } from "react";
-import { ModelRecommendationsBadge } from "./ModelRecommendationsBadge";
+import clsx from 'clsx';
+import { FC } from 'react';
+import { ModelRecommendationsBadge } from './ModelRecommendationsBadge';
 
 interface ModelRecommendationsHeaderProps {
   title: string;
@@ -18,8 +18,8 @@ export const ModelRecommendationsHeader: FC<ModelRecommendationsHeaderProps> = (
       <div className="flex items-center gap-2">
         <h3
           className={clsx(
-            "text-xl font-bold",
-            isRecommended ? "text-primary" : "text-base-content"
+            'text-xl font-bold',
+            isRecommended ? 'text-primary' : 'text-base-content',
           )}
         >
           {title}

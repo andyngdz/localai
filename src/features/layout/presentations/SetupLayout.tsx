@@ -1,9 +1,9 @@
-import { Divider } from "@heroui/divider";
-import { Button } from "@heroui/react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import type { FC, ReactNode } from "react";
-import { SetupLayoutBackground } from "./SetupLayoutBackground";
-import { SetupLayoutContent } from "./SetupLayoutContent";
+import { Divider } from '@heroui/divider';
+import { Button } from '@heroui/react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import type { FC, ReactNode } from 'react';
+import { SetupLayoutBackground } from './SetupLayoutBackground';
+import { SetupLayoutContent } from './SetupLayoutContent';
 
 export interface SetupLayoutProps {
   title: string;

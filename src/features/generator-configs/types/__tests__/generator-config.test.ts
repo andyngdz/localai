@@ -1,8 +1,8 @@
-import { describe, expect, it } from "vitest";
-import { GeneratorConfigFormValues } from "../generator-config";
+import { describe, expect, it } from 'vitest';
+import { GeneratorConfigFormValues } from '../generator-config';
 
-describe("GeneratorConfigFormValues", () => {
-  it("should have the correct type structure", () => {
+describe('GeneratorConfigFormValues', () => {
+  it('should have the correct type structure', () => {
     const configValues: GeneratorConfigFormValues = {
       width: 512,
       height: 512,

@@ -15,7 +15,7 @@ const MockNextImage = ({
   height?: number | string;
   className?: string;
   priority?: boolean;
-  loading?: "eager" | "lazy";
+  loading?: 'eager' | 'lazy';
   quality?: number | string;
 }) => {
   return (
@@ -24,8 +24,8 @@ const MockNextImage = ({
       data-src={src}
       data-alt={alt}
       style={{
-        width: width ? `${width}px` : "auto",
-        height: height ? `${height}px` : "auto",
+        width: width ? `${width}px` : 'auto',
+        height: height ? `${height}px` : 'auto',
       }}
       {...props}
     >

@@ -1,20 +1,20 @@
-import { GeneratorConfigFormValues } from "@/features/generator-configs/types/generator-config";
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { ReactNode } from "react";
-import { FormProvider, useForm } from "react-hook-form";
-import { describe, expect, it, vi } from "vitest";
-import { seedService } from "../../services/seed";
-import { GeneratorConfigSeed } from "../GeneratorConfigSeed";
+import { GeneratorConfigFormValues } from '@/features/generator-configs/types/generator-config';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { ReactNode } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { describe, expect, it, vi } from 'vitest';
+import { seedService } from '../../services/seed';
+import { GeneratorConfigSeed } from '../GeneratorConfigSeed';
 
 // Mock dependencies
-vi.mock("@/cores/presentations/NumberInputController", () => ({
+vi.mock('@/cores/presentations/NumberInputController', () => ({
   NumberInputController: ({
-    "aria-label": ariaLabel,
+    'aria-label': ariaLabel,
     controlName,
     startContent,
   }: {
-    "aria-label": string;
+    'aria-label': string;
     controlName: string;
     startContent: ReactNode;
     [key: string]: unknown;
@@ -26,7 +26,7 @@ vi.mock("@/cores/presentations/NumberInputController", () => ({
   ),
 }));
 
-vi.mock("../../services/seed", () => ({
+vi.mock('../../services/seed', () => ({
   seedService: {
     generate: vi.fn().mockReturnValue(12345),
   },
@@ -48,41 +48,41 @@ const MockFormProvider = ({ children }: { children: ReactNode }) => {
   return <FormProvider {...methods}>{children}</FormProvider>;
 };
 
-describe("GeneratorConfigSeed", () => {
+describe('GeneratorConfigSeed', () => {
   it("should render the component with 'Seed' heading", () => {
     render(
       <MockFormProvider>
         <GeneratorConfigSeed />
-      </MockFormProvider>
+      </MockFormProvider>,
     );
 
-    expect(screen.getByText("Seed", { selector: "span.font-semibold" })).toBeInTheDocument();
+    expect(screen.getByText('Seed', { selector: 'span.font-semibold' })).toBeInTheDocument();
   });
 
-  it("should render number input for seed value", () => {
+  it('should render number input for seed value', () => {
     render(
       <MockFormProvider>
         <GeneratorConfigSeed />
-      </MockFormProvider>
+      </MockFormProvider>,
     );
 
-    expect(screen.getByTestId("number-input-seed")).toBeInTheDocument();
-    expect(screen.getByText("Value")).toBeInTheDocument();
+    expect(screen.getByTestId('number-input-seed')).toBeInTheDocument();
+    expect(screen.getByText('Value')).toBeInTheDocument();
   });
 
-  it("should render a dice button to generate random seed", () => {
+  it('should render a dice button to generate random seed', () => {
     render(
       <MockFormProvider>
         <GeneratorConfigSeed />
-      </MockFormProvider>
+      </MockFormProvider>,
     );
 
     // Check that a button is present
-    const buttons = screen.getAllByRole("button");
+    const buttons = screen.getAllByRole('button');
     expect(buttons.length).toBe(1); // Should be one button
   });
 
-  it("should call seedService.generate and setValue when dice button is clicked", async () => {
+  it('should call seedService.generate and setValue when dice button is clicked', async () => {
     const user = userEvent.setup();
     const mockSetValue = vi.fn();
 
@@ -109,11 +109,11 @@ describe("GeneratorConfigSeed", () => {
     render(
       <CustomMockFormProvider>
         <GeneratorConfigSeed />
-      </CustomMockFormProvider>
+      </CustomMockFormProvider>,
     );
 
     // Click on the dice button
-    const diceButton = screen.getByRole("button");
+    const diceButton = screen.getByRole('button');
     await user.click(diceButton);
 
     // Verify that seedService.generate was called
@@ -121,9 +121,9 @@ describe("GeneratorConfigSeed", () => {
 
     // Verify that setValue was called with the correct parameters
     expect(mockSetValue).toHaveBeenCalledWith(
-      "seed",
+      'seed',
       12345, // This is the mocked return value of seedService.generate
-      { shouldValidate: true, shouldTouch: true }
+      { shouldValidate: true, shouldTouch: true },
     );
   });
 });

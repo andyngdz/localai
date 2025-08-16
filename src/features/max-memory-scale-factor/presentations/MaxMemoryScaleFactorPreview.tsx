@@ -1,12 +1,12 @@
-import { formatter } from "@/services/formatter";
-import { useMemoryQuery } from "@/services/queries";
-import { useFormContext } from "react-hook-form";
-import { MaxMemoryFormProps } from "../types";
+import { formatter } from '@/services/formatter';
+import { useMemoryQuery } from '@/services/queries';
+import { useFormContext } from 'react-hook-form';
+import { MaxMemoryFormProps } from '../types';
 
 export const MaxMemoryScaleFactorPreview = () => {
   const { data } = useMemoryQuery();
   const { watch } = useFormContext<MaxMemoryFormProps>();
-  const scaleFactor = watch("scaleFactor");
+  const scaleFactor = watch('scaleFactor');
 
   if (!data) {
     return (

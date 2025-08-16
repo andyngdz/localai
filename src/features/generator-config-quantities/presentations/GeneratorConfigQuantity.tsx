@@ -1,8 +1,8 @@
-import { NumberInputController } from "@/cores/presentations/NumberInputController";
-import { GeneratorConfigFormValues } from "@/features/generator-configs/types/generator-config";
-import { Tooltip } from "@heroui/react";
-import { Info } from "lucide-react";
-import { useFormContext } from "react-hook-form";
+import { NumberInputController } from '@/cores/presentations/NumberInputController';
+import { GeneratorConfigFormValues } from '@/features/generator-configs/types/generator-config';
+import { Tooltip } from '@heroui/react';
+import { Info } from 'lucide-react';
+import { useFormContext } from 'react-hook-form';
 
 export const GeneratorConfigQuantity = () => {
   const { control } = useFormContext<GeneratorConfigFormValues>();

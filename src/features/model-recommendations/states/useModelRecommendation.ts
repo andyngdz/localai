@@ -1,10 +1,10 @@
-import { api } from "@/services/api";
-import { useModelRecommendationsQuery } from "@/services/queries";
-import { socket, SocketEvents } from "@/sockets";
-import { useRouter } from "next/navigation";
-import { useCallback, useEffect } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { ModelRecommendationFormProps } from "../types";
+import { api } from '@/services/api';
+import { useModelRecommendationsQuery } from '@/services/queries';
+import { socket, SocketEvents } from '@/sockets';
+import { useRouter } from 'next/navigation';
+import { useCallback, useEffect } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { ModelRecommendationFormProps } from '../types';
 
 export const useModelRecommendation = () => {
   const router = useRouter();
@@ -21,7 +21,7 @@ export const useModelRecommendation = () => {
   };
 
   const onModelLoadCompleted = useCallback(() => {
-    router.replace("/editor");
+    router.replace('/editor');
   }, [router]);
 
   useEffect(() => {
@@ -34,7 +34,7 @@ export const useModelRecommendation = () => {
 
   useEffect(() => {
     if (data) {
-      setValue("id", data.default_selected_id);
+      setValue('id', data.default_selected_id);
     }
   }, [data, setValue]);
 

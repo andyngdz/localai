@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Card, Divider } from "@heroui/react";
-import { FC } from "react";
+import { Card, Divider } from '@heroui/react';
+import { FC } from 'react';
 
 export interface GpuDetectionVersionProps {
   cuda_runtime_version: string;

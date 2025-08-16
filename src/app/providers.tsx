@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { HeroUIProvider, ToastProvider } from "@heroui/react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { FC, PropsWithChildren } from "react";
+import { HeroUIProvider, ToastProvider } from '@heroui/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { FC, PropsWithChildren } from 'react';
 
 const queryClient = new QueryClient({
   defaultOptions: {

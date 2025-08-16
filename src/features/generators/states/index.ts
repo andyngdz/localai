@@ -1,1 +1,1 @@
-export * from "./useGenerator";
+export * from './useGenerator';

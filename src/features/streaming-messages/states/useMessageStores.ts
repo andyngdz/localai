@@ -1,4 +1,4 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 
 export interface MessageStoreProps {
   message: string;
@@ -7,7 +7,7 @@ export interface MessageStoreProps {
 }
 
 export const useMessageStore = create<MessageStoreProps>((set, _get, store) => ({
-  message: "",
+  message: '',
   setMessage: (message) => set({ message }),
   reset: () => set(store.getInitialState()),
 }));
