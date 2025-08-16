@@ -4,6 +4,8 @@ import type {
   DeviceIndexResponse,
   HardwareResponse,
   HealthResponse,
+  ImageGenerationRequest,
+  ImageGenerationResponse,
   MaxMemoryRequest,
   MemoryResponse,
   ModelDownloaded,
@@ -77,6 +79,12 @@ class API {
 
   async addHistory(config: GeneratorConfigFormValues) {
     const { data } = await client.post<number>("/histories", config);
+
+    return data;
+  }
+
+  async generator(request: ImageGenerationRequest) {
+    const { data } = await client.post<ImageGenerationResponse>(`/generators`, request);
 
     return data;
   }
