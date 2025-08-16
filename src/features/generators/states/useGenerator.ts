@@ -14,12 +14,15 @@ export const useGenerator = () => {
     mutationFn: (request: ImageGenerationRequest) => {
       return api.generator(request);
     },
-    onError() {
+    onError: () => {
       addToast({
         title: 'Something went wrong',
         description: 'There was an error generating your image.',
         color: 'danger',
       });
+    },
+    onSuccess: (response) => {
+      console.info(response);
     },
   });
 
