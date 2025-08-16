@@ -1,18 +1,9 @@
-import { GeneratorConfigFormValues } from '@/features/generator-configs';
 import clsx from 'clsx';
-import NextImage from 'next/image';
-import { useFormContext } from 'react-hook-form';
 import { useGeneratorPreviewer } from '../states';
+import { GeneratorPreviewerItem } from './GeneratorPreviewerItem';
 
 export const GeneratorPreviewer = () => {
-  const { watch } = useFormContext<GeneratorConfigFormValues>();
   const { images } = useGeneratorPreviewer();
-
-  const width = watch('width');
-  const height = watch('height');
-  const aspectRatio = width / height;
-
-  console.info(aspectRatio);
 
   return (
     <div
@@ -23,24 +14,7 @@ export const GeneratorPreviewer = () => {
       )}
     >
       {images.map((image) => {
-        const dataUrl = `data:image/png;base64,${image.image_base64}`;
-        return (
-          <div
-            key={image.index}
-            className="relative self-start"
-            style={{
-              aspectRatio,
-            }}
-          >
-            <NextImage
-              key={image.index}
-              src={dataUrl}
-              alt={`Image step: ${image.current_step}`}
-              className="rounded-2xl object-cover"
-              fill
-            />
-          </div>
-        );
+        return <GeneratorPreviewerItem key={image.index} image={image} />;
       })}
     </div>
   );
