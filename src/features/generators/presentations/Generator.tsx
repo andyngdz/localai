@@ -39,7 +39,7 @@ export const Generator = () => {
           <Allotment.Pane maxSize={350} minSize={300} preferredSize={300}>
             <GeneratorConfig />
           </Allotment.Pane>
-          <Allotment.Pane>
+          <Allotment.Pane className="flex flex-col">
             <GeneratorPrompt />
             <GeneratorActions />
             <GeneratorPreviewer />
