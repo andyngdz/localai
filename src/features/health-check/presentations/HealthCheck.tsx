@@ -29,7 +29,7 @@ export const HealthCheck = () => {
 
   useEffect(() => {
     onCheckDeviceIndex();
-  }, [onCheckDeviceIndex]);
+  }, [isHealthy, onCheckDeviceIndex]);
 
   return (
     <SetupLayout
