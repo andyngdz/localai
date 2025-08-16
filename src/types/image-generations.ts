@@ -15,4 +15,16 @@ interface ImageGenerationResponse {
   nsfw_content_detected: boolean[];
 }
 
-export type { ImageGenerationItem, ImageGenerationRequest, ImageGenerationResponse };
+interface ImageGenerationStepEndResponse {
+  index: number;
+  current_step: number;
+  timestep: number;
+  image_base64: string;
+}
+
+export type {
+  ImageGenerationItem,
+  ImageGenerationRequest,
+  ImageGenerationResponse,
+  ImageGenerationStepEndResponse,
+};

@@ -12,7 +12,7 @@ export const GeneratorActions = () => {
       <Button color="primary" variant="bordered" isDisabled={!isValid} type="submit">
         Generate {numberOfImages} images
       </Button>
-      <Select className="max-w-32" defaultSelectedKeys={['grid']}>
+      <Select className="max-w-32" defaultSelectedKeys={['grid']} aria-label="View">
         <SelectItem key="grid">Grid View</SelectItem>
         <SelectItem key="list">List View</SelectItem>
       </Select>

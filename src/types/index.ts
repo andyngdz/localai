@@ -1,2 +1,3 @@
 export * from './api';
-export * from './image-generation';
+export * from './image-generations';
+export * from './models';

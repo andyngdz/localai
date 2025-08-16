@@ -6,6 +6,7 @@ import type {
   HealthResponse,
   ImageGenerationRequest,
   ImageGenerationResponse,
+  LoadModelRequest,
   MaxMemoryRequest,
   MemoryResponse,
   ModelDownloaded,
@@ -56,6 +57,13 @@ class API {
 
   async getModelRecommendations() {
     const { data } = await client.get<ModelRecommendationResponse>('/models/recommendations');
+
+    return data;
+  }
+
+  async loadModel(request: LoadModelRequest) {
+    const { data } = await client.post('/models/load', request);
+
     return data;
   }
 
