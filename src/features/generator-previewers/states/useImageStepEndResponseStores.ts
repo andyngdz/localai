@@ -24,11 +24,26 @@ export function addOrUpdateImageInList(
 
 export interface UseImageStepEndResponseStore {
   images: ImageGenerationStepEndResponse[];
+  initImages: (count: number) => void;
   updateImage: (response: ImageGenerationStepEndResponse) => void;
 }
 
 export const useImageStepEndResponseStore = create<UseImageStepEndResponseStore>((set) => ({
   images: [],
+  initImages: (count: number) =>
+    set(() => {
+      const images = Array(count)
+        .keys()
+        .map((index) => ({
+          index,
+          current_step: 0,
+          timestep: 0,
+          image_base64: '',
+        }))
+        .toArray();
+
+      return { images };
+    }),
   updateImage: (response) =>
     set((state) => ({
       images: addOrUpdateImageInList(state.images, response),
