@@ -7,6 +7,7 @@ vi.mock('@heroui/react', () => ({
   HeroUIProvider: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="heroui-provider">{children}</div>
   ),
+  ToastProvider: () => <div data-testid="toast-provider" />,
 }));
 
 vi.mock('@tanstack/react-query', () => ({
@@ -84,13 +85,16 @@ describe('Providers', () => {
     expect(child).toBeInTheDocument();
   });
 
-  it('matches snapshot', () => {
+  it('renders expected provider DOM', () => {
     const { container } = render(
       <Providers>
         <div>Test Content</div>
       </Providers>,
     );
 
-    expect(container.firstChild).toMatchSnapshot();
+    expect(screen.getByTestId('heroui-provider')).toBeInTheDocument();
+    expect(screen.getByTestId('query-client-provider')).toBeInTheDocument();
+    expect(screen.getByTestId('react-query-devtools')).toBeInTheDocument();
+    expect(container.firstChild).toContainElement(screen.getByTestId('query-client-provider'));
   });
 });

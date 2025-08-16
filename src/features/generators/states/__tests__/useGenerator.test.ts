@@ -8,6 +8,7 @@ import { useGenerator } from '../useGenerator';
 vi.mock('@/services/api', () => ({
   api: {
     addHistory: vi.fn(),
+    generator: vi.fn().mockResolvedValue({}),
   },
 }));
 
@@ -57,7 +58,7 @@ describe('useGenerator', () => {
     vi.mocked(api.addHistory).mockRejectedValue(error);
     const wrapper = createQueryClientWrapper();
     const { result } = renderHook(() => useGenerator(), { wrapper });
-    result.current.onGenerate(mockConfig);
+    await expect(result.current.onGenerate(mockConfig)).rejects.toThrow('Test error');
 
     await waitFor(() => {
       expect(api.addHistory).toHaveBeenCalledWith(mockConfig);
