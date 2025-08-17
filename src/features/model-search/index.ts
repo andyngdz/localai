@@ -1,1 +1,1 @@
-export * from './presentations/ModelSearchIconButton';
+export * from './presentations/ModelSearchOpenIconButton';
