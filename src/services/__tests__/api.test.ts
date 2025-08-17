@@ -222,4 +222,52 @@ describe('API Service', () => {
       expect(result).toEqual(mockResponse);
     });
   });
+
+  describe('loadModel', () => {
+    it('calls POST /models/load and returns the data', async () => {
+      const request = { id: 'model1' };
+      const mockResponse = { status: 'loaded', id: 'model1' };
+      vi.spyOn(client, 'post').mockResolvedValueOnce({ data: mockResponse });
+
+      const result = await api.loadModel(request);
+
+      expect(client.post).toHaveBeenCalledWith('/models/load', request);
+      expect(result).toEqual(mockResponse);
+    });
+  });
+
+  describe('generator', () => {
+    it('calls POST /generators and returns ImageGenerationResponse data', async () => {
+      const request = {
+        history_id: 1,
+        config: {
+          prompt: 'a cat',
+          negative_prompt: '',
+          seed: 123,
+          steps: 20,
+          width: 512,
+          height: 512,
+          styles: [],
+          number_of_images: 1,
+          hires_fix: false,
+          cfg_scale: 7,
+        },
+      };
+      const mockResponse = {
+        items: [
+          {
+            path: '/images/img1.png',
+            file_name: 'img1.png',
+          },
+        ],
+        nsfw_content_detected: [false],
+      };
+      vi.spyOn(client, 'post').mockResolvedValueOnce({ data: mockResponse });
+
+      const result = await api.generator(request);
+
+      expect(client.post).toHaveBeenCalledWith('/generators', request);
+      expect(result).toEqual(mockResponse);
+    });
+  });
 });

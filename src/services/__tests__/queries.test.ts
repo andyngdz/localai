@@ -1,12 +1,16 @@
+import type { ModelDownloaded } from '@/types/api';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
-import { createQueryClientWrapper } from '../../cores/test-utils';
+import React from 'react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { api } from '../api';
 import {
+  useDownloadedModelsQuery,
   useHardwareQuery,
   useHealthQuery,
   useMemoryQuery,
   useModelRecommendationsQuery,
+  useStyleSectionsQuery,
 } from '../queries';
 
 // Mock the API service
@@ -16,18 +20,51 @@ vi.mock('../api', () => ({
     getHardwareStatus: vi.fn(),
     getMemory: vi.fn(),
     getModelRecommendations: vi.fn(),
+    getDownloadedModels: vi.fn(),
+    styles: vi.fn(),
   },
 }));
 
-describe('Query Hooks', () => {
-  const wrapper = createQueryClientWrapper();
+/**
+ * Creates a testing environment with a fresh QueryClient for React Query hooks
+ */
+const createQueryTestingEnvironment = () => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
+
+  const wrapper = ({ children }: { children: React.ReactNode }) =>
+    React.createElement(QueryClientProvider, { client: queryClient }, children);
+
+  return {
+    queryClient,
+    wrapper,
+  };
+};
+
+describe('React Query Hooks', () => {
+  // Test utility setup
+  let testEnv: ReturnType<typeof createQueryTestingEnvironment>;
+
+  beforeEach(() => {
+    testEnv = createQueryTestingEnvironment();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    testEnv.queryClient.clear();
+  });
 
   describe('useHealthQuery', () => {
     it('calls api.health and returns the data', async () => {
       const mockResponse = { status: 'ok', message: 'Server is healthy' };
       vi.mocked(api.health).mockResolvedValue(mockResponse);
 
-      const { result } = renderHook(() => useHealthQuery(), { wrapper });
+      const { result } = renderHook(() => useHealthQuery(), { wrapper: testEnv.wrapper });
 
       await waitFor(() => {
         expect(result.current.isSuccess).toBe(true);
@@ -41,7 +78,7 @@ describe('Query Hooks', () => {
       const mockError = new Error('Network error');
       vi.mocked(api.health).mockRejectedValue(mockError);
 
-      const { result } = renderHook(() => useHealthQuery(), { wrapper });
+      const { result } = renderHook(() => useHealthQuery(), { wrapper: testEnv.wrapper });
 
       await waitFor(() => {
         expect(result.current.isError).toBe(true);
@@ -69,7 +106,7 @@ describe('Query Hooks', () => {
       };
       vi.mocked(api.getHardwareStatus).mockResolvedValue(mockResponse);
 
-      const { result } = renderHook(() => useHardwareQuery(), { wrapper });
+      const { result } = renderHook(() => useHardwareQuery(), { wrapper: testEnv.wrapper });
 
       await waitFor(() => {
         expect(result.current.isSuccess).toBe(true);
@@ -85,7 +122,7 @@ describe('Query Hooks', () => {
       const mockResponse = { gpu: 24576000000, ram: 32000000000 };
       vi.mocked(api.getMemory).mockResolvedValue(mockResponse);
 
-      const { result } = renderHook(() => useMemoryQuery(), { wrapper });
+      const { result } = renderHook(() => useMemoryQuery(), { wrapper: testEnv.wrapper });
 
       await waitFor(() => {
         expect(result.current.isSuccess).toBe(true);
@@ -124,7 +161,7 @@ describe('Query Hooks', () => {
       vi.mocked(api.getModelRecommendations).mockResolvedValue(mockResponse);
 
       const { result } = renderHook(() => useModelRecommendationsQuery(), {
-        wrapper,
+        wrapper: testEnv.wrapper,
       });
 
       await waitFor(() => {
@@ -132,6 +169,68 @@ describe('Query Hooks', () => {
       });
 
       expect(api.getModelRecommendations).toHaveBeenCalled();
+      expect(result.current.data).toEqual(mockResponse);
+    });
+  });
+
+  describe('useDownloadedModelsQuery', () => {
+    it('calls api.getDownloadedModels and returns data', async () => {
+      const mockResponse: ModelDownloaded[] = [
+        {
+          created_at: '2025-01-01T00:00:00Z',
+          id: 1,
+          model_id: 'model-1',
+          model_dir: '/models/model-1',
+          updated_at: '2025-01-01T00:00:00Z',
+        },
+        {
+          created_at: '2025-01-02T00:00:00Z',
+          id: 2,
+          model_id: 'model-2',
+          model_dir: '/models/model-2',
+          updated_at: '2025-01-02T00:00:00Z',
+        },
+      ];
+      vi.mocked(api.getDownloadedModels).mockResolvedValue(mockResponse);
+
+      const { result } = renderHook(() => useDownloadedModelsQuery(), { wrapper: testEnv.wrapper });
+
+      await waitFor(() => {
+        expect(result.current.isSuccess).toBe(true);
+      });
+
+      expect(api.getDownloadedModels).toHaveBeenCalled();
+      expect(result.current.data).toEqual(mockResponse);
+    });
+  });
+
+  describe('useStyleSectionsQuery', () => {
+    it('calls api.styles and returns data', async () => {
+      const mockResponse = [
+        {
+          id: 'section1',
+          styles: [
+            {
+              id: 'style1',
+              name: 'Style 1',
+              origin: 'test',
+              license: 'MIT',
+              positive: 'beautiful, stunning',
+              negative: 'ugly, blurry',
+              image: 'style1.jpg',
+            },
+          ],
+        },
+      ];
+      vi.mocked(api.styles).mockResolvedValue(mockResponse);
+
+      const { result } = renderHook(() => useStyleSectionsQuery(), { wrapper: testEnv.wrapper });
+
+      await waitFor(() => {
+        expect(result.current.isSuccess).toBe(true);
+      });
+
+      expect(api.styles).toHaveBeenCalled();
       expect(result.current.data).toEqual(mockResponse);
     });
   });
