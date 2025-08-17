@@ -1,4 +1,5 @@
 import LocalAILogo from '@/assets/logo.png';
+import { ModelSearchIconButton } from '@/features/model-search';
 import { ModelSelector } from '@/features/model-selectors/presentations/ModelSelector';
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from '@heroui/react';
 import NextImage from 'next/image';
@@ -10,8 +11,9 @@ export const EditorNavbar = () => {
         <NextImage src={LocalAILogo} alt="LocalAI Logo" width={32} height={32} priority />
       </NavbarBrand>
       <NavbarContent justify="center">
-        <NavbarItem>
+        <NavbarItem className="flex items-center gap-2">
           <ModelSelector />
+          <ModelSearchIconButton />
         </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end" />
