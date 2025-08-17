@@ -4,7 +4,7 @@ interface LoadModelRequest {
 
 interface LoadModelResponse {
   id: string;
-  config: Map<string, unknown>;
+  config: Record<string, unknown>;
   sample_size: number;
 }
 
