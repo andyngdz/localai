@@ -49,7 +49,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4 # Use latest setup-node action
         with:
-          node-version: "18"
+          node-version: "latest"
           cache: "npm" # Enable caching for npm dependencies
 
       # Step 3: Install dependencies (will use cache if available)
@@ -135,7 +135,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "18"
+          node-version: "latest"
           cache: "npm" # Enable caching for npm dependencies
 
       # Step 3: Install dependencies (will use cache if available)

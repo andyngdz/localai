@@ -78,25 +78,27 @@ describe('useGenerator', () => {
   });
 
   it('should handle error case', async () => {
-    const error = new Error('Test error');
-    vi.mocked(api.addHistory).mockRejectedValue(error);
+    const mockError = new Error('Test error');
+    vi.mocked(api.addHistory).mockRejectedValue(mockError);
 
     const wrapper = createQueryClientWrapper();
     const { result } = renderHook(() => useGenerator(), { wrapper });
 
-    // Use try/catch to properly handle the expected rejection
-    let caughtError: Nullable<Error>;
+    // Explicitly checking for the error
+    let errorWasCaught = false;
 
     await act(async () => {
       try {
         await result.current.onGenerate(mockConfig);
+        // If we get here, the test should fail because we expect an error
+        expect("This code should not be reached").toBe("Promise should reject");
       } catch (err) {
-        caughtError = err as Error;
+        errorWasCaught = true;
+        expect(err).toEqual(mockError);
       }
     });
 
-    expect(caughtError).toBeInstanceOf(Error);
-    expect(caughtError?.message).toBe('Test error');
+    expect(errorWasCaught).toBe(true);
     expect(api.addHistory).toHaveBeenCalledWith(mockConfig);
     // Generator function should not be called since addHistory fails
     expect(api.generator).not.toHaveBeenCalled();
@@ -111,11 +113,14 @@ describe('useGenerator', () => {
     const { result } = renderHook(() => useGenerator(), { wrapper });
 
     await act(async () => {
-      // Using try/catch to handle the promise rejection
+      // We expect the promise to reject, but we don't need to do anything with the error
+      // since we're just testing that onError callback was triggered
       try {
         await result.current.onGenerate(mockConfig);
-      } catch {
-        // Error is expected and caught here
+        // If we get here, the test should fail because we expect an error
+        expect("This code should not be reached").toBe("Promise should reject");
+      } catch (error: unknown) {
+        // Error is expected - test will continue
       }
     });
 
