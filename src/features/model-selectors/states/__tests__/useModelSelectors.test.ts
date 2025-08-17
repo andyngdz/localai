@@ -8,6 +8,12 @@ import { useModelSelectors } from '../useModelSelectors';
 import { useModelSelectorStore } from '../useModelSelectorStores';
 
 // Mock dependencies
+vi.mock('@/services/api', () => ({
+  api: {
+    loadModel: vi.fn().mockResolvedValue({}),
+  },
+}));
+
 vi.mock('@/services/queries', () => ({
   useDownloadedModelsQuery: vi.fn(),
 }));
@@ -58,7 +64,6 @@ describe('useModelSelectors', () => {
       if (arr && Array.isArray(arr) && arr.length > 0) {
         return arr[0];
       }
-      return undefined;
     });
   });
 
@@ -110,5 +115,22 @@ describe('useModelSelectors', () => {
 
     expect(result.current.data).toEqual([]);
     expect(mockSetId).not.toHaveBeenCalled();
+  });
+
+  it('should call api.loadModel when id changes', async () => {
+    // Access the mocked api
+    const mockedApi = vi.mocked(await import('@/services/api')).api;
+
+    vi.mocked(useModelSelectorStore).mockReturnValue({
+      id: 'existing-id',
+      setId: mockSetId,
+    });
+
+    renderHook(() => useModelSelectors());
+
+    // Wait for the effect to be called
+    await waitFor(() => {
+      expect(mockedApi.loadModel).toHaveBeenCalledWith({ id: 'existing-id' });
+    });
   });
 });
