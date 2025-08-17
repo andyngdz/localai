@@ -1,1 +1,1 @@
-export * from "./useGeneratorConfigStyleItem";
+export * from './useGeneratorConfigStyleItem';

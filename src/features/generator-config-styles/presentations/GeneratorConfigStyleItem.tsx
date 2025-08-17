@@ -1,9 +1,9 @@
-import { StyleItem } from "@/types";
-import { Avatar, Chip, Tooltip } from "@heroui/react";
-import clsx from "clsx";
-import NextImage from "next/image";
-import { FC } from "react";
-import { useGeneratorConfigStyle } from "../states";
+import { StyleItem } from '@/types';
+import { Avatar, Chip, Tooltip } from '@heroui/react';
+import clsx from 'clsx';
+import NextImage from 'next/image';
+import { FC } from 'react';
+import { useGeneratorConfigStyle } from '../states';
 
 export interface GeneratorConfigStyleItemProps {
   styleItem: StyleItem;
@@ -16,7 +16,7 @@ export const GeneratorConfigStyleItem: FC<GeneratorConfigStyleItemProps> = ({ st
     <Tooltip
       key={styleItem.id}
       classNames={{
-        content: "p-0 rounded-lg overflow-hidden",
+        content: 'p-0 rounded-lg overflow-hidden',
       }}
       content={
         <NextImage
@@ -36,8 +36,8 @@ export const GeneratorConfigStyleItem: FC<GeneratorConfigStyleItemProps> = ({ st
           />
         }
         variant="bordered"
-        className={clsx("cursor-pointer transition-all", {
-          "border-primary": isSelected,
+        className={clsx('cursor-pointer transition-all', {
+          'border-primary': isSelected,
         })}
         onClick={onClick}
       >

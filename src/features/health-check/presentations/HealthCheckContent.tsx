@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Chip } from "@heroui/react";
-import { FC, useMemo } from "react";
+import { Chip } from '@heroui/react';
+import { FC, useMemo } from 'react';
 
 export interface HealthCheckContentProps {
   isHealthy: boolean;

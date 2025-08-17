@@ -1,4 +1,4 @@
-import { GpuDetection } from "@/features/gpu-detection";
+import { GpuDetection } from '@/features/gpu-detection';
 
 export default function GPUDetectionScreen() {
   return <GpuDetection />;

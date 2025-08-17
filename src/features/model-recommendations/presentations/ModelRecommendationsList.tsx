@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import "swiper/css";
-import "swiper/css/pagination";
+import 'swiper/css';
+import 'swiper/css/pagination';
 
-import { ModelRecommendationSection } from "@/types/api";
-import { findIndex } from "es-toolkit/compat";
-import { FC } from "react";
-import { Pagination } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { ModelRecommendationsSection } from "./ModelRecommendationsSection";
+import { ModelRecommendationSection } from '@/types/api';
+import { findIndex } from 'es-toolkit/compat';
+import { FC } from 'react';
+import { Pagination } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { ModelRecommendationsSection } from './ModelRecommendationsSection';
 
 interface ModelRecommendationsListProps {
   sections: ModelRecommendationSection[];

@@ -1,10 +1,10 @@
-import { ModelRecommendationItem } from "@/types/api";
-import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
-import { ModelRecommendationsCard } from "../ModelRecommendationsCard";
+import { ModelRecommendationItem } from '@/types/api';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+import { ModelRecommendationsCard } from '../ModelRecommendationsCard';
 
 // Mock the Card component from @heroui/react with simplified props
-vi.mock("@heroui/react", () => ({
+vi.mock('@heroui/react', () => ({
   Card: ({
     children,
     className,
@@ -20,7 +20,7 @@ vi.mock("@heroui/react", () => ({
       data-testid="card"
       className={className}
       onClick={onPress}
-      data-is-pressable={isPressable ? "true" : "false"}
+      data-is-pressable={isPressable ? 'true' : 'false'}
     >
       {children}
     </div>
@@ -33,7 +33,7 @@ const mockWatch = vi.fn();
 const mockSetValue = vi.fn();
 
 // Mock react-hook-form with a simplified approach
-vi.mock("react-hook-form", () => {
+vi.mock('react-hook-form', () => {
   return {
     // Simple mock that just returns our predefined object
     useFormContext: () => ({
@@ -56,7 +56,7 @@ vi.mock("react-hook-form", () => {
 });
 
 // Mock the child components
-vi.mock("../ModelRecommendationMemoryBox", () => ({
+vi.mock('../ModelRecommendationMemoryBox', () => ({
   ModelRecommendationMemoryBox: ({ icon, content }: { icon: React.ReactNode; content: string }) => (
     <div data-testid="memory-box" data-content={content}>
       {icon}
@@ -64,18 +64,18 @@ vi.mock("../ModelRecommendationMemoryBox", () => ({
   ),
 }));
 
-vi.mock("../ModelRecommendationsBadge", () => ({
+vi.mock('../ModelRecommendationsBadge', () => ({
   ModelRecommendationsBadge: () => <div data-testid="recommendations-badge">Star</div>,
 }));
 
-vi.mock("../ModelRecommendationsTags", () => ({
+vi.mock('../ModelRecommendationsTags', () => ({
   ModelRecommendationsTags: ({ tags }: { tags: string[] }) => (
-    <div data-testid="tags">{tags.join(", ")}</div>
+    <div data-testid="tags">{tags.join(', ')}</div>
   ),
 }));
 
 // Mock Lucide icons
-vi.mock("lucide-react", () => ({
+vi.mock('lucide-react', () => ({
   Gpu: ({ size }: { size: number }) => (
     <div data-testid="gpu-icon" data-size={size}>
       GPU
@@ -88,14 +88,14 @@ vi.mock("lucide-react", () => ({
   ),
 }));
 
-describe("ModelRecommendationsCard", () => {
+describe('ModelRecommendationsCard', () => {
   const mockModel: ModelRecommendationItem = {
-    id: "model1",
-    name: "Test Model",
-    description: "A test model description",
+    id: 'model1',
+    name: 'Test Model',
+    description: 'A test model description',
     memory_requirement_gb: 8,
-    model_size: "7B",
-    tags: ["tag1", "tag2"],
+    model_size: '7B',
+    tags: ['tag1', 'tag2'],
     is_recommended: true,
   };
 
@@ -110,17 +110,17 @@ describe("ModelRecommendationsCard", () => {
     };
   };
 
-  it("renders the model name and description", () => {
+  it('renders the model name and description', () => {
     setup();
 
-    expect(screen.getByText("Test Model")).toBeInTheDocument();
-    expect(screen.getByText("A test model description")).toBeInTheDocument();
+    expect(screen.getByText('Test Model')).toBeInTheDocument();
+    expect(screen.getByText('A test model description')).toBeInTheDocument();
   });
 
-  it("displays recommendation badge when model is recommended", () => {
+  it('displays recommendation badge when model is recommended', () => {
     setup();
 
-    expect(screen.getByTestId("recommendations-badge")).toBeInTheDocument();
+    expect(screen.getByTestId('recommendations-badge')).toBeInTheDocument();
   });
 
   it("doesn't display recommendation badge when model is not recommended", () => {
@@ -135,69 +135,69 @@ describe("ModelRecommendationsCard", () => {
 
     render(<ModelRecommendationsCard model={nonRecommendedModel} />);
 
-    expect(screen.queryByTestId("recommendations-badge")).not.toBeInTheDocument();
+    expect(screen.queryByTestId('recommendations-badge')).not.toBeInTheDocument();
   });
 
-  it("displays memory boxes with correct content", () => {
+  it('displays memory boxes with correct content', () => {
     setup();
 
-    const memoryBoxes = screen.getAllByTestId("memory-box");
+    const memoryBoxes = screen.getAllByTestId('memory-box');
     expect(memoryBoxes).toHaveLength(2);
 
-    expect(memoryBoxes[0]).toHaveAttribute("data-content", "7B");
-    expect(memoryBoxes[1]).toHaveAttribute("data-content", "8 GB");
+    expect(memoryBoxes[0]).toHaveAttribute('data-content', '7B');
+    expect(memoryBoxes[1]).toHaveAttribute('data-content', '8 GB');
 
-    expect(screen.getByTestId("harddrive-icon")).toBeInTheDocument();
-    expect(screen.getByTestId("gpu-icon")).toBeInTheDocument();
+    expect(screen.getByTestId('harddrive-icon')).toBeInTheDocument();
+    expect(screen.getByTestId('gpu-icon')).toBeInTheDocument();
   });
 
-  it("displays tags component with correct tags", () => {
+  it('displays tags component with correct tags', () => {
     setup();
 
-    const tagsElement = screen.getByTestId("tags");
+    const tagsElement = screen.getByTestId('tags');
     expect(tagsElement).toBeInTheDocument();
-    expect(tagsElement).toHaveTextContent("tag1, tag2");
+    expect(tagsElement).toHaveTextContent('tag1, tag2');
   });
 
-  it("applies selected styling when model id matches selected id", () => {
-    setup("model1");
+  it('applies selected styling when model id matches selected id', () => {
+    setup('model1');
 
-    const card = screen.getByTestId("card");
-    expect(card).toHaveClass("bg-primary/10");
-    expect(card).toHaveClass("border-primary");
-    expect(card).not.toHaveClass("hover:border-primary/50");
+    const card = screen.getByTestId('card');
+    expect(card).toHaveClass('bg-primary/10');
+    expect(card).toHaveClass('border-primary');
+    expect(card).not.toHaveClass('hover:border-primary/50');
 
-    const title = screen.getByText("Test Model");
-    expect(title).toHaveClass("text-primary");
-    expect(title).not.toHaveClass("text-base-content");
+    const title = screen.getByText('Test Model');
+    expect(title).toHaveClass('text-primary');
+    expect(title).not.toHaveClass('text-base-content');
   });
 
   it("applies non-selected styling when model id doesn't match selected id", () => {
-    setup("different-id");
+    setup('different-id');
 
-    const card = screen.getByTestId("card");
-    expect(card).not.toHaveClass("bg-primary/10");
-    expect(card).not.toHaveClass("border-primary");
-    expect(card).toHaveClass("hover:border-primary/50");
+    const card = screen.getByTestId('card');
+    expect(card).not.toHaveClass('bg-primary/10');
+    expect(card).not.toHaveClass('border-primary');
+    expect(card).toHaveClass('hover:border-primary/50');
 
-    const title = screen.getByText("Test Model");
-    expect(title).not.toHaveClass("text-primary");
-    expect(title).toHaveClass("text-base-content");
+    const title = screen.getByText('Test Model');
+    expect(title).not.toHaveClass('text-primary');
+    expect(title).toHaveClass('text-base-content');
   });
 
-  it("calls setValue with model id when card is clicked", () => {
+  it('calls setValue with model id when card is clicked', () => {
     const { setValue } = setup();
 
-    const card = screen.getByTestId("card");
+    const card = screen.getByTestId('card');
     fireEvent.click(card);
 
-    expect(setValue).toHaveBeenCalledWith("id", "model1");
+    expect(setValue).toHaveBeenCalledWith('id', 'model1');
   });
 
-  it("renders with pressable card", () => {
+  it('renders with pressable card', () => {
     setup();
 
-    const card = screen.getByTestId("card");
-    expect(card).toHaveAttribute("data-is-pressable", "true");
+    const card = screen.getByTestId('card');
+    expect(card).toHaveAttribute('data-is-pressable', 'true');
   });
 });

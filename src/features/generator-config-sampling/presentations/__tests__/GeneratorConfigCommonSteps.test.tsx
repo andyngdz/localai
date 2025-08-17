@@ -1,14 +1,14 @@
-import { GeneratorConfigFormValues } from "@/features/generator-configs/types/generator-config";
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { ReactNode } from "react";
-import { FormProvider, useForm } from "react-hook-form";
-import { describe, expect, it, vi } from "vitest";
-import { COMMON_STEPS } from "../../constants";
-import { GeneratorConfigCommonSteps } from "../GeneratorConfigCommonSteps";
+import { GeneratorConfigFormValues } from '@/features/generator-configs/types/generator-config';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { ReactNode } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { describe, expect, it, vi } from 'vitest';
+import { COMMON_STEPS } from '../../constants';
+import { GeneratorConfigCommonSteps } from '../GeneratorConfigCommonSteps';
 
 // Mock constants to test with
-vi.mock("../../constants", () => ({
+vi.mock('../../constants', () => ({
   COMMON_STEPS: [16, 24, 32],
 }));
 
@@ -28,21 +28,21 @@ const MockFormProvider = ({ children }: { children: ReactNode }) => {
   return <FormProvider {...methods}>{children}</FormProvider>;
 };
 
-describe("GeneratorConfigCommonSteps", () => {
-  it("should render buttons for each common step value", () => {
+describe('GeneratorConfigCommonSteps', () => {
+  it('should render buttons for each common step value', () => {
     render(
       <MockFormProvider>
         <GeneratorConfigCommonSteps />
-      </MockFormProvider>
+      </MockFormProvider>,
     );
 
     // Check that all buttons from COMMON_STEPS are rendered
     COMMON_STEPS.forEach((step) => {
-      expect(screen.getByRole("button", { name: step.toString() })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: step.toString() })).toBeInTheDocument();
     });
   });
 
-  it("should call setValue with correct step value when button is pressed", async () => {
+  it('should call setValue with correct step value when button is pressed', async () => {
     const user = userEvent.setup();
     const mockSetValue = vi.fn();
 
@@ -69,40 +69,40 @@ describe("GeneratorConfigCommonSteps", () => {
     render(
       <CustomMockFormProvider>
         <GeneratorConfigCommonSteps />
-      </CustomMockFormProvider>
+      </CustomMockFormProvider>,
     );
 
     // Click on the first button (16)
-    const firstStepButton = screen.getByRole("button", { name: "16" });
+    const firstStepButton = screen.getByRole('button', { name: '16' });
     await user.click(firstStepButton);
 
     // Verify setValue was called with correct parameters
-    expect(mockSetValue).toHaveBeenCalledWith("steps", 16);
+    expect(mockSetValue).toHaveBeenCalledWith('steps', 16);
 
     // Click on the third button (32)
-    const thirdStepButton = screen.getByRole("button", { name: "32" });
+    const thirdStepButton = screen.getByRole('button', { name: '32' });
     await user.click(thirdStepButton);
 
     // Verify setValue was called with correct parameters
-    expect(mockSetValue).toHaveBeenCalledWith("steps", 32);
+    expect(mockSetValue).toHaveBeenCalledWith('steps', 32);
   });
 
-  it("should render buttons with light variant and proper styling", () => {
+  it('should render buttons with light variant and proper styling', () => {
     render(
       <MockFormProvider>
         <GeneratorConfigCommonSteps />
-      </MockFormProvider>
+      </MockFormProvider>,
     );
 
     // Get all buttons
-    const buttons = screen.getAllByRole("button");
+    const buttons = screen.getAllByRole('button');
 
     // Check number of buttons matches COMMON_STEPS length
     expect(buttons).toHaveLength(COMMON_STEPS.length);
 
     // Check each button has the light variant class
     buttons.forEach((button) => {
-      expect(button).toHaveAttribute("class", expect.stringContaining("text-foreground-500"));
+      expect(button).toHaveAttribute('class', expect.stringContaining('text-foreground-500'));
     });
   });
 });

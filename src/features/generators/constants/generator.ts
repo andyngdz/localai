@@ -1,4 +1,4 @@
-import { GeneratorConfigFormValues } from "@/features/generator-configs/types/generator-config";
+import { GeneratorConfigFormValues } from '@/features/generator-configs/types/generator-config';
 
 export const FORM_DEFAULT_VALUES: GeneratorConfigFormValues = {
   width: 512,
@@ -9,6 +9,6 @@ export const FORM_DEFAULT_VALUES: GeneratorConfigFormValues = {
   seed: -1,
   cfg_scale: 7.5,
   styles: [],
-  prompt: "",
-  negative_prompt: "",
+  prompt: '',
+  negative_prompt: '',
 };

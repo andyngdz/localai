@@ -1,18 +1,18 @@
-import { createQueryClientWrapper } from "@/cores/test-utils";
-import { ModelRecommendationResponse, ModelRecommendationSection } from "@/types/api";
-import { render, screen } from "@testing-library/react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import { ModelRecommendations } from "../ModelRecommendations";
+import { createQueryClientWrapper } from '@/cores/test-utils';
+import { ModelRecommendationResponse, ModelRecommendationSection } from '@/types/api';
+import { render, screen } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { ModelRecommendations } from '../ModelRecommendations';
 
 // Mock the dependencies
-vi.mock("next/navigation", () => ({
+vi.mock('next/navigation', () => ({
   useRouter: () => ({
     back: vi.fn(),
   }),
 }));
 
 // Mock the ModelRecommendationsList component
-vi.mock("../ModelRecommendationsList", () => ({
+vi.mock('../ModelRecommendationsList', () => ({
   ModelRecommendationsList: ({
     sections,
     defaultSection,
@@ -31,7 +31,7 @@ vi.mock("../ModelRecommendationsList", () => ({
 }));
 
 // Mock the SetupLayout component
-vi.mock("@/features/layout/presentations/SetupLayout", () => ({
+vi.mock('@/features/layout/presentations/SetupLayout', () => ({
   SetupLayout: ({
     title,
     description,
@@ -68,12 +68,12 @@ const mockMethods = {
 const mockUseModelRecommendation = vi.fn();
 
 // Mock the modules
-vi.mock("../states/useModelRecommendation", () => ({
+vi.mock('../states/useModelRecommendation', () => ({
   useModelRecommendation: mockUseModelRecommendation,
 }));
 
 // Mock React Query
-vi.mock("@/services/queries", () => ({
+vi.mock('@/services/queries', () => ({
   useModelRecommendationsQuery: vi.fn().mockReturnValue({
     data: null,
     isLoading: false,
@@ -82,7 +82,7 @@ vi.mock("@/services/queries", () => ({
 }));
 
 // Mock react-hook-form
-vi.mock("react-hook-form", () => {
+vi.mock('react-hook-form', () => {
   return {
     useForm: () => ({
       handleSubmit: vi.fn(),
@@ -93,27 +93,27 @@ vi.mock("react-hook-form", () => {
   };
 });
 
-describe("ModelRecommendations", () => {
+describe('ModelRecommendations', () => {
   // Mock data that will be returned by useModelRecommendation
   const mockData: ModelRecommendationResponse = {
     sections: [
       {
-        id: "section1",
-        name: "Section 1",
-        description: "Description 1",
+        id: 'section1',
+        name: 'Section 1',
+        description: 'Description 1',
         models: [],
         is_recommended: false,
       },
       {
-        id: "section2",
-        name: "Section 2",
-        description: "Description 2",
+        id: 'section2',
+        name: 'Section 2',
+        description: 'Description 2',
         models: [],
         is_recommended: true,
       },
     ],
-    default_section: "section2",
-    default_selected_id: "model1",
+    default_section: 'section2',
+    default_selected_id: 'model1',
   };
 
   beforeEach(() => {
@@ -127,26 +127,26 @@ describe("ModelRecommendations", () => {
     });
   });
 
-  it("renders FormProvider with correct methods", () => {
+  it('renders FormProvider with correct methods', () => {
     render(<ModelRecommendations />, { wrapper: createQueryClientWrapper() });
 
     // Check for FormProvider
-    expect(screen.getByTestId("mock-form-provider")).toBeInTheDocument();
+    expect(screen.getByTestId('mock-form-provider')).toBeInTheDocument();
   });
 
-  it("renders SetupLayout with correct props", () => {
+  it('renders SetupLayout with correct props', () => {
     render(<ModelRecommendations />, { wrapper: createQueryClientWrapper() });
 
-    const setupLayout = screen.getByTestId("mock-setup-layout");
+    const setupLayout = screen.getByTestId('mock-setup-layout');
     expect(setupLayout).toBeInTheDocument();
-    expect(setupLayout).toHaveAttribute("data-title", "Model Recommendations");
+    expect(setupLayout).toHaveAttribute('data-title', 'Model Recommendations');
     expect(setupLayout).toHaveAttribute(
-      "data-description",
-      "Choose an AI model that fits your hardware capabilities and performance needs"
+      'data-description',
+      'Choose an AI model that fits your hardware capabilities and performance needs',
     );
   });
 
-  it("renders with Form Provider and Setup Layout", () => {
+  it('renders with Form Provider and Setup Layout', () => {
     // Set up the return value - this implicitly checks if the hook is called
     // without needing to test the hook call directly
     mockUseModelRecommendation.mockReturnValue({
@@ -158,11 +158,11 @@ describe("ModelRecommendations", () => {
     render(<ModelRecommendations />, { wrapper: createQueryClientWrapper() });
 
     // Verify the form provider and layout are rendered
-    expect(screen.getByTestId("mock-form-provider")).toBeInTheDocument();
-    expect(screen.getByTestId("mock-setup-layout")).toBeInTheDocument();
+    expect(screen.getByTestId('mock-form-provider')).toBeInTheDocument();
+    expect(screen.getByTestId('mock-setup-layout')).toBeInTheDocument();
   });
 
-  it("does not render ModelRecommendationsList when data is not available", () => {
+  it('does not render ModelRecommendationsList when data is not available', () => {
     // Override the mock for this specific test
     mockUseModelRecommendation.mockReturnValue({
       methods: mockMethods,
@@ -172,10 +172,10 @@ describe("ModelRecommendations", () => {
 
     render(<ModelRecommendations />, { wrapper: createQueryClientWrapper() });
 
-    expect(screen.queryByTestId("mock-recommendations-list")).not.toBeInTheDocument();
+    expect(screen.queryByTestId('mock-recommendations-list')).not.toBeInTheDocument();
   });
 
-  it("passes form submission handler to SetupLayout", () => {
+  it('passes form submission handler to SetupLayout', () => {
     // We need to reassign the value for this specific test
     mockUseModelRecommendation.mockReturnValueOnce({
       methods: mockMethods,
@@ -191,6 +191,6 @@ describe("ModelRecommendations", () => {
     // nextButton.click();
 
     // We'll just verify it was rendered
-    expect(screen.getByTestId("mock-next-button")).toBeInTheDocument();
+    expect(screen.getByTestId('mock-next-button')).toBeInTheDocument();
   });
 });

@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from '@tanstack/react-query';
 import {
   ApiError,
   HardwareResponse,
@@ -7,12 +7,12 @@ import {
   ModelDownloaded,
   ModelRecommendationResponse,
   StyleSection,
-} from "../types/api";
-import { api } from "./api";
+} from '../types/api';
+import { api } from './api';
 
 const useHealthQuery = () => {
   return useQuery<HealthResponse, ApiError>({
-    queryKey: ["health"],
+    queryKey: ['health'],
     queryFn: api.health,
     refetchInterval: 3000,
   });
@@ -20,35 +20,35 @@ const useHealthQuery = () => {
 
 const useHardwareQuery = () => {
   return useQuery<HardwareResponse, ApiError>({
-    queryKey: ["hardware"],
+    queryKey: ['hardware'],
     queryFn: () => api.getHardwareStatus(),
   });
 };
 
 const useMemoryQuery = () => {
   return useQuery<MemoryResponse, ApiError>({
-    queryKey: ["memory"],
+    queryKey: ['memory'],
     queryFn: () => api.getMemory(),
   });
 };
 
 const useModelRecommendationsQuery = () => {
   return useQuery<ModelRecommendationResponse, ApiError>({
-    queryKey: ["model-recommendations"],
+    queryKey: ['model-recommendations'],
     queryFn: () => api.getModelRecommendations(),
   });
 };
 
 const useDownloadedModelsQuery = () => {
   return useQuery<ModelDownloaded[], ApiError>({
-    queryKey: ["downloaded-models"],
+    queryKey: ['downloaded-models'],
     queryFn: () => api.getDownloadedModels(),
   });
 };
 
 const useStyleSectionsQuery = () => {
   return useQuery<StyleSection[], ApiError>({
-    queryKey: ["style-section"],
+    queryKey: ['style-section'],
     queryFn: () => api.styles(),
   });
 };

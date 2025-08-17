@@ -1,9 +1,9 @@
-import { NumberInputController } from "@/cores/presentations/NumberInputController";
-import { GeneratorConfigFormValues } from "@/features/generator-configs/types/generator-config";
-import { Button } from "@heroui/react";
-import { Dices } from "lucide-react";
-import { useFormContext } from "react-hook-form";
-import { seedService } from "../services/seed";
+import { NumberInputController } from '@/cores/presentations/NumberInputController';
+import { GeneratorConfigFormValues } from '@/features/generator-configs/types/generator-config';
+import { Button } from '@heroui/react';
+import { Dices } from 'lucide-react';
+import { useFormContext } from 'react-hook-form';
+import { seedService } from '../services/seed';
 
 export const GeneratorConfigSeed = () => {
   const { setValue, control } = useFormContext<GeneratorConfigFormValues>();
@@ -22,7 +22,7 @@ export const GeneratorConfigSeed = () => {
         <Button
           variant="light"
           onPress={() => {
-            setValue("seed", seedService.generate(), { shouldValidate: true, shouldTouch: true });
+            setValue('seed', seedService.generate(), { shouldValidate: true, shouldTouch: true });
           }}
           isIconOnly
         >

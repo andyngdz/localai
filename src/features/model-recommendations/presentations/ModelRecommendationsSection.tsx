@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { ModelRecommendationSection } from "@/types/api";
-import { FC } from "react";
-import { ModelRecommendationsCard } from "./ModelRecommendationsCard";
-import { ModelRecommendationsHeader } from "./ModelRecommendationsHeader";
+import { ModelRecommendationSection } from '@/types/api';
+import { FC } from 'react';
+import { ModelRecommendationsCard } from './ModelRecommendationsCard';
+import { ModelRecommendationsHeader } from './ModelRecommendationsHeader';
 
 interface ModelRecommendationsSectionProps {
   section: ModelRecommendationSection;

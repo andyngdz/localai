@@ -1,9 +1,9 @@
-import { StyleSection } from "@/types";
-import { Modal, ModalBody, ModalContent, ModalHeader, ModalProps } from "@heroui/react";
-import { FC } from "react";
-import { GeneratorConfigStyleSection } from "./GeneratorConfigStyleSection";
+import { StyleSection } from '@/types';
+import { Modal, ModalBody, ModalContent, ModalHeader, ModalProps } from '@heroui/react';
+import { FC } from 'react';
+import { GeneratorConfigStyleSection } from './GeneratorConfigStyleSection';
 
-export interface GeneratorConfigStyleModalProps extends Omit<ModalProps, "children"> {
+export interface GeneratorConfigStyleModalProps extends Omit<ModalProps, 'children'> {
   styleSections: StyleSection[];
 }
 

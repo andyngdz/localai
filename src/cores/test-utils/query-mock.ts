@@ -1,5 +1,5 @@
-import { UseQueryResult } from "@tanstack/react-query";
-import { ApiError } from "@/types/api";
+import { UseQueryResult } from '@tanstack/react-query';
+import { ApiError } from '@/types/api';
 
 /**
  * Creates a mock query result with the provided data.
@@ -11,7 +11,7 @@ import { ApiError } from "@/types/api";
  */
 export const createMockQuery = <T>(
   data: T | null,
-  overrides?: Partial<UseQueryResult<T, ApiError>>
+  overrides?: Partial<UseQueryResult<T, ApiError>>,
 ): UseQueryResult<T, ApiError> => {
   return {
     data,

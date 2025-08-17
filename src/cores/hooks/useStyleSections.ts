@@ -1,5 +1,5 @@
-import { useStyleSectionsQuery } from "@/services/queries";
-import { useMemo } from "react";
+import { useStyleSectionsQuery } from '@/services/queries';
+import { useMemo } from 'react';
 
 export const useStyleSections = () => {
   const { data: styleSections = [], isLoading, error } = useStyleSectionsQuery();

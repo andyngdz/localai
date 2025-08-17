@@ -1,8 +1,8 @@
-import { Card, Radio } from "@heroui/react";
-import clsx from "clsx";
-import { FC } from "react";
-import { maxMemoryScaleFactorService } from "../services";
-import { MemoryOption } from "../types";
+import { Card, Radio } from '@heroui/react';
+import clsx from 'clsx';
+import { FC } from 'react';
+import { maxMemoryScaleFactorService } from '../services';
+import { MemoryOption } from '../types';
 
 export interface MaxMemoryScaleFactorItemProps {
   option: MemoryOption;
@@ -14,9 +14,9 @@ export const MaxMemoryScaleFactorItem: FC<MaxMemoryScaleFactorItemProps> = ({ op
   const { bgClassName, textClassName, color } = colors;
 
   return (
-    <Card key={option.scaleFactor} className={clsx("border-none shadow-none", bgClassName)}>
+    <Card key={option.scaleFactor} className={clsx('border-none shadow-none', bgClassName)}>
       <Radio value={option.scaleFactor.toString()} color={color} className="p-5">
-        <span className={clsx("font-medium", textClassName)}>
+        <span className={clsx('font-medium', textClassName)}>
           {percent}% GPU / {percent}% RAM
         </span>
       </Radio>

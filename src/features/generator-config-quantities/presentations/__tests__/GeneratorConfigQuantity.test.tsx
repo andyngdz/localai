@@ -1,19 +1,19 @@
-import { GeneratorConfigFormValues } from "@/features/generator-configs/types/generator-config";
-import { render, screen } from "@testing-library/react";
-import { ReactNode } from "react";
-import { FormProvider, useForm } from "react-hook-form";
-import { describe, expect, it, vi } from "vitest";
-import { GeneratorConfigQuantity } from "../GeneratorConfigQuantity";
+import { GeneratorConfigFormValues } from '@/features/generator-configs/types/generator-config';
+import { render, screen } from '@testing-library/react';
+import { ReactNode } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { describe, expect, it, vi } from 'vitest';
+import { GeneratorConfigQuantity } from '../GeneratorConfigQuantity';
 
 // Mock the NumberInputController component
-vi.mock("@/cores/presentations/NumberInputController", () => ({
+vi.mock('@/cores/presentations/NumberInputController', () => ({
   NumberInputController: ({
-    "aria-label": ariaLabel,
+    'aria-label': ariaLabel,
     controlName,
     startContent,
     endContent,
   }: {
-    "aria-label": string;
+    'aria-label': string;
     controlName: string;
     startContent: ReactNode;
     endContent: ReactNode;
@@ -28,7 +28,7 @@ vi.mock("@/cores/presentations/NumberInputController", () => ({
 }));
 
 // Mock the Tooltip component from @heroui/react
-vi.mock("@heroui/react", () => ({
+vi.mock('@heroui/react', () => ({
   Tooltip: ({ content, children }: { content: string; children: ReactNode }) => (
     <div data-testid="tooltip" data-tooltip-content={content}>
       {children}
@@ -52,38 +52,38 @@ const MockFormProvider = ({ children }: { children: ReactNode }) => {
   return <FormProvider {...methods}>{children}</FormProvider>;
 };
 
-describe("GeneratorConfigQuantity", () => {
+describe('GeneratorConfigQuantity', () => {
   it("should render the component with 'Quantity' heading", () => {
     render(
       <MockFormProvider>
         <GeneratorConfigQuantity />
-      </MockFormProvider>
+      </MockFormProvider>,
     );
 
-    expect(screen.getByText("Quantity")).toBeInTheDocument();
+    expect(screen.getByText('Quantity')).toBeInTheDocument();
   });
 
-  it("should render number input for number_of_images", () => {
+  it('should render number input for number_of_images', () => {
     render(
       <MockFormProvider>
         <GeneratorConfigQuantity />
-      </MockFormProvider>
+      </MockFormProvider>,
     );
 
-    expect(screen.getByTestId("number-input-number_of_images")).toBeInTheDocument();
-    expect(screen.getByText("Number of images")).toBeInTheDocument();
-    expect(screen.getByText("Images")).toBeInTheDocument();
+    expect(screen.getByTestId('number-input-number_of_images')).toBeInTheDocument();
+    expect(screen.getByText('Number of images')).toBeInTheDocument();
+    expect(screen.getByText('Images')).toBeInTheDocument();
   });
 
-  it("should render tooltip with correct content", () => {
+  it('should render tooltip with correct content', () => {
     render(
       <MockFormProvider>
         <GeneratorConfigQuantity />
-      </MockFormProvider>
+      </MockFormProvider>,
     );
 
-    const tooltip = screen.getByTestId("tooltip");
+    const tooltip = screen.getByTestId('tooltip');
     expect(tooltip).toBeInTheDocument();
-    expect(tooltip).toHaveAttribute("data-tooltip-content", "Number of images will be generated");
+    expect(tooltip).toHaveAttribute('data-tooltip-content', 'Number of images will be generated');
   });
 });

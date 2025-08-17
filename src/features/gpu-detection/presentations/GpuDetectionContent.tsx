@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { HardwareResponse } from "@/types";
-import { FC } from "react";
-import { GpuDetectionCpuModeOnly } from "./GpuDetectionCpuModeOnly";
-import { GpuDetectionItems } from "./GpuDetectionItems";
-import { GpuDetectionVersion } from "./GpuDetectionVersion";
+import { HardwareResponse } from '@/types';
+import { FC } from 'react';
+import { GpuDetectionCpuModeOnly } from './GpuDetectionCpuModeOnly';
+import { GpuDetectionItems } from './GpuDetectionItems';
+import { GpuDetectionVersion } from './GpuDetectionVersion';
 
 interface GpuDetectionContentProps {
   hardwareData: HardwareResponse;

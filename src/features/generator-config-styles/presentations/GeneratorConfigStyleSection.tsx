@@ -1,6 +1,6 @@
-import { StyleSection } from "@/types";
-import { FC } from "react";
-import { GeneratorConfigStyleItem } from "./GeneratorConfigStyleItem";
+import { StyleSection } from '@/types';
+import { FC } from 'react';
+import { GeneratorConfigStyleItem } from './GeneratorConfigStyleItem';
 
 interface GeneratorConfigStyleSectionProps {
   styleSections: StyleSection[];

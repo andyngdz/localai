@@ -1,2 +1,2 @@
-export { HealthCheck } from "./presentations/HealthCheck";
-export { HealthCheckContent } from "./presentations/HealthCheckContent";
+export { HealthCheck } from './presentations/HealthCheck';
+export { HealthCheckContent } from './presentations/HealthCheckContent';

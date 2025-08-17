@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 export interface ModelSelectorState {
   id: string;
@@ -9,11 +9,11 @@ export interface ModelSelectorState {
 export const useModelSelectorStore = create(
   persist<ModelSelectorState>(
     (set) => ({
-      id: "",
+      id: '',
       setId: (id) => set({ id }),
     }),
     {
-      name: "model-selector",
-    }
-  )
+      name: 'model-selector',
+    },
+  ),
 );

@@ -1,23 +1,23 @@
-import { GeneratorConfigFormValues } from "@/features/generator-configs/types/generator-config";
-import { render, screen } from "@testing-library/react";
-import { FormProvider, useForm } from "react-hook-form";
-import { describe, expect, it, vi } from "vitest";
-import { GeneratorConfigSampling } from "../GeneratorConfigSampling";
+import { GeneratorConfigFormValues } from '@/features/generator-configs/types/generator-config';
+import { render, screen } from '@testing-library/react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { describe, expect, it, vi } from 'vitest';
+import { GeneratorConfigSampling } from '../GeneratorConfigSampling';
 
 // Mock the NumberInputController component
-vi.mock("@/cores/presentations/NumberInputController", () => ({
+vi.mock('@/cores/presentations/NumberInputController', () => ({
   NumberInputController: ({
     controlName,
     startContent,
     minValue,
     maximumFractionDigits,
-    "aria-label": ariaLabel,
+    'aria-label': ariaLabel,
   }: {
     controlName: string;
     startContent: React.ReactNode;
     minValue?: number;
     maximumFractionDigits?: number;
-    "aria-label"?: string;
+    'aria-label'?: string;
   }) => (
     <div data-testid={`number-input-${controlName}`}>
       <div>{startContent}</div>
@@ -33,11 +33,11 @@ vi.mock("@/cores/presentations/NumberInputController", () => ({
 }));
 
 // Mock the GeneratorConfigCommonSteps component
-vi.mock("../GeneratorConfigCommonSteps", () => ({
+vi.mock('../GeneratorConfigCommonSteps', () => ({
   GeneratorConfigCommonSteps: () => <div data-testid="common-steps" />,
 }));
 
-describe("GeneratorConfigSampling", () => {
+describe('GeneratorConfigSampling', () => {
   const Wrapper = () => {
     const methods = useForm<GeneratorConfigFormValues>({
       defaultValues: {
@@ -53,27 +53,27 @@ describe("GeneratorConfigSampling", () => {
     );
   };
 
-  it("renders the sampling section with correct title", () => {
+  it('renders the sampling section with correct title', () => {
     render(<Wrapper />);
-    expect(screen.getByText("Sampling")).toBeInTheDocument();
+    expect(screen.getByText('Sampling')).toBeInTheDocument();
   });
 
-  it("renders the steps input with correct properties", () => {
+  it('renders the steps input with correct properties', () => {
     render(<Wrapper />);
-    const stepsInput = screen.getByTestId("number-input-steps");
+    const stepsInput = screen.getByTestId('number-input-steps');
     expect(stepsInput).toBeInTheDocument();
-    expect(screen.getByText("Steps")).toBeInTheDocument();
+    expect(screen.getByText('Steps')).toBeInTheDocument();
   });
 
-  it("renders the common steps component", () => {
+  it('renders the common steps component', () => {
     render(<Wrapper />);
-    expect(screen.getByTestId("common-steps")).toBeInTheDocument();
+    expect(screen.getByTestId('common-steps')).toBeInTheDocument();
   });
 
-  it("renders the CFG Scale input with correct properties", () => {
+  it('renders the CFG Scale input with correct properties', () => {
     render(<Wrapper />);
-    const cfgScaleInput = screen.getByTestId("number-input-cfg_scale");
+    const cfgScaleInput = screen.getByTestId('number-input-cfg_scale');
     expect(cfgScaleInput).toBeInTheDocument();
-    expect(screen.getByText("CFG Scale")).toBeInTheDocument();
+    expect(screen.getByText('CFG Scale')).toBeInTheDocument();
   });
 });

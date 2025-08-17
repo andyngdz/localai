@@ -1,13 +1,13 @@
-import { socket, SocketEvents } from "@/sockets";
-import { useEffect } from "react";
-import { useMessageStore } from "./useMessageStores";
+import { socket, SocketEvents } from '@/sockets';
+import { useEffect } from 'react';
+import { useMessageStore } from './useMessageStores';
 
 export const useStreamingMessage = () => {
   const { message, setMessage, reset } = useMessageStore();
 
   useEffect(() => {
     socket.on(SocketEvents.DOWNLOAD_START, () => {
-      setMessage("Downloading model");
+      setMessage('Downloading model');
     });
 
     socket.on(SocketEvents.MODEL_LOAD_COMPLETED, () => reset());
