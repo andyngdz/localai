@@ -1,6 +1,5 @@
 import { createQueryClientWrapper } from '@/cores/test-utils';
 import { api } from '@/services/api';
-import { Nullable } from '@/types';
 import { addToast } from '@heroui/react';
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -91,7 +90,7 @@ describe('useGenerator', () => {
       try {
         await result.current.onGenerate(mockConfig);
         // If we get here, the test should fail because we expect an error
-        expect("This code should not be reached").toBe("Promise should reject");
+        expect('This code should not be reached').toBe('Promise should reject');
       } catch (err) {
         errorWasCaught = true;
         expect(err).toEqual(mockError);
@@ -118,8 +117,8 @@ describe('useGenerator', () => {
       try {
         await result.current.onGenerate(mockConfig);
         // If we get here, the test should fail because we expect an error
-        expect("This code should not be reached").toBe("Promise should reject");
-      } catch (error: unknown) {
+        expect('This code should not be reached').toBe('Promise should reject');
+      } catch {
         // Error is expected - test will continue
       }
     });
