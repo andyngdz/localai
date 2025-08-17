@@ -10,9 +10,7 @@ export const useModelSelectors = () => {
 
   const onLoadModel = async (id: string) => {
     if (isEmpty(id)) return;
-
-    const response = await api.loadModel({ id });
-    console.info(response);
+    await api.loadModel({ id });
   };
 
   useEffect(() => {

@@ -1,9 +1,16 @@
 import clsx from 'clsx';
+import { useMemo } from 'react';
 import { useGeneratorPreviewer } from '../states';
 import { GeneratorPreviewerItem } from './GeneratorPreviewerItem';
 
 export const GeneratorPreviewer = () => {
-  const { images } = useGeneratorPreviewer();
+  const { imageStepEnds } = useGeneratorPreviewer();
+
+  const ImageComponents = useMemo(() => {
+    return imageStepEnds.map((imageStepEnd) => {
+      return <GeneratorPreviewerItem key={imageStepEnd.index} imageStepEnd={imageStepEnd} />;
+    });
+  }, [imageStepEnds]);
 
   return (
     <div
@@ -13,9 +20,7 @@ export const GeneratorPreviewer = () => {
         'overflow-auto',
       )}
     >
-      {images.map((image) => {
-        return <GeneratorPreviewerItem key={image.index} image={image} />;
-      })}
+      {ImageComponents}
     </div>
   );
 };

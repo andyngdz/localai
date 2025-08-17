@@ -1,13 +1,15 @@
 import { GeneratorConfigFormValues } from '@/features/generator-configs';
-import { useImageStepEndResponseStore } from '@/features/generator-previewers/states';
 import { api } from '@/services/api';
 import { ImageGenerationRequest } from '@/types';
 import { addToast } from '@heroui/react';
 import { useMutation } from '@tanstack/react-query';
 import { SubmitHandler } from 'react-hook-form';
+import { useImageGenerationResponseStore } from './useImageGenerationResponseStores';
+import { useImageStepEndResponseStore } from './useImageStepEndResponseStores';
 
 export const useGenerator = () => {
-  const { initImages } = useImageStepEndResponseStore();
+  const { onInitImageStepEnds } = useImageStepEndResponseStore();
+  const { onUpdateResponse, onInitResponse } = useImageGenerationResponseStore();
 
   const generator = useMutation({
     mutationKey: ['generator'],
@@ -22,7 +24,7 @@ export const useGenerator = () => {
       });
     },
     onSuccess: (response) => {
-      console.info(response);
+      onUpdateResponse(response);
     },
   });
 
@@ -50,7 +52,9 @@ export const useGenerator = () => {
   const onGenerate: SubmitHandler<GeneratorConfigFormValues> = async (config) => {
     const history_id = await addHistory.mutateAsync(config);
 
-    initImages(config.number_of_images);
+    onInitImageStepEnds(config.number_of_images);
+    onInitResponse(config.number_of_images);
+
     await generator.mutateAsync({ history_id, config });
   };
 

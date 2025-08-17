@@ -1,23 +1,27 @@
+import {
+  useImageGenerationResponseStore,
+  useImageStepEndResponseStore,
+} from '@/features/generators/states';
 import { socket, SocketEvents } from '@/sockets';
 import { ImageGenerationStepEndResponse } from '@/types';
 import { useCallback, useEffect } from 'react';
-import { useImageStepEndResponseStore } from './useImageStepEndResponseStores';
 
 export const useGeneratorPreviewer = () => {
-  const { images, updateImage } = useImageStepEndResponseStore();
+  const { imageStepEnds, onUpdateImageStepEnd } = useImageStepEndResponseStore();
+  const { items, nsfw_content_detected } = useImageGenerationResponseStore();
 
   const onImageGenerationStepEnd = useCallback(() => {
     socket.on(
       SocketEvents.IMAGE_GENERATION_STEP_END,
       (response: ImageGenerationStepEndResponse) => {
-        updateImage(response);
+        onUpdateImageStepEnd(response);
       },
     );
-  }, [updateImage]);
+  }, [onUpdateImageStepEnd]);
 
   useEffect(() => {
     onImageGenerationStepEnd();
   }, [onImageGenerationStepEnd]);
 
-  return { images };
+  return { imageStepEnds, items, nsfw_content_detected };
 };
