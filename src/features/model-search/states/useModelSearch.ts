@@ -1,5 +1,6 @@
 import { api } from '@/services/api';
 import { useQuery } from '@tanstack/react-query';
+import { first } from 'es-toolkit/compat';
 import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { ModelSearchFormValues } from '../types';
@@ -21,9 +22,10 @@ export const useModelSearch = () => {
   useEffect(() => {
     if (data) {
       const { models_search_info } = data;
+      const firstModelSearchInfo = first(models_search_info);
 
-      if (models_search_info.length > 0) {
-        onUpdateModelId(models_search_info[0].id);
+      if (firstModelSearchInfo) {
+        onUpdateModelId(firstModelSearchInfo.id);
       }
     }
   }, [data]);

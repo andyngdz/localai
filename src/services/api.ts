@@ -9,6 +9,7 @@ import type {
   LoadModelRequest,
   MaxMemoryRequest,
   MemoryResponse,
+  ModelDetailsResponse,
   ModelDownloaded,
   ModelRecommendationResponse,
   ModelSearchResponse,
@@ -72,6 +73,12 @@ class API {
     const { data } = await client.get<ModelSearchResponse>(
       `/models/search?model_name=${model_name}`,
     );
+
+    return data;
+  }
+
+  async modelDetails(model_id: string) {
+    const { data } = await client.get<ModelDetailsResponse>(`/models/details?id=${model_id}`);
 
     return data;
   }

@@ -24,4 +24,36 @@ interface ModelSearchResponse {
   models_search_info: ModelSearchInfo[];
 }
 
-export type { LoadModelRequest, LoadModelResponse, ModelSearchInfo, ModelSearchResponse };
+interface ModelDetailsSibling {
+  blob_id: String;
+  rfilename: String;
+  size: number;
+}
+
+interface ModelDetailsResponse {
+  author: string;
+  created_at: string;
+  disabled: boolean;
+  downloads_all_time?: number;
+  downloads: number;
+  gated: string;
+  id: string;
+  last_modified: string;
+  library_name: string;
+  likes: number;
+  pipeline_tag: string[];
+  private: boolean;
+  sha: string;
+  siblings: ModelDetailsSibling[];
+  spaces: string[];
+  tags: string[];
+}
+
+export type {
+  LoadModelRequest,
+  LoadModelResponse,
+  ModelDetailsResponse,
+  ModelDetailsSibling,
+  ModelSearchInfo,
+  ModelSearchResponse,
+};
