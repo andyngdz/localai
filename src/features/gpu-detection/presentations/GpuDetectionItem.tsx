@@ -28,9 +28,7 @@ export const GpuDetectionItem: FC<GpuDetectionItemProps> = ({ gpu, ...restProps 
     >
       <div className="flex items-center justify-between gap-2 w-full">
         <span className="font-bold">{name}</span>
-        <span className="text-sm text-foreground-500 font-medium">
-          {formatter.formatBytes(memory)}
-        </span>
+        <span className="text-sm text-foreground-500 font-medium">{formatter.bytes(memory)}</span>
       </div>
     </Radio>
   );

@@ -16,8 +16,6 @@ export const ModelSearchListModel = () => {
   if (data) {
     const { models_search_info } = data;
 
-    console.info(models_search_info);
-
     return (
       <div className="scrollbar-thin overflow-auto">
         <div className="flex flex-col gap-2">
