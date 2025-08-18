@@ -1,20 +1,20 @@
-import { api } from '@/services/api';
-import { useQuery } from '@tanstack/react-query';
-import { useFormContext } from 'react-hook-form';
-import { ModelSearchFormValues } from '../types';
+import { Alert, Spinner } from '@heroui/react';
+import { useModelSearch } from '../states';
 import { ModelSearchItem } from './ModelSearchItem';
 
 export const ModelSearchListModel = () => {
-  const { watch } = useFormContext<ModelSearchFormValues>();
-  const query = watch('query');
+  const { data, isLoading } = useModelSearch();
 
-  const { data } = useQuery({
-    queryKey: ['modelSearch', query],
-    queryFn: () => api.searchModel(query),
-  });
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   if (data) {
     const { models_search_info } = data;
+
+    if (models_search_info.length === 0) {
+      return <Alert>No models found</Alert>;
+    }
 
     return (
       <div className="scrollbar-thin overflow-auto">
@@ -26,10 +26,4 @@ export const ModelSearchListModel = () => {
       </div>
     );
   }
-
-  return (
-    <div>
-      <span>No models found</span>
-    </div>
-  );
 };

@@ -6,6 +6,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { ModelSearchFormValues } from '../types';
 import { ModelSearchInput } from './ModelSearchInput';
 import { ModelSearchListModel } from './ModelSearchListModel';
+import { ModelSearchView } from './ModelSearchView';
 
 export const ModelSearchContainer = () => {
   const methods = useForm<ModelSearchFormValues>({
@@ -23,7 +24,7 @@ export const ModelSearchContainer = () => {
           </div>
         </Allotment.Pane>
         <Allotment.Pane className="flex flex-col">
-          <div />
+          <ModelSearchView />
         </Allotment.Pane>
       </Allotment>
     </FormProvider>

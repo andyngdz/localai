@@ -3,13 +3,14 @@ import { ModelSearchInfo } from '@/types';
 import { Avatar, Card, CardBody, CardHeader } from '@heroui/react';
 import { ArrowDownToLine, Heart } from 'lucide-react';
 import { FC } from 'react';
+import { onUpdateModelId } from '../states';
 export interface ModelSearchItemProps {
   modelSearchInfo: ModelSearchInfo;
 }
 
 export const ModelSearchItem: FC<ModelSearchItemProps> = ({ modelSearchInfo }) => {
   return (
-    <Card className="max-w-96" isPressable>
+    <Card className="max-w-96" onClick={() => onUpdateModelId(modelSearchInfo.id)} isPressable>
       <CardHeader className="flex gap-3">
         <Avatar
           size="sm"
