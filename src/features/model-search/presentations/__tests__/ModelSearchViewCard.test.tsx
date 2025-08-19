@@ -1,6 +1,6 @@
 import { render, screen, within } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
 import type { ReactNode } from 'react';
+import { describe, expect, it, vi } from 'vitest';
 
 import { ModelSearchViewCard } from '../ModelSearchViewCard';
 import type { ModelSearchViewHeaderProps } from '../ModelSearchViewHeader';
@@ -42,14 +42,16 @@ describe('ModelSearchViewCard', () => {
         author="test-author"
         downloads={5000}
         likes={1000}
-        tags={["tag1", "tag2"]}
-      />
+        tags={['tag1', 'tag2']}
+      />,
     );
 
     // Header content and link
     const header = screen.getByTestId('header');
     expect(within(header).getByText('title: Model Card')).toBeInTheDocument();
-    expect(within(header).getByText('href: https://huggingface.co/test-author/test-model-123')).toBeInTheDocument();
+    expect(
+      within(header).getByText('href: https://huggingface.co/test-author/test-model-123'),
+    ).toBeInTheDocument();
 
     // Avatar data
     const avatar = screen.getByTestId('model-with-avatar');
@@ -72,13 +74,7 @@ describe('ModelSearchViewCard', () => {
 
   it('renders without tags when tags array is empty', () => {
     render(
-      <ModelSearchViewCard
-        id="test/model"
-        author="author"
-        downloads={0}
-        likes={0}
-        tags={[]}
-      />
+      <ModelSearchViewCard id="test/model" author="author" downloads={0} likes={0} tags={[]} />,
     );
 
     // Still shows header and avatar
