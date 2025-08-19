@@ -25,8 +25,8 @@ interface ModelSearchResponse {
 }
 
 interface ModelDetailsSibling {
-  blob_id: String;
-  rfilename: String;
+  blob_id: string;
+  rfilename: string;
   size: number;
 }
 

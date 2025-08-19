@@ -4,12 +4,12 @@ import { formatter } from '../formatter';
 describe('Formatter', () => {
   describe('formatBytes', () => {
     it('handles zero bytes', () => {
-      expect(formatter.bytes(0)).toBe('0 Bytes');
+      expect(formatter.bytes(0)).toBe('0 B');
     });
 
     it('formats bytes correctly', () => {
-      expect(formatter.bytes(1)).toBe('1 Bytes');
-      expect(formatter.bytes(999)).toBe('999 Bytes');
+      expect(formatter.bytes(1)).toBe('1 B');
+      expect(formatter.bytes(999)).toBe('999 B');
     });
 
     it('formats KB correctly', () => {

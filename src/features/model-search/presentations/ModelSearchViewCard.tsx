@@ -3,6 +3,7 @@ import { formatter } from '@/services/formatter';
 import { Chip, ScrollShadow } from '@heroui/react';
 import { CircleArrowDown, CircleDashed, Heart, Package } from 'lucide-react';
 import { FC } from 'react';
+import { ModelSearchViewHeader } from './ModelSearchViewHeader';
 
 export interface ModelSearchViewCardProps {
   id: string;
@@ -21,10 +22,11 @@ export const ModelSearchViewCard: FC<ModelSearchViewCardProps> = ({
 }) => {
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center gap-2">
-        <Package className="text-primary" />
-        <span className="text-foreground-500 text-lg font-bold">Model Card</span>
-      </div>
+      <ModelSearchViewHeader
+        Icon={Package}
+        title="Model Card"
+        href={`https://huggingface.co/${id}`}
+      />
       <div className="flex flex-col gap-4">
         <ModelWithAvatar author={author} id={id} />
         <div className="flex items-center gap-4 text-foreground-500">

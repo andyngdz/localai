@@ -1,14 +1,15 @@
-import { Avatar, Button, Chip } from '@heroui/react';
-import { take } from 'es-toolkit/compat';
+import { AuthorAvatar } from '@/cores/presentations/AuthorAvatar';
+import { Button, Chip } from '@heroui/react';
+import { split, take } from 'es-toolkit/compat';
 import { Orbit } from 'lucide-react';
 import { FC, useMemo, useState } from 'react';
+import { ModelSearchViewHeader } from './ModelSearchViewHeader';
 
 export interface ModelSearchViewSpacesProps {
-  id: string;
   spaces: string[];
 }
 
-export const ModelSearchViewSpaces: FC<ModelSearchViewSpacesProps> = ({ id, spaces }) => {
+export const ModelSearchViewSpaces: FC<ModelSearchViewSpacesProps> = ({ spaces }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const showMoreText = isExpanded ? 'Show less' : 'Show more';
 
@@ -21,18 +22,13 @@ export const ModelSearchViewSpaces: FC<ModelSearchViewSpacesProps> = ({ id, spac
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center gap-2">
-        <Orbit className="text-primary" />
-        <span className="text-foreground-500 text-lg font-bold">Spaces are using {id}</span>
-      </div>
+      <ModelSearchViewHeader Icon={Orbit} title="Spaces" />
       <div className="flex flex-wrap gap-2">
         {showSpaces.map((space) => {
           return (
             <Chip
               variant="bordered"
-              avatar={
-                <Avatar src={`http://localhost:8000/users/avatar/${space.split('/')[0]}.png`} />
-              }
+              avatar={<AuthorAvatar id={split(space, '/')[0]} />}
               key={space}
             >
               <span>{space}</span>
