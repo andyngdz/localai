@@ -1,13 +1,13 @@
+import { GpuInfo } from '@/types';
+import { RadioGroup } from '@heroui/react';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { GpuDetectionItem } from '../GpuDetectionItem';
-import { GpuInfo } from '@/types';
-import { RadioGroup } from '@heroui/react';
 
 // Mock the formatter service
 vi.mock('@/services/formatter', () => ({
   formatter: {
-    formatBytes: vi.fn((bytes: number) => `${(bytes / 1024 / 1024 / 1024).toFixed(1)} GB`),
+    bytes: vi.fn((bytes: number) => `${(bytes / 1024 / 1024 / 1024).toFixed(1)} GB`),
   },
 }));
 

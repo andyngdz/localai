@@ -15,7 +15,7 @@ vi.mock('@/services/queries', () => ({
 
 vi.mock('@/services/formatter', () => ({
   formatter: {
-    formatBytes: vi.fn(),
+    bytes: vi.fn(),
   },
 }));
 
@@ -29,7 +29,7 @@ describe('MaxMemoryScaleFactorPreview', () => {
   };
 
   beforeEach(() => {
-    vi.mocked(formatter.bytes).mockImplementation((bytes) => `${bytes} bytes`);
+    vi.mocked(formatter.bytes).mockImplementation((bytes) => `${bytes} B`);
   });
 
   afterEach(() => {
@@ -64,11 +64,11 @@ describe('MaxMemoryScaleFactorPreview', () => {
 
     // Check if GPU usage is displayed correctly (with scaling factor of 0.6)
     expect(formatter.bytes).toHaveBeenCalledWith(8000000000 * 0.6);
-    expect(screen.getByText('GPU: 4800000000 bytes')).toBeInTheDocument();
+    expect(screen.getByText('GPU: 4800000000 B')).toBeInTheDocument();
 
     // Check if RAM usage is displayed correctly (with scaling factor of 0.6)
     expect(formatter.bytes).toHaveBeenCalledWith(16000000000 * 0.6);
-    expect(screen.getByText('RAM: 9600000000 bytes')).toBeInTheDocument();
+    expect(screen.getByText('RAM: 9600000000 B')).toBeInTheDocument();
   });
 
   it('updates the preview when scale factor changes', () => {
