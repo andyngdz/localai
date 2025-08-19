@@ -1,7 +1,9 @@
 import { useModelSelectorStore } from '../states';
 import { useModelSearchView } from '../states/useModelSearchView';
 
+import { ScrollShadow } from '@heroui/react';
 import { ModelSearchViewCard } from './ModelSearchViewCard';
+import { ModelSearchViewSpaces } from './ModelSearchViewSpaces';
 
 export const ModelSearchView = () => {
   const { model_id } = useModelSelectorStore();
@@ -9,9 +11,16 @@ export const ModelSearchView = () => {
 
   if (modelDetails) {
     return (
-      <div className="p-6">
-        <ModelSearchViewCard modelDetails={modelDetails} />
-      </div>
+      <ScrollShadow className="flex flex-col gap-6 p-6 scrollbar-thin">
+        <ModelSearchViewCard
+          author={modelDetails.author}
+          downloads={modelDetails.downloads}
+          id={modelDetails.id}
+          likes={modelDetails.likes}
+          tags={modelDetails.tags}
+        />
+        <ModelSearchViewSpaces id={modelDetails.id} spaces={modelDetails.spaces} />
+      </ScrollShadow>
     );
   }
 };

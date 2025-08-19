@@ -1,22 +1,29 @@
 import { ModelWithAvatar } from '@/cores/presentations/ModelWithAvatar';
 import { formatter } from '@/services/formatter';
-import { ModelDetailsResponse } from '@/types';
 import { Chip, ScrollShadow } from '@heroui/react';
 import { CircleArrowDown, CircleDashed, Heart, Package } from 'lucide-react';
 import { FC } from 'react';
 
 export interface ModelSearchViewCardProps {
-  modelDetails: ModelDetailsResponse;
+  id: string;
+  author: string;
+  downloads: number;
+  likes: number;
+  tags: string[];
 }
 
-export const ModelSearchViewCard: FC<ModelSearchViewCardProps> = ({ modelDetails }) => {
-  const { id, author, downloads, likes, tags } = modelDetails;
-
+export const ModelSearchViewCard: FC<ModelSearchViewCardProps> = ({
+  id,
+  author,
+  downloads,
+  likes,
+  tags,
+}) => {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center gap-2">
         <Package className="text-primary" />
-        <span className="text-foreground-500 text-xl font-bold">Model Card</span>
+        <span className="text-foreground-500 text-lg font-bold">Model Card</span>
       </div>
       <div className="flex flex-col gap-4">
         <ModelWithAvatar author={author} id={id} />
