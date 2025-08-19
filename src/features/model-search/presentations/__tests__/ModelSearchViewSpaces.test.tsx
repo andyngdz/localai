@@ -1,4 +1,5 @@
 import type { ButtonProps, ChipProps } from '@heroui/react';
+import type { PressEvent } from '@react-aria/interactions';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
@@ -28,7 +29,7 @@ vi.mock('@heroui/react', async () => {
       <button
         data-testid="toggle-button"
         className={className}
-        onClick={() => onPress && onPress({} as any)}
+        onClick={() => onPress && onPress({} as PressEvent)}
       >
         {children}
       </button>
