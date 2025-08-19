@@ -25,4 +25,5 @@ export const ModelSearchView = () => {
       </ScrollShadow>
     );
   }
+  return null;
 };
