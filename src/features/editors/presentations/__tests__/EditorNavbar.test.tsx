@@ -14,6 +14,11 @@ vi.mock('@/features/model-selectors/presentations/ModelSelector', () => ({
   ModelSelector: () => <div data-testid="mock-model-selector">Model Selector</div>,
 }));
 
+// Mock the ModelSearchOpenIconButton component
+vi.mock('@/features/model-search', () => ({
+  ModelSearchOpenIconButton: () => <div data-testid="mock-search-button">Search Button</div>,
+}));
+
 // Mock the HeroUI components
 vi.mock('@heroui/react', () => ({
   Navbar: ({ children, className }: { children: React.ReactNode; className?: string }) => (
@@ -30,6 +35,21 @@ vi.mock('@heroui/react', () => ({
   NavbarItem: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="mock-navbar-item">{children}</div>
   ),
+  // Add mock for useDisclosure
+  useDisclosure: () => ({
+    isOpen: false,
+    onOpen: vi.fn(),
+    onClose: vi.fn(),
+  }),
+  // Add mocks for other components used in ModelSearchOpenIconButton
+  Button: ({ children }: { children: React.ReactNode }) => (
+    <button data-testid="mock-button">{children}</button>
+  ),
+  Modal: () => <div data-testid="mock-modal">Modal</div>,
+  ModalContent: () => <div data-testid="mock-modal-content">Modal Content</div>,
+  ModalHeader: () => <div data-testid="mock-modal-header">Modal Header</div>,
+  ModalBody: () => <div data-testid="mock-modal-body">Modal Body</div>,
+  Divider: () => <div data-testid="mock-divider">Divider</div>,
 }));
 
 describe('EditorNavbar', () => {
@@ -48,6 +68,13 @@ describe('EditorNavbar', () => {
     expect(screen.getByTestId('mock-navbar-content-center')).toBeInTheDocument();
     expect(screen.getByTestId('mock-navbar-item')).toBeInTheDocument();
     expect(screen.getByTestId('mock-model-selector')).toBeInTheDocument();
+  });
+
+  it('renders the search button in the center content', () => {
+    render(<EditorNavbar />);
+
+    expect(screen.getByTestId('mock-navbar-content-center')).toBeInTheDocument();
+    expect(screen.getByTestId('mock-search-button')).toBeInTheDocument();
   });
 
   it('renders end navbar content', () => {

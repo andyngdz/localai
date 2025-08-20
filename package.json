@@ -55,6 +55,7 @@
     "eslint-config-next": "15.4.6",
     "jsdom": "^26.1.0",
     "prettier": "^3.6.2",
+    "tailwind-scrollbar": "^4.0.2",
     "tailwindcss": "^4",
     "typescript": "^5",
     "vite-tsconfig-paths": "^5.1.4",

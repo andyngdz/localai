@@ -8,7 +8,7 @@ import { Divider } from '@heroui/react';
 
 export const GeneratorConfig = () => {
   return (
-    <div className="h-full overflow-auto">
+    <div className="h-full scrollbar-thin overflow-auto">
       <GeneratorConfigFormat />
       <Divider />
       <GeneratorConfigExtra />

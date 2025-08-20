@@ -1,6 +1,6 @@
 import { formatter } from '@/services/formatter';
 import { useMemoryQuery } from '@/services/queries';
-import { MemoryResponse, ApiError } from '@/types/api';
+import { ApiError, MemoryResponse } from '@/types/api';
 import { UseQueryResult } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -15,7 +15,7 @@ vi.mock('@/services/queries', () => ({
 
 vi.mock('@/services/formatter', () => ({
   formatter: {
-    formatBytes: vi.fn(),
+    bytes: vi.fn(),
   },
 }));
 
@@ -29,7 +29,7 @@ describe('MaxMemoryScaleFactorPreview', () => {
   };
 
   beforeEach(() => {
-    vi.mocked(formatter.formatBytes).mockImplementation((bytes) => `${bytes} bytes`);
+    vi.mocked(formatter.bytes).mockImplementation((bytes) => `${bytes} B`);
   });
 
   afterEach(() => {
@@ -63,12 +63,12 @@ describe('MaxMemoryScaleFactorPreview', () => {
     expect(screen.getByText('Memory Usage Preview')).toBeInTheDocument();
 
     // Check if GPU usage is displayed correctly (with scaling factor of 0.6)
-    expect(formatter.formatBytes).toHaveBeenCalledWith(8000000000 * 0.6);
-    expect(screen.getByText('GPU: 4800000000 bytes')).toBeInTheDocument();
+    expect(formatter.bytes).toHaveBeenCalledWith(8000000000 * 0.6);
+    expect(screen.getByText('GPU: 4800000000 B')).toBeInTheDocument();
 
     // Check if RAM usage is displayed correctly (with scaling factor of 0.6)
-    expect(formatter.formatBytes).toHaveBeenCalledWith(16000000000 * 0.6);
-    expect(screen.getByText('RAM: 9600000000 bytes')).toBeInTheDocument();
+    expect(formatter.bytes).toHaveBeenCalledWith(16000000000 * 0.6);
+    expect(screen.getByText('RAM: 9600000000 B')).toBeInTheDocument();
   });
 
   it('updates the preview when scale factor changes', () => {
@@ -83,8 +83,8 @@ describe('MaxMemoryScaleFactorPreview', () => {
     );
 
     // Initial render with default scale factor 0.6
-    expect(formatter.formatBytes).toHaveBeenCalledWith(8000000000 * 0.6);
-    expect(formatter.formatBytes).toHaveBeenCalledWith(16000000000 * 0.6);
+    expect(formatter.bytes).toHaveBeenCalledWith(8000000000 * 0.6);
+    expect(formatter.bytes).toHaveBeenCalledWith(16000000000 * 0.6);
 
     // Now create a new form context with a different scale factor
     const CustomFormWrapper = ({ children }: { children: React.ReactNode }) => {
@@ -103,7 +103,7 @@ describe('MaxMemoryScaleFactorPreview', () => {
     );
 
     // Check if the calculations updated with the new scale factor
-    expect(formatter.formatBytes).toHaveBeenCalledWith(8000000000 * 0.8);
-    expect(formatter.formatBytes).toHaveBeenCalledWith(16000000000 * 0.8);
+    expect(formatter.bytes).toHaveBeenCalledWith(8000000000 * 0.8);
+    expect(formatter.bytes).toHaveBeenCalledWith(16000000000 * 0.8);
   });
 });

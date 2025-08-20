@@ -9,8 +9,10 @@ import type {
   LoadModelRequest,
   MaxMemoryRequest,
   MemoryResponse,
+  ModelDetailsResponse,
   ModelDownloaded,
   ModelRecommendationResponse,
+  ModelSearchResponse,
   SelectDeviceRequest,
   StyleSection,
 } from '../types';
@@ -67,14 +69,22 @@ class API {
     return data;
   }
 
-  async downloadModel(id: string) {
-    const { data } = await client.post('/downloads/', { id });
+  async searchModel(model_name: string) {
+    const { data } = await client.get<ModelSearchResponse>(
+      `/models/search?model_name=${model_name}`,
+    );
 
     return data;
   }
 
-  async styles() {
-    const { data } = await client.get<StyleSection[]>('/styles');
+  async modelDetails(model_id: string) {
+    const { data } = await client.get<ModelDetailsResponse>(`/models/details?id=${model_id}`);
+
+    return data;
+  }
+
+  async downloadModel(id: string) {
+    const { data } = await client.post('/downloads/', { id });
 
     return data;
   }
@@ -93,6 +103,12 @@ class API {
 
   async generator(request: ImageGenerationRequest) {
     const { data } = await client.post<ImageGenerationResponse>(`/generators`, request);
+
+    return data;
+  }
+
+  async styles() {
+    const { data } = await client.get<StyleSection[]>('/styles');
 
     return data;
   }

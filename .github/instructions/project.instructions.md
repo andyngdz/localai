@@ -1,3 +1,7 @@
+---
+applyTo: '**'
+---
+
 # LocalAI Coding Guidelines for AI Agents
 
 This document provides essential knowledge for working effectively with the LocalAI codebase. It is based on the project's `rules.md` and tailored for AI agent use.
@@ -58,7 +62,7 @@ src/
 - **Example** from `src/features/streaming-messages/states/useMessageStores.ts`:
   ```typescript
   export const useMessageStore = create<MessageStoreProps>((set, _get, store) => ({
-    message: "",
+    message: '',
     setMessage: (message) => set({ message }),
     reset: () => set(store.getInitialState()),
   }));
@@ -78,7 +82,7 @@ src/
   ```typescript
   useEffect(() => {
     socket.on(SocketEvents.DOWNLOAD_START, () => {
-      setMessage("Downloading model");
+      setMessage('Downloading model');
     });
 
     return () => {
@@ -97,18 +101,18 @@ src/
 
   ```typescript
   vi.mocked(useModelRecommendationsQuery).mockReturnValue({
-    data: { default_selected_id: "test-id" },
+    data: { default_selected_id: 'test-id' },
   } as ReturnType<typeof useModelRecommendationsQuery>);
 
   renderHook(() => useModelRecommendation());
 
-  expect(setValue).toHaveBeenCalledWith("id", "test-id");
+  expect(setValue).toHaveBeenCalledWith('id', 'test-id');
   ```
 
 - **Example Test Structure**:
 
   ```typescript
-  describe("ComponentName", () => {
+  describe('ComponentName', () => {
     beforeEach(() => {
       // Setup mocks
     });
@@ -117,7 +121,7 @@ src/
       vi.clearAllMocks();
     });
 
-    it("should do something", () => {
+    it('should do something', () => {
       // Test implementation
     });
   });

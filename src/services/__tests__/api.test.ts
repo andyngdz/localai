@@ -139,6 +139,59 @@ describe('API Service', () => {
     });
   });
 
+  describe('searchModel', () => {
+    it('fetches model search results', async () => {
+      const modelName = 'sdxl';
+      const mockResponse = {
+        models_search_info: [
+          {
+            id: 'org/model',
+            author: 'author',
+            likes: 10,
+            downloads: 100,
+            tags: ['sd', 'diffusion'],
+            is_downloaded: false,
+          },
+        ],
+      };
+      vi.spyOn(client, 'get').mockResolvedValueOnce({ data: mockResponse });
+
+      const result = await api.searchModel(modelName);
+
+      expect(client.get).toHaveBeenCalledWith(`/models/search?model_name=${modelName}`);
+      expect(result).toEqual(mockResponse);
+    });
+  });
+
+  describe('modelDetails', () => {
+    it('fetches model details', async () => {
+      const modelId = 'org/model';
+      const mockResponse = {
+        author: 'author',
+        created_at: '2024-01-01T00:00:00Z',
+        disabled: false,
+        downloads: 100,
+        gated: 'none',
+        id: modelId,
+        last_modified: '2024-01-02T00:00:00Z',
+        library_name: 'diffusers',
+        likes: 10,
+        pipeline_tag: ['text-to-image'],
+        private: false,
+        sha: 'abcdef',
+        siblings: [{ blob_id: 'b1', rfilename: 'model.safetensors', size: 123456 }],
+        spaces: [],
+        tags: ['sd', 'diffusion'],
+      };
+      vi.spyOn(client, 'get').mockResolvedValueOnce({ data: mockResponse });
+
+      const result = await api.modelDetails(modelId);
+
+      expect(client.get).toHaveBeenCalledWith(`/models/details?id=${modelId}`);
+      expect(result).toEqual(mockResponse);
+    });
+  });
+
   describe('downloadModel', () => {
     it('initiates model download', async () => {
       const mockResponse = { status: 'downloading' };
