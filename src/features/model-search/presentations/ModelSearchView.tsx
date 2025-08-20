@@ -25,7 +25,7 @@ export const ModelSearchView = () => {
           <ModelSearchViewSpaces spaces={modelDetails.spaces} />
           <ModelSearchViewFiles id={modelDetails.id} siblings={modelDetails.siblings} />
         </ScrollShadow>
-        <ModelSearchViewFooter />
+        <ModelSearchViewFooter id={modelDetails.id} />
       </div>
     );
   }
