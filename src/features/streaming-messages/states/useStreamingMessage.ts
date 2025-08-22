@@ -12,6 +12,10 @@ export const useStreamingMessage = () => {
 
     socket.on(SocketEvents.MODEL_LOAD_COMPLETED, () => reset());
 
+    socket.on(SocketEvents.DOWNLOAD_STEP_PROGRESS, (data) => {
+      console.info(data);
+    });
+
     return () => {
       socket.off(SocketEvents.DOWNLOAD_START);
       socket.off(SocketEvents.MODEL_LOAD_COMPLETED);

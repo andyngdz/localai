@@ -34,6 +34,7 @@ export default defineConfig({
         '**/index.ts',
         'next.config.ts',
         'postcss.config.mjs',
+        'vitest.setup.ts',
         '.next/**',
       ],
     },
