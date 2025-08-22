@@ -1,7 +1,6 @@
 import { socket, SocketEvents } from '@/sockets';
 import { useEffect } from 'react';
 import { useMessageStore } from './useMessageStores';
-import { Socket } from 'socket.io-client';
 
 export const useStreamingMessage = () => {
   const { message, setMessage, reset } = useMessageStore();
