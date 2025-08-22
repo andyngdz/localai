@@ -29,5 +29,4 @@ export const ModelSearchView = () => {
       </div>
     );
   }
-  return null;
 };
