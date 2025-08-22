@@ -43,14 +43,18 @@ vi.mock('../../states/useModelSearchView', () => ({
   useModelSearchView: (id: string) => useModelSearchViewMock(id),
 }));
 
-// Mock ScrollShadow to a simple wrapper to make DOM assertions stable
-vi.mock('@heroui/react', () => ({
-  ScrollShadow: ({ children, className }: { children: ReactNode; className?: string }) => (
-    <div data-testid="scrollshadow" className={className}>
-      {children}
-    </div>
-  ),
-}));
+// Mock ScrollShadow to a simple wrapper, but keep other actual exports (e.g., Button)
+vi.mock('@heroui/react', async () => {
+  const actual = await vi.importActual<typeof import('@heroui/react')>('@heroui/react');
+  return {
+    ...actual,
+    ScrollShadow: ({ children, className }: { children: ReactNode; className?: string }) => (
+      <div data-testid="scrollshadow" className={className}>
+        {children}
+      </div>
+    ),
+  };
+});
 
 // Mock child components
 vi.mock('../ModelSearchViewCard', () => ({
