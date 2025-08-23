@@ -1,0 +1,12 @@
+appId: 'dev.andyng.localai'
+productName: 'LocalAI'
+copyright: 'Copyright (c) 2025 Andy Ng'
+win:
+  target: ['dir', 'portable', 'zip']
+  icon: 'src/assets/logo.png'
+linux:
+  target: ['dir', 'appimage', 'deb', 'zip']
+  icon: 'src/assets/logo.png'
+mac:
+  target: ['dir', 'dmg', 'zip']
+  icon: 'src/assets/logo.png'
