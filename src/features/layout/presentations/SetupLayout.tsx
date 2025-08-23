@@ -1,3 +1,5 @@
+'use client';
+
 import { Divider } from '@heroui/divider';
 import { Button } from '@heroui/react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
