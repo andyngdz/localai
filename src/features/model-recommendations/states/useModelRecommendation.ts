@@ -20,17 +20,17 @@ export const useModelRecommendation = () => {
     }
   };
 
-  const onModelLoadCompleted = useCallback(() => {
+  const onDownloadCompleted = useCallback(() => {
     router.replace('/editor');
   }, [router]);
 
   useEffect(() => {
-    socket.on(SocketEvents.MODEL_LOAD_COMPLETED, onModelLoadCompleted);
+    socket.on(SocketEvents.DOWNLOAD_COMPLETED, onDownloadCompleted);
 
     return () => {
-      socket.off(SocketEvents.MODEL_LOAD_COMPLETED, onModelLoadCompleted);
+      socket.off(SocketEvents.DOWNLOAD_COMPLETED, onDownloadCompleted);
     };
-  }, [onModelLoadCompleted, router]);
+  }, [onDownloadCompleted, router]);
 
   useEffect(() => {
     if (data) {

@@ -20,7 +20,7 @@ vi.mock('@/sockets', async (originalImport: () => Promise<Socket>) => {
       off: vi.fn(),
     },
     SocketEvents: {
-      MODEL_LOAD_COMPLETED: 'MODEL_LOAD_COMPLETED',
+      DOWNLOAD_COMPLETED: 'DOWNLOAD_COMPLETED',
     },
   };
 });
@@ -60,7 +60,7 @@ describe('useModelRecommendation', () => {
       data: {},
     } as ReturnType<typeof useModelRecommendationsQuery>);
 
-    vi.mocked(api.downloadModel).mockResolvedValue({});
+    vi.mocked(api.downloadModel).mockResolvedValue();
 
     const { result } = renderHook(() => useModelRecommendation());
 
@@ -71,7 +71,7 @@ describe('useModelRecommendation', () => {
     expect(api.downloadModel).toHaveBeenCalledWith('model-123');
   });
 
-  it('should navigate to editor on MODEL_LOAD_COMPLETED and clean up on unmount', async () => {
+  it('should navigate to editor on DOWNLOAD_COMPLETED and clean up on unmount', async () => {
     vi.mocked(useModelRecommendationsQuery).mockReturnValue({
       data: {},
     } as ReturnType<typeof useModelRecommendationsQuery>);
@@ -81,7 +81,7 @@ describe('useModelRecommendation', () => {
 
     // Mock the socket.on and socket.off methods
     vi.spyOn(socket, 'on').mockImplementation((event: string, cb: VoidFunction) => {
-      if (event === SocketEvents.MODEL_LOAD_COMPLETED) {
+      if (event === SocketEvents.DOWNLOAD_COMPLETED) {
         cb(); // Immediately call the callback to trigger navigation
       }
       return socket; // Return the socket object as per socket.io API
@@ -91,15 +91,12 @@ describe('useModelRecommendation', () => {
 
     // Check that navigation happened
     expect(mockReplace).toHaveBeenCalledWith('/editor');
-    expect(socket.on).toHaveBeenCalledWith(SocketEvents.MODEL_LOAD_COMPLETED, expect.any(Function));
+    expect(socket.on).toHaveBeenCalledWith(SocketEvents.DOWNLOAD_COMPLETED, expect.any(Function));
 
     // Unmount the hook to trigger cleanup
     unmount();
 
     // Verify that socket.off was called with the correct event
-    expect(socket.off).toHaveBeenCalledWith(
-      SocketEvents.MODEL_LOAD_COMPLETED,
-      expect.any(Function),
-    );
+    expect(socket.off).toHaveBeenCalledWith(SocketEvents.DOWNLOAD_COMPLETED, expect.any(Function));
   });
 });
