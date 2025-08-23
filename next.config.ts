@@ -1,7 +1,6 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  output: "export",
   experimental: {
     viewTransition: true,
   },
@@ -9,5 +8,9 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
 };
+
+if (process.env.NODE_ENV === 'production') {
+  nextConfig.output = 'export';
+}
 
 export default nextConfig;

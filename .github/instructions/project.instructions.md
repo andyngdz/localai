@@ -12,7 +12,7 @@ The workspace contains two main projects:
 
 - `localai/`: A Next.js/React frontend for the user interface.
 - `localai_backend/`: A Python FastAPI backend service.
-- `src-tauri/`: A Tauri layer for desktop application integration.
+- `electron/`: An Electron layer for desktop application integration.
 
 This guide focuses primarily on the `localai/` frontend.
 

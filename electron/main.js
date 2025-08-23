@@ -1,0 +1,83 @@
+import { app, BrowserWindow, shell } from 'electron';
+import serve from 'electron-serve';
+import path from 'path';
+import waitOn from 'wait-on';
+
+const __dirname = path.resolve();
+
+const IS_PRODUCTION = app.isPackaged;
+const DEV_URL = 'http://localhost:3000';
+const appServe = IS_PRODUCTION && serve({ directory: path.join(__dirname, '../out') });
+
+const onSetLinuxGpuFlags = () => {
+  if (process.platform !== 'linux') return;
+
+  app.commandLine.appendSwitch('ignore-gpu-blocklist');
+  app.commandLine.appendSwitch('enable-gpu-rasterization');
+  app.commandLine.appendSwitch('enable-zero-copy');
+};
+
+const onCreateWindow = async () => {
+  const win = new BrowserWindow({
+    width: 1200,
+    height: 800,
+    autoHideMenuBar: true,
+    show: false,
+    backgroundColor: '#0b0b0b',
+    webPreferences: {
+      preload: path.join(__dirname, 'electron', 'preload.js'),
+      sandbox: true,
+      contextIsolation: true,
+      nodeIntegration: false,
+      spellcheck: false,
+      devTools: !IS_PRODUCTION,
+    },
+  });
+
+  win.webContents.setWindowOpenHandler(({ url }) => {
+    shell.openExternal(url);
+    return { action: 'deny' };
+  });
+
+  win.once('ready-to-show', () => win.show());
+
+  if (IS_PRODUCTION) {
+    await appServe(win);
+
+    win.loadURL('app://');
+  } else {
+    await waitOn({ resources: [DEV_URL] });
+
+    win.loadURL(DEV_URL);
+    win.webContents.openDevTools();
+    win.webContents.on('did-fail-load', () => {
+      win.webContents.reloadIgnoringCache();
+    });
+  }
+};
+
+const gotLock = app.requestSingleInstanceLock();
+
+if (!gotLock) {
+  app.quit();
+} else {
+  app.on('second-instance', () => {
+    const [win] = BrowserWindow.getAllWindows();
+
+    if (win) {
+      if (win.isMinimized()) win.restore();
+      win.focus();
+    }
+  });
+
+  app.whenReady().then(() => {
+    onSetLinuxGpuFlags();
+    onCreateWindow();
+  });
+
+  app.on('window-all-closed', () => {
+    if (process.platform !== 'darwin') {
+      app.quit();
+    }
+  });
+}
