@@ -12,7 +12,7 @@ vi.mock('@/sockets', () => ({
   SocketEvents: {
     DOWNLOAD_START: 'DOWNLOAD_START',
     MODEL_LOAD_COMPLETED: 'MODEL_LOAD_COMPLETED',
-    IMAGE_GENERATION_STEP_END: 'IMAGE_GENERATION_STEP_END',
+    DOWNLOAD_COMPLETED: 'DOWNLOAD_COMPLETED',
   },
 }));
 
@@ -23,6 +23,7 @@ describe('useStreamingMessage', () => {
   // Use specific callback types to avoid 'Function' lint warnings
   let onDownloadCallback: () => void;
   let onLoadCompletedCallback: () => void;
+  let onDownloadCompletedCallback: () => void;
 
   beforeEach(() => {
     // Reset state
@@ -36,6 +37,8 @@ describe('useStreamingMessage', () => {
           onDownloadCallback = callback;
         } else if (event === SocketEvents.MODEL_LOAD_COMPLETED) {
           onLoadCompletedCallback = callback;
+        } else if (event === SocketEvents.DOWNLOAD_COMPLETED) {
+          onDownloadCompletedCallback = callback;
         }
       },
     );
@@ -46,6 +49,7 @@ describe('useStreamingMessage', () => {
 
     expect(socket.on).toHaveBeenCalledWith(SocketEvents.DOWNLOAD_START, expect.any(Function));
     expect(socket.on).toHaveBeenCalledWith(SocketEvents.MODEL_LOAD_COMPLETED, expect.any(Function));
+    expect(socket.on).toHaveBeenCalledWith(SocketEvents.DOWNLOAD_COMPLETED, expect.any(Function));
   });
 
   it('sets message on DOWNLOAD_START', () => {
@@ -73,12 +77,26 @@ describe('useStreamingMessage', () => {
     expect(useMessageStore.getState().message).toBe('');
   });
 
+  it('resets message on DOWNLOAD_COMPLETED', () => {
+    // Set initial state
+    useMessageStore.getState().setMessage('Downloading model');
+
+    renderHook(() => useStreamingMessage());
+
+    // Simulate download completed event
+    act(() => {
+      onDownloadCompletedCallback();
+    });
+
+    expect(useMessageStore.getState().message).toBe('');
+  });
+
   it('cleans up listeners on unmount', () => {
     const { unmount } = renderHook(() => useStreamingMessage());
     unmount();
 
     expect(socket.off).toHaveBeenCalledWith(SocketEvents.DOWNLOAD_START);
     expect(socket.off).toHaveBeenCalledWith(SocketEvents.MODEL_LOAD_COMPLETED);
-    expect(socket.off).toHaveBeenCalledWith(SocketEvents.IMAGE_GENERATION_STEP_END);
+    expect(socket.off).toHaveBeenCalledWith(SocketEvents.DOWNLOAD_COMPLETED);
   });
 });

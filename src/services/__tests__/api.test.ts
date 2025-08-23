@@ -194,14 +194,11 @@ describe('API Service', () => {
 
   describe('downloadModel', () => {
     it('initiates model download', async () => {
-      const mockResponse = { status: 'downloading' };
-      vi.spyOn(client, 'post').mockResolvedValueOnce({ data: mockResponse });
       const modelId = 'model1';
 
-      const result = await api.downloadModel(modelId);
+      await api.downloadModel(modelId);
 
       expect(client.post).toHaveBeenCalledWith('/downloads/', { id: modelId });
-      expect(result).toEqual(mockResponse);
     });
   });
 

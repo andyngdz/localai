@@ -12,14 +12,12 @@ export const useStreamingMessage = () => {
 
     socket.on(SocketEvents.MODEL_LOAD_COMPLETED, () => reset());
 
-    socket.on(SocketEvents.DOWNLOAD_STEP_PROGRESS, (data) => {
-      console.info(data);
-    });
+    socket.on(SocketEvents.DOWNLOAD_COMPLETED, () => reset());
 
     return () => {
       socket.off(SocketEvents.DOWNLOAD_START);
       socket.off(SocketEvents.MODEL_LOAD_COMPLETED);
-      socket.off(SocketEvents.IMAGE_GENERATION_STEP_END);
+      socket.off(SocketEvents.DOWNLOAD_COMPLETED);
     };
   }, [reset, setMessage]);
 

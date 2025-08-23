@@ -84,9 +84,7 @@ class API {
   }
 
   async downloadModel(id: string) {
-    const { data } = await client.post('/downloads/', { id });
-
-    return data;
+    await client.post('/downloads/', { id });
   }
 
   async getDownloadedModels() {
