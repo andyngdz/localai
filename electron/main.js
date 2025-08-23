@@ -30,7 +30,7 @@ const onCreateWindow = async () => {
       contextIsolation: true,
       nodeIntegration: false,
       spellcheck: false,
-      devTools: IS_PRODUCTION,
+      devTools: !IS_PRODUCTION,
     },
   });
 
