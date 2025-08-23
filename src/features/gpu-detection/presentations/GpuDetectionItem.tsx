@@ -22,7 +22,7 @@ export const GpuDetectionItem: FC<GpuDetectionItemProps> = ({ gpu, ...restProps 
         </span>
       }
       classNames={{
-        base: 'max-w-full p-4',
+        base: 'max-w-full p-5',
         labelWrapper: 'flex justify-between w-full',
       }}
     >

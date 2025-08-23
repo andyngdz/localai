@@ -49,7 +49,7 @@ const onCreateWindow = async () => {
     await waitOn({ resources: [DEV_URL] });
 
     win.loadURL(DEV_URL);
-    win.webContents.openDevTools({ mode: 'detach' });
+    win.webContents.openDevTools();
     win.webContents.on('did-fail-load', () => {
       win.webContents.reloadIgnoringCache();
     });
