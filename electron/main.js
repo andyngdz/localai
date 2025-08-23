@@ -1,47 +1,83 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, shell } from 'electron';
 import serve from 'electron-serve';
 import path from 'path';
 import waitOn from 'wait-on';
 
 const __dirname = path.resolve();
 
-const appServe =
-  app.isPackaged &&
-  serve({
-    directory: path.join(__dirname, '../out'),
-  });
+const IS_PRODUCTION = app.isPackaged;
+const DEV_URL = 'http://localhost:3000';
+const appServe = IS_PRODUCTION && serve({ directory: path.join(__dirname, '../out') });
 
-const createWindow = () => {
+const onSetLinuxGpuFlags = () => {
+  if (process.platform !== 'linux') return;
+
+  app.commandLine.appendSwitch('ignore-gpu-blocklist');
+  app.commandLine.appendSwitch('enable-gpu-rasterization');
+  app.commandLine.appendSwitch('enable-zero-copy');
+};
+
+const onCreateWindow = async () => {
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1200,
+    height: 800,
     autoHideMenuBar: true,
+    show: false,
+    backgroundColor: '#0b0b0b',
     webPreferences: {
       preload: path.join(__dirname, 'electron', 'preload.js'),
+      sandbox: true,
+      contextIsolation: true,
+      nodeIntegration: false,
+      spellcheck: false,
+      devTools: IS_PRODUCTION,
     },
   });
 
-  if (app.isPackaged && appServe) {
-    appServe(win).then(() => {
-      win.loadURL('app://');
-    });
+  win.webContents.setWindowOpenHandler(({ url }) => {
+    shell.openExternal(url);
+    return { action: 'deny' };
+  });
+
+  win.once('ready-to-show', () => win.show());
+
+  if (IS_PRODUCTION) {
+    await appServe(win);
+
+    win.loadURL('app://');
   } else {
-    waitOn({ resources: ['http://localhost:3000'] }).then(() => {
-      win.loadURL('http://localhost:3000');
-      win.webContents.openDevTools();
-      win.webContents.on('did-fail-load', () => {
-        win.webContents.reloadIgnoringCache();
-      });
+    await waitOn({ resources: [DEV_URL] });
+
+    win.loadURL(DEV_URL);
+    win.webContents.openDevTools({ mode: 'detach' });
+    win.webContents.on('did-fail-load', () => {
+      win.webContents.reloadIgnoringCache();
     });
   }
 };
 
-app.on('ready', () => {
-  createWindow();
-});
+const gotLock = app.requestSingleInstanceLock();
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
-});
+if (!gotLock) {
+  app.quit();
+} else {
+  app.on('second-instance', () => {
+    const [win] = BrowserWindow.getAllWindows();
+
+    if (win) {
+      if (win.isMinimized()) win.restore();
+      win.focus();
+    }
+  });
+
+  app.whenReady().then(() => {
+    onSetLinuxGpuFlags();
+    onCreateWindow();
+  });
+
+  app.on('window-all-closed', () => {
+    if (process.platform !== 'darwin') {
+      app.quit();
+    }
+  });
+}
