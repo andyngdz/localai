@@ -8,6 +8,7 @@ export const useModelSearchView = (model_id: string) => {
     isError,
   } = useQuery({
     queryKey: ['searchModel', model_id],
+    enabled: !!model_id,
     queryFn: async () => {
       const response = await api.modelDetails(model_id);
 

@@ -1,6 +1,6 @@
 import { api } from '@/services/api';
 import { useQuery } from '@tanstack/react-query';
-import { first } from 'es-toolkit/compat';
+import { first, isString } from 'es-toolkit/compat';
 import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { ModelSearchFormValues } from '../types';
@@ -12,8 +12,11 @@ export const useModelSearch = () => {
 
   const { data, isLoading } = useQuery({
     queryKey: ['modelSearch', query],
+    enabled: isString(query),
     queryFn: () => api.searchModel(query),
   });
+
+  console.info(query);
 
   useEffect(() => {
     onResetModelId();

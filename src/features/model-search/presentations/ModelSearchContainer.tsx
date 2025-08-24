@@ -12,6 +12,7 @@ export const ModelSearchContainer = () => {
   const methods = useForm<ModelSearchFormValues>({
     mode: 'all',
     reValidateMode: 'onChange',
+    defaultValues: { query: '' },
   });
 
   return (
