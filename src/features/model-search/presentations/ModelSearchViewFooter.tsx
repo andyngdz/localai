@@ -1,17 +1,12 @@
-import { api } from '@/services/api';
-import { Button } from '@heroui/react';
-import { Info } from 'lucide-react';
-import { FC } from 'react';
+import { Info } from 'lucide-react'
+import { FC } from 'react'
+import { ModelSearchViewDownloadButton } from './ModelSearchViewDownloadButton'
 
 export interface ModelSearchViewFooterProps {
-  id: string;
+  id: string
 }
 
 export const ModelSearchViewFooter: FC<ModelSearchViewFooterProps> = ({ id }) => {
-  const onDownload = () => {
-    api.downloadModel(id);
-  };
-
   return (
     <div className="p-4">
       <div className="flex items-center justify-between gap-4">
@@ -21,10 +16,8 @@ export const ModelSearchViewFooter: FC<ModelSearchViewFooterProps> = ({ id }) =>
             Optimized download: Only essential files are downloaded, saving space
           </span>
         </div>
-        <Button color="primary" className="text-background" size="sm" onPress={onDownload}>
-          Download this model
-        </Button>
+        <ModelSearchViewDownloadButton id={id} />
       </div>
     </div>
-  );
-};
+  )
+}
