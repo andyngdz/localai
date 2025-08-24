@@ -1,6 +1,7 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  trailingSlash: true,
   experimental: {
     viewTransition: true,
   },
@@ -11,6 +12,7 @@ const nextConfig: NextConfig = {
 
 if (process.env.NODE_ENV === 'production') {
   nextConfig.output = 'export';
+  nextConfig.distDir = 'dist/renderer';
 }
 
 export default nextConfig;

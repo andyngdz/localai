@@ -1,13 +1,14 @@
 import { app, BrowserWindow, shell } from 'electron';
-import serve from 'electron-serve';
 import path from 'path';
-import waitOn from 'wait-on';
+import serve from 'electron-serve';
 
-const __dirname = path.resolve();
+process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true;
+process.env.IBUS_USE_PORTAL = '1';
 
+const appDir = app.getAppPath();
 const IS_PRODUCTION = app.isPackaged;
 const DEV_URL = 'http://localhost:3000';
-const appServe = IS_PRODUCTION && serve({ directory: path.join(__dirname, '../out') });
+const appServe = IS_PRODUCTION && serve({ directory: path.join(appDir, 'dist/renderer') });
 
 const onSetLinuxGpuFlags = () => {
   if (process.platform !== 'linux') return;
@@ -25,7 +26,7 @@ const onCreateWindow = async () => {
     show: false,
     backgroundColor: '#0b0b0b',
     webPreferences: {
-      preload: path.join(__dirname, 'electron', 'preload.js'),
+      preload: path.join(appDir, 'electron', 'preload.js'),
       sandbox: true,
       contextIsolation: true,
       nodeIntegration: false,
@@ -43,9 +44,8 @@ const onCreateWindow = async () => {
 
   if (IS_PRODUCTION) {
     await appServe(win);
-
-    win.loadURL('app://');
   } else {
+    const { default: waitOn } = await import('wait-on');
     await waitOn({ resources: [DEV_URL] });
 
     win.loadURL(DEV_URL);
