@@ -16,8 +16,6 @@ export const useModelSearch = () => {
     queryFn: () => api.searchModel(query),
   });
 
-  console.info(query);
-
   useEffect(() => {
     onResetModelId();
   }, [query]);
