@@ -1,6 +1,19 @@
 appId: 'dev.andyng.localai'
 productName: 'LocalAI'
 copyright: 'Copyright (c) 2025 Andy Ng'
+asar: true
+compression: 'maximum'
+electronLanguages:
+  - 'en-US'
+files:
+  - 'dist/renderer/**'
+  - 'electron/**'
+  - 'package.json'
+  - '!**/*.map'
+  - '!**/__tests__/**'
+  - '!src/**'
+  - '!scripts/**'
+  - '!**/*.md'
 win:
   target: ['dir', 'portable', 'zip']
   icon: 'src/assets/logo.png'
