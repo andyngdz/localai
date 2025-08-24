@@ -5,20 +5,22 @@ import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { ModelSearchFormValues } from '../types';
 import { onResetModelId, onUpdateModelId } from './useModelSelectorStores';
+import { useDebounce } from '@uidotdev/usehooks';
 
 export const useModelSearch = () => {
   const { watch } = useFormContext<ModelSearchFormValues>();
   const query = watch('query');
+  const queryDebounced = useDebounce(query, 500);
 
   const { data, isLoading } = useQuery({
-    queryKey: ['modelSearch', query],
-    enabled: isString(query),
-    queryFn: () => api.searchModel(query),
+    queryKey: ['modelSearch', queryDebounced],
+    enabled: isString(queryDebounced),
+    queryFn: () => api.searchModel(queryDebounced),
   });
 
   useEffect(() => {
     onResetModelId();
-  }, [query]);
+  }, [queryDebounced]);
 
   useEffect(() => {
     if (data) {
