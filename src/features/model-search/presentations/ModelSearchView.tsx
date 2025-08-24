@@ -6,6 +6,7 @@ import { ModelSearchViewCard } from './ModelSearchViewCard';
 import { ModelSearchViewFiles } from './ModelSearchViewFiles';
 import { ModelSearchViewFooter } from './ModelSearchViewFooter';
 import { ModelSearchViewSpaces } from './ModelSearchViewSpaces';
+import { ModelDownloadStatusLine } from '@/features/model-download-status-line';
 
 export const ModelSearchView = () => {
   const { model_id } = useModelSelectorStore();
@@ -25,7 +26,10 @@ export const ModelSearchView = () => {
           <ModelSearchViewSpaces spaces={modelDetails.spaces} />
           <ModelSearchViewFiles id={modelDetails.id} siblings={modelDetails.siblings} />
         </ScrollShadow>
-        <ModelSearchViewFooter id={modelDetails.id} />
+        <div className="flex flex-col">
+          <ModelDownloadStatusLine />
+          <ModelSearchViewFooter id={modelDetails.id} />
+        </div>
       </div>
     );
   }
