@@ -1,12 +1,12 @@
-import { Button } from '@heroui/react';
-import { Link, LucideProps } from 'lucide-react';
-import NextLink from 'next/link';
-import { ComponentType, FC } from 'react';
+import { Button } from '@heroui/react'
+import { Link, LucideProps } from 'lucide-react'
+import NextLink from 'next/link'
+import { ComponentType, FC } from 'react'
 
 export interface ModelSearchViewHeaderProps {
-  Icon: ComponentType<LucideProps>;
-  title: string;
-  href?: string;
+  Icon: ComponentType<LucideProps>
+  title: string
+  href?: string
 }
 
 export const ModelSearchViewHeader: FC<ModelSearchViewHeaderProps> = ({ Icon, title, href }) => {
@@ -30,5 +30,5 @@ export const ModelSearchViewHeader: FC<ModelSearchViewHeaderProps> = ({ Icon, ti
         </Button>
       )}
     </div>
-  );
-};
+  )
+}

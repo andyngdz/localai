@@ -1,1 +1,1 @@
-export * from './model-search';
+export * from './model-search'

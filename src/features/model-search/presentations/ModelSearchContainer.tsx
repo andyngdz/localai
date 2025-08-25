@@ -1,19 +1,19 @@
-'use client';
+'use client'
 
-import { Allotment } from 'allotment';
-import 'allotment/dist/style.css';
-import { FormProvider, useForm } from 'react-hook-form';
-import { ModelSearchFormValues } from '../types';
-import { ModelSearchInput } from './ModelSearchInput';
-import { ModelSearchListModel } from './ModelSearchListModel';
-import { ModelSearchView } from './ModelSearchView';
+import { Allotment } from 'allotment'
+import 'allotment/dist/style.css'
+import { FormProvider, useForm } from 'react-hook-form'
+import { ModelSearchFormValues } from '../types'
+import { ModelSearchInput } from './ModelSearchInput'
+import { ModelSearchListModel } from './ModelSearchListModel'
+import { ModelSearchView } from './ModelSearchView'
 
 export const ModelSearchContainer = () => {
   const methods = useForm<ModelSearchFormValues>({
     mode: 'all',
     reValidateMode: 'onChange',
-    defaultValues: { query: '' },
-  });
+    defaultValues: { query: '' }
+  })
 
   return (
     <FormProvider {...methods}>
@@ -29,5 +29,5 @@ export const ModelSearchContainer = () => {
         </Allotment.Pane>
       </Allotment>
     </FormProvider>
-  );
-};
+  )
+}

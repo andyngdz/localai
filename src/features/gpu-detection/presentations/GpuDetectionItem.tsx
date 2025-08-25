@@ -1,16 +1,16 @@
-'use client';
+'use client'
 
-import { formatter } from '@/services/formatter';
-import { GpuInfo } from '@/types';
-import { Radio, RadioProps } from '@heroui/react';
-import { FC } from 'react';
+import { formatter } from '@/services/formatter'
+import { GpuInfo } from '@/types'
+import { Radio, RadioProps } from '@heroui/react'
+import { FC } from 'react'
 
 export interface GpuDetectionItemProps extends RadioProps {
-  gpu: GpuInfo;
+  gpu: GpuInfo
 }
 
 export const GpuDetectionItem: FC<GpuDetectionItemProps> = ({ gpu, ...restProps }) => {
-  const { name, cuda_compute_capability, memory } = gpu;
+  const { name, cuda_compute_capability, memory } = gpu
 
   return (
     <Radio
@@ -23,7 +23,7 @@ export const GpuDetectionItem: FC<GpuDetectionItemProps> = ({ gpu, ...restProps 
       }
       classNames={{
         base: 'max-w-full p-5',
-        labelWrapper: 'flex justify-between w-full',
+        labelWrapper: 'flex justify-between w-full'
       }}
     >
       <div className="ml-2 flex items-center justify-between gap-2 w-full">
@@ -31,5 +31,5 @@ export const GpuDetectionItem: FC<GpuDetectionItemProps> = ({ gpu, ...restProps 
         <span className="text-sm text-foreground-500 font-medium">{formatter.bytes(memory)}</span>
       </div>
     </Radio>
-  );
-};
+  )
+}

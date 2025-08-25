@@ -1,11 +1,11 @@
-'use client';
+'use client'
 
-import { Chip } from '@heroui/react';
-import { FC } from 'react';
-import { modelTagService } from '../services/model_tag';
+import { Chip } from '@heroui/react'
+import { FC } from 'react'
+import { modelTagService } from '../services/model_tag'
 
 interface ModelRecommendationsTagsProps {
-  tags: string[];
+  tags: string[]
 }
 
 export const ModelRecommendationsTags: FC<ModelRecommendationsTagsProps> = ({ tags }) => {
@@ -17,5 +17,5 @@ export const ModelRecommendationsTags: FC<ModelRecommendationsTagsProps> = ({ ta
         </Chip>
       ))}
     </section>
-  );
-};
+  )
+}

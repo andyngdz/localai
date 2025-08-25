@@ -1,3 +1,3 @@
 export interface ModelRecommendationFormProps {
-  id?: string;
+  id?: string
 }

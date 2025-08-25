@@ -1,18 +1,18 @@
-import { vi } from 'vitest';
-import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import { vi } from 'vitest'
+import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
 
 /**
  * Sets up a mocked router for Next.js tests.
  */
 export const setupRouterMock = async () => {
-  const mockPush = vi.fn();
-  const mockBack = vi.fn();
-  const mockForward = vi.fn();
-  const mockRefresh = vi.fn();
-  const mockReplace = vi.fn();
-  const mockPrefetch = vi.fn();
+  const mockPush = vi.fn()
+  const mockBack = vi.fn()
+  const mockForward = vi.fn()
+  const mockRefresh = vi.fn()
+  const mockReplace = vi.fn()
+  const mockPrefetch = vi.fn()
 
-  const { useRouter } = await import('next/navigation');
+  const { useRouter } = await import('next/navigation')
 
   vi.mocked(useRouter).mockReturnValue({
     push: mockPush,
@@ -20,8 +20,8 @@ export const setupRouterMock = async () => {
     forward: mockForward,
     refresh: mockRefresh,
     replace: mockReplace,
-    prefetch: mockPrefetch,
-  } as AppRouterInstance);
+    prefetch: mockPrefetch
+  } as AppRouterInstance)
 
   return {
     useRouter,
@@ -30,6 +30,6 @@ export const setupRouterMock = async () => {
     mockForward,
     mockRefresh,
     mockReplace,
-    mockPrefetch,
-  };
-};
+    mockPrefetch
+  }
+}

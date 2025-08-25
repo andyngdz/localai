@@ -1,12 +1,12 @@
-import { useStyleSections } from '@/cores/hooks/useStyleSections';
-import { Button, Skeleton, useDisclosure } from '@heroui/react';
-import { Plus } from 'lucide-react';
-import { GeneratorConfigStyleModal } from './GeneratorConfigStyleModal';
-import { GeneratorConfigStyleSelectedPreviewer } from './GeneratorConfigStyleSelectedPreviewer';
+import { useStyleSections } from '@/cores/hooks/useStyleSections'
+import { Button, Skeleton, useDisclosure } from '@heroui/react'
+import { Plus } from 'lucide-react'
+import { GeneratorConfigStyleModal } from './GeneratorConfigStyleModal'
+import { GeneratorConfigStyleSelectedPreviewer } from './GeneratorConfigStyleSelectedPreviewer'
 
 export const GeneratorConfigStyle = () => {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const { styleSections, isLoading } = useStyleSections();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure()
+  const { styleSections, isLoading } = useStyleSections()
 
   return (
     <section className="flex flex-col gap-4 p-4">
@@ -29,5 +29,5 @@ export const GeneratorConfigStyle = () => {
       </div>
       <GeneratorConfigStyleSelectedPreviewer />
     </section>
-  );
-};
+  )
+}

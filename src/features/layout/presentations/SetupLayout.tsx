@@ -1,20 +1,20 @@
-'use client';
+'use client'
 
-import { Divider } from '@heroui/divider';
-import { Button } from '@heroui/react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import type { FC, ReactNode } from 'react';
-import { SetupLayoutBackground } from './SetupLayoutBackground';
-import { SetupLayoutContent } from './SetupLayoutContent';
+import { Divider } from '@heroui/divider'
+import { Button } from '@heroui/react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+import type { FC, ReactNode } from 'react'
+import { SetupLayoutBackground } from './SetupLayoutBackground'
+import { SetupLayoutContent } from './SetupLayoutContent'
 
 export interface SetupLayoutProps {
-  title: string;
-  description: string;
-  children: ReactNode;
-  onNext?: VoidFunction;
-  onBack?: VoidFunction;
-  isNextDisabled?: boolean;
-  isBackDisabled?: boolean;
+  title: string
+  description: string
+  children: ReactNode
+  onNext?: VoidFunction
+  onBack?: VoidFunction
+  isNextDisabled?: boolean
+  isBackDisabled?: boolean
 }
 
 export const SetupLayout: FC<SetupLayoutProps> = ({
@@ -24,7 +24,7 @@ export const SetupLayout: FC<SetupLayoutProps> = ({
   onNext,
   onBack,
   isNextDisabled = false,
-  isBackDisabled = false,
+  isBackDisabled = false
 }) => {
   return (
     <div className="relative min-h-screen flex flex-col items-center">
@@ -48,5 +48,5 @@ export const SetupLayout: FC<SetupLayoutProps> = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

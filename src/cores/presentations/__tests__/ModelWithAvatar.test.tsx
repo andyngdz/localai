@@ -7,9 +7,9 @@
  * - Passes correct props to AuthorAvatar
  */
 
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
-import { ModelWithAvatar, ModelWithAvatarProps } from '../ModelWithAvatar';
+import { render, screen } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
+import { ModelWithAvatar, ModelWithAvatarProps } from '../ModelWithAvatar'
 
 // Mock the AuthorAvatar component
 vi.mock('../AuthorAvatar', () => ({
@@ -25,74 +25,74 @@ vi.mock('../AuthorAvatar', () => ({
     >
       Mock Avatar
     </div>
-  )),
-}));
+  ))
+}))
 
 describe('ModelWithAvatar', () => {
   it('renders with the correct AuthorAvatar and model ID', () => {
     // Arrange
     const props: ModelWithAvatarProps = {
       author: 'test-author',
-      id: 'test-model',
-    };
+      id: 'test-model'
+    }
 
     // Act
-    render(<ModelWithAvatar {...props} />);
+    render(<ModelWithAvatar {...props} />)
 
     // Assert
-    const avatarElement = screen.getByTestId('mock-author-avatar');
-    const modelIdText = screen.getByText('test-model');
+    const avatarElement = screen.getByTestId('mock-author-avatar')
+    const modelIdText = screen.getByText('test-model')
 
     // Verify Avatar props
-    expect(avatarElement).toBeInTheDocument();
-    expect(avatarElement).toHaveAttribute('data-author-id', 'test-author');
-    expect(avatarElement).toHaveAttribute('data-size', 'sm');
-    expect(avatarElement).toHaveAttribute('data-radius', 'full');
-    expect(avatarElement).toHaveAttribute('data-alt', 'test-model');
-    expect(avatarElement).toHaveAttribute('data-class-name', 'w-4 h-4');
-    expect(avatarElement).toHaveAttribute('data-is-bordered', 'true');
+    expect(avatarElement).toBeInTheDocument()
+    expect(avatarElement).toHaveAttribute('data-author-id', 'test-author')
+    expect(avatarElement).toHaveAttribute('data-size', 'sm')
+    expect(avatarElement).toHaveAttribute('data-radius', 'full')
+    expect(avatarElement).toHaveAttribute('data-alt', 'test-model')
+    expect(avatarElement).toHaveAttribute('data-class-name', 'w-4 h-4')
+    expect(avatarElement).toHaveAttribute('data-is-bordered', 'true')
 
     // Verify model ID is displayed
-    expect(modelIdText).toBeInTheDocument();
-  });
+    expect(modelIdText).toBeInTheDocument()
+  })
 
   it('updates AuthorAvatar when props change', () => {
     // Arrange
     const props: ModelWithAvatarProps = {
       author: 'initial-author',
-      id: 'initial-model',
-    };
+      id: 'initial-model'
+    }
 
     // Act - initial render
-    const { rerender } = render(<ModelWithAvatar {...props} />);
+    const { rerender } = render(<ModelWithAvatar {...props} />)
 
     // Assert initial state
     expect(screen.getByTestId('mock-author-avatar')).toHaveAttribute(
       'data-author-id',
-      'initial-author',
-    );
-    expect(screen.getByText('initial-model')).toBeInTheDocument();
+      'initial-author'
+    )
+    expect(screen.getByText('initial-model')).toBeInTheDocument()
 
     // Act - rerender with new props
-    rerender(<ModelWithAvatar author="updated-author" id="updated-model" />);
+    rerender(<ModelWithAvatar author="updated-author" id="updated-model" />)
 
     // Assert updated state
     expect(screen.getByTestId('mock-author-avatar')).toHaveAttribute(
       'data-author-id',
-      'updated-author',
-    );
-    expect(screen.getByText('updated-model')).toBeInTheDocument();
-  });
+      'updated-author'
+    )
+    expect(screen.getByText('updated-model')).toBeInTheDocument()
+  })
 
   it('renders with the correct layout and styling', () => {
     // Arrange
-    render(<ModelWithAvatar author="test-author" id="test-model" />);
+    render(<ModelWithAvatar author="test-author" id="test-model" />)
 
     // Act
-    const container = screen.getByText('test-model').parentElement;
+    const container = screen.getByText('test-model').parentElement
 
     // Assert
-    expect(container).toHaveClass('flex', 'items-center', 'gap-3');
-    expect(screen.getByText('test-model')).toHaveClass('text-left', 'text-sm');
-  });
-});
+    expect(container).toHaveClass('flex', 'items-center', 'gap-3')
+    expect(screen.getByText('test-model')).toHaveClass('text-left', 'text-sm')
+  })
+})

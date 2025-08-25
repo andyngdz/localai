@@ -1,18 +1,18 @@
-'use client';
+'use client'
 
-import { ModelRecommendationSection } from '@/types/api';
-import { FC } from 'react';
-import { ModelRecommendationsCard } from './ModelRecommendationsCard';
-import { ModelRecommendationsHeader } from './ModelRecommendationsHeader';
+import { ModelRecommendationSection } from '@/types/api'
+import { FC } from 'react'
+import { ModelRecommendationsCard } from './ModelRecommendationsCard'
+import { ModelRecommendationsHeader } from './ModelRecommendationsHeader'
 
 interface ModelRecommendationsSectionProps {
-  section: ModelRecommendationSection;
-  isDefaultRecommended: boolean;
+  section: ModelRecommendationSection
+  isDefaultRecommended: boolean
 }
 
 export const ModelRecommendationsSection: FC<ModelRecommendationsSectionProps> = ({
   section,
-  isDefaultRecommended,
+  isDefaultRecommended
 }) => {
   return (
     <div className="flex flex-col gap-4">
@@ -25,5 +25,5 @@ export const ModelRecommendationsSection: FC<ModelRecommendationsSectionProps> =
         <ModelRecommendationsCard key={model.id} model={model} />
       ))}
     </div>
-  );
-};
+  )
+}

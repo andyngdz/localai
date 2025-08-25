@@ -1,24 +1,24 @@
-import { AuthorAvatar } from '@/cores/presentations/AuthorAvatar';
-import { Button, Chip } from '@heroui/react';
-import { split, take } from 'es-toolkit/compat';
-import { Orbit } from 'lucide-react';
-import { FC, useMemo, useState } from 'react';
-import { ModelSearchViewHeader } from './ModelSearchViewHeader';
+import { AuthorAvatar } from '@/cores/presentations/AuthorAvatar'
+import { Button, Chip } from '@heroui/react'
+import { split, take } from 'es-toolkit/compat'
+import { Orbit } from 'lucide-react'
+import { FC, useMemo, useState } from 'react'
+import { ModelSearchViewHeader } from './ModelSearchViewHeader'
 
 export interface ModelSearchViewSpacesProps {
-  spaces: string[];
+  spaces: string[]
 }
 
 export const ModelSearchViewSpaces: FC<ModelSearchViewSpacesProps> = ({ spaces }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const showMoreText = isExpanded ? 'Show less' : 'Show more';
+  const [isExpanded, setIsExpanded] = useState(false)
+  const showMoreText = isExpanded ? 'Show less' : 'Show more'
 
   const showSpaces = useMemo(() => {
     if (isExpanded) {
-      return spaces;
+      return spaces
     }
-    return take(spaces, 5);
-  }, [isExpanded, spaces]);
+    return take(spaces, 5)
+  }, [isExpanded, spaces])
 
   return (
     <div className="flex flex-col gap-6">
@@ -33,7 +33,7 @@ export const ModelSearchViewSpaces: FC<ModelSearchViewSpacesProps> = ({ spaces }
             >
               <span>{space}</span>
             </Chip>
-          );
+          )
         })}
         <Button
           onPress={() => setIsExpanded((prev) => !prev)}
@@ -47,5 +47,5 @@ export const ModelSearchViewSpaces: FC<ModelSearchViewSpacesProps> = ({ spaces }
         </Button>
       </div>
     </div>
-  );
-};
+  )
+}

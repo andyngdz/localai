@@ -13,5 +13,5 @@ export const GpuDetectionCpuModeOnly = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

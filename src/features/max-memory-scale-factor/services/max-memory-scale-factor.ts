@@ -1,4 +1,4 @@
-import { MemoryColorClasses } from '../types';
+import { MemoryColorClasses } from '../types'
 
 class MaxMemoryScaleFactorService {
   memoryColor(scaleFactor: number): MemoryColorClasses {
@@ -6,22 +6,22 @@ class MaxMemoryScaleFactorService {
       return {
         bgClassName: 'bg-success/10',
         textClassName: 'text-success/90',
-        color: 'success',
-      };
+        color: 'success'
+      }
     } else if (scaleFactor <= 0.7) {
       return {
         bgClassName: 'bg-warning/10',
         textClassName: 'text-warning/90',
-        color: 'warning',
-      };
+        color: 'warning'
+      }
     } else {
       return {
         bgClassName: 'bg-danger/10',
         textClassName: 'text-danger/90',
-        color: 'danger',
-      };
+        color: 'danger'
+      }
     }
   }
 }
 
-export const maxMemoryScaleFactorService = new MaxMemoryScaleFactorService();
+export const maxMemoryScaleFactorService = new MaxMemoryScaleFactorService()

@@ -1,1 +1,1 @@
-export * from './useGeneratorPreviewer';
+export * from './useGeneratorPreviewer'

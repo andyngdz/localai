@@ -1,9 +1,9 @@
-import { Input } from '@heroui/react';
-import { useFormContext } from 'react-hook-form';
-import { ModelSearchFormValues } from '../types';
+import { Input } from '@heroui/react'
+import { useFormContext } from 'react-hook-form'
+import { ModelSearchFormValues } from '../types'
 
 export const ModelSearchInput = () => {
-  const { register } = useFormContext<ModelSearchFormValues>();
+  const { register } = useFormContext<ModelSearchFormValues>()
 
-  return <Input variant="flat" {...register('query')} />;
-};
+  return <Input variant="flat" {...register('query')} />
+}

@@ -1,10 +1,10 @@
-import { NumberInputController } from '@/cores/presentations/NumberInputController';
-import { GeneratorConfigFormValues } from '@/features/generator-configs/types/generator-config';
-import { Checkbox } from '@heroui/react';
-import { useFormContext } from 'react-hook-form';
+import { NumberInputController } from '@/cores/presentations/NumberInputController'
+import { GeneratorConfigFormValues } from '@/features/generator-configs/types/generator-config'
+import { Checkbox } from '@heroui/react'
+import { useFormContext } from 'react-hook-form'
 
 export const GeneratorConfigFormat = () => {
-  const { register, control } = useFormContext<GeneratorConfigFormValues>();
+  const { register, control } = useFormContext<GeneratorConfigFormValues>()
 
   return (
     <div className="flex flex-col gap-4 p-4">
@@ -28,11 +28,11 @@ export const GeneratorConfigFormat = () => {
       <Checkbox
         {...register('hires_fix')}
         classNames={{
-          label: 'text-sm',
+          label: 'text-sm'
         }}
       >
         Hires.fix
       </Checkbox>
     </div>
-  );
-};
+  )
+}

@@ -1,8 +1,8 @@
-import LocalAILogo from '@/assets/logo.png';
-import { ModelSearchOpenIconButton } from '@/features/model-search';
-import { ModelSelector } from '@/features/model-selectors/presentations/ModelSelector';
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from '@heroui/react';
-import NextImage from 'next/image';
+import LocalAILogo from '@/assets/logo.png'
+import { ModelSearchOpenIconButton } from '@/features/model-search'
+import { ModelSelector } from '@/features/model-selectors/presentations/ModelSelector'
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from '@heroui/react'
+import NextImage from 'next/image'
 
 export const EditorNavbar = () => {
   return (
@@ -18,5 +18,5 @@ export const EditorNavbar = () => {
       </NavbarContent>
       <NavbarContent justify="end" />
     </Navbar>
-  );
-};
+  )
+}

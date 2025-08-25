@@ -1,8 +1,8 @@
-'use client';
+'use client'
 
-import { Generator } from '@/features/generators/presentations/Generator';
-import { Divider } from '@heroui/react';
-import { EditorNavbar } from './EditorNavbar';
+import { Generator } from '@/features/generators/presentations/Generator'
+import { Divider } from '@heroui/react'
+import { EditorNavbar } from './EditorNavbar'
 
 export const Editor = () => {
   return (
@@ -11,5 +11,5 @@ export const Editor = () => {
       <Divider />
       <Generator />
     </div>
-  );
-};
+  )
+}

@@ -1,37 +1,37 @@
-'use client';
+'use client'
 
-import { DeviceSelection } from '@/cores/constants';
-import { api } from '@/services/api';
-import { useRouter } from 'next/navigation';
-import { useCallback, useEffect } from 'react';
-import { useHealthQuery } from '../../../services/queries';
-import { SetupLayout } from '../../layout/presentations/SetupLayout';
-import { HealthCheckContent } from './HealthCheckContent';
+import { DeviceSelection } from '@/cores/constants'
+import { api } from '@/services/api'
+import { useRouter } from 'next/navigation'
+import { useCallback, useEffect } from 'react'
+import { useHealthQuery } from '../../../services/queries'
+import { SetupLayout } from '../../layout/presentations/SetupLayout'
+import { HealthCheckContent } from './HealthCheckContent'
 
 export const HealthCheck = () => {
-  const router = useRouter();
-  const { data } = useHealthQuery();
-  const isHealthy = !!data;
+  const router = useRouter()
+  const { data } = useHealthQuery()
+  const isHealthy = !!data
 
   const onNext = () => {
     if (isHealthy) {
-      router.push('/gpu-detection');
+      router.push('/gpu-detection')
     }
-  };
+  }
 
   const onCheckDeviceIndex = useCallback(async () => {
     if (isHealthy) {
-      const { device_index } = await api.getDeviceIndex();
+      const { device_index } = await api.getDeviceIndex()
 
       if (device_index !== DeviceSelection.NOT_FOUND) {
-        router.push('/editor');
+        router.push('/editor')
       }
     }
-  }, [isHealthy, router]);
+  }, [isHealthy, router])
 
   useEffect(() => {
-    onCheckDeviceIndex();
-  }, [onCheckDeviceIndex]);
+    onCheckDeviceIndex()
+  }, [onCheckDeviceIndex])
 
   return (
     <SetupLayout
@@ -42,5 +42,5 @@ export const HealthCheck = () => {
     >
       <HealthCheckContent isHealthy={isHealthy} />
     </SetupLayout>
-  );
-};
+  )
+}

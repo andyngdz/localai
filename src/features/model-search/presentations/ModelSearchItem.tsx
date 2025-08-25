@@ -1,16 +1,16 @@
-import { ModelWithAvatar } from '@/cores/presentations/ModelWithAvatar';
-import { formatter } from '@/services/formatter';
-import { ModelSearchInfo } from '@/types';
-import { Card, CardBody, CardHeader } from '@heroui/react';
-import { CircleArrowDown, Heart } from 'lucide-react';
-import { FC } from 'react';
-import { onUpdateModelId } from '../states';
+import { ModelWithAvatar } from '@/cores/presentations/ModelWithAvatar'
+import { formatter } from '@/services/formatter'
+import { ModelSearchInfo } from '@/types'
+import { Card, CardBody, CardHeader } from '@heroui/react'
+import { CircleArrowDown, Heart } from 'lucide-react'
+import { FC } from 'react'
+import { onUpdateModelId } from '../states'
 export interface ModelSearchItemProps {
-  modelSearchInfo: ModelSearchInfo;
+  modelSearchInfo: ModelSearchInfo
 }
 
 export const ModelSearchItem: FC<ModelSearchItemProps> = ({ modelSearchInfo }) => {
-  const { id, author, downloads, likes } = modelSearchInfo;
+  const { id, author, downloads, likes } = modelSearchInfo
 
   return (
     <Card className="max-w-96" onClick={() => onUpdateModelId(id)} isPressable>
@@ -30,5 +30,5 @@ export const ModelSearchItem: FC<ModelSearchItemProps> = ({ modelSearchInfo }) =
         </div>
       </CardBody>
     </Card>
-  );
-};
+  )
+}

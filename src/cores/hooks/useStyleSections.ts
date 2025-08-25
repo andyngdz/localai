@@ -1,12 +1,12 @@
-import { useStyleSectionsQuery } from '@/services/queries';
-import { useMemo } from 'react';
+import { useStyleSectionsQuery } from '@/services/queries'
+import { useMemo } from 'react'
 
 export const useStyleSections = () => {
-  const { data: styleSections = [], isLoading, error } = useStyleSectionsQuery();
+  const { data: styleSections = [], isLoading, error } = useStyleSectionsQuery()
 
   const styleItems = useMemo(() => {
-    return styleSections.map((section) => section.styles).flat();
-  }, [styleSections]);
+    return styleSections.map((section) => section.styles).flat()
+  }, [styleSections])
 
-  return { styleSections, styleItems, isLoading, error };
-};
+  return { styleSections, styleItems, isLoading, error }
+}

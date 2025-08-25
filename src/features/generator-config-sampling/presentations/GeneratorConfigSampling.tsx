@@ -1,10 +1,10 @@
-import { NumberInputController } from '@/cores/presentations/NumberInputController';
-import { GeneratorConfigFormValues } from '@/features/generator-configs/types/generator-config';
-import { useFormContext } from 'react-hook-form';
-import { GeneratorConfigCommonSteps } from './GeneratorConfigCommonSteps';
+import { NumberInputController } from '@/cores/presentations/NumberInputController'
+import { GeneratorConfigFormValues } from '@/features/generator-configs/types/generator-config'
+import { useFormContext } from 'react-hook-form'
+import { GeneratorConfigCommonSteps } from './GeneratorConfigCommonSteps'
 
 export const GeneratorConfigSampling = () => {
-  const { control } = useFormContext<GeneratorConfigFormValues>();
+  const { control } = useFormContext<GeneratorConfigFormValues>()
 
   return (
     <div className="flex flex-col gap-4 p-4">
@@ -28,5 +28,5 @@ export const GeneratorConfigSampling = () => {
         startContent={<span className="text-sm text-foreground-500 min-w-fit">CFG Scale</span>}
       />
     </div>
-  );
-};
+  )
+}

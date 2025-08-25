@@ -1,4 +1,4 @@
-const MAX_31_BIT_INT = 0x7fffffff;
+const MAX_31_BIT_INT = 0x7fffffff
 
 class SeedService {
   /**
@@ -9,8 +9,8 @@ class SeedService {
   generate(): number {
     // Use Date.now() for better performance and to avoid external dependencies.
     // The bitwise AND with MAX_31_BIT_INT ensures the seed is a positive 31-bit integer.
-    return Date.now() & MAX_31_BIT_INT;
+    return Date.now() & MAX_31_BIT_INT
   }
 }
 
-export const seedService = new SeedService();
+export const seedService = new SeedService()
