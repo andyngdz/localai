@@ -1,11 +1,11 @@
-import { api } from '@/services/api'
-import { useDownloadedModelsQuery } from '@/services/queries'
+import { api } from '@/services'
 import { first, isEmpty } from 'es-toolkit/compat'
 import { useEffect } from 'react'
 import { useModelSelectorStore } from './useModelSelectorStores'
+import { useDownloadedModels } from '@/cores/hooks'
 
 export const useModelSelectors = () => {
-  const { data = [] } = useDownloadedModelsQuery()
+  const { data = [] } = useDownloadedModels()
   const { id, setId } = useModelSelectorStore((state) => state)
 
   const onLoadModel = async (id: string) => {

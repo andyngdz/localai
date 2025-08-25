@@ -1,12 +1,11 @@
 'use client'
 
 import { DeviceSelection } from '@/cores/constants'
-import { api } from '@/services/api'
+import { api, useHealthQuery } from '@/services'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect } from 'react'
-import { useHealthQuery } from '../../../services/queries'
-import { SetupLayout } from '../../layout/presentations/SetupLayout'
 import { HealthCheckContent } from './HealthCheckContent'
+import { SetupLayout } from '@/features/layout/presentations'
 
 export const HealthCheck = () => {
   const router = useRouter()

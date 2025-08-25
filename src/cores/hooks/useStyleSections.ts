@@ -1,4 +1,4 @@
-import { useStyleSectionsQuery } from '@/services/queries'
+import { useStyleSectionsQuery } from '@/services'
 import { useMemo } from 'react'
 
 export const useStyleSections = () => {

@@ -1,5 +1,5 @@
 import { ModelWithAvatar } from '@/cores/presentations/ModelWithAvatar'
-import { formatter } from '@/services/formatter'
+import { formatter } from '@/services'
 import { ModelSearchInfo } from '@/types'
 import { Card, CardBody, CardHeader } from '@heroui/react'
 import { CircleArrowDown, Heart } from 'lucide-react'

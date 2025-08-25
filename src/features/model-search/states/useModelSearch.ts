@@ -1,4 +1,4 @@
-import { api } from '@/services/api'
+import { api } from '@/services'
 import { useQuery } from '@tanstack/react-query'
 import { first, isString } from 'es-toolkit/compat'
 import { useEffect } from 'react'

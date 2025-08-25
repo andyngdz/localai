@@ -1,12 +1,17 @@
 import { Info } from 'lucide-react'
 import { FC } from 'react'
 import { ModelSearchViewDownloadButton } from './ModelSearchViewDownloadButton'
+import { useDownloadedModels } from '@/cores/hooks'
+import { ModelSearchViewDownloadedButton } from './ModelSearchViewDownloadedButton'
 
 export interface ModelSearchViewFooterProps {
   id: string
 }
 
 export const ModelSearchViewFooter: FC<ModelSearchViewFooterProps> = ({ id }) => {
+  const { onCheckDownloaded } = useDownloadedModels()
+  const isDownloaded = onCheckDownloaded(id)
+
   return (
     <div className="p-4">
       <div className="flex items-center justify-between gap-4">
@@ -16,7 +21,11 @@ export const ModelSearchViewFooter: FC<ModelSearchViewFooterProps> = ({ id }) =>
             Optimized download: Only essential files are downloaded, saving space
           </span>
         </div>
-        <ModelSearchViewDownloadButton id={id} />
+        {isDownloaded ? (
+          <ModelSearchViewDownloadedButton />
+        ) : (
+          <ModelSearchViewDownloadButton id={id} />
+        )}
       </div>
     </div>
   )

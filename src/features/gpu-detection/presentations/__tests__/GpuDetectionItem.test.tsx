@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { GpuDetectionItem } from '../GpuDetectionItem'
 
 // Mock the formatter service
-vi.mock('@/services/formatter', () => ({
+vi.mock('@/services', () => ({
   formatter: {
     bytes: vi.fn((bytes: number) => `${(bytes / 1024 / 1024 / 1024).toFixed(1)} GB`)
   }

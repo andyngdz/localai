@@ -1,5 +1,4 @@
-import { formatter } from '@/services/formatter'
-import { useMemoryQuery } from '@/services/queries'
+import { formatter, useMemoryQuery } from '@/services'
 import { ApiError, MemoryResponse } from '@/types/api'
 import { UseQueryResult } from '@tanstack/react-query'
 import { render, screen } from '@testing-library/react'
