@@ -49,24 +49,6 @@ describe('useModelSearchView', () => {
     tags: ['tag1', 'tag2']
   }
 
-  const minimalModelData: ModelDetailsResponse = {
-    author: '',
-    created_at: new Date(0).toISOString(),
-    disabled: false,
-    downloads: 0,
-    gated: '',
-    id: '',
-    last_modified: new Date(0).toISOString(),
-    library_name: '',
-    likes: 0,
-    pipeline_tag: [],
-    private: false,
-    sha: '',
-    siblings: [],
-    spaces: [],
-    tags: []
-  }
-
   it('should fetch model details successfully', async () => {
     // Mock successful API response
     mockedModelDetails.mockResolvedValueOnce(mockModelData)
@@ -105,18 +87,16 @@ describe('useModelSearchView', () => {
     expect(result.current.modelDetails).toBeUndefined()
   })
 
-  it('calls API with empty id and returns undefined result safely', async () => {
-    // Provide an explicit minimal ModelDetailsResponse instead of using undefined
-    mockedModelDetails.mockResolvedValueOnce(minimalModelData)
-
+  it('should not execute query with empty id', async () => {
     const { result } = renderWithId('')
 
-    // The hook should be in a loading state initially
-    expect(result.current.isLoading).toBe(true)
+    // The query should not be in a loading state since enabled is false
+    expect(result.current.isLoading).toBe(false)
 
-    // Wait for the query to finish and assert it was called with empty id
-    await waitFor(() => expect(result.current.isLoading).toBe(false))
-    expect(api.modelDetails).toHaveBeenCalledWith('')
-    expect(result.current.modelDetails).toEqual(minimalModelData)
+    // The API should not be called
+    expect(api.modelDetails).not.toHaveBeenCalled()
+
+    // Model details should be undefined
+    expect(result.current.modelDetails).toBeUndefined()
   })
 })

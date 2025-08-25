@@ -2,6 +2,13 @@ import { render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { Providers } from '../providers'
 
+// Mock the DownloadWatcher component
+vi.mock('@/features/download-watcher/presentations/DownloadWatcher', () => ({
+  DownloadWatcher: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="download-watcher">{children}</div>
+  )
+}))
+
 // Mock the external providers
 vi.mock('@heroui/react', () => ({
   HeroUIProvider: ({ children }: { children: React.ReactNode }) => (
@@ -31,6 +38,7 @@ describe('Providers', () => {
 
     expect(screen.getByTestId('heroui-provider')).toBeInTheDocument()
     expect(screen.getByTestId('query-client-provider')).toBeInTheDocument()
+    expect(screen.getByTestId('download-watcher')).toBeInTheDocument()
     expect(screen.getByTestId('react-query-devtools')).toBeInTheDocument()
     expect(screen.getByTestId('test-children')).toBeInTheDocument()
   })
@@ -56,6 +64,18 @@ describe('Providers', () => {
     expect(screen.getByTestId('query-client-provider')).toBeInTheDocument()
   })
 
+  it('includes DownloadWatcher wrapping children', () => {
+    render(
+      <Providers>
+        <div data-testid="test-child">Test</div>
+      </Providers>
+    )
+
+    const downloadWatcher = screen.getByTestId('download-watcher')
+    expect(downloadWatcher).toBeInTheDocument()
+    expect(downloadWatcher).toContainElement(screen.getByTestId('test-child'))
+  })
+
   it('includes ReactQueryDevtools with correct props', () => {
     render(
       <Providers>
@@ -78,10 +98,12 @@ describe('Providers', () => {
     // HeroUIProvider should be the outermost
     const heroui = screen.getByTestId('heroui-provider')
     const queryClient = screen.getByTestId('query-client-provider')
+    const downloadWatcher = screen.getByTestId('download-watcher')
     const child = screen.getByTestId('nested-child')
 
     expect(heroui).toBeInTheDocument()
     expect(queryClient).toBeInTheDocument()
+    expect(downloadWatcher).toBeInTheDocument()
     expect(child).toBeInTheDocument()
   })
 
@@ -94,6 +116,7 @@ describe('Providers', () => {
 
     expect(screen.getByTestId('heroui-provider')).toBeInTheDocument()
     expect(screen.getByTestId('query-client-provider')).toBeInTheDocument()
+    expect(screen.getByTestId('download-watcher')).toBeInTheDocument()
     expect(screen.getByTestId('react-query-devtools')).toBeInTheDocument()
     expect(container.firstChild).toContainElement(screen.getByTestId('query-client-provider'))
   })

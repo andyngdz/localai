@@ -21,7 +21,6 @@ import { socket, SocketEvents } from '@/sockets'
 
 describe('useStreamingMessage', () => {
   // Use specific callback types to avoid 'Function' lint warnings
-  let onDownloadCallback: () => void
   let onLoadCompletedCallback: () => void
   let onDownloadCompletedCallback: () => void
 
@@ -33,9 +32,7 @@ describe('useStreamingMessage', () => {
     // Setup for capturing callbacks - use type cast for vi.MockInstance
     ;(socket.on as ReturnType<typeof vi.fn>).mockImplementation(
       (event: string, callback: VoidFunction) => {
-        if (event === SocketEvents.DOWNLOAD_START) {
-          onDownloadCallback = callback
-        } else if (event === SocketEvents.MODEL_LOAD_COMPLETED) {
+        if (event === SocketEvents.MODEL_LOAD_COMPLETED) {
           onLoadCompletedCallback = callback
         } else if (event === SocketEvents.DOWNLOAD_COMPLETED) {
           onDownloadCompletedCallback = callback
@@ -47,21 +44,10 @@ describe('useStreamingMessage', () => {
   it('subscribes to socket events on mount', () => {
     renderHook(() => useStreamingMessage())
 
-    expect(socket.on).toHaveBeenCalledWith(SocketEvents.DOWNLOAD_START, expect.any(Function))
     expect(socket.on).toHaveBeenCalledWith(SocketEvents.MODEL_LOAD_COMPLETED, expect.any(Function))
     expect(socket.on).toHaveBeenCalledWith(SocketEvents.DOWNLOAD_COMPLETED, expect.any(Function))
   })
 
-  it('sets message on DOWNLOAD_START', () => {
-    renderHook(() => useStreamingMessage())
-
-    // Simulate download event
-    act(() => {
-      onDownloadCallback()
-    })
-
-    expect(useMessageStore.getState().message).toBe('Downloading model')
-  })
 
   it('resets message on MODEL_LOAD_COMPLETED', () => {
     // Set initial state
@@ -95,7 +81,6 @@ describe('useStreamingMessage', () => {
     const { unmount } = renderHook(() => useStreamingMessage())
     unmount()
 
-    expect(socket.off).toHaveBeenCalledWith(SocketEvents.DOWNLOAD_START)
     expect(socket.off).toHaveBeenCalledWith(SocketEvents.MODEL_LOAD_COMPLETED)
     expect(socket.off).toHaveBeenCalledWith(SocketEvents.DOWNLOAD_COMPLETED)
   })

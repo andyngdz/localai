@@ -104,6 +104,18 @@ vi.mock('../ModelSearchViewFiles', () => ({
   )
 }))
 
+vi.mock('../ModelSearchViewFooter', () => ({
+  ModelSearchViewFooter: ({ id }: { id: string }) => (
+    <div data-testid="mock-view-footer">
+      <div>Footer ID: {id}</div>
+    </div>
+  )
+}))
+
+vi.mock('@/features/model-download-status-line', () => ({
+  ModelDownloadStatusLine: () => <div data-testid="mock-download-status-line">Download Status</div>
+}))
+
 // Import the component under test AFTER mocks so they take effect
 import { ModelSearchView } from '../ModelSearchView'
 
@@ -131,6 +143,8 @@ describe('ModelSearchView', () => {
     expect(screen.queryByTestId('mock-view-card')).not.toBeInTheDocument()
     expect(screen.queryByTestId('mock-view-spaces')).not.toBeInTheDocument()
     expect(screen.queryByTestId('mock-view-files')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('mock-view-footer')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('mock-download-status-line')).not.toBeInTheDocument()
   })
 
   it('renders all sections when model details are available', () => {
@@ -145,10 +159,12 @@ describe('ModelSearchView', () => {
       wrapper: createQueryClientWrapper()
     })
 
-    // Should render all three sections
+    // Should render all sections
     expect(screen.getByTestId('mock-view-card')).toBeInTheDocument()
     expect(screen.getByTestId('mock-view-spaces')).toBeInTheDocument()
     expect(screen.getByTestId('mock-view-files')).toBeInTheDocument()
+    expect(screen.getByTestId('mock-view-footer')).toBeInTheDocument()
+    expect(screen.getByTestId('mock-download-status-line')).toBeInTheDocument()
 
     // Check the content of the card section
     expect(
@@ -172,6 +188,12 @@ describe('ModelSearchView', () => {
 
     // Check the content of the files section
     expect(screen.getByText('Siblings: 2')).toBeInTheDocument()
+    
+    // Check the footer section
+    expect(screen.getByText('Footer ID: test-model-123')).toBeInTheDocument()
+    
+    // Check the download status line is present
+    expect(screen.getByText('Download Status')).toBeInTheDocument()
   })
 
   it('passes correct props to child components', () => {
@@ -189,9 +211,9 @@ describe('ModelSearchView', () => {
     // Verify that the model ID from the store is passed to useModelSearchView
     expect(useModelSearchViewMock).toHaveBeenCalledWith('test-model-123')
 
-    // The ScrollShadow component should wrap all child components
+    // The ScrollShadow component should wrap the main view components
     const childComponents = screen.getAllByTestId(/mock-view-/)
-    expect(childComponents).toHaveLength(3)
+    expect(childComponents).toHaveLength(4) // card, spaces, files, footer
 
     // The wrapper should have the scrollbar-thin class
     const scrollShadow = screen.getByTestId('scrollshadow')
