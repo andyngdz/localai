@@ -188,10 +188,10 @@ describe('ModelSearchView', () => {
 
     // Check the content of the files section
     expect(screen.getByText('Siblings: 2')).toBeInTheDocument()
-    
+
     // Check the footer section
     expect(screen.getByText('Footer ID: test-model-123')).toBeInTheDocument()
-    
+
     // Check the download status line is present
     expect(screen.getByText('Download Status')).toBeInTheDocument()
   })

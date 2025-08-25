@@ -48,7 +48,6 @@ describe('useStreamingMessage', () => {
     expect(socket.on).toHaveBeenCalledWith(SocketEvents.DOWNLOAD_COMPLETED, expect.any(Function))
   })
 
-
   it('resets message on MODEL_LOAD_COMPLETED', () => {
     // Set initial state
     useMessageStore.getState().setMessage('Downloading model')
