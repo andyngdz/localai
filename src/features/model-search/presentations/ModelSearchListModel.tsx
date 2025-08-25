@@ -1,24 +1,24 @@
-import { Alert, ScrollShadow, Spinner } from '@heroui/react';
-import { isEmpty } from 'es-toolkit/compat';
-import { useModelSearch } from '../states';
-import { ModelSearchItem } from './ModelSearchItem';
+import { Alert, ScrollShadow, Spinner } from '@heroui/react'
+import { isEmpty } from 'es-toolkit/compat'
+import { useModelSearch } from '../states'
+import { ModelSearchItem } from './ModelSearchItem'
 
 export const ModelSearchListModel = () => {
-  const { data, isLoading } = useModelSearch();
+  const { data, isLoading } = useModelSearch()
 
   if (isLoading) {
-    return <Spinner />;
+    return <Spinner />
   }
 
   if (data) {
-    const { models_search_info } = data;
+    const { models_search_info } = data
 
     if (isEmpty(models_search_info)) {
       return (
         <Alert className="grow-0" color="warning">
           No models found
         </Alert>
-      );
+      )
     }
 
     return (
@@ -29,6 +29,6 @@ export const ModelSearchListModel = () => {
           ))}
         </div>
       </ScrollShadow>
-    );
+    )
   }
-};
+}

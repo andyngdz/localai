@@ -1,12 +1,12 @@
-import { formatter } from '@/services/formatter';
-import { useMemoryQuery } from '@/services/queries';
-import { useFormContext } from 'react-hook-form';
-import { MaxMemoryFormProps } from '../types';
+import { formatter } from '@/services/formatter'
+import { useMemoryQuery } from '@/services/queries'
+import { useFormContext } from 'react-hook-form'
+import { MaxMemoryFormProps } from '../types'
 
 export const MaxMemoryScaleFactorPreview = () => {
-  const { data } = useMemoryQuery();
-  const { watch } = useFormContext<MaxMemoryFormProps>();
-  const scaleFactor = watch('scaleFactor');
+  const { data } = useMemoryQuery()
+  const { watch } = useFormContext<MaxMemoryFormProps>()
+  const scaleFactor = watch('scaleFactor')
 
   if (!data) {
     return (
@@ -15,7 +15,7 @@ export const MaxMemoryScaleFactorPreview = () => {
           <p className="text-base-content/60">Select a memory option to see preview</p>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -27,5 +27,5 @@ export const MaxMemoryScaleFactorPreview = () => {
         <div className="font-bold">RAM: {formatter.bytes(data.ram * scaleFactor)}</div>
       </div>
     </div>
-  );
-};
+  )
+}

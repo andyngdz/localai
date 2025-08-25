@@ -1,9 +1,9 @@
-import { GeneratorConfigFormValues } from '@/features/generator-configs/types/generator-config';
-import { Textarea } from '@heroui/input';
-import { useFormContext } from 'react-hook-form';
+import { GeneratorConfigFormValues } from '@/features/generator-configs/types/generator-config'
+import { Textarea } from '@heroui/input'
+import { useFormContext } from 'react-hook-form'
 
 export const GeneratorPrompt = () => {
-  const { register, formState } = useFormContext<GeneratorConfigFormValues>();
+  const { register, formState } = useFormContext<GeneratorConfigFormValues>()
 
   return (
     <div className="p-4">
@@ -23,5 +23,5 @@ export const GeneratorPrompt = () => {
         />
       </div>
     </div>
-  );
-};
+  )
+}

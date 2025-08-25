@@ -1,10 +1,10 @@
-import { NumberInput, NumberInputProps } from '@heroui/react';
-import { Control, FieldValues, Path, useController } from 'react-hook-form';
+import { NumberInput, NumberInputProps } from '@heroui/react'
+import { Control, FieldValues, Path, useController } from 'react-hook-form'
 
 export interface NumberInputControllerProps<T extends FieldValues, C> extends NumberInputProps {
-  control: Control<T, C, T>;
-  controlName: Path<T>;
-  maximumFractionDigits?: number;
+  control: Control<T, C, T>
+  controlName: Path<T>
+  maximumFractionDigits?: number
 }
 
 export const NumberInputController = <T extends FieldValues, C>({
@@ -20,11 +20,11 @@ export const NumberInputController = <T extends FieldValues, C>({
     rules: {
       validate: (value) => {
         if (isNaN(value)) {
-          return 'Input is required';
+          return 'Input is required'
         }
-      },
-    },
-  });
+      }
+    }
+  })
 
   return (
     <NumberInput
@@ -36,13 +36,13 @@ export const NumberInputController = <T extends FieldValues, C>({
       formatOptions={{
         useGrouping: false,
         minimumFractionDigits: 0,
-        maximumFractionDigits,
+        maximumFractionDigits
       }}
       errorMessage={fieldState.error?.message}
       isInvalid={fieldState.invalid}
       classNames={{
-        inputWrapper: 'max-h-8',
+        inputWrapper: 'max-h-8'
       }}
     />
-  );
-};
+  )
+}

@@ -1,1 +1,1 @@
-export * from './presentations/GeneratorPreviewer';
+export * from './presentations/GeneratorPreviewer'

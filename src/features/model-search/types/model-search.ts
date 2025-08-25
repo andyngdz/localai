@@ -1,3 +1,3 @@
 export interface ModelSearchFormValues {
-  query: string;
+  query: string
 }

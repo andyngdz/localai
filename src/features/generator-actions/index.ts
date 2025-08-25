@@ -1,1 +1,1 @@
-export * from './presentations/GeneratorActions';
+export * from './presentations/GeneratorActions'

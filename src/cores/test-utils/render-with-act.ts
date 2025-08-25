@@ -1,6 +1,6 @@
-import React, { act } from 'react';
-import { render, RenderOptions, RenderResult } from '@testing-library/react';
-import { createQueryClientWrapper } from './query-client';
+import React, { act } from 'react'
+import { render, RenderOptions, RenderResult } from '@testing-library/react'
+import { createQueryClientWrapper } from './query-client'
 
 /**
  * Renders a component wrapped in React's act() and with a QueryClient provider.
@@ -12,16 +12,16 @@ import { createQueryClientWrapper } from './query-client';
  */
 export const renderWithAct = async (
   ui: React.ReactElement,
-  options?: Omit<RenderOptions, 'wrapper'>,
+  options?: Omit<RenderOptions, 'wrapper'>
 ): Promise<RenderResult> => {
-  let renderResult: RenderResult | undefined;
+  let renderResult: RenderResult | undefined
 
   await act(async () => {
     renderResult = render(ui, {
       wrapper: createQueryClientWrapper(),
-      ...options,
-    });
-  });
+      ...options
+    })
+  })
 
-  return renderResult!;
-};
+  return renderResult!
+}

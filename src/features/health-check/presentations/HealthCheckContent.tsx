@@ -1,10 +1,10 @@
-'use client';
+'use client'
 
-import { Chip } from '@heroui/react';
-import { FC, useMemo } from 'react';
+import { Chip } from '@heroui/react'
+import { FC, useMemo } from 'react'
 
 export interface HealthCheckContentProps {
-  isHealthy: boolean;
+  isHealthy: boolean
 }
 
 export const HealthCheckContent: FC<HealthCheckContentProps> = ({ isHealthy }) => {
@@ -14,15 +14,15 @@ export const HealthCheckContent: FC<HealthCheckContentProps> = ({ isHealthy }) =
         <Chip color="success">
           <span>LocalAI backend is running and ready to use</span>
         </Chip>
-      );
+      )
     }
 
     return (
       <Chip color="danger">
         <span>LocalAI backend is not running</span>
       </Chip>
-    );
-  }, [isHealthy]);
+    )
+  }, [isHealthy])
 
-  return <div className="flex justify-center">{children}</div>;
-};
+  return <div className="flex justify-center">{children}</div>
+}

@@ -1,12 +1,12 @@
-'use client';
+'use client'
 
-import AIAnimationData from '@/assets/ai.json';
-import clsx from 'clsx';
-import Lottie from 'react-lottie';
-import { useStreamingMessage } from '../states/useStreamingMessage';
+import AIAnimationData from '@/assets/ai.json'
+import clsx from 'clsx'
+import Lottie from 'react-lottie'
+import { useStreamingMessage } from '../states/useStreamingMessage'
 
 export const StreamingMessage = () => {
-  const { message } = useStreamingMessage();
+  const { message } = useStreamingMessage()
 
   if (message.length > 0) {
     return (
@@ -16,6 +16,6 @@ export const StreamingMessage = () => {
           <span className="text-sm font-medium">{message}</span>
         </div>
       </div>
-    );
+    )
   }
-};
+}

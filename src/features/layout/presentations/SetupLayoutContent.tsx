@@ -1,14 +1,14 @@
-import { FC, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren } from 'react'
 
 export interface SetupLayoutContentProps {
-  title: string;
-  description: string;
+  title: string
+  description: string
 }
 
 export const SetupLayoutContent: FC<PropsWithChildren<SetupLayoutContentProps>> = ({
   title,
   description,
-  children,
+  children
 }) => {
   return (
     <div className="max-w-4xl flex flex-1 items-center justify-center">
@@ -22,5 +22,5 @@ export const SetupLayoutContent: FC<PropsWithChildren<SetupLayoutContentProps>> 
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

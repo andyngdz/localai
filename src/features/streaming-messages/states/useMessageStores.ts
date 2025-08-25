@@ -1,10 +1,10 @@
-import { create } from 'zustand';
-import { immer } from 'zustand/middleware/immer';
+import { create } from 'zustand'
+import { immer } from 'zustand/middleware/immer'
 
 export interface MessageStoreProps {
-  message: string;
-  setMessage: (message: string) => void;
-  reset: VoidFunction;
+  message: string
+  setMessage: (message: string) => void
+  reset: VoidFunction
 }
 
 export const useMessageStore = create<MessageStoreProps>()(
@@ -12,11 +12,11 @@ export const useMessageStore = create<MessageStoreProps>()(
     message: '',
     setMessage: (message) => {
       set((state) => {
-        state.message = message;
-      });
+        state.message = message
+      })
     },
     reset: () => {
-      set(store.getInitialState());
-    },
-  })),
-);
+      set(store.getInitialState())
+    }
+  }))
+)

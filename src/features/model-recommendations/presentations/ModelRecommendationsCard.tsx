@@ -1,30 +1,30 @@
-'use client';
+'use client'
 
-import { ModelRecommendationItem } from '@/types/api';
-import { Card } from '@heroui/react';
-import clsx from 'clsx';
-import { Gpu, HardDrive } from 'lucide-react';
-import { FC } from 'react';
-import { useFormContext } from 'react-hook-form';
-import { ModelRecommendationFormProps } from '../types';
-import { ModelRecommendationMemoryBox } from './ModelRecommendationMemoryBox';
-import { ModelRecommendationsBadge } from './ModelRecommendationsBadge';
-import { ModelRecommendationsTags } from './ModelRecommendationsTags';
+import { ModelRecommendationItem } from '@/types/api'
+import { Card } from '@heroui/react'
+import clsx from 'clsx'
+import { Gpu, HardDrive } from 'lucide-react'
+import { FC } from 'react'
+import { useFormContext } from 'react-hook-form'
+import { ModelRecommendationFormProps } from '../types'
+import { ModelRecommendationMemoryBox } from './ModelRecommendationMemoryBox'
+import { ModelRecommendationsBadge } from './ModelRecommendationsBadge'
+import { ModelRecommendationsTags } from './ModelRecommendationsTags'
 
 interface ModelRecommendationsCardProps {
-  model: ModelRecommendationItem;
+  model: ModelRecommendationItem
 }
 
 export const ModelRecommendationsCard: FC<ModelRecommendationsCardProps> = ({ model }) => {
-  const { watch, setValue } = useFormContext<ModelRecommendationFormProps>();
-  const id = watch('id');
-  const isSelected = id === model.id;
+  const { watch, setValue } = useFormContext<ModelRecommendationFormProps>()
+  const id = watch('id')
+  const isSelected = id === model.id
 
   return (
     <Card
       className={clsx('p-4 border-2 border-foreground/10 transition-all', {
         'bg-primary/10 border-primary': isSelected,
-        'hover:border-primary/50': !isSelected,
+        'hover:border-primary/50': !isSelected
       })}
       onPress={() => setValue('id', model.id)}
       isPressable
@@ -36,7 +36,7 @@ export const ModelRecommendationsCard: FC<ModelRecommendationsCardProps> = ({ mo
               <h4
                 className={clsx(
                   'font-bold text-lg',
-                  isSelected ? 'text-primary' : 'text-base-content',
+                  isSelected ? 'text-primary' : 'text-base-content'
                 )}
               >
                 {model.name}
@@ -59,5 +59,5 @@ export const ModelRecommendationsCard: FC<ModelRecommendationsCardProps> = ({ mo
         </div>
       </div>
     </Card>
-  );
-};
+  )
+}

@@ -1,1 +1,1 @@
-export * from './memory-options';
+export * from './memory-options'

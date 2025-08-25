@@ -1,1 +1,1 @@
-export * from './max-memory-scale-factor';
+export * from './max-memory-scale-factor'

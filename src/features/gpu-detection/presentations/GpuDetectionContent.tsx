@@ -1,18 +1,18 @@
-'use client';
+'use client'
 
-import { HardwareResponse } from '@/types';
-import { FC } from 'react';
-import { GpuDetectionCpuModeOnly } from './GpuDetectionCpuModeOnly';
-import { GpuDetectionItems } from './GpuDetectionItems';
-import { GpuDetectionVersion } from './GpuDetectionVersion';
+import { HardwareResponse } from '@/types'
+import { FC } from 'react'
+import { GpuDetectionCpuModeOnly } from './GpuDetectionCpuModeOnly'
+import { GpuDetectionItems } from './GpuDetectionItems'
+import { GpuDetectionVersion } from './GpuDetectionVersion'
 
 interface GpuDetectionContentProps {
-  hardwareData: HardwareResponse;
+  hardwareData: HardwareResponse
 }
 
 export const GpuDetectionContent: FC<GpuDetectionContentProps> = ({ hardwareData }) => {
   if (hardwareData) {
-    const { is_cuda, cuda_runtime_version, nvidia_driver_version } = hardwareData;
+    const { is_cuda, cuda_runtime_version, nvidia_driver_version } = hardwareData
 
     return (
       <div className="flex flex-col gap-4">
@@ -25,6 +25,6 @@ export const GpuDetectionContent: FC<GpuDetectionContentProps> = ({ hardwareData
         <GpuDetectionItems gpus={hardwareData.gpus} />
         {!is_cuda && <GpuDetectionCpuModeOnly />}
       </div>
-    );
+    )
   }
-};
+}

@@ -1,30 +1,30 @@
-import { act } from '@testing-library/react';
-import { beforeEach, describe, expect, it } from 'vitest';
-import { useMessageStore } from '../useMessageStores';
+import { act } from '@testing-library/react'
+import { beforeEach, describe, expect, it } from 'vitest'
+import { useMessageStore } from '../useMessageStores'
 
 describe('useMessageStore', () => {
   beforeEach(() => {
     act(() => {
-      useMessageStore.getState().reset();
-    });
-  });
+      useMessageStore.getState().reset()
+    })
+  })
 
   it('has initial state', () => {
-    expect(useMessageStore.getState().message).toBe('');
-  });
+    expect(useMessageStore.getState().message).toBe('')
+  })
 
   it('setMessage updates the message', () => {
     act(() => {
-      useMessageStore.getState().setMessage('Hello');
-    });
-    expect(useMessageStore.getState().message).toBe('Hello');
-  });
+      useMessageStore.getState().setMessage('Hello')
+    })
+    expect(useMessageStore.getState().message).toBe('Hello')
+  })
 
   it('reset clears the message', () => {
     act(() => {
-      useMessageStore.getState().setMessage('Hello');
-      useMessageStore.getState().reset();
-    });
-    expect(useMessageStore.getState().message).toBe('');
-  });
-});
+      useMessageStore.getState().setMessage('Hello')
+      useMessageStore.getState().reset()
+    })
+    expect(useMessageStore.getState().message).toBe('')
+  })
+})

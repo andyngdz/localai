@@ -1,19 +1,20 @@
-import { api } from '@/services/api';
-import { useQuery } from '@tanstack/react-query';
+import { api } from '@/services/api'
+import { useQuery } from '@tanstack/react-query'
 
 export const useModelSearchView = (model_id: string) => {
   const {
     data: modelDetails,
     isLoading,
-    isError,
+    isError
   } = useQuery({
     queryKey: ['searchModel', model_id],
+    enabled: !!model_id,
     queryFn: async () => {
-      const response = await api.modelDetails(model_id);
+      const response = await api.modelDetails(model_id)
 
-      return response;
-    },
-  });
+      return response
+    }
+  })
 
-  return { modelDetails, isLoading, isError };
-};
+  return { modelDetails, isLoading, isError }
+}

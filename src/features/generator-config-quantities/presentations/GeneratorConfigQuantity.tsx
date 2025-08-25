@@ -1,11 +1,11 @@
-import { NumberInputController } from '@/cores/presentations/NumberInputController';
-import { GeneratorConfigFormValues } from '@/features/generator-configs/types/generator-config';
-import { Tooltip } from '@heroui/react';
-import { Info } from 'lucide-react';
-import { useFormContext } from 'react-hook-form';
+import { NumberInputController } from '@/cores/presentations/NumberInputController'
+import { GeneratorConfigFormValues } from '@/features/generator-configs/types/generator-config'
+import { Tooltip } from '@heroui/react'
+import { Info } from 'lucide-react'
+import { useFormContext } from 'react-hook-form'
 
 export const GeneratorConfigQuantity = () => {
-  const { control } = useFormContext<GeneratorConfigFormValues>();
+  const { control } = useFormContext<GeneratorConfigFormValues>()
 
   return (
     <div className="flex flex-col gap-4 p-4">
@@ -25,5 +25,5 @@ export const GeneratorConfigQuantity = () => {
         />
       </div>
     </div>
-  );
-};
+  )
+}

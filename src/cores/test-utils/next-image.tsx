@@ -9,14 +9,14 @@ const MockNextImage = ({
   height,
   ...props
 }: {
-  src: string;
-  alt: string;
-  width?: number | string;
-  height?: number | string;
-  className?: string;
-  priority?: boolean;
-  loading?: 'eager' | 'lazy';
-  quality?: number | string;
+  src: string
+  alt: string
+  width?: number | string
+  height?: number | string
+  className?: string
+  priority?: boolean
+  loading?: 'eager' | 'lazy'
+  quality?: number | string
 }) => {
   return (
     <div
@@ -25,14 +25,14 @@ const MockNextImage = ({
       data-alt={alt}
       style={{
         width: width ? `${width}px` : 'auto',
-        height: height ? `${height}px` : 'auto',
+        height: height ? `${height}px` : 'auto'
       }}
       {...props}
     >
       {alt}
     </div>
-  );
-};
+  )
+}
 
 /**
  * Setup function to mock the next/image module
@@ -41,6 +41,6 @@ const MockNextImage = ({
 export const mockNextImage = () => {
   return {
     default: MockNextImage,
-    __esModule: true,
-  };
-};
+    __esModule: true
+  }
+}

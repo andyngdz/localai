@@ -1,16 +1,16 @@
-import { ModelWithAvatar } from '@/cores/presentations/ModelWithAvatar';
-import { formatter } from '@/services/formatter';
-import { Chip, ScrollShadow } from '@heroui/react';
-import { CircleArrowDown, CircleDashed, Heart, Package } from 'lucide-react';
-import { FC } from 'react';
-import { ModelSearchViewHeader } from './ModelSearchViewHeader';
+import { ModelWithAvatar } from '@/cores/presentations/ModelWithAvatar'
+import { formatter } from '@/services/formatter'
+import { Chip, ScrollShadow } from '@heroui/react'
+import { CircleArrowDown, CircleDashed, Heart, Package } from 'lucide-react'
+import { FC } from 'react'
+import { ModelSearchViewHeader } from './ModelSearchViewHeader'
 
 export interface ModelSearchViewCardProps {
-  id: string;
-  author: string;
-  downloads: number;
-  likes: number;
-  tags: string[];
+  id: string
+  author: string
+  downloads: number
+  likes: number
+  tags: string[]
 }
 
 export const ModelSearchViewCard: FC<ModelSearchViewCardProps> = ({
@@ -18,7 +18,7 @@ export const ModelSearchViewCard: FC<ModelSearchViewCardProps> = ({
   author,
   downloads,
   likes,
-  tags,
+  tags
 }) => {
   return (
     <div className="flex flex-col gap-6">
@@ -49,10 +49,10 @@ export const ModelSearchViewCard: FC<ModelSearchViewCardProps> = ({
               <Chip variant="bordered" key={tag}>
                 {tag}
               </Chip>
-            );
+            )
           })}
         </ScrollShadow>
       </div>
     </div>
-  );
-};
+  )
+}

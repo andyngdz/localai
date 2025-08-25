@@ -1,10 +1,10 @@
-import { GeneratorConfigExtra } from '@/features/generator-config-extras/presentations/GeneratorConfigExtra';
-import { GeneratorConfigFormat } from '@/features/generator-config-formats/presentations/GeneratorConfigFormat';
-import { GeneratorConfigQuantity } from '@/features/generator-config-quantities/presentations/GeneratorConfigQuantity';
-import { GeneratorConfigSampling } from '@/features/generator-config-sampling/presentations/GeneratorConfigSampling';
-import { GeneratorConfigSeed } from '@/features/generator-config-seed/presentations/GeneratorConfigSeed';
-import { GeneratorConfigStyle } from '@/features/generator-config-styles/presentations/GeneratorConfigStyle';
-import { Divider } from '@heroui/react';
+import { GeneratorConfigExtra } from '@/features/generator-config-extras/presentations/GeneratorConfigExtra'
+import { GeneratorConfigFormat } from '@/features/generator-config-formats/presentations/GeneratorConfigFormat'
+import { GeneratorConfigQuantity } from '@/features/generator-config-quantities/presentations/GeneratorConfigQuantity'
+import { GeneratorConfigSampling } from '@/features/generator-config-sampling/presentations/GeneratorConfigSampling'
+import { GeneratorConfigSeed } from '@/features/generator-config-seed/presentations/GeneratorConfigSeed'
+import { GeneratorConfigStyle } from '@/features/generator-config-styles/presentations/GeneratorConfigStyle'
+import { Divider } from '@heroui/react'
 
 export const GeneratorConfig = () => {
   return (
@@ -21,5 +21,5 @@ export const GeneratorConfig = () => {
       <Divider />
       <GeneratorConfigStyle />
     </div>
-  );
-};
+  )
+}

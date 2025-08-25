@@ -5,13 +5,13 @@ import {
   ModalBody,
   ModalContent,
   ModalHeader,
-  useDisclosure,
-} from '@heroui/react';
-import { Plus } from 'lucide-react';
-import { ModelSearchContainer } from './ModelSearchContainer';
+  useDisclosure
+} from '@heroui/react'
+import { Plus } from 'lucide-react'
+import { ModelSearchContainer } from './ModelSearchContainer'
 
 export const ModelSearchOpenIconButton = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
     <section>
@@ -28,5 +28,5 @@ export const ModelSearchOpenIconButton = () => {
         </ModalContent>
       </Modal>
     </section>
-  );
-};
+  )
+}

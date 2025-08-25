@@ -1,17 +1,17 @@
-import clsx from 'clsx';
-import { FC } from 'react';
-import { ModelRecommendationsBadge } from './ModelRecommendationsBadge';
+import clsx from 'clsx'
+import { FC } from 'react'
+import { ModelRecommendationsBadge } from './ModelRecommendationsBadge'
 
 interface ModelRecommendationsHeaderProps {
-  title: string;
-  description: string;
-  isRecommended: boolean;
+  title: string
+  description: string
+  isRecommended: boolean
 }
 
 export const ModelRecommendationsHeader: FC<ModelRecommendationsHeaderProps> = ({
   title,
   description,
-  isRecommended,
+  isRecommended
 }) => {
   return (
     <div className="flex flex-col">
@@ -19,7 +19,7 @@ export const ModelRecommendationsHeader: FC<ModelRecommendationsHeaderProps> = (
         <h3
           className={clsx(
             'text-xl font-bold',
-            isRecommended ? 'text-primary' : 'text-base-content',
+            isRecommended ? 'text-primary' : 'text-base-content'
           )}
         >
           {title}
@@ -28,5 +28,5 @@ export const ModelRecommendationsHeader: FC<ModelRecommendationsHeaderProps> = (
       </div>
       <span className="text-muted-content leading-relaxed">{description}</span>
     </div>
-  );
-};
+  )
+}
