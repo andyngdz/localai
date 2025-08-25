@@ -1,12 +1,16 @@
 interface DownloadStepProgressResponse {
-  id: string;
-  step: number;
-  total: number;
+  id: string
+  step: number
+  total: number
 }
 interface DownloadModelResponse {
-  id: string;
-  message: string;
-  path: string;
+  id: string
+  message: string
+  path: string
 }
 
-export type { DownloadStepProgressResponse, DownloadModelResponse };
+interface DownloadModelStartResponse {
+  id: string
+}
+
+export type { DownloadStepProgressResponse, DownloadModelResponse, DownloadModelStartResponse }

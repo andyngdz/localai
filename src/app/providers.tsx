@@ -1,5 +1,6 @@
 'use client'
 
+import { DownloadWatcher } from '@/features/download-watcher/presentations/DownloadWatcher'
 import { HeroUIProvider, ToastProvider } from '@heroui/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
@@ -19,7 +20,7 @@ export const Providers: FC<PropsWithChildren> = ({ children }) => {
     <HeroUIProvider>
       <ToastProvider />
       <QueryClientProvider client={queryClient}>
-        {children}
+        <DownloadWatcher>{children}</DownloadWatcher>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </HeroUIProvider>

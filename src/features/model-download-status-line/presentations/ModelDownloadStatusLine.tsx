@@ -1,9 +1,13 @@
+import { useDownloadWatcher } from '@/features/download-watcher'
 import { Divider, Skeleton } from '@heroui/react'
-import { useModelDownloadStatusLine } from '../states'
-import { useMemo } from 'react'
+import { FC, useMemo } from 'react'
 
-export const ModelDownloadStatusLine = () => {
-  const { percent } = useModelDownloadStatusLine()
+export interface ModelDownloadStatusLineProps {
+  id: string
+}
+
+export const ModelDownloadStatusLine: FC<ModelDownloadStatusLineProps> = ({ id }) => {
+  const { percent } = useDownloadWatcher(id)
 
   const Indicator = useMemo(() => {
     if (percent <= 0) return
