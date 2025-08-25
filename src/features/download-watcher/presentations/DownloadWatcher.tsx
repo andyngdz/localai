@@ -1,7 +1,6 @@
 'use client'
 
-import { FC, PropsWithChildren } from 'react'
-import { useEffect } from 'react'
+import { FC, PropsWithChildren, useEffect } from 'react'
 import { useDownloadWatcherStore } from '../states'
 import { useQueryClient } from '@tanstack/react-query'
 import {
