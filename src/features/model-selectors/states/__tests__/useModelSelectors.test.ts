@@ -1,5 +1,5 @@
 import { createMockQueryResult } from '@/cores/test-utils'
-import { useDownloadedModelsQuery } from '@/services/queries'
+import { useDownloadedModelsQuery } from '@/services'
 import { ModelDownloaded } from '@/types/api'
 import { renderHook, waitFor } from '@testing-library/react'
 import * as esToolkit from 'es-toolkit/compat'

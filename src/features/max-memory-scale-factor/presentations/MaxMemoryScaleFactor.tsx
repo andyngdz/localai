@@ -1,7 +1,7 @@
 'use client'
 
 import { SetupLayout } from '@/features/layout/presentations/SetupLayout'
-import { api } from '@/services/api'
+import { api } from '@/services'
 import { Divider } from '@heroui/react'
 import { useRouter } from 'next/navigation'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'

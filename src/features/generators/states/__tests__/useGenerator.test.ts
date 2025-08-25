@@ -1,5 +1,5 @@
 import { createQueryClientWrapper } from '@/cores/test-utils'
-import { api } from '@/services/api'
+import { api } from '@/services'
 import { addToast } from '@heroui/react'
 import { act, renderHook } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'

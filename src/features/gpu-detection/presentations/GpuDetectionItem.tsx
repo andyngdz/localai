@@ -1,6 +1,6 @@
 'use client'
 
-import { formatter } from '@/services/formatter'
+import { formatter } from '@/services'
 import { GpuInfo } from '@/types'
 import { Radio, RadioProps } from '@heroui/react'
 import { FC } from 'react'

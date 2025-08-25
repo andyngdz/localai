@@ -1,5 +1,4 @@
-import { formatter } from '@/services/formatter'
-import { useMemoryQuery } from '@/services/queries'
+import { formatter, useMemoryQuery } from '@/services'
 import { useFormContext } from 'react-hook-form'
 import { MaxMemoryFormProps } from '../types'
 

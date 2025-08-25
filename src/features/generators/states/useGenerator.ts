@@ -1,5 +1,5 @@
 import { GeneratorConfigFormValues } from '@/features/generator-configs'
-import { api } from '@/services/api'
+import { api } from '@/services'
 import { ImageGenerationRequest } from '@/types'
 import { addToast } from '@heroui/react'
 import { useMutation } from '@tanstack/react-query'

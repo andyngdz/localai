@@ -1,4 +1,4 @@
-import { api } from '@/services/api'
+import { api } from '@/services'
 import { useQuery } from '@tanstack/react-query'
 
 export const useModelSearchView = (model_id: string) => {

@@ -1,5 +1,4 @@
-import { api } from '@/services/api'
-import { useModelRecommendationsQuery } from '@/services/queries'
+import { api, useModelRecommendationsQuery } from '@/services'
 import { socket, SocketEvents } from '@/sockets'
 import { act, renderHook } from '@testing-library/react'
 import { setupRouterMock } from '@/cores/test-utils'

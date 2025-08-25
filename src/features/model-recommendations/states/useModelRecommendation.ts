@@ -1,5 +1,4 @@
-import { api } from '@/services/api'
-import { useModelRecommendationsQuery } from '@/services/queries'
+import { api, useModelRecommendationsQuery } from '@/services'
 import { socket, SocketEvents } from '@/sockets'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect } from 'react'

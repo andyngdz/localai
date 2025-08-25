@@ -1,5 +1,5 @@
 import { ModelWithAvatar } from '@/cores/presentations/ModelWithAvatar'
-import { formatter } from '@/services/formatter'
+import { formatter } from '@/services'
 import { Chip, ScrollShadow } from '@heroui/react'
 import { CircleArrowDown, CircleDashed, Heart, Package } from 'lucide-react'
 import { FC } from 'react'

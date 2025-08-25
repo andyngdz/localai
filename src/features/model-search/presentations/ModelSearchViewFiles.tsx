@@ -1,4 +1,4 @@
-import { formatter } from '@/services/formatter'
+import { formatter } from '@/services'
 import { ModelDetailsSibling } from '@/types'
 import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from '@heroui/react'
 import { Container } from 'lucide-react'
