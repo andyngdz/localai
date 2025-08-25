@@ -73,13 +73,15 @@ describe('ModelSearchViewFooter', () => {
     const mockCheckDownloaded = vi.fn().mockReturnValue(true)
     vi.mocked(useDownloadedModels).mockReturnValue({
       onCheckDownloaded: mockCheckDownloaded,
-      data: [{ 
-        model_id: 'test-model-id',
-        id: 1,
-        created_at: '2025-08-25T14:30:00Z',
-        updated_at: '2025-08-25T14:30:00Z',
-        model_dir: '/path/to/model'
-      }]
+      data: [
+        {
+          model_id: 'test-model-id',
+          id: 1,
+          created_at: '2025-08-25T14:30:00Z',
+          updated_at: '2025-08-25T14:30:00Z',
+          model_dir: '/path/to/model'
+        }
+      ]
     })
 
     // Act

@@ -33,13 +33,23 @@ describe('useDownloadedModels', () => {
   it('should return data from the query', () => {
     // Arrange
     const mockData: ModelDownloaded[] = [
-      { model_id: 'model1', id: 1, created_at: '2023-01-01', updated_at: '2023-01-01', model_dir: '/models/model1' },
-      { model_id: 'model2', id: 2, created_at: '2023-01-02', updated_at: '2023-01-02', model_dir: '/models/model2' }
+      {
+        model_id: 'model1',
+        id: 1,
+        created_at: '2023-01-01',
+        updated_at: '2023-01-01',
+        model_dir: '/models/model1'
+      },
+      {
+        model_id: 'model2',
+        id: 2,
+        created_at: '2023-01-02',
+        updated_at: '2023-01-02',
+        model_dir: '/models/model2'
+      }
     ]
 
-    vi.mocked(useDownloadedModelsQuery).mockReturnValue(
-      createMockQueryResult(mockData)
-    )
+    vi.mocked(useDownloadedModelsQuery).mockReturnValue(createMockQueryResult(mockData))
 
     // Act
     const { result } = renderHook(() => useDownloadedModels(), {
@@ -54,13 +64,23 @@ describe('useDownloadedModels', () => {
     it('should return true when model ID exists in data', () => {
       // Arrange
       const mockData: ModelDownloaded[] = [
-        { model_id: 'model1', id: 1, created_at: '2023-01-01', updated_at: '2023-01-01', model_dir: '/models/model1' },
-        { model_id: 'model2', id: 2, created_at: '2023-01-02', updated_at: '2023-01-02', model_dir: '/models/model2' }
+        {
+          model_id: 'model1',
+          id: 1,
+          created_at: '2023-01-01',
+          updated_at: '2023-01-01',
+          model_dir: '/models/model1'
+        },
+        {
+          model_id: 'model2',
+          id: 2,
+          created_at: '2023-01-02',
+          updated_at: '2023-01-02',
+          model_dir: '/models/model2'
+        }
       ]
 
-      vi.mocked(useDownloadedModelsQuery).mockReturnValue(
-        createMockQueryResult(mockData)
-      )
+      vi.mocked(useDownloadedModelsQuery).mockReturnValue(createMockQueryResult(mockData))
 
       // Act
       const { result } = renderHook(() => useDownloadedModels(), {
@@ -74,13 +94,23 @@ describe('useDownloadedModels', () => {
     it('should return false when model ID does not exist in data', () => {
       // Arrange
       const mockData: ModelDownloaded[] = [
-        { model_id: 'model1', id: 1, created_at: '2023-01-01', updated_at: '2023-01-01', model_dir: '/models/model1' },
-        { model_id: 'model2', id: 2, created_at: '2023-01-02', updated_at: '2023-01-02', model_dir: '/models/model2' }
+        {
+          model_id: 'model1',
+          id: 1,
+          created_at: '2023-01-01',
+          updated_at: '2023-01-01',
+          model_dir: '/models/model1'
+        },
+        {
+          model_id: 'model2',
+          id: 2,
+          created_at: '2023-01-02',
+          updated_at: '2023-01-02',
+          model_dir: '/models/model2'
+        }
       ]
 
-      vi.mocked(useDownloadedModelsQuery).mockReturnValue(
-        createMockQueryResult(mockData)
-      )
+      vi.mocked(useDownloadedModelsQuery).mockReturnValue(createMockQueryResult(mockData))
 
       // Act
       const { result } = renderHook(() => useDownloadedModels(), {
@@ -93,9 +123,7 @@ describe('useDownloadedModels', () => {
 
     it('should return false when data is empty', () => {
       // Arrange
-      vi.mocked(useDownloadedModelsQuery).mockReturnValue(
-        createMockQueryResult([])
-      )
+      vi.mocked(useDownloadedModelsQuery).mockReturnValue(createMockQueryResult([]))
 
       // Act
       const { result } = renderHook(() => useDownloadedModels(), {
