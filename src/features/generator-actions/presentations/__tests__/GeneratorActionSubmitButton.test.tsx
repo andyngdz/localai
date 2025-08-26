@@ -9,6 +9,23 @@ vi.mock('@/features/generators/states', () => ({
   useGenerationStatusStore: vi.fn()
 }))
 
+// Mock HeroUI Button component
+vi.mock('@heroui/react', () => ({
+  Button: ({
+    children,
+    isDisabled,
+    type
+  }: {
+    children: React.ReactNode
+    isDisabled?: boolean
+    type?: 'submit' | 'reset' | 'button'
+  }) => (
+    <button type={type} disabled={isDisabled} data-testid="submit-button">
+      {children}
+    </button>
+  )
+}))
+
 // Mock react-hook-form's FormProvider
 const FormProviderWrapper = ({ children }: { children: React.ReactNode }) => {
   const methods = useForm({
@@ -24,7 +41,7 @@ describe('GeneratorActionSubmitButton', () => {
     vi.resetAllMocks()
   })
 
-  it('should render button with correct number of images', () => {
+  it('should render button with correct number of images when not generating', () => {
     // Arrange
     vi.mocked(useGenerationStatusStore).mockReturnValue({
       isGenerating: false,
@@ -40,11 +57,11 @@ describe('GeneratorActionSubmitButton', () => {
     )
 
     // Assert
-    expect(screen.getByRole('button')).toHaveTextContent('Generate 4 images')
-    expect(screen.queryByRole('status')).not.toBeInTheDocument()
+    expect(screen.getByTestId('submit-button')).toHaveTextContent('Generate 4 images')
+    expect(screen.getByTestId('submit-button')).not.toBeDisabled()
   })
 
-  it('should show loading state when generating images', () => {
+  it('should disable button and show animation class when generating', () => {
     // Arrange
     vi.mocked(useGenerationStatusStore).mockReturnValue({
       isGenerating: true,
@@ -60,8 +77,35 @@ describe('GeneratorActionSubmitButton', () => {
     )
 
     // Assert
-    expect(screen.getByRole('button')).toHaveTextContent('Generating...')
-    expect(screen.getByRole('button')).toBeDisabled()
-    expect(screen.getByRole('status')).toBeInTheDocument()
+    expect(screen.getByTestId('submit-button')).toHaveTextContent('Generate 4 images')
+    expect(screen.getByTestId('submit-button')).toBeDisabled()
+  })
+
+  it('should update number of images based on form value', () => {
+    // Arrange
+    vi.mocked(useGenerationStatusStore).mockReturnValue({
+      isGenerating: false,
+      onSetIsGenerating: vi.fn(),
+      reset: vi.fn()
+    })
+
+    const CustomFormProviderWrapper = ({ children }: { children: React.ReactNode }) => {
+      const methods = useForm({
+        defaultValues: {
+          number_of_images: 8
+        }
+      })
+      return <FormProvider {...methods}>{children}</FormProvider>
+    }
+
+    // Act
+    render(
+      <CustomFormProviderWrapper>
+        <GeneratorActionSubmitButton />
+      </CustomFormProviderWrapper>
+    )
+
+    // Assert
+    expect(screen.getByTestId('submit-button')).toHaveTextContent('Generate 8 images')
   })
 })

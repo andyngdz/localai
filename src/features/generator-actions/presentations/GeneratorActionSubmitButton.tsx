@@ -1,6 +1,6 @@
 import { GeneratorConfigFormValues } from '@/features/generator-configs'
 import { useGenerationStatusStore } from '@/features/generators/states'
-import { Button, Spinner } from '@heroui/react'
+import { Button } from '@heroui/react'
 import clsx from 'clsx'
 import { useFormContext } from 'react-hook-form'
 

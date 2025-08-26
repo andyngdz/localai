@@ -4,6 +4,9 @@ import { addToast } from '@heroui/react'
 import { act, renderHook } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { useGenerator } from '../useGenerator'
+import { useGenerationStatusStore } from '../useGenerationStatusStore'
+import { useImageGenerationResponseStore } from '../useImageGenerationResponseStores'
+import { useImageStepEndResponseStore } from '../useImageStepEndResponseStores'
 
 // Mock the API module with a factory so addHistory is a mock function
 vi.mock('@/services/api', () => ({
@@ -19,6 +22,26 @@ vi.mock('@/services/api', () => ({
 // Mock HeroUI addToast function
 vi.mock('@heroui/react', () => ({
   addToast: vi.fn()
+}))
+
+// Mock the store hooks
+vi.mock('../useGenerationStatusStore', () => ({
+  useGenerationStatusStore: vi.fn().mockReturnValue({
+    onSetIsGenerating: vi.fn()
+  })
+}))
+
+vi.mock('../useImageGenerationResponseStores', () => ({
+  useImageGenerationResponseStore: vi.fn().mockReturnValue({
+    onUpdateResponse: vi.fn(),
+    onInitResponse: vi.fn()
+  })
+}))
+
+vi.mock('../useImageStepEndResponseStores', () => ({
+  useImageStepEndResponseStore: vi.fn().mockReturnValue({
+    onInitImageStepEnds: vi.fn()
+  })
 }))
 
 afterEach(() => {
@@ -41,7 +64,12 @@ describe('useGenerator', () => {
     styles: []
   }
 
-  it('should call mutate with the config', async () => {
+  it('should call mutate with the config and update generation status', async () => {
+    const mockSetIsGenerating = vi.fn()
+    vi.mocked(useGenerationStatusStore).mockReturnValue({
+      onSetIsGenerating: mockSetIsGenerating
+    })
+
     const wrapper = createQueryClientWrapper()
     const { result } = renderHook(() => useGenerator(), { wrapper })
 
@@ -50,9 +78,11 @@ describe('useGenerator', () => {
     })
 
     expect(api.addHistory).toHaveBeenCalledWith(mockConfig)
+    expect(mockSetIsGenerating).toHaveBeenCalledWith(true)
+    expect(mockSetIsGenerating).toHaveBeenCalledWith(false)
   })
 
-  it('should handle success case', async () => {
+  it('should handle success case and update all stores', async () => {
     vi.mocked(api.addHistory).mockResolvedValue(1) // API returns a number ID
 
     // Mock the generator API with a proper response
@@ -61,6 +91,23 @@ describe('useGenerator', () => {
       nsfw_content_detected: [false]
     }
     vi.mocked(api.generator).mockResolvedValue(mockGeneratorResponse)
+
+    // Mock store functions
+    const mockSetIsGenerating = vi.fn()
+    const mockInitImageStepEnds = vi.fn()
+    const mockInitResponse = vi.fn()
+    const mockUpdateResponse = vi.fn()
+
+    vi.mocked(useGenerationStatusStore).mockReturnValue({
+      onSetIsGenerating: mockSetIsGenerating
+    })
+    vi.mocked(useImageStepEndResponseStore).mockReturnValue({
+      onInitImageStepEnds: mockInitImageStepEnds
+    })
+    vi.mocked(useImageGenerationResponseStore).mockReturnValue({
+      onInitResponse: mockInitResponse,
+      onUpdateResponse: mockUpdateResponse
+    })
 
     const wrapper = createQueryClientWrapper()
     const { result } = renderHook(() => useGenerator(), { wrapper })
@@ -74,11 +121,35 @@ describe('useGenerator', () => {
       history_id: 1,
       config: mockConfig
     })
+
+    // Verify store interactions
+    expect(mockSetIsGenerating).toHaveBeenCalledWith(true)
+    expect(mockInitImageStepEnds).toHaveBeenCalledWith(mockConfig.number_of_images)
+    expect(mockInitResponse).toHaveBeenCalledWith(mockConfig.number_of_images)
+    expect(mockUpdateResponse).toHaveBeenCalledWith(mockGeneratorResponse)
+    expect(mockSetIsGenerating).toHaveBeenCalledWith(false)
   })
 
-  it('should handle error case', async () => {
+  it('should handle error case in addHistory and reset generation status', async () => {
     const mockError = new Error('Test error')
     vi.mocked(api.addHistory).mockRejectedValue(mockError)
+
+    // Mock store functions
+    const mockSetIsGenerating = vi.fn()
+    const mockInitImageStepEnds = vi.fn()
+
+    vi.mocked(useGenerationStatusStore).mockReturnValue({
+      onSetIsGenerating: mockSetIsGenerating
+    })
+
+    vi.mocked(useImageStepEndResponseStore).mockReturnValue({
+      onInitImageStepEnds: mockInitImageStepEnds
+    })
+
+    vi.mocked(useImageGenerationResponseStore).mockReturnValue({
+      onInitResponse: vi.fn(),
+      onUpdateResponse: vi.fn()
+    })
 
     const wrapper = createQueryClientWrapper()
     const { result } = renderHook(() => useGenerator(), { wrapper })
@@ -101,12 +172,32 @@ describe('useGenerator', () => {
     expect(api.addHistory).toHaveBeenCalledWith(mockConfig)
     // Generator function should not be called since addHistory fails
     expect(api.generator).not.toHaveBeenCalled()
+
+    // Verify store interactions
+    expect(mockSetIsGenerating).toHaveBeenCalledWith(true)
+    expect(mockSetIsGenerating).toHaveBeenCalledWith(false)
   })
 
-  it('should handle error case for generator', async () => {
+  it('should handle error case for generator and show toast', async () => {
     const error = new Error('Generator error')
     vi.mocked(api.addHistory).mockResolvedValue(1)
     vi.mocked(api.generator).mockRejectedValue(error)
+
+    // Mock store functions
+    const mockSetIsGenerating = vi.fn()
+    const mockInitImageStepEnds = vi.fn()
+    const mockInitResponse = vi.fn()
+
+    vi.mocked(useGenerationStatusStore).mockReturnValue({
+      onSetIsGenerating: mockSetIsGenerating
+    })
+    vi.mocked(useImageStepEndResponseStore).mockReturnValue({
+      onInitImageStepEnds: mockInitImageStepEnds
+    })
+    vi.mocked(useImageGenerationResponseStore).mockReturnValue({
+      onInitResponse: mockInitResponse,
+      onUpdateResponse: vi.fn()
+    })
 
     const wrapper = createQueryClientWrapper()
     const { result } = renderHook(() => useGenerator(), { wrapper })
@@ -129,6 +220,47 @@ describe('useGenerator', () => {
       expect.objectContaining({
         title: 'Something went wrong',
         color: 'danger'
+      })
+    )
+
+    // Verify store interactions
+    expect(mockSetIsGenerating).toHaveBeenCalledWith(true)
+    expect(mockInitImageStepEnds).toHaveBeenCalledWith(mockConfig.number_of_images)
+    expect(mockInitResponse).toHaveBeenCalledWith(mockConfig.number_of_images)
+    expect(mockSetIsGenerating).toHaveBeenCalledWith(false)
+  })
+
+  it('should handle success case for addHistory and show toast', async () => {
+    vi.mocked(api.addHistory).mockResolvedValue(1)
+
+    // Mock store functions
+    const mockSetIsGenerating = vi.fn()
+    const mockInitImageStepEnds = vi.fn()
+
+    vi.mocked(useGenerationStatusStore).mockReturnValue({
+      onSetIsGenerating: mockSetIsGenerating
+    })
+
+    vi.mocked(useImageStepEndResponseStore).mockReturnValue({
+      onInitImageStepEnds: mockInitImageStepEnds
+    })
+
+    vi.mocked(useImageGenerationResponseStore).mockReturnValue({
+      onInitResponse: vi.fn(),
+      onUpdateResponse: vi.fn()
+    })
+
+    const wrapper = createQueryClientWrapper()
+    const { result } = renderHook(() => useGenerator(), { wrapper })
+
+    await act(async () => {
+      await result.current.onGenerate(mockConfig)
+    })
+
+    expect(addToast).toHaveBeenCalledWith(
+      expect.objectContaining({
+        title: 'Added history',
+        color: 'success'
       })
     )
   })
