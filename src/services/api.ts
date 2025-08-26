@@ -110,6 +110,12 @@ class API {
 
     return data
   }
+
+  async getHistories() {
+    const { data } = await client.get<History[]>('/histories')
+
+    return data
+  }
 }
 
 export const api = new API()
