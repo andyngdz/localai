@@ -1,6 +1,6 @@
 'use client'
 
-import { GeneratorActions } from '@/features/generator-actions'
+import { GeneratorAction } from '@/features/generator-actions'
 import { GeneratorConfig, GeneratorConfigFormValues } from '@/features/generator-configs'
 import { GeneratorPreviewer } from '@/features/generator-previewers'
 import { GeneratorPrompt } from '@/features/generator-prompts'
@@ -41,7 +41,7 @@ export const Generator = () => {
           </Allotment.Pane>
           <Allotment.Pane className="flex flex-col">
             <GeneratorPrompt />
-            <GeneratorActions />
+            <GeneratorAction />
             <GeneratorPreviewer />
           </Allotment.Pane>
         </Allotment>
