@@ -5,3 +5,28 @@
 @source '../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
 @source '../**/*.{js,ts,jsx,tsx,mdx}';
 @custom-variant dark (&:is(.dark *));
+
+@theme {
+  @keyframes shine {
+    0% {
+      background-position: 100%;
+    }
+    100% {
+      background-position: -100%;
+    }
+  }
+}
+
+@utility animate-shine {
+  background: linear-gradient(
+    120deg,
+    var(--color-gray-50) 40%,
+    var(--color-gray-800) 50%,
+    var(--color-gray-50) 60%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  display: inline-block;
+  animation: shine 2s linear infinite;
+}

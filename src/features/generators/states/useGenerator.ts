@@ -6,10 +6,12 @@ import { useMutation } from '@tanstack/react-query'
 import { SubmitHandler } from 'react-hook-form'
 import { useImageGenerationResponseStore } from './useImageGenerationResponseStores'
 import { useImageStepEndResponseStore } from './useImageStepEndResponseStores'
+import { useGenerationStatusStore } from './useGenerationStatusStore'
 
 export const useGenerator = () => {
   const { onInitImageStepEnds } = useImageStepEndResponseStore()
   const { onUpdateResponse, onInitResponse } = useImageGenerationResponseStore()
+  const { onSetIsGenerating } = useGenerationStatusStore()
 
   const generator = useMutation({
     mutationKey: ['generator'],
@@ -50,12 +52,17 @@ export const useGenerator = () => {
   })
 
   const onGenerate: SubmitHandler<GeneratorConfigFormValues> = async (config) => {
-    const history_id = await addHistory.mutateAsync(config)
+    try {
+      onSetIsGenerating(true)
+      const history_id = await addHistory.mutateAsync(config)
 
-    onInitImageStepEnds(config.number_of_images)
-    onInitResponse(config.number_of_images)
+      onInitImageStepEnds(config.number_of_images)
+      onInitResponse(config.number_of_images)
 
-    await generator.mutateAsync({ history_id, config })
+      await generator.mutateAsync({ history_id, config })
+    } finally {
+      onSetIsGenerating(false)
+    }
   }
 
   return { onGenerate }
