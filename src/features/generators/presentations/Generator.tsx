@@ -8,19 +8,29 @@ import { Allotment } from 'allotment'
 import clsx from 'clsx'
 import { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { FORM_DEFAULT_VALUES } from '../constants'
-import { useGenerator } from '../states'
+import { useFormValuesStore, useGenerator } from '../states'
 
 import 'allotment/dist/style.css'
 
 export const Generator = () => {
+  const { values, setValues } = useFormValuesStore()
   const methods = useForm<GeneratorConfigFormValues>({
     mode: 'all',
     reValidateMode: 'onChange',
-    defaultValues: FORM_DEFAULT_VALUES
+    defaultValues: values,
+    values
   })
   const [mounted, setMounted] = useState(false)
   const { onGenerate } = useGenerator()
+
+  // Update Zustand store when form values change
+  useEffect(() => {
+    const subscription = methods.watch((formValues) => {
+      setValues(formValues as GeneratorConfigFormValues)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [methods, setValues])
 
   useEffect(() => {
     setMounted(true)
