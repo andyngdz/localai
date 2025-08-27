@@ -12,7 +12,7 @@ interface HistoryGeneratorFormConfigValues {
   styles: string[]
 }
 
-interface History {
+interface HistoryItem {
   model: string
   created_at: string
   prompt: string
@@ -21,4 +21,4 @@ interface History {
   updated_at: string
 }
 
-export type { History, HistoryGeneratorFormConfigValues }
+export type { HistoryItem, HistoryGeneratorFormConfigValues }

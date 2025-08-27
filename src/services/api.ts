@@ -4,6 +4,7 @@ import type {
   DeviceIndexResponse,
   HardwareResponse,
   HealthResponse,
+  HistoryItem,
   ImageGenerationRequest,
   ImageGenerationResponse,
   LoadModelRequest,
@@ -112,7 +113,7 @@ class API {
   }
 
   async getHistories() {
-    const { data } = await client.get<History[]>('/histories')
+    const { data } = await client.get<HistoryItem[]>('/histories')
 
     return data
   }
