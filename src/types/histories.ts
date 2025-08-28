@@ -32,4 +32,4 @@ interface HistoryItem {
   generated_images: HistoryGeneratedImage[]
 }
 
-export type { HistoryItem, HistoryGeneratorFormConfigValues }
+export type { HistoryItem, HistoryGeneratedImage, HistoryGeneratorFormConfigValues }

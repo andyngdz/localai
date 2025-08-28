@@ -20,14 +20,22 @@ export const GeneratorPreviewerItem: FC<GeneratorPreviewerItemProps> = ({ imageS
   const ImageComponent = useMemo(() => {
     const item = items[imageStepEnd.index]
 
+    if (item.path.length > 0) {
+      return (
+        <NextImage
+          src={`http://localhost:8000/${item.path}`}
+          alt={`Image ${imageStepEnd.index}`}
+          className="rounded-2xl object-cover"
+          fill
+        />
+      )
+    }
+
     if (imageStepEnd.image_base64.length === 0) {
       return <Skeleton className="rounded-2xl w-full h-full" />
     }
 
-    const src =
-      item.path.length === 0
-        ? `data:image/png;base64,${imageStepEnd.image_base64}`
-        : `http://localhost:8000/${item.path}`
+    const src = `data:image/png;base64,${imageStepEnd.image_base64}`
 
     return (
       <NextImage
