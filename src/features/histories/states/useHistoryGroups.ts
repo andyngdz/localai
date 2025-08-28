@@ -6,7 +6,7 @@ interface HistoryGroup {
   histories: HistoryItem[]
 }
 
-export function useHistoryGroups(histories: HistoryItem[] | undefined): HistoryGroup[] {
+export const useHistoryGroups = (histories: HistoryItem[]): HistoryGroup[] => {
   return useMemo(() => {
     if (!histories || histories.length === 0) {
       return []

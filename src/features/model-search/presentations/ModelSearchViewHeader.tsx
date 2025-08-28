@@ -14,7 +14,7 @@ export const ModelSearchViewHeader: FC<ModelSearchViewHeaderProps> = ({ Icon, ti
     <div className="flex gap-2">
       <div className="flex items-center gap-2">
         <Icon className="text-primary" />
-        <span className="text-foreground-500 text font-bold">{title}</span>
+        <span className="text-default-500 text font-bold">{title}</span>
       </div>
       {href && (
         <Button
@@ -22,7 +22,7 @@ export const ModelSearchViewHeader: FC<ModelSearchViewHeaderProps> = ({ Icon, ti
           href={href}
           size="sm"
           variant="light"
-          className="text-foreground-500"
+          className="text-default-500"
           target="_blank"
           isIconOnly
         >

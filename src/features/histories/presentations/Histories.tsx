@@ -4,7 +4,7 @@ import { useHistoryGroups } from '../states/useHistoryGroups'
 import { HistoryGroup } from './HistoryGroup'
 
 export const Histories = () => {
-  const { data: histories, isLoading, error } = useHistoriesQuery()
+  const { data: histories = [], isLoading, error } = useHistoriesQuery()
   const historyGroups = useHistoryGroups(histories)
 
   if (isLoading) {
@@ -32,19 +32,21 @@ export const Histories = () => {
   }
 
   return (
-    <Accordion className="w-full">
-      {historyGroups.map((group) => (
-        <AccordionItem
-          key={group.date}
-          title={group.date}
-          aria-label={`History group for ${group.date}`}
-          classNames={{
-            title: 'text-sm text-default-500 font-semibold'
-          }}
-        >
-          <HistoryGroup key={group.date} histories={group.histories} />
-        </AccordionItem>
-      ))}
-    </Accordion>
+    <div className="overflow-auto scrollbar-thin">
+      <Accordion className="w-full">
+        {historyGroups.map((group) => (
+          <AccordionItem
+            key={group.date}
+            title={group.date}
+            aria-label={`History group for ${group.date}`}
+            classNames={{
+              title: 'text-sm text-default-500 font-semibold'
+            }}
+          >
+            <HistoryGroup key={group.date} histories={group.histories} />
+          </AccordionItem>
+        ))}
+      </Accordion>
+    </div>
   )
 }

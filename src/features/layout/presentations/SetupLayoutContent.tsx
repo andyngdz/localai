@@ -15,7 +15,7 @@ export const SetupLayoutContent: FC<PropsWithChildren<SetupLayoutContentProps>> 
       <div className="mx-auto flex flex-col gap-12">
         <div className="flex flex-col gap-2 items-center justify-center">
           <h1 className="text-4xl font-bold text-base-content">{title}</h1>
-          <span className="text-foreground-500">{description}</span>
+          <span className="text-default-500">{description}</span>
         </div>
         <div className="flex flex-1 justify-center">
           <div className="container">{children}</div>

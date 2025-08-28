@@ -102,7 +102,7 @@ describe('GeneratorConfigCommonSteps', () => {
 
     // Check each button has the light variant class
     buttons.forEach((button) => {
-      expect(button).toHaveAttribute('class', expect.stringContaining('text-foreground-500'))
+      expect(button).toHaveAttribute('class', expect.stringContaining('text-default-500'))
     })
   })
 })

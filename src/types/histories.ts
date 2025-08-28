@@ -12,6 +12,16 @@ interface HistoryGeneratorFormConfigValues {
   styles: string[]
 }
 
+interface HistoryGeneratedImage {
+  id: number
+  path: string
+  is_nsfw: boolean
+  updated_at: string
+  file_name: string
+  history_id: number
+  created_at: string
+}
+
 interface HistoryItem {
   model: string
   created_at: string
@@ -19,6 +29,7 @@ interface HistoryItem {
   config: HistoryGeneratorFormConfigValues
   id: number
   updated_at: string
+  generated_images: HistoryGeneratedImage[]
 }
 
 export type { HistoryItem, HistoryGeneratorFormConfigValues }
