@@ -2,12 +2,13 @@ import { GeneratorConfigFormValues } from '@/features/generator-configs'
 import { api } from '@/services'
 import { ImageGenerationRequest } from '@/types'
 import { addToast } from '@heroui/react'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { SubmitHandler } from 'react-hook-form'
 import { useGenerationStatusStore } from './useGenerationStatusStore'
 import { useUseImageGenerationStore } from './useImageGenerationResponseStores'
 
 export const useGenerator = () => {
+  const queryClient = useQueryClient()
   const { onCompleted, onInit } = useUseImageGenerationStore()
   const { onSetIsGenerating } = useGenerationStatusStore()
 
@@ -51,12 +52,14 @@ export const useGenerator = () => {
     try {
       onSetIsGenerating(true)
       const history_id = await addHistory.mutateAsync(config)
+      queryClient.refetchQueries({ queryKey: ['histories'] })
 
       onInit(config.number_of_images)
 
       await generator.mutateAsync({ history_id, config })
     } finally {
       onSetIsGenerating(false)
+      queryClient.refetchQueries({ queryKey: ['histories'] })
     }
   }
 

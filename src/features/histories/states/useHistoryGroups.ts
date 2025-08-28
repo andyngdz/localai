@@ -1,27 +1,25 @@
+import { dateFormatter } from '@/services'
 import { HistoryItem } from '@/types'
+import { isEmpty } from 'es-toolkit/compat'
 import { useMemo } from 'react'
 
-interface HistoryGroup {
+export interface HistoryGroup {
   date: string
   histories: HistoryItem[]
 }
 
 export const useHistoryGroups = (histories: HistoryItem[]): HistoryGroup[] => {
   return useMemo(() => {
-    if (!histories || histories.length === 0) {
+    if (isEmpty(histories)) {
       return []
     }
 
     const groups: Record<string, HistoryItem[]> = {}
 
-    histories.forEach((history) => {
-      // Extract date part from created_at (ISO string)
-      const date = new Date(history.created_at).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      })
+    const historiesSorted = histories.reverse()
 
+    historiesSorted.forEach((history) => {
+      const date = dateFormatter.date(history.created_at)
       if (!groups[date]) {
         groups[date] = []
       }
@@ -29,14 +27,6 @@ export const useHistoryGroups = (histories: HistoryItem[]): HistoryGroup[] => {
       groups[date].push(history)
     })
 
-    // Convert to array and sort by date (newest first)
-    return Object.entries(groups)
-      .map(([date, histories]) => ({ date, histories }))
-      .sort((a, b) => {
-        // Sort by date in descending order (newest first)
-        const dateA = new Date(a.histories[0].created_at)
-        const dateB = new Date(b.histories[0].created_at)
-        return dateB.getTime() - dateA.getTime()
-      })
+    return Object.entries(groups).map(([date, histories]) => ({ date, histories }))
   }, [histories])
 }
