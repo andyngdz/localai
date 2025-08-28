@@ -10,9 +10,21 @@ vi.mock('@heroui/react', async () => {
   const actual = await vi.importActual<typeof import('@heroui/react')>('@heroui/react')
   return {
     ...actual,
-    Button: ({ children, onPress, isIconOnly, variant, size }: { children: React.ReactNode; onPress?: () => void; isIconOnly?: boolean; variant?: string; size?: string }) => (
-      <button 
-        data-testid="button" 
+    Button: ({
+      children,
+      onPress,
+      isIconOnly,
+      variant,
+      size
+    }: {
+      children: React.ReactNode
+      onPress?: () => void
+      isIconOnly?: boolean
+      variant?: string
+      size?: string
+    }) => (
+      <button
+        data-testid="button"
         onClick={onPress}
         data-icon-only={isIconOnly ? 'true' : 'false'}
         data-variant={variant}
@@ -39,7 +51,7 @@ vi.mock('../../states/useUseConfig', () => ({
 
 describe('HistoryUseConfigButton', () => {
   const mockOnUseConfig = vi.fn()
-  
+
   beforeEach(() => {
     vi.mocked(useUseConfig).mockReturnValue({
       onUseConfig: mockOnUseConfig
@@ -74,7 +86,7 @@ describe('HistoryUseConfigButton', () => {
     }
 
     render(<HistoryUseConfigButton history={mockHistory} />)
-    
+
     expect(useUseConfig).toHaveBeenCalledWith(mockHistory)
     expect(screen.getByTestId('tooltip')).toHaveAttribute('data-content', 'Use this config')
     expect(screen.getByTestId('button')).toBeInTheDocument()
@@ -105,10 +117,10 @@ describe('HistoryUseConfigButton', () => {
     }
 
     render(<HistoryUseConfigButton history={mockHistory} />)
-    
+
     const button = screen.getByTestId('button')
     await userEvent.click(button)
-    
+
     expect(mockOnUseConfig).toHaveBeenCalledTimes(1)
   })
 })

@@ -62,7 +62,7 @@ describe('HistoryItemContainer', () => {
     }
 
     render(<HistoryItemContainer history={mockHistory} />)
-    
+
     expect(dateFormatter.time).toHaveBeenCalledWith('2023-01-01T10:00:00ZZ')
     expect(screen.getByText('10:00 AM')).toBeInTheDocument()
     expect(screen.getByText('test-model')).toBeInTheDocument()
@@ -113,7 +113,7 @@ describe('HistoryItemContainer', () => {
     }
 
     render(<HistoryItemContainer history={mockHistory} />)
-    
+
     const images = screen.getAllByTestId('next-image')
     expect(images).toHaveLength(2)
     expect(images[0]).toHaveAttribute('data-src', 'http://localhost:8000/static/images/image1.png')
@@ -146,7 +146,7 @@ describe('HistoryItemContainer', () => {
     }
 
     render(<HistoryItemContainer history={mockHistory} />)
-    
+
     expect(screen.queryByTestId('next-image')).not.toBeInTheDocument()
   })
 })
