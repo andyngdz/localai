@@ -14,7 +14,7 @@ export const HistoryItemContainer: FC<HistoryItemProps> = ({ history }) => {
         <span className="text-default-500 font-bold">
           {dateFormatter.time(`${history.created_at}Z`)}
         </span>
-        <span className="text-default-500 font-semibold">{history.model}</span>
+        <span className="text-default-500 font-semibold truncate">{history.model}</span>
         <span className="truncate">{history.prompt}</span>
       </div>
       {history.generated_images.length > 0 && (
