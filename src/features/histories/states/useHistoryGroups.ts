@@ -16,7 +16,7 @@ export const useHistoryGroups = (histories: HistoryItem[]): HistoryGroup[] => {
 
     const groups: Record<string, HistoryItem[]> = {}
 
-    const historiesSorted = histories.reverse()
+    const historiesSorted = histories.toReversed()
 
     historiesSorted.forEach((history) => {
       const date = dateFormatter.date(history.created_at)
