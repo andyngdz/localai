@@ -14,7 +14,7 @@ import clsx from 'clsx'
 import 'allotment/dist/style.css'
 
 export const Generator = () => {
-  const { values, setValues } = useFormValuesStore()
+  const { values, onSetValues } = useFormValuesStore()
   const methods = useForm<GeneratorConfigFormValues>({
     mode: 'all',
     reValidateMode: 'onChange',
@@ -27,11 +27,11 @@ export const Generator = () => {
   // Update Zustand store when form values change
   useEffect(() => {
     const subscription = methods.watch((formValues) => {
-      setValues(formValues as GeneratorConfigFormValues)
+      onSetValues(formValues as GeneratorConfigFormValues)
     })
 
     return () => subscription.unsubscribe()
-  }, [methods, setValues])
+  }, [methods, onSetValues])
 
   useEffect(() => {
     setMounted(true)

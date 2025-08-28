@@ -28,7 +28,7 @@ describe('useFormValuesStore', () => {
     const newValues = { ...FORM_DEFAULT_VALUES, prompt: 'Test prompt' }
 
     act(() => {
-      result.current.setValues(newValues)
+      result.current.onSetValues(newValues)
     })
 
     expect(result.current.values).toEqual(newValues)
@@ -39,7 +39,7 @@ describe('useFormValuesStore', () => {
 
     // First update a value
     act(() => {
-      result.current.setValues({
+      result.current.onSetValues({
         ...FORM_DEFAULT_VALUES,
         prompt: 'Test prompt'
       })

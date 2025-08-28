@@ -6,7 +6,7 @@ import { immer } from 'zustand/middleware/immer'
 
 export interface FormValuesStore {
   values: GeneratorConfigFormValues
-  setValues: (values: GeneratorConfigFormValues) => void
+  onSetValues: (values: GeneratorConfigFormValues) => void
   reset: () => void
 }
 
@@ -14,7 +14,7 @@ export const useFormValuesStore = create<FormValuesStore>()(
   persist(
     immer((set, get, store) => ({
       values: FORM_DEFAULT_VALUES,
-      setValues: (values: GeneratorConfigFormValues) => {
+      onSetValues: (values: GeneratorConfigFormValues) => {
         set((state) => {
           state.values = values
         })
