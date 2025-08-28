@@ -1,12 +1,10 @@
 import { Accordion, AccordionItem, Spinner } from '@heroui/react'
-import { useHistoriesQuery } from '@/services/queries'
-import { useHistoryGroups } from '../states/useHistoryGroups'
 import { HistoryGroup } from './HistoryGroup'
 import { isEmpty } from 'es-toolkit/compat'
+import { useHistories } from '../states'
 
 export const Histories = () => {
-  const { data: histories = [], isLoading, error } = useHistoriesQuery()
-  const historyGroups = useHistoryGroups(histories)
+  const { historyGroups, isLoading, error } = useHistories()
 
   if (isLoading) {
     return (
@@ -24,7 +22,7 @@ export const Histories = () => {
     )
   }
 
-  if (isEmpty(histories)) {
+  if (isEmpty(historyGroups)) {
     return (
       <div className="flex items-center justify-center h-64">
         <p className="text-gray-500">No histories found</p>

@@ -1,3 +1,4 @@
+import { FC } from 'react'
 import { HistoryItemContainer } from './HistoryItemContainer'
 import { HistoryItem } from '@/types'
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component'
@@ -5,7 +6,6 @@ import { Clock } from 'lucide-react'
 
 import 'react-vertical-timeline-component/style.min.css'
 import '../styles/timeline.css'
-import { FC } from 'react'
 
 interface HistoryGroupProps {
   histories: HistoryItem[]
