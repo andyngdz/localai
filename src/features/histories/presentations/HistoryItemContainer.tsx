@@ -1,24 +1,19 @@
 import Image from 'next/image'
-import { FC, useMemo } from 'react'
+import { FC } from 'react'
 import { HistoryItem } from '@/types'
+import { dateFormatter } from '@/services'
 
 interface HistoryItemProps {
   history: HistoryItem
 }
 
 export const HistoryItemContainer: FC<HistoryItemProps> = ({ history }) => {
-  const formattedTime = useMemo(() => {
-    const date = new Date(history.created_at)
-    return date.toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit'
-    })
-  }, [history.created_at])
-
   return (
     <div className="flex flex-col gap-2">
       <div className="flex flex-col gap-2 text-sm">
-        <span className="text-default-500 font-bold">{formattedTime}</span>
+        <span className="text-default-500 font-bold">
+          {dateFormatter.time(`${history.created_at}Z`)}
+        </span>
         <span className="text-default-500 font-semibold">{history.model}</span>
         <span className="truncate">{history.prompt}</span>
       </div>

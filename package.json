@@ -22,6 +22,7 @@
     "test:coverage": "vitest --coverage"
   },
   "dependencies": {
+    "dayjs": "^1.11.15",
     "electron-serve": "^2.1.1"
   },
   "devDependencies": {
