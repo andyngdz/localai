@@ -49,7 +49,7 @@ describe('useHistories', () => {
 
     const groups: HistoryGroup[] = [{ date: '2023-01-01', histories }]
 
-    vi.mocked(useHistoriesQuery).mockReturnValue(createMockQueryResult(histories))
+    vi.mocked(useHistoriesQuery).mockReturnValue(createMockQueryResult(histories, { isLoading: false, error: null }))
     vi.mocked(useHistoryGroups).mockReturnValue(groups)
 
     const { result } = renderHook(() => useHistories(), {
