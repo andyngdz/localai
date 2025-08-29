@@ -13,11 +13,6 @@ export default defineConfig({
     setupFiles: ['./vitest.setup.ts'],
     globals: true,
     css: false,
-    poolOptions: {
-      threads: {
-        singleThread: false
-      }
-    },
     include: ['src/**/*.test.{ts,tsx,js}', '**/__tests__/**/*.{test,spec}.{ts,tsx,js}'],
     exclude: [
       '**/node_modules/**',
