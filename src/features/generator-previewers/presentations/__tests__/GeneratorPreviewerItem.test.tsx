@@ -46,7 +46,6 @@ describe('GeneratorPreviewerItem', () => {
     mockUseGeneratorPreviewer.mockReturnValue({
       items: [{ path: '', file_name: '' }],
       imageStepEnds: [],
-      nsfw_content_detected: []
     })
 
     const { container } = render(<GeneratorPreviewerItem {...defaultProps} />)
@@ -57,7 +56,6 @@ describe('GeneratorPreviewerItem', () => {
     mockUseGeneratorPreviewer.mockReturnValue({
       items: [{ path: '', file_name: '' }],
       imageStepEnds: [],
-      nsfw_content_detected: []
     })
 
     const props: GeneratorPreviewerItemProps = {
@@ -77,7 +75,6 @@ describe('GeneratorPreviewerItem', () => {
     mockUseGeneratorPreviewer.mockReturnValue({
       items: [{ path: 'images/test.png', file_name: 'test.png' }],
       imageStepEnds: [],
-      nsfw_content_detected: []
     })
 
     const props: GeneratorPreviewerItemProps = {

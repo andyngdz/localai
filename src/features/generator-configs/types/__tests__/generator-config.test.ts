@@ -10,7 +10,10 @@ describe('GeneratorConfigFormValues', () => {
       number_of_images: 4,
       steps: 24,
       seed: -1,
-      cfg_scale: 7.5
+      cfg_scale: 7.5,
+      negative_prompt: '',
+      prompt: '',
+      styles: []
     }
 
     // TypeScript compilation validates the type

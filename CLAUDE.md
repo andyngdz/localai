@@ -79,6 +79,7 @@ Each feature typically contains:
 ## Development Patterns & Guidelines
 
 ### Coding Standards
+
 - **Feature-First**: New functionality should be encapsulated within a new or existing directory in `src/features/`
 - **Reusability**: If code is used in more than two places, extract it into a reusable utility/hook/component
 - **Component Design**: Keep components small, focused, and prefer composition. Avoid deep nesting
@@ -88,26 +89,30 @@ Each feature typically contains:
 - Use JSDoc to document public classes and methods
 
 ### State Management (Zustand)
+
 Follow the existing store creation pattern:
+
 ```typescript
 export const useMessageStore = create<MessageStoreProps>((set, _get, store) => ({
   message: '',
   setMessage: (message) => set({ message }),
-  reset: () => set(store.getInitialState()),
-}));
+  reset: () => set(store.getInitialState())
+}))
 ```
 
 ### Socket Integration
+
 Use the shared socket instance from `@/sockets` and event constants from `SocketEvents`:
+
 ```typescript
 useEffect(() => {
   socket.on(SocketEvents.DOWNLOAD_START, () => {
-    setMessage('Downloading model');
-  });
+    setMessage('Downloading model')
+  })
   return () => {
-    socket.off(SocketEvents.DOWNLOAD_START);
-  };
-}, []);
+    socket.off(SocketEvents.DOWNLOAD_START)
+  }
+}, [])
 ```
 
 ## Testing Guidelines
@@ -118,10 +123,13 @@ useEffect(() => {
 - **Naming**: Use descriptive test names (e.g., `"shows error message when API fails"`)
 - **Mocks**: Use `vi.mock` for modules and clean up with `afterEach`
 - **Coverage**: Target ≥ 80% coverage for functions, lines, and branches
+- **No Overtestig**: You must not over-testing, make sure reach best coverage but do not over-testing
+- **Type Safe**: You must fixed all the type errors, you can't use `any` at all. You can use `npm run type-check` and `npm run lint` to make sure all type-safe
 
 ### Running Tests
+
 - `npm run test` - Run all tests
-- `npm test -- <path/to/test.tsx>` - Run single test file  
+- `npm test -- <path/to/test.tsx>` - Run single test file
 - `npm run test:coverage` - Run tests with coverage reporting
 - Test files are located in `__tests__/` directories within each feature
 

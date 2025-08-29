@@ -14,12 +14,20 @@
     "dev:desktop": "bash ./scripts/run-desktop.sh",
     "build": "next build && electron-builder",
     "start": "next start",
+    "type-check": "tsc --noEmit",
     "lint": "next lint",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json}\"",
     "ci:lint": "eslint src --ext .ts,.tsx,.js,.jsx --max-warnings=0 -f json -o eslint-report.json",
     "ci:format": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json}\"",
     "test": "vitest --run",
-    "test:coverage": "vitest --coverage"
+    "test:coverage": "vitest --coverage",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "src/**/*.{ts,tsx,js,jsx,json}": [
+      "npm run format",
+      "npm run lint"
+    ]
   },
   "dependencies": {
     "dayjs": "^1.11.15",
@@ -58,8 +66,10 @@
     "eslint": "^9",
     "eslint-config-next": "15.4.6",
     "framer-motion": "^12.23.12",
+    "husky": "^9.1.7",
     "immer": "^10.1.1",
     "jsdom": "^26.1.0",
+    "lint-staged": "^16.1.5",
     "lucide-react": "^0.536.0",
     "next": "15.4.6",
     "prettier": "^3.6.2",
@@ -72,7 +82,7 @@
     "swiper": "^11.2.10",
     "tailwind-scrollbar": "^4.0.2",
     "tailwindcss": "^4",
-    "typescript": "^5",
+    "typescript": "^5.9.2",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.2.4",
     "vitest-sonar-reporter": "^2.0.4",
