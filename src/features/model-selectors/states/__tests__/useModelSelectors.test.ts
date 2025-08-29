@@ -98,9 +98,7 @@ describe('useModelSelectors', () => {
   })
 
   it('should not set id when data is empty', () => {
-    vi.mocked(useDownloadedModelsQuery).mockReturnValue(
-      createMockQueryResult([] as ModelDownloaded[])
-    )
+    vi.mocked(useDownloadedModelsQuery).mockReturnValue(createMockQueryResult([]))
 
     renderHook(() => useModelSelectors())
 

@@ -4,16 +4,17 @@ import { GeneratorAction } from '@/features/generator-actions'
 import { GeneratorConfig, GeneratorConfigFormValues } from '@/features/generator-configs'
 import { GeneratorPreviewer } from '@/features/generator-previewers'
 import { GeneratorPrompt } from '@/features/generator-prompts'
+import { Histories } from '@/features/histories'
 import { Allotment } from 'allotment'
-import clsx from 'clsx'
 import { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useFormValuesStore, useGenerator } from '../states'
+import clsx from 'clsx'
 
 import 'allotment/dist/style.css'
 
 export const Generator = () => {
-  const { values, setValues } = useFormValuesStore()
+  const { values, onSetValues } = useFormValuesStore()
   const methods = useForm<GeneratorConfigFormValues>({
     mode: 'all',
     reValidateMode: 'onChange',
@@ -26,11 +27,11 @@ export const Generator = () => {
   // Update Zustand store when form values change
   useEffect(() => {
     const subscription = methods.watch((formValues) => {
-      setValues(formValues as GeneratorConfigFormValues)
+      onSetValues(formValues as GeneratorConfigFormValues)
     })
 
     return () => subscription.unsubscribe()
-  }, [methods, setValues])
+  }, [methods, onSetValues])
 
   useEffect(() => {
     setMounted(true)
@@ -53,6 +54,9 @@ export const Generator = () => {
             <GeneratorPrompt />
             <GeneratorAction />
             <GeneratorPreviewer />
+          </Allotment.Pane>
+          <Allotment.Pane className="flex flex-col">
+            <Histories />
           </Allotment.Pane>
         </Allotment>
       </form>

@@ -9,11 +9,12 @@ import {
   StyleSection
 } from '../types/api'
 import { api } from './api'
+import { HistoryItem } from '@/types'
 
 const useHealthQuery = () => {
   return useQuery<HealthResponse, ApiError>({
     queryKey: ['health'],
-    queryFn: api.health,
+    queryFn: () => api.health(),
     refetchInterval: 3000
   })
 }
@@ -53,10 +54,18 @@ const useStyleSectionsQuery = () => {
   })
 }
 
+const useHistoriesQuery = () => {
+  return useQuery<HistoryItem[], ApiError>({
+    queryKey: ['histories'],
+    queryFn: () => api.getHistories()
+  })
+}
+
 export {
   useDownloadedModelsQuery,
   useHardwareQuery,
   useHealthQuery,
+  useHistoriesQuery,
   useMemoryQuery,
   useModelRecommendationsQuery,
   useStyleSectionsQuery

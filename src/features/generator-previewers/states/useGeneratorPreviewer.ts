@@ -1,14 +1,10 @@
-import {
-  useImageGenerationResponseStore,
-  useImageStepEndResponseStore
-} from '@/features/generators/states'
+import { useUseImageGenerationStore } from '@/features/generators'
 import { socket, SocketEvents } from '@/sockets'
 import { ImageGenerationStepEndResponse } from '@/types'
 import { useCallback, useEffect } from 'react'
 
 export const useGeneratorPreviewer = () => {
-  const { imageStepEnds, onUpdateImageStepEnd } = useImageStepEndResponseStore()
-  const { items, nsfw_content_detected } = useImageGenerationResponseStore()
+  const { imageStepEnds, onUpdateImageStepEnd, items } = useUseImageGenerationStore()
 
   const onImageGenerationStepEnd = useCallback(() => {
     socket.on(
@@ -23,5 +19,5 @@ export const useGeneratorPreviewer = () => {
     onImageGenerationStepEnd()
   }, [onImageGenerationStepEnd])
 
-  return { imageStepEnds, items, nsfw_content_detected }
+  return { imageStepEnds, items }
 }

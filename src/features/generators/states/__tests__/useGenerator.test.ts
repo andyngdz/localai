@@ -5,8 +5,7 @@ import { act, renderHook } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { useGenerator } from '../useGenerator'
 import { useGenerationStatusStore } from '../useGenerationStatusStore'
-import { useImageGenerationResponseStore } from '../useImageGenerationResponseStores'
-import { useImageStepEndResponseStore } from '../useImageStepEndResponseStores'
+import { useUseImageGenerationStore } from '../useImageGenerationResponseStores'
 
 // Mock the API module with a factory so addHistory is a mock function
 vi.mock('@/services/api', () => ({
@@ -32,15 +31,9 @@ vi.mock('../useGenerationStatusStore', () => ({
 }))
 
 vi.mock('../useImageGenerationResponseStores', () => ({
-  useImageGenerationResponseStore: vi.fn().mockReturnValue({
-    onUpdateResponse: vi.fn(),
-    onInitResponse: vi.fn()
-  })
-}))
-
-vi.mock('../useImageStepEndResponseStores', () => ({
-  useImageStepEndResponseStore: vi.fn().mockReturnValue({
-    onInitImageStepEnds: vi.fn()
+  useUseImageGenerationStore: vi.fn().mockReturnValue({
+    onCompleted: vi.fn(),
+    onInit: vi.fn()
   })
 }))
 
@@ -94,19 +87,15 @@ describe('useGenerator', () => {
 
     // Mock store functions
     const mockSetIsGenerating = vi.fn()
-    const mockInitImageStepEnds = vi.fn()
-    const mockInitResponse = vi.fn()
-    const mockUpdateResponse = vi.fn()
+    const mockInit = vi.fn()
+    const mockCompleted = vi.fn()
 
     vi.mocked(useGenerationStatusStore).mockReturnValue({
       onSetIsGenerating: mockSetIsGenerating
     })
-    vi.mocked(useImageStepEndResponseStore).mockReturnValue({
-      onInitImageStepEnds: mockInitImageStepEnds
-    })
-    vi.mocked(useImageGenerationResponseStore).mockReturnValue({
-      onInitResponse: mockInitResponse,
-      onUpdateResponse: mockUpdateResponse
+    vi.mocked(useUseImageGenerationStore).mockReturnValue({
+      onInit: mockInit,
+      onCompleted: mockCompleted
     })
 
     const wrapper = createQueryClientWrapper()
@@ -124,9 +113,12 @@ describe('useGenerator', () => {
 
     // Verify store interactions
     expect(mockSetIsGenerating).toHaveBeenCalledWith(true)
-    expect(mockInitImageStepEnds).toHaveBeenCalledWith(mockConfig.number_of_images)
-    expect(mockInitResponse).toHaveBeenCalledWith(mockConfig.number_of_images)
-    expect(mockUpdateResponse).toHaveBeenCalledWith(mockGeneratorResponse)
+    expect(mockInit).toHaveBeenCalledWith(mockConfig.number_of_images)
+    expect(mockCompleted).toHaveBeenCalledWith(
+      mockGeneratorResponse,
+      { history_id: 1, config: mockConfig },
+      undefined
+    )
     expect(mockSetIsGenerating).toHaveBeenCalledWith(false)
   })
 
@@ -136,19 +128,14 @@ describe('useGenerator', () => {
 
     // Mock store functions
     const mockSetIsGenerating = vi.fn()
-    const mockInitImageStepEnds = vi.fn()
 
     vi.mocked(useGenerationStatusStore).mockReturnValue({
       onSetIsGenerating: mockSetIsGenerating
     })
 
-    vi.mocked(useImageStepEndResponseStore).mockReturnValue({
-      onInitImageStepEnds: mockInitImageStepEnds
-    })
-
-    vi.mocked(useImageGenerationResponseStore).mockReturnValue({
-      onInitResponse: vi.fn(),
-      onUpdateResponse: vi.fn()
+    vi.mocked(useUseImageGenerationStore).mockReturnValue({
+      onInit: vi.fn(),
+      onCompleted: vi.fn()
     })
 
     const wrapper = createQueryClientWrapper()
@@ -185,18 +172,14 @@ describe('useGenerator', () => {
 
     // Mock store functions
     const mockSetIsGenerating = vi.fn()
-    const mockInitImageStepEnds = vi.fn()
-    const mockInitResponse = vi.fn()
+    const mockInit = vi.fn()
 
     vi.mocked(useGenerationStatusStore).mockReturnValue({
       onSetIsGenerating: mockSetIsGenerating
     })
-    vi.mocked(useImageStepEndResponseStore).mockReturnValue({
-      onInitImageStepEnds: mockInitImageStepEnds
-    })
-    vi.mocked(useImageGenerationResponseStore).mockReturnValue({
-      onInitResponse: mockInitResponse,
-      onUpdateResponse: vi.fn()
+    vi.mocked(useUseImageGenerationStore).mockReturnValue({
+      onInit: mockInit,
+      onCompleted: vi.fn()
     })
 
     const wrapper = createQueryClientWrapper()
@@ -225,8 +208,7 @@ describe('useGenerator', () => {
 
     // Verify store interactions
     expect(mockSetIsGenerating).toHaveBeenCalledWith(true)
-    expect(mockInitImageStepEnds).toHaveBeenCalledWith(mockConfig.number_of_images)
-    expect(mockInitResponse).toHaveBeenCalledWith(mockConfig.number_of_images)
+    expect(mockInit).toHaveBeenCalledWith(mockConfig.number_of_images)
     expect(mockSetIsGenerating).toHaveBeenCalledWith(false)
   })
 
@@ -235,19 +217,14 @@ describe('useGenerator', () => {
 
     // Mock store functions
     const mockSetIsGenerating = vi.fn()
-    const mockInitImageStepEnds = vi.fn()
 
     vi.mocked(useGenerationStatusStore).mockReturnValue({
       onSetIsGenerating: mockSetIsGenerating
     })
 
-    vi.mocked(useImageStepEndResponseStore).mockReturnValue({
-      onInitImageStepEnds: mockInitImageStepEnds
-    })
-
-    vi.mocked(useImageGenerationResponseStore).mockReturnValue({
-      onInitResponse: vi.fn(),
-      onUpdateResponse: vi.fn()
+    vi.mocked(useUseImageGenerationStore).mockReturnValue({
+      onInit: vi.fn(),
+      onCompleted: vi.fn()
     })
 
     const wrapper = createQueryClientWrapper()

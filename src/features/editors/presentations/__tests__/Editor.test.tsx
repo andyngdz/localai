@@ -11,19 +11,31 @@ vi.mock('../EditorNavbar', () => ({
   EditorNavbar: () => <div data-testid="mock-editor-navbar">Editor Navbar</div>
 }))
 
+// Mock the Generator component to avoid network requests and resizable panel issues
+vi.mock('@/features/generators/presentations/Generator', () => ({
+  Generator: () => <div data-testid="mock-generator">Generator</div>
+}))
+
+// Mock HeroUI Divider component
+vi.mock('@heroui/react', () => ({
+  Divider: () => <div data-testid="mock-divider" />
+}))
+
 describe('Editor', () => {
-  it('renders the EditorNavbar component', () => {
+  it('renders all components', () => {
     render(<Editor />, { wrapper: createQueryClientWrapper() })
 
     expect(screen.getByTestId('mock-editor-navbar')).toBeInTheDocument()
+    expect(screen.getByTestId('mock-divider')).toBeInTheDocument()
+    expect(screen.getByTestId('mock-generator')).toBeInTheDocument()
   })
 
-  it('renders with proper structure', () => {
+  it('renders with proper structure and CSS classes', () => {
     const { container } = render(<Editor />, { wrapper: createQueryClientWrapper() })
 
-    // Check that there's a wrapping div
+    // Check that there's a wrapping div with correct classes
     const wrapperDiv = container.firstChild
     expect(wrapperDiv).toBeInTheDocument()
-    expect(wrapperDiv).toHaveTextContent('Editor Navbar')
+    expect(wrapperDiv).toHaveClass('flex', 'flex-col', 'h-screen')
   })
 })

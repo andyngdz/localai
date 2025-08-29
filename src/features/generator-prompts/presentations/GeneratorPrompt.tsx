@@ -3,7 +3,7 @@ import { Textarea } from '@heroui/input'
 import { useFormContext } from 'react-hook-form'
 
 export const GeneratorPrompt = () => {
-  const { register, formState } = useFormContext<GeneratorConfigFormValues>()
+  const { register, watch, formState } = useFormContext<GeneratorConfigFormValues>()
 
   return (
     <div className="p-4">
@@ -12,6 +12,7 @@ export const GeneratorPrompt = () => {
           className="font-mono"
           label="Prompt"
           maxLength={1000}
+          value={watch('prompt')}
           isInvalid={!!formState.errors.prompt}
           {...register('prompt', { required: true })}
         />
@@ -19,6 +20,7 @@ export const GeneratorPrompt = () => {
           className="font-mono"
           label="Negative prompt"
           maxLength={1000}
+          value={watch('negative_prompt')}
           {...register('negative_prompt')}
         />
       </div>

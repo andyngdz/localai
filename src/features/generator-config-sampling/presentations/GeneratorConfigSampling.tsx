@@ -15,7 +15,7 @@ export const GeneratorConfigSampling = () => {
           control={control}
           controlName="steps"
           minValue={1}
-          startContent={<span className="text-sm text-foreground-500">Steps</span>}
+          startContent={<span className="text-sm text-default-500">Steps</span>}
         />
         <GeneratorConfigCommonSteps />
       </div>
@@ -25,7 +25,7 @@ export const GeneratorConfigSampling = () => {
         controlName="cfg_scale"
         maximumFractionDigits={2}
         minValue={1}
-        startContent={<span className="text-sm text-foreground-500 min-w-fit">CFG Scale</span>}
+        startContent={<span className="text-sm text-default-500 min-w-fit">CFG Scale</span>}
       />
     </div>
   )
