@@ -45,7 +45,7 @@ describe('GeneratorPreviewerItem', () => {
   it('should render a skeleton when image is empty', () => {
     mockUseGeneratorPreviewer.mockReturnValue({
       items: [{ path: '', file_name: '' }],
-      imageStepEnds: [],
+      imageStepEnds: []
     })
 
     const { container } = render(<GeneratorPreviewerItem {...defaultProps} />)
@@ -55,7 +55,7 @@ describe('GeneratorPreviewerItem', () => {
   it('should render NextImage with base64 when image is generated and path is not available', () => {
     mockUseGeneratorPreviewer.mockReturnValue({
       items: [{ path: '', file_name: '' }],
-      imageStepEnds: [],
+      imageStepEnds: []
     })
 
     const props: GeneratorPreviewerItemProps = {
@@ -74,7 +74,7 @@ describe('GeneratorPreviewerItem', () => {
   it('should render NextImage with http URL when image path is available', () => {
     mockUseGeneratorPreviewer.mockReturnValue({
       items: [{ path: 'images/test.png', file_name: 'test.png' }],
-      imageStepEnds: [],
+      imageStepEnds: []
     })
 
     const props: GeneratorPreviewerItemProps = {

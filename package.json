@@ -15,7 +15,7 @@
     "build": "next build && electron-builder",
     "start": "next start",
     "type-check": "tsc --noEmit",
-    "lint": "next lint",
+    "lint": "eslint --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json}\"",
     "ci:lint": "eslint src --ext .ts,.tsx,.js,.jsx --max-warnings=0 -f json -o eslint-report.json",
     "ci:format": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json}\"",
@@ -24,10 +24,8 @@
     "prepare": "husky"
   },
   "lint-staged": {
-    "src/**/*.{ts,tsx,js,jsx,json}": [
-      "npm run format",
-      "npm run lint"
-    ]
+    "*.{js,jsx,ts,tsx}": "eslint --fix",
+    "*.{js,jsx,ts,tsx,json,md}": "prettier --write"
   },
   "dependencies": {
     "dayjs": "^1.11.15",
