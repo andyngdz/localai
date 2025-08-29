@@ -8,6 +8,7 @@ import {
   useDownloadedModelsQuery,
   useHardwareQuery,
   useHealthQuery,
+  useHistoriesQuery,
   useMemoryQuery,
   useModelRecommendationsQuery,
   useStyleSectionsQuery
@@ -21,7 +22,8 @@ vi.mock('../api', () => ({
     getMemory: vi.fn(),
     getModelRecommendations: vi.fn(),
     getDownloadedModels: vi.fn(),
-    styles: vi.fn()
+    styles: vi.fn(),
+    getHistories: vi.fn()
   }
 }))
 
@@ -232,6 +234,91 @@ describe('React Query Hooks', () => {
 
       expect(api.styles).toHaveBeenCalled()
       expect(result.current.data).toEqual(mockResponse)
+    })
+  })
+
+  describe('useHistoriesQuery', () => {
+    it('calls api.getHistories and returns data', async () => {
+      const mockResponse = [
+        {
+          id: 1,
+          model: 'stable-diffusion-xl',
+          created_at: '2024-01-01T00:00:00Z',
+          updated_at: '2024-01-01T00:30:00Z',
+          prompt: 'a beautiful landscape',
+          config: {
+            width: 1024,
+            height: 1024,
+            hires_fix: false,
+            number_of_images: 4,
+            prompt: 'a beautiful landscape',
+            negative_prompt: 'blurry, low quality',
+            cfg_scale: 7.5,
+            steps: 30,
+            seed: 12345,
+            sampler: 'DPM++ 2M Karras',
+            styles: ['photorealistic']
+          },
+          generated_images: [
+            {
+              id: 101,
+              path: '/images/landscape1.png',
+              file_name: 'landscape1.png',
+              is_nsfw: false,
+              history_id: 1,
+              created_at: '2024-01-01T00:25:00Z',
+              updated_at: '2024-01-01T00:25:00Z'
+            },
+            {
+              id: 102,
+              path: '/images/landscape2.png',
+              file_name: 'landscape2.png',
+              is_nsfw: false,
+              history_id: 1,
+              created_at: '2024-01-01T00:26:00Z',
+              updated_at: '2024-01-01T00:26:00Z'
+            }
+          ]
+        }
+      ]
+      vi.mocked(api.getHistories).mockResolvedValue(mockResponse)
+
+      const { result } = renderHook(() => useHistoriesQuery(), { wrapper: testEnv.wrapper })
+
+      await waitFor(() => {
+        expect(result.current.isSuccess).toBe(true)
+      })
+
+      expect(api.getHistories).toHaveBeenCalled()
+      expect(result.current.data).toEqual(mockResponse)
+    })
+
+    it('handles empty history list', async () => {
+      const mockResponse: never[] = []
+      vi.mocked(api.getHistories).mockResolvedValue(mockResponse)
+
+      const { result } = renderHook(() => useHistoriesQuery(), { wrapper: testEnv.wrapper })
+
+      await waitFor(() => {
+        expect(result.current.isSuccess).toBe(true)
+      })
+
+      expect(api.getHistories).toHaveBeenCalled()
+      expect(result.current.data).toEqual([])
+    })
+
+    it('handles error state', async () => {
+      const mockError = new Error('Failed to fetch histories')
+      vi.mocked(api.getHistories).mockRejectedValue(mockError)
+
+      const { result } = renderHook(() => useHistoriesQuery(), { wrapper: testEnv.wrapper })
+
+      await waitFor(() => {
+        expect(result.current.isError).toBe(true)
+      })
+
+      expect(api.getHistories).toHaveBeenCalled()
+      expect(result.current.error).toBeDefined()
     })
   })
 })

@@ -320,4 +320,115 @@ describe('API Service', () => {
       expect(result).toEqual(mockResponse)
     })
   })
+
+  describe('getHistories', () => {
+    it('fetches all history items', async () => {
+      const mockResponse = [
+        {
+          id: 1,
+          model: 'stable-diffusion-xl',
+          created_at: '2024-01-01T00:00:00Z',
+          updated_at: '2024-01-01T00:30:00Z',
+          prompt: 'a beautiful landscape',
+          config: {
+            width: 1024,
+            height: 1024,
+            hires_fix: false,
+            number_of_images: 4,
+            prompt: 'a beautiful landscape',
+            negative_prompt: 'blurry, low quality',
+            cfg_scale: 7.5,
+            steps: 30,
+            seed: 12345,
+            sampler: 'DPM++ 2M Karras',
+            styles: ['photorealistic']
+          },
+          generated_images: [
+            {
+              id: 101,
+              path: '/images/landscape1.png',
+              file_name: 'landscape1.png',
+              is_nsfw: false,
+              history_id: 1,
+              created_at: '2024-01-01T00:25:00Z',
+              updated_at: '2024-01-01T00:25:00Z'
+            },
+            {
+              id: 102,
+              path: '/images/landscape2.png',
+              file_name: 'landscape2.png',
+              is_nsfw: false,
+              history_id: 1,
+              created_at: '2024-01-01T00:26:00Z',
+              updated_at: '2024-01-01T00:26:00Z'
+            }
+          ]
+        },
+        {
+          id: 2,
+          model: 'stable-diffusion-xl',
+          created_at: '2024-01-02T10:00:00Z',
+          updated_at: '2024-01-02T10:15:00Z',
+          prompt: 'a futuristic cityscape',
+          config: {
+            width: 768,
+            height: 768,
+            hires_fix: true,
+            number_of_images: 2,
+            prompt: 'a futuristic cityscape',
+            negative_prompt: 'vintage, old',
+            cfg_scale: 8.0,
+            steps: 25,
+            seed: 67890,
+            sampler: 'Euler a',
+            styles: ['cyberpunk', 'neon']
+          },
+          generated_images: [
+            {
+              id: 103,
+              path: '/images/cityscape1.png',
+              file_name: 'cityscape1.png',
+              is_nsfw: false,
+              history_id: 2,
+              created_at: '2024-01-02T10:12:00Z',
+              updated_at: '2024-01-02T10:12:00Z'
+            }
+          ]
+        }
+      ]
+      vi.spyOn(client, 'get').mockResolvedValueOnce({ data: mockResponse })
+
+      const result = await api.getHistories()
+
+      expect(client.get).toHaveBeenCalledWith('/histories')
+      expect(result).toEqual(mockResponse)
+      expect(result).toHaveLength(2)
+      expect(result[0]).toHaveProperty('id', 1)
+      expect(result[0]).toHaveProperty('model', 'stable-diffusion-xl')
+      expect(result[0]).toHaveProperty('prompt', 'a beautiful landscape')
+      expect(result[0].config).toHaveProperty('width', 1024)
+      expect(result[0].generated_images).toHaveLength(2)
+      expect(result[1]).toHaveProperty('id', 2)
+      expect(result[1].generated_images).toHaveLength(1)
+    })
+
+    it('handles empty history list', async () => {
+      const mockResponse: never[] = []
+      vi.spyOn(client, 'get').mockResolvedValueOnce({ data: mockResponse })
+
+      const result = await api.getHistories()
+
+      expect(client.get).toHaveBeenCalledWith('/histories')
+      expect(result).toEqual([])
+      expect(result).toHaveLength(0)
+    })
+
+    it('handles API error gracefully', async () => {
+      const errorMessage = 'Failed to fetch histories'
+      vi.spyOn(client, 'get').mockRejectedValueOnce(new Error(errorMessage))
+
+      await expect(api.getHistories()).rejects.toThrow(errorMessage)
+      expect(client.get).toHaveBeenCalledWith('/histories')
+    })
+  })
 })
