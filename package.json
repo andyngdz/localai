@@ -29,7 +29,8 @@
   },
   "dependencies": {
     "dayjs": "^1.11.15",
-    "electron-serve": "^2.1.1"
+    "electron-serve": "^2.1.1",
+    "react-use": "^17.6.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

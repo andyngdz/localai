@@ -1,11 +1,10 @@
 import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
+import { SettingFormValues } from '../types'
 
 interface UseSettingsStore {
-  apiBaseUrl: string
-  isSafetyCheckEnabled: boolean
-  setApiBaseUrl: (url: string) => void
-  toggleSafetyCheck: () => void
+  values: SettingFormValues
+  setValues: (values: SettingFormValues) => void
   reset: () => void
 }
 
@@ -13,13 +12,11 @@ const useSettingsStore = create<UseSettingsStore>()(
   devtools(
     persist(
       (set, get, state) => ({
-        apiBaseUrl: 'http://localhost:8000',
-        isSafetyCheckEnabled: true,
-        setApiBaseUrl: (url) => set({ apiBaseUrl: url }),
-        toggleSafetyCheck: () =>
-          set((state) => ({
-            isSafetyCheckEnabled: !state.isSafetyCheckEnabled
-          })),
+        values: {
+          baseUrl: 'http://localhost:8000',
+          safetyCheck: true
+        },
+        setValues: (values) => set({ values }),
         reset: () => set(state.getInitialState())
       }),
       {
