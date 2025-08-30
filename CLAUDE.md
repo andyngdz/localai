@@ -125,8 +125,9 @@ useEffect(() => {
 - **Naming**: Use descriptive test names (e.g., `"shows error message when API fails"`)
 - **Mocks**: Use `vi.mock` for modules and clean up with `afterEach`
 - **Coverage**: Target ≥ 80% coverage for functions, lines, and branches
-- **No Overtestig**: You must not over-testing, make sure reach best coverage but do not over-testing
-- **Type Safe**: You must fixed all the type errors, you can't use `any` at all. You can use `npm run type-check` and `npm run lint` to make sure all type-safe
+- **No Over-testing**: You must not over-testing, make sure to reach best coverage but do not over-testing
+- **Type Safe**: You must fixed all the type errors, you can't use `any` at all. You can use `npx lint-staged` to make sure all type-safe
+- **Mocks**: Check the `@cores/test-utils` to see all the predefined mock functions, mock tests, if not then create, or reusable
 
 ### Running Tests
 

@@ -31,7 +31,7 @@ vi.mock('../ModelRecommendationsList', () => ({
 }))
 
 // Mock the SetupLayout component
-vi.mock('@/features/layout/presentations/SetupLayout', () => ({
+vi.mock('@/features/setup-layout/presentations/SetupLayout', () => ({
   SetupLayout: ({
     title,
     description,

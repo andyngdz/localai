@@ -5,7 +5,7 @@ import { api, useHealthQuery } from '@/services'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect } from 'react'
 import { HealthCheckContent } from './HealthCheckContent'
-import { SetupLayout } from '@/features/layout/presentations'
+import { SetupLayout } from '@/features/setup-layout/presentations'
 
 export const HealthCheck = () => {
   const router = useRouter()
