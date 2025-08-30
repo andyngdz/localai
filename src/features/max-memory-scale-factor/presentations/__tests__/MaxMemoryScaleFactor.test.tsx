@@ -18,7 +18,7 @@ vi.mock('@/services/api', () => ({
   }
 }))
 
-vi.mock('@/features/layout/presentations/SetupLayout', () => ({
+vi.mock('@/features/setup-layout/presentations/SetupLayout', () => ({
   SetupLayout: ({
     children,
     onNext,

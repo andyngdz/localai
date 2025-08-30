@@ -11,7 +11,7 @@ vi.mock('next/navigation', () => ({
   useRouter: vi.fn()
 }))
 
-vi.mock('@/features/layout/presentations/SetupLayout', () => ({
+vi.mock('@/features/setup-layout/presentations/SetupLayout', () => ({
   SetupLayout: ({
     children,
     title,
