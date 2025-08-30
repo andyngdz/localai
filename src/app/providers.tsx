@@ -21,7 +21,7 @@ export const Providers: FC<PropsWithChildren> = ({ children }) => {
       <ToastProvider />
       <QueryClientProvider client={queryClient}>
         <DownloadWatcher>{children}</DownloadWatcher>
-        <ReactQueryDevtools initialIsOpen={false} />
+        <ReactQueryDevtools initialIsOpen={false} buttonPosition="top-left" />
       </QueryClientProvider>
     </HeroUIProvider>
   )

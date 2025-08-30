@@ -1,6 +1,6 @@
 'use client'
 
-import { SetupLayout } from '@/features/layout/presentations/SetupLayout'
+import { SetupLayout } from '@/features/setup-layout/presentations/SetupLayout'
 import { api } from '@/services'
 import { Divider } from '@heroui/react'
 import { useRouter } from 'next/navigation'

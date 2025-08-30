@@ -1,6 +1,6 @@
 'use client'
 
-import { SetupLayout } from '@/features/layout/presentations/SetupLayout'
+import { SetupLayout } from '@/features/setup-layout/presentations/SetupLayout'
 import { api, useHardwareQuery } from '@/services'
 import { useRouter } from 'next/navigation'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'

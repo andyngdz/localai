@@ -6,6 +6,7 @@ import type { Metadata } from 'next'
 import { Inter, JetBrains_Mono } from 'next/font/google'
 import { unstable_ViewTransition as ViewTransition } from 'react'
 import { Providers } from './providers'
+import { AppLayout } from './app-layout'
 
 const font = Inter({
   variable: '--font-inter',
@@ -31,8 +32,10 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body className={clsx(font.className, monoFont.variable, 'antialiased')}>
         <Providers>
-          <ViewTransition>{children}</ViewTransition>
-          <StreamingMessage />
+          <AppLayout>
+            <ViewTransition>{children}</ViewTransition>
+            <StreamingMessage />
+          </AppLayout>
         </Providers>
       </body>
     </html>

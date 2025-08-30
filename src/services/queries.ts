@@ -21,42 +21,42 @@ const useHealthQuery = () => {
 
 const useHardwareQuery = () => {
   return useQuery<HardwareResponse, ApiError>({
-    queryKey: ['hardware'],
+    queryKey: ['getHardwareStatus'],
     queryFn: () => api.getHardwareStatus()
   })
 }
 
 const useMemoryQuery = () => {
   return useQuery<MemoryResponse, ApiError>({
-    queryKey: ['memory'],
+    queryKey: ['getMemory'],
     queryFn: () => api.getMemory()
   })
 }
 
 const useModelRecommendationsQuery = () => {
   return useQuery<ModelRecommendationResponse, ApiError>({
-    queryKey: ['model-recommendations'],
+    queryKey: ['getModelRecommendations'],
     queryFn: () => api.getModelRecommendations()
   })
 }
 
 const useDownloadedModelsQuery = () => {
   return useQuery<ModelDownloaded[], ApiError>({
-    queryKey: ['downloaded-models'],
+    queryKey: ['getDownloadedModels'],
     queryFn: () => api.getDownloadedModels()
   })
 }
 
 const useStyleSectionsQuery = () => {
   return useQuery<StyleSection[], ApiError>({
-    queryKey: ['style-section'],
+    queryKey: ['styles'],
     queryFn: () => api.styles()
   })
 }
 
 const useHistoriesQuery = () => {
   return useQuery<HistoryItem[], ApiError>({
-    queryKey: ['histories'],
+    queryKey: ['getHistories'],
     queryFn: () => api.getHistories()
   })
 }
