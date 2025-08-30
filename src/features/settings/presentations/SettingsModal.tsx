@@ -20,7 +20,7 @@ export const SettingsModal: FC<SettingsModalProps> = ({ isOpen, onClose }) => {
             className="min-h-[80vh]"
             classNames={{
               base: 'border-r border-default p-4',
-              tab: 'justify-left',
+              tab: 'justify-start',
               panel: 'w-full p-4'
             }}
             isVertical
