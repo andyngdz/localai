@@ -4,20 +4,20 @@ import { useModelSelectorStore } from '../useModelSelectorStores'
 describe('useModelSelectorStore', () => {
   // Clear the store after each test
   afterEach(() => {
-    useModelSelectorStore.setState({ id: '' })
+    useModelSelectorStore.setState({ selected_model_id: '' })
   })
 
-  it('should initialize with empty id', () => {
+  it('should initialize with empty selected_model_id', () => {
     const state = useModelSelectorStore.getState()
-    expect(state.id).toBe('')
+    expect(state.selected_model_id).toBe('')
   })
 
-  it('should update id when setId is called', () => {
+  it('should update selected_model_id when setSelectedModelId is called', () => {
     const state = useModelSelectorStore.getState()
-    state.setId('test-model-id')
+    state.setSelectedModelId('test-model-id')
 
     const updatedState = useModelSelectorStore.getState()
-    expect(updatedState.id).toBe('test-model-id')
+    expect(updatedState.selected_model_id).toBe('test-model-id')
   })
 
   it('should persist the state with proper name', () => {

@@ -52,8 +52,8 @@ describe('useModelSelectors', () => {
 
     // Default mock implementations
     vi.mocked(useModelSelectorStore).mockReturnValue({
-      id: '',
-      setId: mockSetId
+      selected_model_id: '',
+      setSelectedModelId: mockSetId
     })
 
     // Mock the query result with test utility
@@ -75,8 +75,8 @@ describe('useModelSelectors', () => {
 
   it('should set id to first model when id is empty and data exists', async () => {
     vi.mocked(useModelSelectorStore).mockReturnValue({
-      id: '',
-      setId: mockSetId
+      selected_model_id: '',
+      setSelectedModelId: mockSetId
     })
 
     renderHook(() => useModelSelectors())
@@ -88,8 +88,8 @@ describe('useModelSelectors', () => {
 
   it('should not set id when id already exists', () => {
     vi.mocked(useModelSelectorStore).mockReturnValue({
-      id: 'existing-id',
-      setId: mockSetId
+      selected_model_id: 'existing-id',
+      setSelectedModelId: mockSetId
     })
 
     renderHook(() => useModelSelectors())
@@ -120,8 +120,8 @@ describe('useModelSelectors', () => {
     const mockedApi = vi.mocked(await import('@/services/api')).api
 
     vi.mocked(useModelSelectorStore).mockReturnValue({
-      id: 'existing-id',
-      setId: mockSetId
+      selected_model_id: 'existing-id',
+      setSelectedModelId: mockSetId
     })
 
     renderHook(() => useModelSelectors())

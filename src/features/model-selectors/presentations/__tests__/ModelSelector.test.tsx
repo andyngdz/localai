@@ -42,8 +42,8 @@ describe('ModelSelector', () => {
     })
 
     vi.mocked(useModelSelectorStore).mockReturnValue({
-      id: 'model-1',
-      setId: mockSetId
+      selected_model_id: 'model-1',
+      setSelectedModelId: mockSetId
     })
   })
 
