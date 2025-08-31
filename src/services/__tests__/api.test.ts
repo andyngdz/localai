@@ -7,7 +7,8 @@ vi.mock('axios', () => {
     default: {
       create: () => ({
         get: vi.fn(),
-        post: vi.fn()
+        post: vi.fn(),
+        delete: vi.fn()
       })
     }
   }
@@ -429,6 +430,47 @@ describe('API Service', () => {
 
       await expect(api.getHistories()).rejects.toThrow(errorMessage)
       expect(client.get).toHaveBeenCalledWith('/histories')
+    })
+  })
+
+  describe('deleteModel', () => {
+    it('successfully deletes a model', async () => {
+      const modelId = 'test-model-123'
+      const mockResponse = { success: true, message: 'Model deleted successfully' }
+      vi.spyOn(client, 'delete').mockResolvedValueOnce({ data: mockResponse })
+
+      const result = await api.deleteModel(modelId)
+
+      expect(client.delete).toHaveBeenCalledWith(`/models?model_id=${modelId}`)
+      expect(result).toEqual(mockResponse)
+    })
+
+    it('handles API error when deleting model', async () => {
+      const modelId = 'test-model-123'
+      const errorMessage = 'Model not found'
+      vi.spyOn(client, 'delete').mockRejectedValueOnce(new Error(errorMessage))
+
+      await expect(api.deleteModel(modelId)).rejects.toThrow(errorMessage)
+      expect(client.delete).toHaveBeenCalledWith(`/models?model_id=${modelId}`)
+    })
+
+    it('calls the correct endpoint with URL encoded model ID', async () => {
+      const modelId = 'org/model-name'
+      const mockResponse = { success: true }
+      vi.spyOn(client, 'delete').mockResolvedValueOnce({ data: mockResponse })
+
+      await api.deleteModel(modelId)
+
+      expect(client.delete).toHaveBeenCalledWith(`/models?model_id=${modelId}`)
+    })
+
+    it('handles server error response', async () => {
+      const modelId = 'test-model'
+      const serverError = { message: 'Internal server error', status: 500 }
+      vi.spyOn(client, 'delete').mockRejectedValueOnce(serverError)
+
+      await expect(api.deleteModel(modelId)).rejects.toEqual(serverError)
+      expect(client.delete).toHaveBeenCalledWith(`/models?model_id=${modelId}`)
     })
   })
 })
