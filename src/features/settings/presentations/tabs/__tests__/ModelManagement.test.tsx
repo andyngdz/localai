@@ -1,9 +1,9 @@
-import { render, screen } from '@testing-library/react'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { createQueryClientWrapper } from '@/cores/test-utils'
 import { api } from '@/services/api'
 import { ModelDownloaded } from '@/types/api'
+import { render, screen } from '@testing-library/react'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ModelManagement } from '../ModelManagement'
-import { createQueryClientWrapper } from '@/cores/test-utils'
 
 // Mock the API
 vi.mock('@/services/api', () => ({
@@ -67,15 +67,8 @@ vi.mock('@heroui/react', () => ({
       Loading...
     </div>
   ),
-  Modal: ({
-    children,
-    isOpen,
-    onClose
-  }: {
-    children: React.ReactNode
-    isOpen: boolean
-    onClose?: () => void
-  }) => (isOpen ? <div data-testid="modal">{children}</div> : null),
+  Modal: ({ children, isOpen }: { children: React.ReactNode; isOpen: boolean }) =>
+    isOpen ? <div data-testid="modal">{children}</div> : null,
   ModalContent: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="modal-content">{children}</div>
   ),
