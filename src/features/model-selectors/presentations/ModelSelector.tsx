@@ -9,7 +9,7 @@ import { useModelSelectorStore } from '../states/useModelSelectorStores'
 
 export const ModelSelector = () => {
   const { data } = useModelSelectors()
-  const { id, setId } = useModelSelectorStore((state) => state)
+  const { selected_model_id, setSelectedModelId } = useModelSelectorStore()
 
   const items = useMemo(() => {
     return map(data, (d) => {
@@ -22,16 +22,16 @@ export const ModelSelector = () => {
       <Dropdown>
         <DropdownTrigger>
           <Button variant="light" color="primary" endContent={<ChevronDown size={16} />}>
-            {id}
+            {selected_model_id}
           </Button>
         </DropdownTrigger>
         <DropdownMenu
           aria-label="Model selector"
-          selectedKeys={[id]}
+          selectedKeys={[selected_model_id]}
           selectionMode="single"
           onSelectionChange={(id) => {
             if (id.currentKey) {
-              setId(id.currentKey)
+              setSelectedModelId(id.currentKey)
             }
           }}
         >

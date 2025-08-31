@@ -1,18 +1,22 @@
 import { act } from '@testing-library/react'
 import { beforeEach, describe, expect, it } from 'vitest'
-import { onResetModelId, onUpdateModelId, useModelSelectorStore } from '../useModelSelectorStores'
+import {
+  onResetModelId,
+  onUpdateModelId,
+  useModelSearchSelectorStore
+} from '../useModelSearchSelectorStores'
 
 // Mock the store for testing
-const originalState = useModelSelectorStore.getState()
+const originalState = useModelSearchSelectorStore.getState()
 
-describe('useModelSelectorStore', () => {
+describe('useModelSearchSelectorStore', () => {
   beforeEach(() => {
     // Reset the store to initial state before each test
-    useModelSelectorStore.setState(originalState)
+    useModelSearchSelectorStore.setState(originalState)
   })
 
   it('should have initial state', () => {
-    const state = useModelSelectorStore.getState()
+    const state = useModelSearchSelectorStore.getState()
     expect(state).toEqual({ model_id: '' })
   })
 
@@ -23,7 +27,7 @@ describe('useModelSelectorStore', () => {
       onUpdateModelId(testModelId)
     })
 
-    const state = useModelSelectorStore.getState()
+    const state = useModelSearchSelectorStore.getState()
     expect(state.model_id).toBe(testModelId)
   })
 
@@ -38,7 +42,7 @@ describe('useModelSelectorStore', () => {
       onResetModelId()
     })
 
-    const state = useModelSelectorStore.getState()
+    const state = useModelSearchSelectorStore.getState()
     expect(state.model_id).toBe('')
   })
 
@@ -49,16 +53,16 @@ describe('useModelSelectorStore', () => {
     act(() => {
       onUpdateModelId(testModel1)
     })
-    expect(useModelSelectorStore.getState().model_id).toBe(testModel1)
+    expect(useModelSearchSelectorStore.getState().model_id).toBe(testModel1)
 
     act(() => {
       onUpdateModelId(testModel2)
     })
-    expect(useModelSelectorStore.getState().model_id).toBe(testModel2)
+    expect(useModelSearchSelectorStore.getState().model_id).toBe(testModel2)
 
     act(() => {
       onResetModelId()
     })
-    expect(useModelSelectorStore.getState().model_id).toBe('')
+    expect(useModelSearchSelectorStore.getState().model_id).toBe('')
   })
 })

@@ -1,15 +1,15 @@
-import { useModelSelectorStore } from '../states'
 import { useModelSearchView } from '../states/useModelSearchView'
 
+import { ModelDownloadStatusLine } from '@/features/model-download-status-line'
 import { ScrollShadow } from '@heroui/react'
+import { useModelSearchSelectorStore } from '../states'
 import { ModelSearchViewCard } from './ModelSearchViewCard'
 import { ModelSearchViewFiles } from './ModelSearchViewFiles'
 import { ModelSearchViewFooter } from './ModelSearchViewFooter'
 import { ModelSearchViewSpaces } from './ModelSearchViewSpaces'
-import { ModelDownloadStatusLine } from '@/features/model-download-status-line'
 
 export const ModelSearchView = () => {
-  const { model_id } = useModelSelectorStore()
+  const { model_id } = useModelSearchSelectorStore()
   const { modelDetails } = useModelSearchView(model_id)
 
   if (modelDetails) {

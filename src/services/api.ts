@@ -117,6 +117,12 @@ class API {
 
     return data
   }
+
+  async deleteModel(model_id: string) {
+    const { data } = await client.delete(`/models?model_id=${model_id}`)
+
+    return data
+  }
 }
 
 export const api = new API()

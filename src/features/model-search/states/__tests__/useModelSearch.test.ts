@@ -4,7 +4,7 @@ import { ModelSearchResponse } from '@/types/models'
 import { renderHook, waitFor } from '@testing-library/react'
 import { beforeEach, describe, expect, it, MockedFunction, vi } from 'vitest'
 import { useModelSearch } from '../useModelSearch'
-import * as selectorStores from '../useModelSelectorStores'
+import * as selectorStores from '../useModelSearchSelectorStores'
 
 // Create a mock watch function that we can control directly
 const mockWatch = vi.fn()
@@ -17,7 +17,7 @@ vi.mock('@/services/api', () => ({
 }))
 
 // Mock selector handlers
-vi.mock('../useModelSelectorStores', () => ({
+vi.mock('../useModelSearchSelectorStores', () => ({
   onResetModelId: vi.fn(),
   onUpdateModelId: vi.fn()
 }))
@@ -31,7 +31,8 @@ vi.mock('react-hook-form', () => ({
 
 // Import after mocks
 const mockSearchModel = api.searchModel as MockedFunction<typeof api.searchModel>
-const { onResetModelId, onUpdateModelId } = selectorStores
+const mockOnResetModelId = vi.mocked(selectorStores.onResetModelId)
+const mockOnUpdateModelId = vi.mocked(selectorStores.onUpdateModelId)
 
 describe('useModelSearch', () => {
   beforeEach(() => {
@@ -76,8 +77,8 @@ describe('useModelSearch', () => {
     // Assert
     expect(mockSearchModel).toHaveBeenCalledWith(mockQuery)
     expect(result.current.data).toEqual(typedResponse)
-    expect(onResetModelId).toHaveBeenCalled()
-    expect(onUpdateModelId).toHaveBeenCalledWith('model-1')
+    expect(mockOnResetModelId).toHaveBeenCalled()
+    expect(mockOnUpdateModelId).toHaveBeenCalledWith('model-1')
   })
 
   it('should reset model ID on query change but not update when no results', async () => {
@@ -103,8 +104,8 @@ describe('useModelSearch', () => {
     // Assert
     expect(mockSearchModel).toHaveBeenCalledWith(mockQuery)
     expect(result.current.data).toEqual(emptyResponse)
-    expect(onResetModelId).toHaveBeenCalled()
-    expect(onUpdateModelId).not.toHaveBeenCalled()
+    expect(mockOnResetModelId).toHaveBeenCalled()
+    expect(mockOnUpdateModelId).not.toHaveBeenCalled()
   })
 
   it('should handle API errors gracefully', async () => {
@@ -128,7 +129,7 @@ describe('useModelSearch', () => {
     // Assert
     expect(mockSearchModel).toHaveBeenCalledWith(mockQuery)
     expect(result.current.data).toBeUndefined()
-    expect(onResetModelId).toHaveBeenCalled()
-    expect(onUpdateModelId).not.toHaveBeenCalled()
+    expect(mockOnResetModelId).toHaveBeenCalled()
+    expect(mockOnUpdateModelId).not.toHaveBeenCalled()
   })
 })

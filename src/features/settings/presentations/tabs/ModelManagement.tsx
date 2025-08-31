@@ -1,17 +1,10 @@
-import { Listbox, ListboxItem, Button, Spinner } from '@heroui/react'
-import { Trash2 } from 'lucide-react'
-import { useQuery } from '@tanstack/react-query'
-import { api } from '@/services/api'
+import { useDownloadedModels } from '@/features/settings/states/useDownloadedModels'
+import { Listbox, ListboxItem, Spinner } from '@heroui/react'
+import { DeleteModelButton } from './DeleteModelButton'
 
 export const ModelManagement = () => {
   // Fetch models
-  const { data: models = [], isLoading } = useQuery({
-    queryKey: ['getDownloadedModels'],
-    queryFn: async () => {
-      const modelsDownloaded = await api.getDownloadedModels()
-      return modelsDownloaded
-    }
-  })
+  const { data: models = [], isLoading } = useDownloadedModels()
 
   if (isLoading) {
     return (
@@ -28,11 +21,7 @@ export const ModelManagement = () => {
         {models.map((model) => (
           <ListboxItem
             key={model.model_id}
-            endContent={
-              <Button isIconOnly variant="light" color="danger">
-                <Trash2 size={16} />
-              </Button>
-            }
+            endContent={<DeleteModelButton model_id={model.model_id} />}
           >
             {model.model_id}
           </ListboxItem>

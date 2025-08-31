@@ -1,28 +1,30 @@
+import { useDownloadedModels } from '@/cores/hooks'
 import { api } from '@/services'
 import { first, isEmpty } from 'es-toolkit/compat'
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useModelSelectorStore } from './useModelSelectorStores'
-import { useDownloadedModels } from '@/cores/hooks'
 
 export const useModelSelectors = () => {
   const { data = [] } = useDownloadedModels()
-  const { id, setId } = useModelSelectorStore((state) => state)
+  const { selected_model_id, setSelectedModelId } = useModelSelectorStore()
 
-  const onLoadModel = async (id: string) => {
+  const onLoadModel = useCallback(async (id: string) => {
     if (isEmpty(id)) return
+
     await api.loadModel({ id })
-  }
+  }, [])
 
   useEffect(() => {
-    if (data && isEmpty(id)) {
+    if (data && isEmpty(selected_model_id)) {
       const firstModel = first(data)
-      if (firstModel) setId(firstModel.model_id)
+
+      if (firstModel) setSelectedModelId(firstModel.model_id)
     }
-  }, [data, id, setId])
+  }, [data, selected_model_id, setSelectedModelId])
 
   useEffect(() => {
-    onLoadModel(id)
-  }, [id])
+    onLoadModel(selected_model_id)
+  }, [onLoadModel, selected_model_id])
 
   return { data }
 }

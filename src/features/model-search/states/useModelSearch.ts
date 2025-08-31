@@ -1,11 +1,11 @@
 import { api } from '@/services'
 import { useQuery } from '@tanstack/react-query'
+import { useDebounce } from '@uidotdev/usehooks'
 import { first, isString } from 'es-toolkit/compat'
 import { useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { ModelSearchFormValues } from '../types'
-import { onResetModelId, onUpdateModelId } from './useModelSelectorStores'
-import { useDebounce } from '@uidotdev/usehooks'
+import { onResetModelId, onUpdateModelId } from './useModelSearchSelectorStores'
 
 export const useModelSearch = () => {
   const { watch } = useFormContext<ModelSearchFormValues>()

@@ -1,9 +1,9 @@
-import { render, screen } from '@testing-library/react'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { createQueryClientWrapper } from '@/cores/test-utils'
 import { api } from '@/services/api'
 import { ModelDownloaded } from '@/types/api'
+import { render, screen } from '@testing-library/react'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ModelManagement } from '../ModelManagement'
-import { createQueryClientWrapper } from '@/cores/test-utils'
 
 // Mock the API
 vi.mock('@/services/api', () => ({
@@ -37,18 +37,26 @@ vi.mock('@heroui/react', () => ({
     isIconOnly,
     variant,
     color,
+    onPress,
+    isDisabled,
+    isLoading,
     ...props
   }: {
     children: React.ReactNode
     isIconOnly?: boolean
     variant?: string
     color?: string
+    onPress?: () => void
+    isDisabled?: boolean
+    isLoading?: boolean
   }) => (
     <button
       data-testid="delete-button"
       data-variant={variant}
       data-color={color}
       data-icon-only={isIconOnly}
+      onClick={onPress}
+      disabled={isDisabled || isLoading}
       {...props}
     >
       {children}
@@ -58,6 +66,20 @@ vi.mock('@heroui/react', () => ({
     <div data-testid="spinner" data-size={size}>
       Loading...
     </div>
+  ),
+  Modal: ({ children, isOpen }: { children: React.ReactNode; isOpen: boolean }) =>
+    isOpen ? <div data-testid="modal">{children}</div> : null,
+  ModalContent: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="modal-content">{children}</div>
+  ),
+  ModalHeader: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="modal-header">{children}</div>
+  ),
+  ModalBody: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="modal-body">{children}</div>
+  ),
+  ModalFooter: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="modal-footer">{children}</div>
   )
 }))
 
@@ -68,6 +90,14 @@ vi.mock('lucide-react', () => ({
       <title>Trash</title>
     </svg>
   )
+}))
+
+// Mock useDeleteModel hook
+vi.mock('@/features/settings/states/useDeleteModel', () => ({
+  useDeleteModel: () => ({
+    mutate: vi.fn(),
+    isPending: false
+  })
 }))
 
 describe('ModelManagement', () => {

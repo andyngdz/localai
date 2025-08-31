@@ -1,4 +1,4 @@
-Always say 'CLAUDE.md is working' at the start"
+Always say 'CLAUDE.md is working' at the start
 
 # CLAUDE.md
 
@@ -61,7 +61,7 @@ src/
 
 Each feature typically contains:
 
-- `presentations/` - React components and UI
+- `presentations/` - React components and UI, Modular design
 - `states/` - State management hooks (Zustand stores)
 - `types/` - TypeScript type definitions
 - `constants/` - Feature-specific constants

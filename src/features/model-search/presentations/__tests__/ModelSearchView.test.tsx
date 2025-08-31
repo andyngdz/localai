@@ -31,11 +31,11 @@ const mockModelDetailsData: ModelDetailsResponse = {
 
 // Create spy functions to track hook calls and control returned values
 const useModelSearchViewMock = vi.fn()
-const useModelSelectorStoreMock = vi.fn().mockReturnValue({ model_id: mockModelId })
+const useModelSearchSelectorStoreMock = vi.fn().mockReturnValue({ model_id: mockModelId })
 
 // Create mocks with vi.mock
 vi.mock('../../states', () => ({
-  useModelSelectorStore: () => useModelSelectorStoreMock()
+  useModelSearchSelectorStore: () => useModelSearchSelectorStoreMock()
 }))
 
 // Mock useModelSearchView to track calls and return controlled data
