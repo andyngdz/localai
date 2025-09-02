@@ -1,9 +1,11 @@
 import clsx from 'clsx'
 import { useMemo } from 'react'
+import { useImageViewModeStore } from '../states/useImageViewModeStore'
 import { useGeneratorPreviewer } from '../states'
 import { GeneratorPreviewerItem } from './GeneratorPreviewerItem'
+import { GeneratorPreviewerSlider } from './GeneratorPreviewerSlider'
 
-export const GeneratorPreviewer = () => {
+const GeneratorPreviewerGrid = () => {
   const { imageStepEnds } = useGeneratorPreviewer()
 
   const ImageComponents = useMemo(() => {
@@ -23,4 +25,14 @@ export const GeneratorPreviewer = () => {
       {ImageComponents}
     </div>
   )
+}
+
+export const GeneratorPreviewer = () => {
+  const { viewMode } = useImageViewModeStore()
+
+  if (viewMode === 'slider') {
+    return <GeneratorPreviewerSlider />
+  }
+
+  return <GeneratorPreviewerGrid />
 }

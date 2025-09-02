@@ -26,6 +26,7 @@ The frontend communicates with the backend server running on port 8000.
 - `npm run test:coverage` - Run tests with coverage reporting
 - `npm run ci:lint` - Run linting for CI (outputs JSON report)
 - `npm run ci:format` - Check formatting for CI
+- `npx lint-staged` - To verify type errors, linter and formatter, you need to `git add .` before running
 
 ## Architecture
 
