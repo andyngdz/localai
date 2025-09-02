@@ -7,7 +7,7 @@ export const GeneratorAction = () => {
       <GeneratorActionSubmitButton />
       <Select className="max-w-32" defaultSelectedKeys={['grid']} aria-label="View">
         <SelectItem key="grid">Grid View</SelectItem>
-        <SelectItem key="list">List View</SelectItem>
+        <SelectItem key="slider">Slider View</SelectItem>
       </Select>
     </div>
   )
