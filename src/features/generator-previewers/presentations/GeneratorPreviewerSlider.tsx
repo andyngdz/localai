@@ -21,9 +21,7 @@ export const GeneratorPreviewerSlider = () => {
 
   if (imageStepEnds.length === 0) {
     return (
-      <div className="flex justify-center items-center h-96 text-gray-500">
-        No images to display
-      </div>
+      <div className="flex justify-center items-center text-default-500">No images to display</div>
     )
   }
 
@@ -37,6 +35,7 @@ export const GeneratorPreviewerSlider = () => {
           enabled: true,
           onlyInViewport: true
         }}
+        loop
       >
         {ImageSlides}
         <GeneratorPreviewerSliderActions />
