@@ -1,13 +1,12 @@
 import { useMemo } from 'react'
-import { Keyboard, Mousewheel, Navigation, Pagination } from 'swiper/modules'
+import { Keyboard, Mousewheel } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { useGeneratorPreviewer } from '../states'
 import { GeneratorPreviewerItem } from './GeneratorPreviewerItem'
 
 // Import Swiper styles
 import 'swiper/css'
-import 'swiper/css/navigation'
-import 'swiper/css/pagination'
+import { GeneratorPreviewerSliderActions } from './GeneratorPreviewerSliderActions'
 
 export const GeneratorPreviewerSlider = () => {
   const { imageStepEnds } = useGeneratorPreviewer()
@@ -29,22 +28,18 @@ export const GeneratorPreviewerSlider = () => {
   }
 
   return (
-    <div className="p-4">
+    <div className="p-4 relative">
       <Swiper
-        modules={[Navigation, Pagination, Mousewheel, Keyboard]}
+        modules={[Mousewheel, Keyboard]}
         spaceBetween={16}
         slidesPerView={2}
-        pagination={{
-          clickable: true,
-          dynamicBullets: true
-        }}
         keyboard={{
           enabled: true,
           onlyInViewport: true
         }}
-        navigation
       >
         {ImageSlides}
+        <GeneratorPreviewerSliderActions />
       </Swiper>
     </div>
   )
