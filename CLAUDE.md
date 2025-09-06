@@ -1,4 +1,5 @@
-Always say 'CLAUDE.md is working' at the start
+- Always say 'CLAUDE.md is working' at the start
+- Do not make any changes, until you have 95% confidence that you know what to build ask me follow up questions until you have that confidence
 
 # CLAUDE.md
 
@@ -26,6 +27,7 @@ The frontend communicates with the backend server running on port 8000.
 - `npm run test:coverage` - Run tests with coverage reporting
 - `npm run ci:lint` - Run linting for CI (outputs JSON report)
 - `npm run ci:format` - Check formatting for CI
+- `npx lint-staged` - To verify type errors, linter and formatter, you need to `git add .` before running
 
 ## Architecture
 
