@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
-import { useImageViewModeStore, ImageViewMode } from '../useImageViewModeStore'
+import { ImageViewMode, useImageViewModeStore } from '../useImageViewModeStore'
 
 describe('useImageViewModeStore', () => {
   const defaultViewMode: ImageViewMode = 'grid'
@@ -234,7 +234,7 @@ describe('useImageViewModeStore', () => {
         .fill(null)
         .map((_, i) => (i % 2 === 0 ? 'grid' : 'slider'))
 
-      modes.forEach((mode, index) => {
+      modes.forEach((mode) => {
         act(() => {
           result.current.setViewMode(mode)
         })
