@@ -9,7 +9,7 @@ describe('useImageViewModeStore', () => {
     // Reset store to initial state after each test
     const { result } = renderHook(() => useImageViewModeStore())
     act(() => {
-      result.current.setViewMode('grid')
+      result.current.setViewMode(defaultViewMode)
     })
   })
 
