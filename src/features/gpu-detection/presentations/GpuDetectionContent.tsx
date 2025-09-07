@@ -8,9 +8,13 @@ import { GpuDetectionVersion } from './GpuDetectionVersion'
 
 interface GpuDetectionContentProps {
   hardwareData: HardwareResponse
+  onCheckAgain: VoidFunction
 }
 
-export const GpuDetectionContent: FC<GpuDetectionContentProps> = ({ hardwareData }) => {
+export const GpuDetectionContent: FC<GpuDetectionContentProps> = ({
+  hardwareData,
+  onCheckAgain
+}) => {
   if (hardwareData) {
     const { is_cuda, cuda_runtime_version, nvidia_driver_version } = hardwareData
 
@@ -23,7 +27,7 @@ export const GpuDetectionContent: FC<GpuDetectionContentProps> = ({ hardwareData
           />
         )}
         <GpuDetectionItems gpus={hardwareData.gpus} />
-        {!is_cuda && <GpuDetectionCpuModeOnly />}
+        {!is_cuda && <GpuDetectionCpuModeOnly onCheckAgain={onCheckAgain} />}
       </div>
     )
   }

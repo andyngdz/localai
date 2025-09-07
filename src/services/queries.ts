@@ -1,3 +1,4 @@
+import { HistoryItem } from '@/types'
 import { useQuery } from '@tanstack/react-query'
 import {
   ApiError,
@@ -9,7 +10,6 @@ import {
   StyleSection
 } from '../types/api'
 import { api } from './api'
-import { HistoryItem } from '@/types'
 
 const useHealthQuery = () => {
   return useQuery<HealthResponse, ApiError>({

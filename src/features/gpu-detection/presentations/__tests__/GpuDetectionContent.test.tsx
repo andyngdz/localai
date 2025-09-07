@@ -1,11 +1,16 @@
+import { GpuInfo, HardwareResponse } from '@/types'
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { GpuDetectionContent } from '../GpuDetectionContent'
-import { HardwareResponse, GpuInfo } from '@/types'
 
 // Mock child components
 vi.mock('../GpuDetectionCpuModeOnly', () => ({
-  GpuDetectionCpuModeOnly: () => <div data-testid="cpu-mode-only">CPU Mode Only Component</div>
+  GpuDetectionCpuModeOnly: ({ onCheckAgain }: { onCheckAgain: VoidFunction }) => (
+    <div data-testid="cpu-mode-only" onClick={onCheckAgain}>
+      CPU Mode Only Component
+    </div>
+  )
 }))
 
 vi.mock('../GpuDetectionItems', () => ({
@@ -55,40 +60,46 @@ describe('GpuDetectionContent', () => {
   }
 
   it('renders GPU version when CUDA is available', () => {
-    render(<GpuDetectionContent hardwareData={mockHardwareDataWithCuda} />)
+    render(<GpuDetectionContent hardwareData={mockHardwareDataWithCuda} onCheckAgain={() => {}} />)
 
     expect(screen.getByTestId('gpu-version')).toBeInTheDocument()
     expect(screen.getByText('CUDA: 12.2, Driver: 535.104.05')).toBeInTheDocument()
   })
 
   it('does not render GPU version when CUDA is not available', () => {
-    render(<GpuDetectionContent hardwareData={mockHardwareDataWithoutCuda} />)
+    render(
+      <GpuDetectionContent hardwareData={mockHardwareDataWithoutCuda} onCheckAgain={() => {}} />
+    )
 
     expect(screen.queryByTestId('gpu-version')).not.toBeInTheDocument()
   })
 
   it('always renders GPU items', () => {
-    render(<GpuDetectionContent hardwareData={mockHardwareDataWithCuda} />)
+    render(<GpuDetectionContent hardwareData={mockHardwareDataWithCuda} onCheckAgain={() => {}} />)
 
     expect(screen.getByTestId('gpu-items')).toBeInTheDocument()
     expect(screen.getByText('GPU Items: 1 GPUs')).toBeInTheDocument()
   })
 
   it('renders CPU mode only when CUDA is not available', () => {
-    render(<GpuDetectionContent hardwareData={mockHardwareDataWithoutCuda} />)
+    render(
+      <GpuDetectionContent hardwareData={mockHardwareDataWithoutCuda} onCheckAgain={() => {}} />
+    )
 
     expect(screen.getByTestId('cpu-mode-only')).toBeInTheDocument()
     expect(screen.getByText('CPU Mode Only Component')).toBeInTheDocument()
   })
 
   it('does not render CPU mode only when CUDA is available', () => {
-    render(<GpuDetectionContent hardwareData={mockHardwareDataWithCuda} />)
+    render(<GpuDetectionContent hardwareData={mockHardwareDataWithCuda} onCheckAgain={() => {}} />)
 
     expect(screen.queryByTestId('cpu-mode-only')).not.toBeInTheDocument()
   })
 
   it('renders with proper structure and styling', () => {
-    const { container } = render(<GpuDetectionContent hardwareData={mockHardwareDataWithCuda} />)
+    const { container } = render(
+      <GpuDetectionContent hardwareData={mockHardwareDataWithCuda} onCheckAgain={() => {}} />
+    )
 
     const mainDiv = container.firstChild as HTMLElement
     expect(mainDiv).toHaveClass('flex', 'flex-col', 'gap-4')
@@ -100,13 +111,15 @@ describe('GpuDetectionContent', () => {
       gpus: []
     }
 
-    render(<GpuDetectionContent hardwareData={dataWithEmptyGpus} />)
+    render(<GpuDetectionContent hardwareData={dataWithEmptyGpus} onCheckAgain={() => {}} />)
 
     expect(screen.getByText('GPU Items: 0 GPUs')).toBeInTheDocument()
   })
 
   it('renders all components in correct order when CUDA is available', () => {
-    const { container } = render(<GpuDetectionContent hardwareData={mockHardwareDataWithCuda} />)
+    const { container } = render(
+      <GpuDetectionContent hardwareData={mockHardwareDataWithCuda} onCheckAgain={() => {}} />
+    )
 
     const mainDiv = container.firstChild as HTMLElement
     const children = Array.from(mainDiv.children)
@@ -118,7 +131,9 @@ describe('GpuDetectionContent', () => {
   })
 
   it('renders all components in correct order when CUDA is not available', () => {
-    const { container } = render(<GpuDetectionContent hardwareData={mockHardwareDataWithoutCuda} />)
+    const { container } = render(
+      <GpuDetectionContent hardwareData={mockHardwareDataWithoutCuda} onCheckAgain={() => {}} />
+    )
 
     const mainDiv = container.firstChild as HTMLElement
     const children = Array.from(mainDiv.children)
@@ -127,5 +142,21 @@ describe('GpuDetectionContent', () => {
     expect(children[0]).toHaveAttribute('data-testid', 'gpu-items')
     expect(children[1]).toHaveAttribute('data-testid', 'cpu-mode-only')
     expect(children.length).toBe(2) // No GPU version
+  })
+
+  it('calls onCheckAgain when CPU mode component is clicked', async () => {
+    const user = userEvent.setup()
+    const mockOnCheckAgain = vi.fn()
+    render(
+      <GpuDetectionContent
+        hardwareData={mockHardwareDataWithoutCuda}
+        onCheckAgain={mockOnCheckAgain}
+      />
+    )
+
+    const cpuModeComponent = screen.getByTestId('cpu-mode-only')
+    await user.click(cpuModeComponent)
+
+    expect(mockOnCheckAgain).toHaveBeenCalledTimes(1)
   })
 })

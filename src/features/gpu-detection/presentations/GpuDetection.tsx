@@ -14,7 +14,7 @@ export const GpuDetection = () => {
   const {
     formState: { isValid }
   } = methods
-  const { data } = useHardwareQuery()
+  const { data, refetch } = useHardwareQuery()
 
   if (data) {
     const onSubmit: SubmitHandler<GpuDetectionFormProps> = async (values) => {
@@ -31,7 +31,7 @@ export const GpuDetection = () => {
           onBack={router.back}
           isNextDisabled={!isValid}
         >
-          <GpuDetectionContent hardwareData={data} />
+          <GpuDetectionContent hardwareData={data} onCheckAgain={refetch} />
         </SetupLayout>
       </FormProvider>
     )
