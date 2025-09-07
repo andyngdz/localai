@@ -31,7 +31,7 @@ describe('GpuDetectionCpuModeOnly', () => {
 
     render(<GpuDetectionCpuModeOnly onCheckAgain={mockOnCheckAgain} />)
 
-    const button = screen.getByText("I've installed CUDA drivers. Check again.")
+    const button = screen.getByText("I've installed CUDA drivers. Check again")
     await user.click(button)
 
     expect(mockOnCheckAgain).toHaveBeenCalledTimes(1)
