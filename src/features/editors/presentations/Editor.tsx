@@ -6,7 +6,7 @@ import { EditorNavbar } from './EditorNavbar'
 
 export const Editor = () => {
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen w-full">
       <EditorNavbar />
       <Divider />
       <Generator />

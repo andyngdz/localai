@@ -1,6 +1,5 @@
 'use client'
 
-import { Divider } from '@heroui/divider'
 import { Button } from '@heroui/react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import type { FC, ReactNode } from 'react'
@@ -27,12 +26,11 @@ export const SetupLayout: FC<SetupLayoutProps> = ({
   isBackDisabled = false
 }) => {
   return (
-    <div className="relative min-h-screen flex flex-col items-center">
+    <div className="flex flex-col items-center">
       <SetupLayoutBackground />
       <SetupLayoutContent title={title} description={description}>
         {children}
       </SetupLayoutContent>
-      <Divider />
       <div className="w-full">
         <div className="flex justify-center items-center gap-8 py-2">
           {onBack && (

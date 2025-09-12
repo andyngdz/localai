@@ -1,7 +1,7 @@
-import { Accordion, AccordionItem, Spinner } from '@heroui/react'
-import { HistoryGroup } from './HistoryGroup'
+import { Accordion, AccordionItem, Chip, Spinner } from '@heroui/react'
 import { isEmpty } from 'es-toolkit/compat'
 import { useHistories } from '../states'
+import { HistoryGroup } from './HistoryGroup'
 
 export const Histories = () => {
   const { historyGroups, isLoading, error } = useHistories()
@@ -17,7 +17,7 @@ export const Histories = () => {
   if (error) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p className="text-red-500">Failed to load histories</p>
+        <Chip color="danger">Failed to load histories</Chip>
       </div>
     )
   }
@@ -25,7 +25,7 @@ export const Histories = () => {
   if (isEmpty(historyGroups)) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p className="text-gray-500">No histories found</p>
+        <Chip color="warning">No histories found</Chip>
       </div>
     )
   }
