@@ -5,8 +5,8 @@ import clsx from 'clsx'
 import type { Metadata } from 'next'
 import { Inter, JetBrains_Mono } from 'next/font/google'
 import { unstable_ViewTransition as ViewTransition } from 'react'
-import { Providers } from './providers'
 import { AppLayout } from './app-layout'
+import { Providers } from './providers'
 
 const font = Inter({
   variable: '--font-inter',
