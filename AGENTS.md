@@ -36,6 +36,19 @@
 - Location: co-locate in `__tests__` or `*.test.ts(x)` next to source.
 - Run `npm test` before pushing; check coverage report via `npm run test:coverage` (HTML report in `coverage/`).
 - Keep tests deterministic; avoid real network calls; snapshot files in `__snapshots__/` are allowed.
+- Run `npx lint-staged` after testing to make sure no typescript errors, lint and format are up to date.
+
+### Example how to mock NextImage (next/image)
+
+```typescript
+vi.mock('next/image', () => ({
+  __esModule: true,
+  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img {...props} alt="Test image" />
+  }
+}))
+```
 
 ## Commit & Pull Request Guidelines
 

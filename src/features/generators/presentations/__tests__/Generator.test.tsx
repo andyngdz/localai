@@ -1,9 +1,9 @@
 import { render, screen, waitFor } from '@testing-library/react'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { useForm } from 'react-hook-form'
-import { Generator } from '../Generator'
-import { useFormValuesStore, useGenerator } from '../../states'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { FORM_DEFAULT_VALUES } from '../../constants'
+import { useFormValuesStore, useGenerator } from '../../states'
+import { Generator } from '../Generator'
 
 // Mock all the feature components
 vi.mock('@/features/generator-actions', () => ({
@@ -194,11 +194,10 @@ describe('Generator', () => {
     expect(panes[0]).toHaveAttribute('data-min-size', '300')
     expect(panes[0]).toHaveAttribute('data-preferred-size', '300')
 
-    // Second pane (main content)
-    expect(panes[1]).toHaveClass('flex', 'flex-col')
-
     // Third pane (histories)
-    expect(panes[2]).toHaveClass('flex', 'flex-col')
+    expect(panes[0]).toHaveAttribute('data-max-size', '350')
+    expect(panes[0]).toHaveAttribute('data-min-size', '300')
+    expect(panes[0]).toHaveAttribute('data-preferred-size', '300')
   })
 
   it('starts with opacity-0 and transitions to opacity-100 when mounted', async () => {

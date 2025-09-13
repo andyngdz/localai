@@ -1,9 +1,18 @@
 import { render, screen } from '@testing-library/react'
-import { Histories } from '../Histories'
-import { useHistories } from '../../states'
-import { HistoryGroup } from '../HistoryGroup'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { useHistories } from '../../states'
 import { HistoryGroup as HistoryGroupType } from '../../states/useHistoryGroups'
+import { Histories } from '../Histories'
+import { HistoryGroup } from '../HistoryGroup'
+
+// Mock next/image to avoid width/height requirement in tests
+vi.mock('next/image', () => ({
+  __esModule: true,
+  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img {...props} alt="Test image" />
+  }
+}))
 
 // Mock dependencies
 vi.mock('@heroui/react', async () => {
@@ -17,8 +26,7 @@ vi.mock('@heroui/react', async () => {
       <div data-testid="accordion-item" data-title={title}>
         {children}
       </div>
-    ),
-    Spinner: () => <div data-testid="spinner">Loading...</div>
+    )
   }
 })
 
@@ -28,6 +36,10 @@ vi.mock('../../states', () => ({
 
 vi.mock('../HistoryGroup', () => ({
   HistoryGroup: vi.fn(() => <div data-testid="history-group" />)
+}))
+
+vi.mock('../HistoryLoader', () => ({
+  HistoryLoader: () => <div data-testid="history-loader" />
 }))
 
 describe('Histories', () => {
@@ -44,7 +56,7 @@ describe('Histories', () => {
 
     render(<Histories />)
 
-    expect(screen.getByTestId('spinner')).toBeInTheDocument()
+    expect(screen.getByTestId('history-loader')).toBeInTheDocument()
   })
 
   it('should render error state', () => {
@@ -56,7 +68,7 @@ describe('Histories', () => {
 
     render(<Histories />)
 
-    expect(screen.getByText('Failed to load histories')).toBeInTheDocument()
+    expect(screen.getByText('Error loading history')).toBeInTheDocument()
   })
 
   it('should render empty state', () => {

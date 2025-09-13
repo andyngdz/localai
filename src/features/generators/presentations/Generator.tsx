@@ -6,10 +6,10 @@ import { GeneratorPreviewer } from '@/features/generator-previewers'
 import { GeneratorPrompt } from '@/features/generator-prompts'
 import { Histories } from '@/features/histories'
 import { Allotment } from 'allotment'
+import clsx from 'clsx'
 import { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useFormValuesStore, useGenerator } from '../states'
-import clsx from 'clsx'
 
 import 'allotment/dist/style.css'
 
@@ -50,12 +50,14 @@ export const Generator = () => {
           <Allotment.Pane maxSize={350} minSize={300} preferredSize={300}>
             <GeneratorConfig />
           </Allotment.Pane>
-          <Allotment.Pane className="flex flex-col">
-            <GeneratorPrompt />
-            <GeneratorAction />
-            <GeneratorPreviewer />
+          <Allotment.Pane>
+            <div className="flex flex-col">
+              <GeneratorPrompt />
+              <GeneratorAction />
+              <GeneratorPreviewer />
+            </div>
           </Allotment.Pane>
-          <Allotment.Pane className="flex flex-col">
+          <Allotment.Pane maxSize={350} minSize={300} preferredSize={300}>
             <Histories />
           </Allotment.Pane>
         </Allotment>
