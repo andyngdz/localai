@@ -8,7 +8,11 @@ export const HistoryLoader = () => {
       <div className="overflow-auto scrollbar-thin">
         <div className="flex flex-col gap-3 p-2">
           {items.map((_, idx) => (
-            <div key={idx} className="border-2 border-default-300 rounded-2xl p-3">
+            <div
+              key={idx}
+              data-testid="history-loader-item"
+              className="border-2 border-default-300 rounded-2xl p-3"
+            >
               <div className="flex items-center justify-between gap-2 mb-2">
                 <Skeleton className="h-4 w-16 rounded-md" />
                 <Skeleton className="h-6 w-6 rounded-md" />
