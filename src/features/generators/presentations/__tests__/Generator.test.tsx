@@ -195,9 +195,9 @@ describe('Generator', () => {
     expect(panes[0]).toHaveAttribute('data-preferred-size', '300')
 
     // Third pane (histories)
-    expect(panes[0]).toHaveAttribute('data-max-size', '350')
-    expect(panes[0]).toHaveAttribute('data-min-size', '300')
-    expect(panes[0]).toHaveAttribute('data-preferred-size', '300')
+    expect(panes[2]).toHaveAttribute('data-max-size', '350')
+    expect(panes[2]).toHaveAttribute('data-min-size', '300')
+    expect(panes[2]).toHaveAttribute('data-preferred-size', '300')
   })
 
   it('starts with opacity-0 and transitions to opacity-100 when mounted', async () => {
