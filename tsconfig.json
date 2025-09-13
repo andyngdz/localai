@@ -29,7 +29,8 @@
     ".next/types/**/*.ts",
     "next-env.d.ts",
     "dist/renderer/types/**/*.ts",
-    "src/types/**/*.d.ts"
+    "src/types/**/*.d.ts",
+    "electron/**/*.ts"
   ],
-  "exclude": ["node_modules", "electron"]
+  "exclude": ["node_modules"]
 }

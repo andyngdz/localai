@@ -8,7 +8,7 @@
 - `src/app`: Next.js routes/layouts (App Router).
 - `src/features/*`: Feature modules (presentations, states, constants, types, tests).
 - `src/cores`, `src/services`, `src/sockets`, `src/types`, `src/assets`: Shared UI, APIs, sockets, types, and media.
-- `electron/`: Desktop main process (`main.js`, `preload.js`).
+- `electron/`: Desktop main process (`main.ts`, `preload.ts`).
 - `public/`: Static assets served by Next.js.
 - Build output: `.next/` (dev), `dist/renderer/` (prod export for Electron). Do not commit build artifacts.
 
@@ -58,5 +58,5 @@ vi.mock('next/image', () => ({
 
 ## Security & Configuration Tips
 
-- Renderer runs in a sandbox; do not access Node APIs directly. Bridge via `electron/preload.js` if needed.
+- Renderer runs in a sandbox; do not access Node APIs directly. Bridge via `electron/preload.ts` if needed.
 - Never commit secrets; store local assets in `public/` or `src/assets/` as appropriate.

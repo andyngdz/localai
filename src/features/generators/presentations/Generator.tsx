@@ -46,7 +46,7 @@ export const Generator = () => {
           'opacity-100': mounted
         })}
       >
-        <Allotment defaultSizes={[300, 0]}>
+        <Allotment defaultSizes={[300, 0, 300]}>
           <Allotment.Pane maxSize={350} minSize={300} preferredSize={300}>
             <GeneratorConfig />
           </Allotment.Pane>
