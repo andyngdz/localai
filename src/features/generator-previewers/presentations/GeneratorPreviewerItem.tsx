@@ -19,7 +19,7 @@ export const GeneratorPreviewerItem: FC<GeneratorPreviewerItemProps> = ({ imageS
   const height = watch('height')
   const aspectRatio = width / height
 
-  const handleDownloadImage = useCallback(() => {
+  const onHandleDownloadImage = useCallback(() => {
     const item = items[imageStepEnd.index]
     const url = `http://localhost:8000/${item.path}`
 
@@ -74,7 +74,7 @@ export const GeneratorPreviewerItem: FC<GeneratorPreviewerItemProps> = ({ imageS
           variant="solid"
           color="default"
           className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-          onPress={handleDownloadImage}
+          onPress={onHandleDownloadImage}
           aria-label="Download image"
         >
           <Download size={16} />

@@ -1,5 +1,5 @@
 import { mockNextImage } from '@/cores/test-utils'
-import { render } from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react'
 import { useFormContext } from 'react-hook-form'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { useDownloadImages, useGeneratorPreviewer } from '../../states'
@@ -124,5 +124,22 @@ describe('GeneratorPreviewerItem', () => {
     const { getByTestId } = render(<GeneratorPreviewerItem {...props} />)
     const image = getByTestId('mock-next-image')
     expect(image.getAttribute('data-src')).toBe('http://localhost:8000/images/test.png')
+  })
+
+  it('should call onDownloadImage with correct URL when download button is clicked', () => {
+    // Arrange: item has a valid path so the download button is rendered
+    mockUseGeneratorPreviewer.mockReturnValue({
+      items: [{ path: 'images/test.png', file_name: 'test.png' }],
+      imageStepEnds: []
+    })
+
+    // Act: render and click the download button
+    const { getByLabelText } = render(<GeneratorPreviewerItem {...defaultProps} />)
+    const downloadButton = getByLabelText('Download image')
+    fireEvent.click(downloadButton)
+
+    // Assert: onDownloadImage is called with the composed HTTP URL
+    expect(mockOnDownloadImage).toHaveBeenCalledTimes(1)
+    expect(mockOnDownloadImage).toHaveBeenCalledWith('http://localhost:8000/images/test.png')
   })
 })
