@@ -2,7 +2,7 @@ import { mockNextImage } from '@/cores/test-utils'
 import { render } from '@testing-library/react'
 import { useFormContext } from 'react-hook-form'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { useGeneratorPreviewer } from '../../states'
+import { useDownloadImages, useGeneratorPreviewer } from '../../states'
 import { GeneratorPreviewerItem, GeneratorPreviewerItemProps } from '../GeneratorPreviewerItem'
 
 vi.mock('react-hook-form', () => ({
@@ -10,14 +10,46 @@ vi.mock('react-hook-form', () => ({
 }))
 
 vi.mock('@/features/generator-previewers/states', () => ({
-  useGeneratorPreviewer: vi.fn()
+  useGeneratorPreviewer: vi.fn(),
+  useDownloadImages: vi.fn()
 }))
 
 vi.mock('next/image', () => mockNextImage())
 
+// Mock HeroUI components
+vi.mock('@heroui/react', async () => {
+  const actual = await vi.importActual<typeof import('@heroui/react')>('@heroui/react')
+  return {
+    ...actual,
+    Button: ({
+      children,
+      onPress,
+      ...props
+    }: {
+      children: React.ReactNode
+      onPress?: () => void
+      [key: string]: unknown
+    }) => (
+      <button onClick={onPress} {...props}>
+        {children}
+      </button>
+    ),
+    Skeleton: ({ className }: { className?: string }) => (
+      <div className={className} data-testid="skeleton" />
+    )
+  }
+})
+
+// Mock Lucide React icons
+vi.mock('lucide-react', () => ({
+  Download: () => <div data-testid="download-icon" />
+}))
+
 describe('GeneratorPreviewerItem', () => {
   const mockWatch = vi.fn()
+  const mockOnDownloadImage = vi.fn()
   const mockUseGeneratorPreviewer = vi.mocked(useGeneratorPreviewer)
+  const mockUseDownloadImages = vi.mocked(useDownloadImages)
 
   beforeEach(() => {
     // @ts-expect-error - We're only mocking the watch method that the component uses
@@ -26,6 +58,10 @@ describe('GeneratorPreviewerItem', () => {
       if (field === 'width') return 512
       if (field === 'height') return 512
       return 0
+    })
+
+    mockUseDownloadImages.mockReturnValue({
+      onDownloadImage: mockOnDownloadImage
     })
   })
 

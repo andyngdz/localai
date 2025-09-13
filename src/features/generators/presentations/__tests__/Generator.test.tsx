@@ -180,7 +180,7 @@ describe('Generator', () => {
     render(<Generator />)
 
     const allotment = screen.getByTestId('allotment')
-    expect(allotment).toHaveAttribute('data-default-sizes', JSON.stringify([300, 0]))
+    expect(allotment).toHaveAttribute('data-default-sizes', JSON.stringify([300, 0, 300]))
   })
 
   it('renders three Allotment panes with correct configurations', () => {
