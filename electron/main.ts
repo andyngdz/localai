@@ -61,11 +61,7 @@ const onDownloadImage = () => {
     const win = BrowserWindow.getFocusedWindow()
 
     if (win) {
-      try {
-        win.webContents.downloadURL(url)
-      } catch (error) {
-        throw error
-      }
+      win.webContents.downloadURL(url)
     }
   })
 }
