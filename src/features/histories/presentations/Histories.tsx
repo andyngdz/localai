@@ -23,22 +23,20 @@ export const Histories = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="overflow-auto scrollbar-thin">
-        <Accordion className="w-full">
-          {historyGroups.map((group) => (
-            <AccordionItem
-              key={group.date}
-              title={group.date}
-              aria-label={`History group for ${group.date}`}
-              classNames={{
-                title: 'text-sm text-default-500 font-semibold'
-              }}
-            >
-              <HistoryGroup key={group.date} histories={group.histories} />
-            </AccordionItem>
-          ))}
-        </Accordion>
-      </div>
+      <Accordion>
+        {historyGroups.map((group) => (
+          <AccordionItem
+            key={group.date}
+            title={group.date}
+            aria-label={`History group for ${group.date}`}
+            classNames={{
+              title: 'text-sm text-default-500 font-semibold'
+            }}
+          >
+            <HistoryGroup key={group.date} histories={group.histories} />
+          </AccordionItem>
+        ))}
+      </Accordion>
     </div>
   )
 }
