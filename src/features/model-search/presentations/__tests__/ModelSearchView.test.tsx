@@ -217,6 +217,6 @@ describe('ModelSearchView', () => {
 
     // The wrapper should have the scrollbar-thin class
     const scrollShadow = screen.getByTestId('scrollshadow')
-    expect(scrollShadow).toHaveClass('scrollbar-thin')
+    expect(scrollShadow).toHaveClass('scrollable')
   })
 })

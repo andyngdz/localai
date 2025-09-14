@@ -43,7 +43,7 @@ export const ModelSearchViewCard: FC<ModelSearchViewCardProps> = ({
             <span className="text-xs">{formatter.number(likes)}</span>
           </div>
         </div>
-        <ScrollShadow className="flex gap-2" hideScrollBar orientation="horizontal">
+        <ScrollShadow className="flex gap-2" orientation="horizontal" hideScrollBar>
           {tags.map((tag) => {
             return (
               <Chip variant="bordered" key={tag}>

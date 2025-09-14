@@ -15,7 +15,7 @@ export const ModelSearchView = () => {
   if (modelDetails) {
     return (
       <div className="flex flex-col gap-2 h-full">
-        <ScrollShadow className="flex flex-col gap-8 p-6 scrollbar-thin">
+        <ScrollShadow className="flex flex-col gap-8 p-6 scrollable">
           <ModelSearchViewCard
             author={modelDetails.author}
             downloads={modelDetails.downloads}
