@@ -2,8 +2,6 @@ import { HistoryItem } from '@/types'
 import { FC } from 'react'
 import { HistoryItemContainer } from './HistoryItemContainer'
 
-import 'react-vertical-timeline-component/style.min.css'
-
 interface HistoryGroupProps {
   histories: HistoryItem[]
 }
