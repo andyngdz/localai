@@ -13,20 +13,15 @@ export default defineConfig({
     setupFiles: ['./vitest.setup.ts'],
     globals: true,
     css: false,
-    include: [
-      ...configDefaults.include,
-      'src/**/*.test.{ts,tsx,js}',
-      '**/__tests__/**/*.{test,spec}.{ts,tsx,js}'
-    ],
-    exclude: [...configDefaults.exclude, '**/index.ts', '**/types.ts'],
+    exclude: [...configDefaults.exclude, '**/index.ts', '**/types.ts', '**/types/**'],
     coverage: {
       reporter: ['text', 'json', 'html', 'lcov'],
-      include: [
-        ...configDefaults.include,
-        'src/**/*.test.{ts,tsx,js}',
-        '**/__tests__/**/*.{test,spec}.{ts,tsx,js}'
-      ],
-      exclude: [...configDefaults.exclude, '**/index.ts', '**/types.ts']
+      exclude: [
+        ...(configDefaults.coverage?.exclude ?? []),
+        '**/index.ts',
+        '**/types.ts',
+        '**/types/**'
+      ]
     }
   }
 })
