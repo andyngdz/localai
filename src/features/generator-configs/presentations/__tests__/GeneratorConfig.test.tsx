@@ -37,9 +37,18 @@ vi.mock('@/features/generator-config-styles/presentations/GeneratorConfigStyle',
   )
 }))
 
-vi.mock('@heroui/react', () => ({
-  Divider: () => <hr data-testid="divider" />
-}))
+vi.mock('@heroui/react', async () => {
+  const actual = await vi.importActual<typeof import('@heroui/react')>('@heroui/react')
+  return {
+    ...actual,
+    Divider: () => <hr data-testid="divider" />,
+    ScrollShadow: ({ children, className }: { children: React.ReactNode; className?: string }) => (
+      <div data-testid="scrollshadow" className={className}>
+        {children}
+      </div>
+    )
+  }
+})
 
 describe('GeneratorConfig', () => {
   it('should render all sub-components and dividers', () => {

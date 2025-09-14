@@ -5,7 +5,7 @@ import { FC, PropsWithChildren } from 'react'
 
 export const AppLayout: FC<PropsWithChildren> = ({ children }) => {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col h-screen">
       <main className="flex justify-center flex-1">{children}</main>
       <footer className="sticky bottom-0 z-10 backdrop-blur-md bg-content1">
         <div className="px-4 flex justify-between items-center">

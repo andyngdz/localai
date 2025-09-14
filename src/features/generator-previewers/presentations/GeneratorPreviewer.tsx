@@ -20,7 +20,7 @@ const GeneratorPreviewerGrid = () => {
       className={clsx(
         'grid grid-cols-[repeat(auto-fill,minmax(256px,1fr))]',
         'gap-4 p-4',
-        'scrollbar-thin overflow-auto'
+        'scrollable'
       )}
     >
       {ImageComponents}

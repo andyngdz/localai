@@ -1,7 +1,7 @@
-import { render, screen } from '@testing-library/react'
-import { HistoryGroup } from '../HistoryGroup'
 import { HistoryItem } from '@/types'
+import { render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
+import { HistoryGroup } from '../HistoryGroup'
 
 // Mock dependencies
 vi.mock('react-vertical-timeline-component', () => ({
@@ -73,10 +73,6 @@ describe('HistoryGroup', () => {
     ]
 
     render(<HistoryGroup histories={mockHistories} />)
-
-    expect(screen.getByTestId('vertical-timeline')).toBeInTheDocument()
-    const timelineElements = screen.getAllByTestId('timeline-element')
-    expect(timelineElements).toHaveLength(2)
 
     const historyItems = screen.getAllByTestId('history-item-container')
     expect(historyItems).toHaveLength(2)

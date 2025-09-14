@@ -30,3 +30,8 @@
   display: inline-block;
   animation: shine 2s linear infinite;
 }
+
+@utility scrollable {
+  @apply scrollbar-thin;
+  @apply overflow-auto;
+}

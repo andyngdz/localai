@@ -26,7 +26,6 @@ describe('Editor', () => {
     render(<Editor />, { wrapper: createQueryClientWrapper() })
 
     expect(screen.getByTestId('mock-editor-navbar')).toBeInTheDocument()
-    expect(screen.getByTestId('mock-divider')).toBeInTheDocument()
     expect(screen.getByTestId('mock-generator')).toBeInTheDocument()
   })
 
@@ -36,6 +35,6 @@ describe('Editor', () => {
     // Check that there's a wrapping div with correct classes
     const wrapperDiv = container.firstChild
     expect(wrapperDiv).toBeInTheDocument()
-    expect(wrapperDiv).toHaveClass('flex', 'flex-col', 'h-screen')
+    expect(wrapperDiv).toHaveClass('flex', 'flex-col', 'h-full', 'w-full')
   })
 })

@@ -5,7 +5,7 @@ export const HistoryLoader = () => {
 
   return (
     <div className="flex flex-col" data-testid="history-loader">
-      <div className="overflow-auto scrollbar-thin">
+      <div className="scrollable">
         <div className="flex flex-col gap-3 p-2">
           {items.map((_, idx) => (
             <div

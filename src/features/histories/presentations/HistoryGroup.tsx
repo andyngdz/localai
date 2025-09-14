@@ -10,7 +10,7 @@ interface HistoryGroupProps {
 
 export const HistoryGroup: FC<HistoryGroupProps> = ({ histories }) => {
   return (
-    <div className="flex flex-col gap-4 overflow-auto scrollbar-thin">
+    <div className="flex flex-col flex-1 gap-4">
       {histories.map((history) => {
         return <HistoryItemContainer key={history.id} history={history} />
       })}
