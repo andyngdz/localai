@@ -12,7 +12,7 @@ export const GeneratorConfigStyleModal: FC<GeneratorConfigStyleModalProps> = ({
   ...restProps
 }) => {
   return (
-    <Modal placement="bottom" {...restProps}>
+    <Modal placement="bottom" size="2xl" scrollBehavior="inside" {...restProps}>
       <ModalContent>
         <ModalHeader className="flex flex-col gap-1">Styles</ModalHeader>
         <ModalBody className="p-0">
