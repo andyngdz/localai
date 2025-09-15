@@ -15,7 +15,7 @@ export const GeneratorConfigStyleModal: FC<GeneratorConfigStyleModalProps> = ({
     <Modal placement="bottom" size="2xl" scrollBehavior="inside" {...restProps}>
       <ModalContent>
         <ModalHeader className="flex flex-col gap-1">Styles</ModalHeader>
-        <ModalBody className="p-0">
+        <ModalBody>
           <GeneratorConfigStyleSection styleSections={styleSections} />
         </ModalBody>
       </ModalContent>
