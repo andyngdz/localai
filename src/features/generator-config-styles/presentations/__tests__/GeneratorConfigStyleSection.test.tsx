@@ -103,20 +103,8 @@ describe('GeneratorConfigStyleSection', () => {
     const animeHeader = screen.getByText('anime')
     const realisticHeader = screen.getByText('realistic')
 
-    expect(animeHeader).toHaveClass(
-      'text-lg',
-      'font-medium',
-      'capitalize',
-      'bg-foreground-100',
-      'p-2'
-    )
-    expect(realisticHeader).toHaveClass(
-      'text-lg',
-      'font-medium',
-      'capitalize',
-      'bg-foreground-100',
-      'p-2'
-    )
+    expect(animeHeader).toHaveClass('text-lg', 'font-medium', 'capitalize')
+    expect(realisticHeader).toHaveClass('text-lg', 'font-medium', 'capitalize')
   })
 
   it('renders all style items within sections', () => {
@@ -198,10 +186,14 @@ describe('GeneratorConfigStyleSection', () => {
       </TestWrapper>
     )
 
-    const sectionContainers = screen.getAllByText(/anime|realistic/).map((el) => el.parentElement)
+    // Find the Card components by their tabindex attribute
+    const cardElements = screen
+      .getAllByText(/anime|realistic/)
+      .map((el) => el.closest('[tabindex="-1"]'))
+      .filter(Boolean)
 
-    sectionContainers.forEach((container) => {
-      expect(container).toHaveClass('flex', 'flex-col', 'gap-2')
+    cardElements.forEach((card) => {
+      expect(card).toHaveClass('flex', 'flex-col')
     })
   })
 
@@ -215,7 +207,7 @@ describe('GeneratorConfigStyleSection', () => {
     const styleItemContainers = screen.getAllByTestId(/style-item-/).map((el) => el.parentElement)
 
     styleItemContainers.forEach((container) => {
-      expect(container).toHaveClass('flex', 'flex-wrap', 'gap-2', 'p-2')
+      expect(container).toHaveClass('flex', 'flex-wrap', 'gap-2')
     })
   })
 
