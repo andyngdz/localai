@@ -13,7 +13,7 @@ export const ModelDownloadStatusLine: FC<ModelDownloadStatusLineProps> = ({ id }
     if (percent <= 0) return
 
     return (
-      <div className="ml-0.5 mr-0.5 absolute flex flex-col h-1 inset-0 rounded-lg overflow-hidden">
+      <div className="ml-0.5 mr-0.5 absolute flex flex-col h-1 inset-0">
         <Skeleton className="h-full w-full absolute" />
         <div
           className={'h-full absolute bg-primary transition-all duration-500 ease-in-out'}
@@ -24,7 +24,7 @@ export const ModelDownloadStatusLine: FC<ModelDownloadStatusLineProps> = ({ id }
   }, [percent])
 
   return (
-    <div className="relative rounded-lg overflow-hidden">
+    <div className="relative">
       <Divider className="h-1" />
       {Indicator}
     </div>

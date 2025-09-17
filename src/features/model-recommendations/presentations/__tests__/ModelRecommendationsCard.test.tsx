@@ -1,4 +1,5 @@
 import { useDownloadWatcherStore } from '@/features/download-watcher'
+import { UseDownloadWatcherStore } from '@/features/download-watcher'
 import { ModelRecommendationItem } from '@/types/api'
 import { fireEvent, render, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
@@ -10,22 +11,29 @@ vi.mock('@heroui/react', () => ({
     children,
     className,
     onPress,
-    isPressable
+    isPressable,
+    isDisabled
   }: {
     children: React.ReactNode
     className?: string
     onPress?: () => void
     isPressable?: boolean
+    isDisabled?: boolean
   }) => (
     <div
       data-testid="card"
       className={className}
-      onClick={onPress}
+      onClick={() => {
+        if (!isDisabled && isPressable) {
+          onPress?.()
+        }
+      }}
       data-is-pressable={isPressable ? 'true' : 'false'}
     >
       {children}
     </div>
-  )
+  ),
+  Button: ({ children }: { children: React.ReactNode }) => <button type="button">{children}</button>
 }))
 
 // Create mock functions outside of the vi.mock call
@@ -105,12 +113,29 @@ describe('ModelRecommendationsCard', () => {
     is_recommended: true
   }
 
+  let downloadWatcherState: UseDownloadWatcherStore
+
+  const setDownloadWatcherState = (downloadingId: string | null) => {
+    downloadWatcherState = {
+      id: downloadingId ?? '',
+      percent: 0,
+      onUpdatePercent: vi.fn(),
+      onSetId: vi.fn()
+    }
+  }
+
   beforeEach(() => {
     // Reset all mocks before each test
     vi.clearAllMocks()
     // Set default return values
     mockWatch.mockReturnValue(undefined)
-    vi.mocked(useDownloadWatcherStore).mockReturnValue({ id: null })
+    setDownloadWatcherState(null)
+
+    vi.mocked(useDownloadWatcherStore).mockImplementation(((
+      selector?: (state: UseDownloadWatcherStore) => unknown
+    ) => {
+      return selector ? selector(downloadWatcherState) : downloadWatcherState
+    }) as typeof useDownloadWatcherStore)
   })
 
   // Helper to setup the component with different watch values
@@ -121,9 +146,7 @@ describe('ModelRecommendationsCard', () => {
     // Set the return values for our hooks
     mockWatch.mockReturnValue(selectedId)
 
-    // Create a mock function that returns the expected value
-    const mockStore = vi.fn(() => ({ id: downloadingModelId }))
-    vi.mocked(useDownloadWatcherStore).mockImplementation(mockStore)
+    setDownloadWatcherState(downloadingModelId)
 
     return {
       setValue: mockSetValue,
@@ -154,7 +177,7 @@ describe('ModelRecommendationsCard', () => {
     mockWatch.mockReset()
     mockSetValue.mockReset()
     mockWatch.mockReturnValue(undefined)
-    vi.mocked(useDownloadWatcherStore).mockReturnValue({ id: null })
+    setDownloadWatcherState(null)
 
     render(<ModelRecommendationsCard model={nonRecommendedModel} />)
 
