@@ -1,6 +1,7 @@
 'use client'
 
 import { useDownloadWatcherStore } from '@/features/download-watcher'
+import { ModelDownloadStatusLine } from '@/features/model-download-status-line'
 import { SetupLayout } from '@/features/setup-layout/presentations/SetupLayout'
 import { useRouter } from 'next/navigation'
 import { FormProvider } from 'react-hook-form'
@@ -10,7 +11,8 @@ import { ModelRecommendationsList } from './ModelRecommendationsList'
 export const ModelRecommendations = () => {
   const router = useRouter()
   const { methods, onSubmit, data } = useModelRecommendation()
-  const isDownloading = useDownloadWatcherStore((state) => !!state.id)
+  const id = useDownloadWatcherStore((state) => state.id)
+  const isDownloading = !!id
 
   return (
     <FormProvider {...methods}>
@@ -28,6 +30,7 @@ export const ModelRecommendations = () => {
             defaultSection={data.default_section}
           />
         )}
+        <ModelDownloadStatusLine id={id} />
       </SetupLayout>
     </FormProvider>
   )

@@ -1,7 +1,5 @@
 'use client'
 
-import { useDownloadWatcher } from '@/features/download-watcher'
-import { ModelDownloadStatusLine } from '@/features/model-download-status-line'
 import { ModelRecommendationItem } from '@/types/api'
 import { Card } from '@heroui/react'
 import clsx from 'clsx'
@@ -21,7 +19,6 @@ export const ModelRecommendationsCard: FC<ModelRecommendationsCardProps> = ({ mo
   const { watch, setValue } = useFormContext<ModelRecommendationFormProps>()
   const id = watch('id')
   const isSelected = id === model.id
-  const { isDownloading } = useDownloadWatcher(model.id)
 
   return (
     <Card
@@ -61,7 +58,6 @@ export const ModelRecommendationsCard: FC<ModelRecommendationsCardProps> = ({ mo
           <ModelRecommendationsTags tags={model.tags} />
         </div>
       </div>
-      {isDownloading && <ModelDownloadStatusLine id={model.id} />}
     </Card>
   )
 }
