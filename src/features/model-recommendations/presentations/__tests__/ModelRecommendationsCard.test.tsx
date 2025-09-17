@@ -1,6 +1,8 @@
+import { useDownloadWatcherStore } from '@/features/download-watcher'
+import { UseDownloadWatcherStore } from '@/features/download-watcher'
 import { ModelRecommendationItem } from '@/types/api'
 import { fireEvent, render, screen } from '@testing-library/react'
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ModelRecommendationsCard } from '../ModelRecommendationsCard'
 
 // Mock the Card component from @heroui/react with simplified props
@@ -9,22 +11,29 @@ vi.mock('@heroui/react', () => ({
     children,
     className,
     onPress,
-    isPressable
+    isPressable,
+    isDisabled
   }: {
     children: React.ReactNode
     className?: string
     onPress?: () => void
     isPressable?: boolean
+    isDisabled?: boolean
   }) => (
     <div
       data-testid="card"
       className={className}
-      onClick={onPress}
+      onClick={() => {
+        if (!isDisabled && isPressable) {
+          onPress?.()
+        }
+      }}
       data-is-pressable={isPressable ? 'true' : 'false'}
     >
       {children}
     </div>
-  )
+  ),
+  Button: ({ children }: { children: React.ReactNode }) => <button type="button">{children}</button>
 }))
 
 // Create mock functions outside of the vi.mock call
@@ -88,6 +97,11 @@ vi.mock('lucide-react', () => ({
   )
 }))
 
+// Mock the download watcher store
+vi.mock('@/features/download-watcher', () => ({
+  useDownloadWatcherStore: vi.fn()
+}))
+
 describe('ModelRecommendationsCard', () => {
   const mockModel: ModelRecommendationItem = {
     id: 'model1',
@@ -99,10 +113,40 @@ describe('ModelRecommendationsCard', () => {
     is_recommended: true
   }
 
+  let downloadWatcherState: UseDownloadWatcherStore
+
+  const setDownloadWatcherState = (downloadingId: string | null) => {
+    downloadWatcherState = {
+      id: downloadingId ?? '',
+      percent: 0,
+      onUpdatePercent: vi.fn(),
+      onSetId: vi.fn()
+    }
+  }
+
+  beforeEach(() => {
+    // Reset all mocks before each test
+    vi.clearAllMocks()
+    // Set default return values
+    mockWatch.mockReturnValue(undefined)
+    setDownloadWatcherState(null)
+
+    vi.mocked(useDownloadWatcherStore).mockImplementation(((
+      selector?: (state: UseDownloadWatcherStore) => unknown
+    ) => {
+      return selector ? selector(downloadWatcherState) : downloadWatcherState
+    }) as typeof useDownloadWatcherStore)
+  })
+
   // Helper to setup the component with different watch values
-  const setup = (selectedId: string | undefined = undefined) => {
+  const setup = (
+    selectedId: string | undefined = undefined,
+    downloadingModelId: string | null = null
+  ) => {
     // Set the return values for our hooks
     mockWatch.mockReturnValue(selectedId)
+
+    setDownloadWatcherState(downloadingModelId)
 
     return {
       setValue: mockSetValue,
@@ -111,14 +155,14 @@ describe('ModelRecommendationsCard', () => {
   }
 
   it('renders the model name and description', () => {
-    setup()
+    setup(undefined, null)
 
     expect(screen.getByText('Test Model')).toBeInTheDocument()
     expect(screen.getByText('A test model description')).toBeInTheDocument()
   })
 
   it('displays recommendation badge when model is recommended', () => {
-    setup()
+    setup(undefined, null)
 
     expect(screen.getByTestId('recommendations-badge')).toBeInTheDocument()
   })
@@ -132,6 +176,8 @@ describe('ModelRecommendationsCard', () => {
     // Reset and setup the mock values
     mockWatch.mockReset()
     mockSetValue.mockReset()
+    mockWatch.mockReturnValue(undefined)
+    setDownloadWatcherState(null)
 
     render(<ModelRecommendationsCard model={nonRecommendedModel} />)
 
@@ -139,7 +185,7 @@ describe('ModelRecommendationsCard', () => {
   })
 
   it('displays memory boxes with correct content', () => {
-    setup()
+    setup(undefined, null)
 
     const memoryBoxes = screen.getAllByTestId('memory-box')
     expect(memoryBoxes).toHaveLength(2)
@@ -152,7 +198,7 @@ describe('ModelRecommendationsCard', () => {
   })
 
   it('displays tags component with correct tags', () => {
-    setup()
+    setup(undefined, null)
 
     const tagsElement = screen.getByTestId('tags')
     expect(tagsElement).toBeInTheDocument()
@@ -160,7 +206,7 @@ describe('ModelRecommendationsCard', () => {
   })
 
   it('applies selected styling when model id matches selected id', () => {
-    setup('model1')
+    setup('model1', null)
 
     const card = screen.getByTestId('card')
     expect(card).toHaveClass('bg-primary/10')
@@ -173,7 +219,7 @@ describe('ModelRecommendationsCard', () => {
   })
 
   it("applies non-selected styling when model id doesn't match selected id", () => {
-    setup('different-id')
+    setup('different-id', null)
 
     const card = screen.getByTestId('card')
     expect(card).not.toHaveClass('bg-primary/10')
@@ -186,7 +232,7 @@ describe('ModelRecommendationsCard', () => {
   })
 
   it('calls setValue with model id when card is clicked', () => {
-    const { setValue } = setup()
+    const { setValue } = setup(undefined, null)
 
     const card = screen.getByTestId('card')
     fireEvent.click(card)
@@ -195,9 +241,45 @@ describe('ModelRecommendationsCard', () => {
   })
 
   it('renders with pressable card', () => {
-    setup()
+    setup(undefined, null)
 
     const card = screen.getByTestId('card')
     expect(card).toHaveAttribute('data-is-pressable', 'true')
+  })
+
+  it('disables card when a different model is downloading', () => {
+    setup(undefined, 'different-model-id')
+
+    const card = screen.getByTestId('card')
+    expect(card).toHaveClass('opacity-50')
+    expect(card).toHaveClass('cursor-not-allowed')
+    expect(card).toHaveAttribute('data-is-pressable', 'false')
+  })
+
+  it('does not disable card when no model is downloading', () => {
+    setup(undefined, null)
+
+    const card = screen.getByTestId('card')
+    expect(card).not.toHaveClass('opacity-50')
+    expect(card).not.toHaveClass('cursor-not-allowed')
+    expect(card).toHaveAttribute('data-is-pressable', 'true')
+  })
+
+  it('does not disable card when the same model is downloading', () => {
+    setup(undefined, 'model1')
+
+    const card = screen.getByTestId('card')
+    expect(card).not.toHaveClass('opacity-50')
+    expect(card).not.toHaveClass('cursor-not-allowed')
+    expect(card).toHaveAttribute('data-is-pressable', 'true')
+  })
+
+  it('does not call setValue when card is disabled and clicked', () => {
+    const { setValue } = setup(undefined, 'different-model-id')
+
+    const card = screen.getByTestId('card')
+    fireEvent.click(card)
+
+    expect(setValue).not.toHaveBeenCalled()
   })
 })
