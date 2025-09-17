@@ -1,5 +1,6 @@
 'use client'
 
+import { useDownloadWatcherStore } from '@/features/download-watcher'
 import { SetupLayout } from '@/features/setup-layout/presentations/SetupLayout'
 import { useRouter } from 'next/navigation'
 import { FormProvider } from 'react-hook-form'
@@ -9,6 +10,8 @@ import { ModelRecommendationsList } from './ModelRecommendationsList'
 export const ModelRecommendations = () => {
   const router = useRouter()
   const { methods, onSubmit, data } = useModelRecommendation()
+  const { id: downloadingId } = useDownloadWatcherStore()
+  const isDownloading = downloadingId !== ''
 
   return (
     <FormProvider {...methods}>
@@ -17,6 +20,8 @@ export const ModelRecommendations = () => {
         description="Choose an AI model that fits your hardware capabilities and performance needs"
         onNext={methods.handleSubmit(onSubmit)}
         onBack={router.back}
+        isNextDisabled={isDownloading}
+        isBackDisabled={isDownloading}
       >
         {data && (
           <ModelRecommendationsList
