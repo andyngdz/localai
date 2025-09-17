@@ -30,7 +30,7 @@ export const ModelRecommendations = () => {
             defaultSection={data.default_section}
           />
         )}
-        <ModelDownloadStatusLine id={id} />
+        {isDownloading && <ModelDownloadStatusLine id={id} />}
       </SetupLayout>
     </FormProvider>
   )

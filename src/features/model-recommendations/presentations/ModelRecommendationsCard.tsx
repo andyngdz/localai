@@ -1,7 +1,8 @@
 'use client'
 
+import { useDownloadWatcherStore } from '@/features/download-watcher'
 import { ModelRecommendationItem } from '@/types/api'
-import { Card } from '@heroui/react'
+import { Button, Card } from '@heroui/react'
 import clsx from 'clsx'
 import { Gpu, HardDrive } from 'lucide-react'
 import { FC } from 'react'
@@ -19,15 +20,20 @@ export const ModelRecommendationsCard: FC<ModelRecommendationsCardProps> = ({ mo
   const { watch, setValue } = useFormContext<ModelRecommendationFormProps>()
   const id = watch('id')
   const isSelected = id === model.id
+  const downloadingId = useDownloadWatcherStore((state) => state.id)
+  const isDisabled = !!downloadingId && downloadingId !== model.id
 
   return (
     <Card
       className={clsx('p-4 border-2 border-foreground/10 transition-all', {
-        'bg-primary/10 border-primary': isSelected,
-        'hover:border-primary/50': !isSelected
+        'bg-primary/10 border-primary': isSelected && !isDisabled,
+        'hover:border-primary/50': !isSelected && !isDisabled,
+        'opacity-50 cursor-not-allowed': isDisabled
       })}
       onPress={() => setValue('id', model.id)}
-      isPressable
+      isPressable={!isDisabled}
+      isDisabled={isDisabled}
+      as={Button}
     >
       <div className="flex items-center gap-4 w-full">
         <div className="flex flex-col gap-2 flex-1">
