@@ -10,8 +10,7 @@ import { ModelRecommendationsList } from './ModelRecommendationsList'
 export const ModelRecommendations = () => {
   const router = useRouter()
   const { methods, onSubmit, data } = useModelRecommendation()
-  const { id: downloadingId } = useDownloadWatcherStore()
-  const isDownloading = downloadingId !== ''
+  const { isDownloading } = useDownloadWatcherStore()
 
   return (
     <FormProvider {...methods}>
