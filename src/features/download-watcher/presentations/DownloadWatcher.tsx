@@ -1,14 +1,14 @@
 'use client'
 
-import { FC, PropsWithChildren, useEffect } from 'react'
-import { useDownloadWatcherStore } from '../states'
-import { useQueryClient } from '@tanstack/react-query'
 import {
   DownloadModelStartResponse,
   DownloadStepProgressResponse,
   socket,
   SocketEvents
 } from '@/sockets'
+import { useQueryClient } from '@tanstack/react-query'
+import { FC, PropsWithChildren, useEffect } from 'react'
+import { useDownloadWatcherStore } from '../states'
 
 export const DownloadWatcher: FC<PropsWithChildren> = ({ children }) => {
   const queryClient = useQueryClient()
@@ -30,7 +30,7 @@ export const DownloadWatcher: FC<PropsWithChildren> = ({ children }) => {
       onUpdatePercent(0.0)
       onSetId('')
       queryClient.invalidateQueries({
-        queryKey: ['downloaded-models']
+        queryKey: ['getDownloadedModels']
       })
     })
 
