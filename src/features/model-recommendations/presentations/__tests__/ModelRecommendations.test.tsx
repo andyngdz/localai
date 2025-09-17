@@ -1,4 +1,6 @@
 import { createQueryClientWrapper } from '@/cores/test-utils'
+import { useDownloadWatcherStore } from '@/features/download-watcher'
+import type { UseDownloadWatcherStore } from '@/features/download-watcher'
 import { ModelRecommendationResponse, ModelRecommendationSection } from '@/types/api'
 import { render, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
@@ -37,15 +39,25 @@ vi.mock('@/features/setup-layout/presentations/SetupLayout', () => ({
     description,
     onNext,
     onBack,
+    isNextDisabled,
+    isBackDisabled,
     children
   }: {
     title: string
     description: string
     onNext: () => void
     onBack: () => void
+    isNextDisabled: boolean
+    isBackDisabled: boolean
     children: React.ReactNode
   }) => (
-    <div data-testid="mock-setup-layout" data-title={title} data-description={description}>
+    <div
+      data-testid="mock-setup-layout"
+      data-title={title}
+      data-description={description}
+      data-is-next-disabled={isNextDisabled ? 'true' : 'false'}
+      data-is-back-disabled={isBackDisabled ? 'true' : 'false'}
+    >
       <button data-testid="mock-next-button" onClick={onNext}>
         Next
       </button>
@@ -53,6 +65,14 @@ vi.mock('@/features/setup-layout/presentations/SetupLayout', () => ({
         Back
       </button>
       <div data-testid="mock-layout-content">{children}</div>
+    </div>
+  )
+}))
+
+vi.mock('@/features/model-download-status-line', () => ({
+  ModelDownloadStatusLine: ({ id }: { id: string }) => (
+    <div data-testid="mock-download-status-line" data-id={id}>
+      Downloading {id}
     </div>
   )
 }))
@@ -70,6 +90,11 @@ const mockUseModelRecommendation = vi.fn()
 // Mock the modules
 vi.mock('../states/useModelRecommendation', () => ({
   useModelRecommendation: mockUseModelRecommendation
+}))
+
+// Mock the download watcher store
+vi.mock('@/features/download-watcher', () => ({
+  useDownloadWatcherStore: vi.fn()
 }))
 
 // Mock React Query
@@ -116,6 +141,23 @@ describe('ModelRecommendations', () => {
     default_selected_id: 'model1'
   }
 
+  let downloadWatcherState: UseDownloadWatcherStore
+
+  const setDownloadWatcherState = (downloadingId: string | null) => {
+    downloadWatcherState = {
+      id: downloadingId ?? '',
+      percent: 0,
+      onUpdatePercent: vi.fn(),
+      onSetId: vi.fn()
+    }
+
+    vi.mocked(useDownloadWatcherStore).mockImplementation(((
+      selector?: (state: UseDownloadWatcherStore) => unknown
+    ) => {
+      return selector ? selector(downloadWatcherState) : downloadWatcherState
+    }) as typeof useDownloadWatcherStore)
+  }
+
   beforeEach(() => {
     vi.clearAllMocks()
 
@@ -125,6 +167,8 @@ describe('ModelRecommendations', () => {
       onSubmit: mockOnSubmit,
       data: mockData
     })
+
+    setDownloadWatcherState(null)
   })
 
   it('renders FormProvider with correct methods', () => {
@@ -144,6 +188,8 @@ describe('ModelRecommendations', () => {
       'data-description',
       'Choose an AI model that fits your hardware capabilities and performance needs'
     )
+    expect(setupLayout).toHaveAttribute('data-is-next-disabled', 'false')
+    expect(setupLayout).toHaveAttribute('data-is-back-disabled', 'false')
   })
 
   it('renders with Form Provider and Setup Layout', () => {
@@ -192,5 +238,33 @@ describe('ModelRecommendations', () => {
 
     // We'll just verify it was rendered
     expect(screen.getByTestId('mock-next-button')).toBeInTheDocument()
+  })
+
+  it('disables navigation while a model is downloading', () => {
+    setDownloadWatcherState('downloading-model')
+
+    render(<ModelRecommendations />, { wrapper: createQueryClientWrapper() })
+
+    const setupLayout = screen.getByTestId('mock-setup-layout')
+    expect(setupLayout).toHaveAttribute('data-is-next-disabled', 'true')
+    expect(setupLayout).toHaveAttribute('data-is-back-disabled', 'true')
+  })
+
+  it('renders download status line while a model is downloading', () => {
+    setDownloadWatcherState('downloading-model')
+
+    render(<ModelRecommendations />, { wrapper: createQueryClientWrapper() })
+
+    const statusLine = screen.getByTestId('mock-download-status-line')
+    expect(statusLine).toBeInTheDocument()
+    expect(statusLine).toHaveAttribute('data-id', 'downloading-model')
+  })
+
+  it('does not render download status line when no model is downloading', () => {
+    setDownloadWatcherState(null)
+
+    render(<ModelRecommendations />, { wrapper: createQueryClientWrapper() })
+
+    expect(screen.queryByTestId('mock-download-status-line')).not.toBeInTheDocument()
   })
 })
