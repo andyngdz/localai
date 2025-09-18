@@ -98,4 +98,21 @@ describe('useModelRecommendation', () => {
     // Verify that socket.off was called with the correct event
     expect(socket.off).toHaveBeenCalledWith(SocketEvents.DOWNLOAD_COMPLETED, expect.any(Function))
   })
+
+  it('should navigate to editor when onSkip is called', async () => {
+    vi.mocked(useModelRecommendationsQuery).mockReturnValue({
+      data: {}
+    } as ReturnType<typeof useModelRecommendationsQuery>)
+
+    // Set up router mock
+    const { mockReplace } = await setupRouterMock()
+
+    const { result } = renderHook(() => useModelRecommendation())
+
+    await act(async () => {
+      result.current.onSkip()
+    })
+
+    expect(mockReplace).toHaveBeenCalledWith('/editor')
+  })
 })

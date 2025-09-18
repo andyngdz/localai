@@ -80,6 +80,7 @@ vi.mock('@/features/model-download-status-line', () => ({
 // Mock the useModelRecommendation hook
 const mockHandleSubmit = vi.fn((callback) => callback)
 const mockOnSubmit = vi.fn()
+const mockOnSkip = vi.fn()
 const mockMethods = {
   handleSubmit: mockHandleSubmit
 }
@@ -117,6 +118,15 @@ vi.mock('react-hook-form', () => {
     )
   }
 })
+
+// Mock HeroUI Button
+vi.mock('@heroui/react', () => ({
+  Button: ({ children, onPress, ...props }: { children: React.ReactNode; onPress: () => void }) => (
+    <button onClick={onPress} {...props}>
+      {children}
+    </button>
+  )
+}))
 
 describe('ModelRecommendations', () => {
   // Mock data that will be returned by useModelRecommendation
@@ -165,6 +175,7 @@ describe('ModelRecommendations', () => {
     mockUseModelRecommendation.mockReturnValue({
       methods: mockMethods,
       onSubmit: mockOnSubmit,
+      onSkip: mockOnSkip,
       data: mockData
     })
 
@@ -198,6 +209,7 @@ describe('ModelRecommendations', () => {
     mockUseModelRecommendation.mockReturnValue({
       methods: mockMethods,
       onSubmit: mockOnSubmit,
+      onSkip: mockOnSkip,
       data: mockData
     })
 
@@ -213,6 +225,7 @@ describe('ModelRecommendations', () => {
     mockUseModelRecommendation.mockReturnValue({
       methods: mockMethods,
       onSubmit: mockOnSubmit,
+      onSkip: mockOnSkip,
       data: null
     })
 
@@ -226,6 +239,7 @@ describe('ModelRecommendations', () => {
     mockUseModelRecommendation.mockReturnValueOnce({
       methods: mockMethods,
       onSubmit: mockOnSubmit,
+      onSkip: mockOnSkip,
       data: mockData
     })
 
@@ -266,5 +280,33 @@ describe('ModelRecommendations', () => {
     render(<ModelRecommendations />, { wrapper: createQueryClientWrapper() })
 
     expect(screen.queryByTestId('mock-download-status-line')).not.toBeInTheDocument()
+  })
+
+  it('renders skip button when not downloading', () => {
+    setDownloadWatcherState(null)
+
+    render(<ModelRecommendations />, { wrapper: createQueryClientWrapper() })
+
+    const skipButton = screen.getByRole('button', { name: /skip for now/i })
+    expect(skipButton).toBeInTheDocument()
+  })
+
+  it('does not render skip button when downloading', () => {
+    setDownloadWatcherState('downloading-model')
+
+    render(<ModelRecommendations />, { wrapper: createQueryClientWrapper() })
+
+    expect(screen.queryByRole('button', { name: /skip for now/i })).not.toBeInTheDocument()
+  })
+
+  it('skip button has correct text and is clickable', () => {
+    setDownloadWatcherState(null)
+
+    render(<ModelRecommendations />, { wrapper: createQueryClientWrapper() })
+
+    const skipButton = screen.getByRole('button', { name: /skip for now/i })
+    expect(skipButton).toBeInTheDocument()
+    expect(skipButton).toHaveTextContent('Skip for now')
+    expect(skipButton).not.toBeDisabled()
   })
 })
