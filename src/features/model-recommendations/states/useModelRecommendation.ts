@@ -23,6 +23,10 @@ export const useModelRecommendation = () => {
     router.replace('/editor')
   }, [router])
 
+  const onSkip = useCallback(() => {
+    router.replace('/editor')
+  }, [router])
+
   useEffect(() => {
     socket.on(SocketEvents.DOWNLOAD_COMPLETED, onDownloadCompleted)
 
@@ -37,5 +41,5 @@ export const useModelRecommendation = () => {
     }
   }, [data, setValue])
 
-  return { methods, onSubmit, data }
+  return { methods, onSubmit, onSkip, data }
 }

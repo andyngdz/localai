@@ -3,6 +3,7 @@
 import { useDownloadWatcherStore } from '@/features/download-watcher'
 import { ModelDownloadStatusLine } from '@/features/model-download-status-line'
 import { SetupLayout } from '@/features/setup-layout/presentations/SetupLayout'
+import { Button } from '@heroui/react'
 import { useRouter } from 'next/navigation'
 import { FormProvider } from 'react-hook-form'
 import { useModelRecommendation } from '../states/useModelRecommendation'
@@ -10,7 +11,7 @@ import { ModelRecommendationsList } from './ModelRecommendationsList'
 
 export const ModelRecommendations = () => {
   const router = useRouter()
-  const { methods, onSubmit, data } = useModelRecommendation()
+  const { methods, onSubmit, onSkip, data } = useModelRecommendation()
   const id = useDownloadWatcherStore((state) => state.id)
   const isDownloading = !!id
 
@@ -24,13 +25,20 @@ export const ModelRecommendations = () => {
         isNextDisabled={isDownloading}
         isBackDisabled={isDownloading}
       >
-        {data && (
-          <ModelRecommendationsList
-            sections={data.sections}
-            defaultSection={data.default_section}
-          />
-        )}
-        {isDownloading && <ModelDownloadStatusLine id={id} />}
+        <div className="flex flex-col items-center gap-6">
+          {data && (
+            <ModelRecommendationsList
+              sections={data.sections}
+              defaultSection={data.default_section}
+            />
+          )}
+          {isDownloading && <ModelDownloadStatusLine id={id} />}
+          {!isDownloading && (
+            <Button onPress={onSkip} variant="light" color="primary" size="sm">
+              Skip for now, I will download later
+            </Button>
+          )}
+        </div>
       </SetupLayout>
     </FormProvider>
   )
