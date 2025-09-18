@@ -1,18 +1,13 @@
-import type { NextConfig } from 'next';
+import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  trailingSlash: true,
+  output: 'export',
   experimental: {
-    viewTransition: true,
+    viewTransition: true
   },
   images: {
-    unoptimized: true,
-  },
-};
-
-if (process.env.NODE_ENV === 'production') {
-  nextConfig.output = 'export';
-  nextConfig.distDir = 'dist/renderer';
+    unoptimized: true
+  }
 }
 
-export default nextConfig;
+export default nextConfig

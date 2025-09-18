@@ -4,10 +4,10 @@
   "version": "0.1.0",
   "identifier": "dev.andyng.localai",
   "build": {
-    "frontendDist": "../dist/renderer",
+    "frontendDist": "../out",
     "devUrl": "http://localhost:3000",
     "beforeDevCommand": "npm run dev",
-    "beforeBuildCommand": "npm run build:web"
+    "beforeBuildCommand": "npm run build"
   },
   "app": {
     "windows": [
