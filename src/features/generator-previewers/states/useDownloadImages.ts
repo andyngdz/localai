@@ -1,9 +1,10 @@
+import { invoke } from '@tauri-apps/api/core'
 import { addToast } from '@heroui/react'
 
 export const useDownloadImages = () => {
   const onDownloadImage = async (url: string) => {
     try {
-      await window.electronAPI.downloadImage(url)
+      await invoke('download_image', { url })
     } catch (error) {
       const description = error instanceof Error ? error.message : 'Unknown error occurred'
 

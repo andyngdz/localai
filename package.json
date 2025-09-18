@@ -7,26 +7,25 @@
     "name": "Andy D. Nguyen",
     "email": "info@andyng.dev"
   },
-  "main": "electron/main.cjs",
   "type": "module",
   "scripts": {
+    "tauri": "tauri",
     "dev": "next dev --turbopack",
-    "dev:desktop": "tsx scripts/dev-full.ts",
-    "electron:compile": "tsx scripts/build-electron.ts",
-    "build": "npm run electron:compile && next build && electron-builder",
+    "build": "next build",
     "start": "next start",
-    "type-check": "tsc --noEmit",
-    "lint": "eslint src --ext .ts,.tsx,.js,.jsx",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json}\"",
     "ci:lint": "eslint src --ext .ts,.tsx,.js,.jsx --max-warnings=0 -f json -o eslint-report.json",
     "ci:format": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json}\"",
     "test": "vitest --run",
     "test:coverage": "vitest --coverage",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src --ext .ts,.tsx,.js,.jsx",
     "prepare": "husky"
   },
   "dependencies": {
+    "@tauri-apps/api": "^2.0.0",
+    "@tauri-apps/plugin-dialog": "^2.4.0",
     "dayjs": "^1.11.18",
-    "electron-serve": "^3.0.0",
     "react-use": "^17.6.0"
   },
   "devDependencies": {
@@ -38,6 +37,7 @@
     "@tailwindcss/typography": "^0.5.16",
     "@tanstack/react-query": "^5.87.4",
     "@tanstack/react-query-devtools": "^5.87.4",
+    "@tauri-apps/cli": "^2.0.0",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.8.0",
     "@testing-library/react": "^16.3.0",
@@ -46,7 +46,6 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/react-lottie": "^1.2.10",
-    "@types/wait-on": "^5.3.4",
     "@uidotdev/usehooks": "^2.4.1",
     "@vitejs/plugin-react": "^5.0.2",
     "@vitest/coverage-v8": "^3.2.4",
@@ -55,8 +54,6 @@
     "clsx": "^2.1.1",
     "concurrently": "^9.2.1",
     "core-js": "^3.45.1",
-    "electron": "^38.1.0",
-    "electron-builder": "^26.0.12",
     "es-toolkit": "^1.39.10",
     "eslint": "^9",
     "eslint-config-next": "15.5.3",
@@ -81,7 +78,6 @@
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.2.4",
     "vitest-sonar-reporter": "^2.0.4",
-    "wait-on": "^8.0.5",
     "zustand": "^5.0.8"
   }
 }

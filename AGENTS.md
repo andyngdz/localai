@@ -8,17 +8,16 @@
 - `src/app`: Next.js routes/layouts (App Router).
 - `src/features/*`: Feature modules (presentations, states, constants, types, tests).
 - `src/cores`, `src/services`, `src/sockets`, `src/types`, `src/assets`: Shared UI, APIs, sockets, types, and media.
-- `electron/`: Desktop main process (`main.ts`, `preload.ts`).
+- `src-tauri/`: Tauri v2 backend (Rust commands, configuration, icons).
 - `public/`: Static assets served by Next.js.
-- Build output: `.next/` (dev), `dist/renderer/` (prod export for Electron). Do not commit build artifacts.
+- Build output: `.next/` (dev), `dist/renderer/` (Next export used by Tauri bundler). Do not commit build artifacts.
 
 ## Build, Test, and Development Commands
 
 - `npm run dev`: Start Next.js dev server (Turbopack).
-- `npm run dev:desktop`: Run web and Electron together for desktop development.
-- `npm run build`: Build Next.js and package desktop app via `electron-builder`.
+- `npm run tauri dev`: Launch Tauri dev workflow (spawns Next.js then desktop shell).
+- `npm run build`: Build the web app (`next build`).
 - `npm start`: Start the built web app locally.
-- `npm run type-check`: TypeScript check without emit.
 - `npm run lint` / `npm run format`: ESLint and Prettier.
 - `npm test` / `npm run test:coverage`: Run Vitest and generate coverage.
 
@@ -58,5 +57,5 @@ vi.mock('next/image', () => ({
 
 ## Security & Configuration Tips
 
-- Renderer runs in a sandbox; do not access Node APIs directly. Bridge via `electron/preload.ts` if needed.
+- Browser context runs inside the Tauri WebView; avoid direct filesystem or OS access from frontend. Expose functionality via Rust commands/plugins.
 - Never commit secrets; store local assets in `public/` or `src/assets/` as appropriate.

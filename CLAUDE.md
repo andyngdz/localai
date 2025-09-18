@@ -7,19 +7,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-LocalAI is a Next.js-based Electron application for running AI models locally. It provides a web interface for image generation with Stable Diffusion, model management, and AI inference capabilities. The workspace contains two main projects:
+LocalAI is a Next.js-based Tauri application for running AI models locally. It provides a web interface for image generation with Stable Diffusion, model management, and AI inference capabilities. The workspace contains two main projects:
 
 - `localai/` - Next.js/React frontend for the user interface
 - `localai_backend/` - Python FastAPI backend service
-- `electron/` - Electron layer for desktop application integration
+- `src-tauri/` - Tauri v2 Rust backend for the desktop wrapper and native commands
 
 The frontend communicates with the backend server running on port 8000.
 
 ## Development Commands
 
 - `npm run dev` - Start Next.js development server with Turbopack
-- `npm run dev:desktop` - Start the Electron desktop version using `./scripts/run-desktop.sh`
-- `npm run build` - Build the application and create Electron distribution
+- `npm run tauri dev` - Start the Tauri desktop shell (runs Next.js dev server automatically)
+- `npm run build` - Build the web application (`next build`)
 - `npm run start` - Start production Next.js server
 - `npm run lint` - Run ESLint
 - `npm run format` - Format code with Prettier
