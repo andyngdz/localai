@@ -35,7 +35,7 @@ export const ModelRecommendations = () => {
           {isDownloading && <ModelDownloadStatusLine id={id} />}
           {!isDownloading && (
             <Button onPress={onSkip} variant="light" color="primary" size="sm">
-              Skip for now. I will download later
+              Skip for now, I will download later
             </Button>
           )}
         </div>
