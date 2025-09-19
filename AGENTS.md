@@ -15,7 +15,7 @@
 ## Build, Test, and Development Commands
 
 - `npm run dev`: Start Next.js dev server (Turbopack).
-- `npm run dev:desktop`: Run web and Electron together for desktop development.
+- `npm run desktop`: Run web and Electron together for desktop development.
 - `npm run build`: Build Next.js and package desktop app via `electron-builder`.
 - `npm start`: Start the built web app locally.
 - `npm run type-check`: TypeScript check without emit.
