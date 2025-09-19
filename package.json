@@ -11,9 +11,9 @@
   "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
-    "dev:desktop": "tsx scripts/dev-full.ts",
-    "electron:compile": "tsx scripts/build-electron.ts",
-    "build": "npm run electron:compile && next build && electron-builder",
+    "desktop": "tsx scripts/dev-full.ts",
+    "compile": "tsx scripts/build-electron.ts",
+    "build": "npm run desktop && next build && electron-builder",
     "start": "next start",
     "type-check": "tsc --noEmit",
     "lint": "eslint src --ext .ts,.tsx,.js,.jsx",
