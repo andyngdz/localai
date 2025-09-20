@@ -7,8 +7,7 @@
     "name": "Andy D. Nguyen",
     "email": "info@andyng.dev"
   },
-  "main": "electron/main.cjs",
-  "type": "module",
+  "main": "electron/main.js",
   "scripts": {
     "dev": "next dev --turbopack",
     "desktop": "tsx scripts/devall.ts",

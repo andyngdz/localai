@@ -1,0 +1,90 @@
+import fs from 'fs/promises'
+import path from 'path'
+import { BACKEND_BRANCH, BACKEND_DIRNAME, BACKEND_REPO_URL } from './constants'
+import { cloneRepository, isGitAvailable, updateRepository } from './git'
+import { BackendStatusEmitter, BackendStatusLevel } from './status'
+
+export interface SetupBackendOptions {
+  userDataPath: string
+  emit: BackendStatusEmitter
+}
+
+const pathExists = async (targetPath: string) => {
+  try {
+    await fs.access(targetPath)
+    return true
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+      return false
+    }
+
+    throw error
+  }
+}
+
+const ensureGitRepository = async (repositoryPath: string) => {
+  const gitDirectory = path.join(repositoryPath, '.git')
+  return pathExists(gitDirectory)
+}
+
+export const setupBackend = async ({
+  userDataPath,
+  emit
+}: SetupBackendOptions) => {
+  emit({
+    level: BackendStatusLevel.Info,
+    message: 'Checking for Git installation…'
+  })
+
+  const hasGit = await isGitAvailable()
+
+  if (!hasGit) {
+    emit({
+      level: BackendStatusLevel.Info,
+      message:
+        'Git is required. Install it using a package manager (macOS: brew install git, Debian/Ubuntu: sudo apt-get install git, Windows: winget install --id Git.Git -e --source winget) and restart the app.'
+    })
+
+    throw new Error('Git is not installed')
+  }
+
+  const backendPath = path.join(userDataPath, BACKEND_DIRNAME)
+  const backendExists = await pathExists(backendPath)
+
+  if (!backendExists) {
+    emit({
+      level: BackendStatusLevel.Info,
+      message: 'Cloning LocalAI backend repository…'
+    })
+    await cloneRepository(BACKEND_REPO_URL, backendPath, BACKEND_BRANCH)
+    emit({
+      level: BackendStatusLevel.Info,
+      message: 'Backend repository cloned successfully.'
+    })
+    return { backendPath }
+  }
+
+  const isRepo = await ensureGitRepository(backendPath)
+
+  if (!isRepo) {
+    emit({
+      level: BackendStatusLevel.Error,
+      message:
+        'The backend directory exists but is not a Git repository. Remove it manually and restart the app.'
+    })
+
+    throw new Error('Backend directory is not a Git repository')
+  }
+
+  emit({
+    level: BackendStatusLevel.Info,
+    message: 'Fetching the latest stable backend changes…'
+  })
+  await updateRepository(backendPath, BACKEND_BRANCH)
+  emit({
+    level: BackendStatusLevel.Info,
+    message: 'Backend repository updated successfully.'
+  })
+
+  return { backendPath }
+}

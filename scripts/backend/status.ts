@@ -1,5 +1,3 @@
-export type Nullable<T> = T | null | undefined
-
 export enum BackendStatusLevel {
   Info = 'info',
   Error = 'error'
