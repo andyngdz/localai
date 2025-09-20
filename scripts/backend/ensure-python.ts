@@ -64,7 +64,7 @@ const tryCandidate = async (candidate: PythonCandidate) => {
     return
   }
 
-  const versionOutput = `${result.stdout} ${result.stderr}`.trim()
+  const versionOutput = result.stdout.trim()
   const version = parseVersion(versionOutput)
 
   if (version && version.startsWith('3.11')) {
