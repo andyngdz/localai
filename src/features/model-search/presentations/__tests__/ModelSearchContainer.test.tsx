@@ -14,11 +14,15 @@ import { ModelSearchContainer } from '../ModelSearchContainer'
 
 // Mock child components
 vi.mock('../ModelSearchInput', () => ({
-  ModelSearchInput: () => <div data-testid="mock-search-input">Search Input</div>
+  ModelSearchInput: () => (
+    <div data-testid="mock-search-input">Search Input</div>
+  )
 }))
 
 vi.mock('../ModelSearchListModel', () => ({
-  ModelSearchListModel: () => <div data-testid="mock-search-list">Model List</div>
+  ModelSearchListModel: () => (
+    <div data-testid="mock-search-list">Model List</div>
+  )
 }))
 
 vi.mock('../ModelSearchView', () => ({
@@ -34,7 +38,10 @@ vi.mock('allotment', () => {
     children: React.ReactNode
     defaultSizes?: number[]
   }) => (
-    <div data-testid="mock-allotment" data-default-sizes={JSON.stringify(defaultSizes)}>
+    <div
+      data-testid="mock-allotment"
+      data-default-sizes={JSON.stringify(defaultSizes)}
+    >
       {children}
     </div>
   )

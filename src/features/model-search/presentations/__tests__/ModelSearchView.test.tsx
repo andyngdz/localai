@@ -31,7 +31,9 @@ const mockModelDetailsData: ModelDetailsResponse = {
 
 // Create spy functions to track hook calls and control returned values
 const useModelSearchViewMock = vi.fn()
-const useModelSearchSelectorStoreMock = vi.fn().mockReturnValue({ model_id: mockModelId })
+const useModelSearchSelectorStoreMock = vi
+  .fn()
+  .mockReturnValue({ model_id: mockModelId })
 
 // Create mocks with vi.mock
 vi.mock('../../states', () => ({
@@ -45,10 +47,17 @@ vi.mock('../../states/useModelSearchView', () => ({
 
 // Mock ScrollShadow to a simple wrapper, but keep other actual exports (e.g., Button)
 vi.mock('@heroui/react', async () => {
-  const actual = await vi.importActual<typeof import('@heroui/react')>('@heroui/react')
+  const actual =
+    await vi.importActual<typeof import('@heroui/react')>('@heroui/react')
   return {
     ...actual,
-    ScrollShadow: ({ children, className }: { children: ReactNode; className?: string }) => (
+    ScrollShadow: ({
+      children,
+      className
+    }: {
+      children: ReactNode
+      className?: string
+    }) => (
       <div data-testid="scrollshadow" className={className}>
         {children}
       </div>
@@ -113,7 +122,9 @@ vi.mock('../ModelSearchViewFooter', () => ({
 }))
 
 vi.mock('@/features/model-download-status-line', () => ({
-  ModelDownloadStatusLine: () => <div data-testid="mock-download-status-line">Download Status</div>
+  ModelDownloadStatusLine: () => (
+    <div data-testid="mock-download-status-line">Download Status</div>
+  )
 }))
 
 // Import the component under test AFTER mocks so they take effect
@@ -144,7 +155,9 @@ describe('ModelSearchView', () => {
     expect(screen.queryByTestId('mock-view-spaces')).not.toBeInTheDocument()
     expect(screen.queryByTestId('mock-view-files')).not.toBeInTheDocument()
     expect(screen.queryByTestId('mock-view-footer')).not.toBeInTheDocument()
-    expect(screen.queryByTestId('mock-download-status-line')).not.toBeInTheDocument()
+    expect(
+      screen.queryByTestId('mock-download-status-line')
+    ).not.toBeInTheDocument()
   })
 
   it('renders all sections when model details are available', () => {
@@ -168,10 +181,14 @@ describe('ModelSearchView', () => {
 
     // Check the content of the card section
     expect(
-      within(screen.getByTestId('mock-view-card')).getByText('ID: test-model-123')
+      within(screen.getByTestId('mock-view-card')).getByText(
+        'ID: test-model-123'
+      )
     ).toBeInTheDocument()
     expect(
-      within(screen.getByTestId('mock-view-card')).getByText('Author: test-author')
+      within(screen.getByTestId('mock-view-card')).getByText(
+        'Author: test-author'
+      )
     ).toBeInTheDocument()
     expect(
       within(screen.getByTestId('mock-view-card')).getByText('Downloads: 5000')

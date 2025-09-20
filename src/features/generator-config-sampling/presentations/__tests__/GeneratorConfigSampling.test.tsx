@@ -26,7 +26,9 @@ vi.mock('@/cores/presentations/NumberInputController', () => ({
         aria-label={ariaLabel}
         data-testid={`input-${controlName}`}
         min={minValue}
-        step={maximumFractionDigits ? 1 / Math.pow(10, maximumFractionDigits) : 1}
+        step={
+          maximumFractionDigits ? 1 / Math.pow(10, maximumFractionDigits) : 1
+        }
       />
     </div>
   )

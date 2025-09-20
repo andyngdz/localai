@@ -159,7 +159,9 @@ describe('API Service', () => {
 
       const result = await api.searchModel(modelName)
 
-      expect(client.get).toHaveBeenCalledWith(`/models/search?model_name=${modelName}`)
+      expect(client.get).toHaveBeenCalledWith(
+        `/models/search?model_name=${modelName}`
+      )
       expect(result).toEqual(mockResponse)
     })
   })
@@ -180,7 +182,9 @@ describe('API Service', () => {
         pipeline_tag: ['text-to-image'],
         private: false,
         sha: 'abcdef',
-        siblings: [{ blob_id: 'b1', rfilename: 'model.safetensors', size: 123456 }],
+        siblings: [
+          { blob_id: 'b1', rfilename: 'model.safetensors', size: 123456 }
+        ],
         spaces: [],
         tags: ['sd', 'diffusion']
       }
@@ -436,7 +440,10 @@ describe('API Service', () => {
   describe('deleteModel', () => {
     it('successfully deletes a model', async () => {
       const modelId = 'test-model-123'
-      const mockResponse = { success: true, message: 'Model deleted successfully' }
+      const mockResponse = {
+        success: true,
+        message: 'Model deleted successfully'
+      }
       vi.spyOn(client, 'delete').mockResolvedValueOnce({ data: mockResponse })
 
       const result = await api.deleteModel(modelId)

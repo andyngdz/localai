@@ -36,7 +36,8 @@
 - Location: co-locate in `__tests__` or `*.test.ts(x)` next to source.
 - Run `npm test` before pushing; check coverage report via `npm run test:coverage` (HTML report in `coverage/`).
 - Keep tests deterministic; avoid real network calls; snapshot files in `__snapshots__/` are allowed.
-- Run `npx lint-staged` after testing to make sure no typescript errors, lint and format are up to date.
+- Run `git add` and `npx lint-staged` after testing to make sure no typescript errors, lint and format are up to date.
+- Do not use `?.` for calling functions, check if not null then run, it's cleaner
 
 ### Example how to mock NextImage (next/image)
 

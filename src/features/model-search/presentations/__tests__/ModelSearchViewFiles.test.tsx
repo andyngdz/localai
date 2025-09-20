@@ -18,7 +18,10 @@ vi.mock('../ModelSearchViewHeader', () => ({
 
 // Mock @heroui/react table primitives to simple containers
 vi.mock('@heroui/react', () => ({
-  Table: ({ children, ...rest }: PropsWithChildren<Record<string, unknown>>) => (
+  Table: ({
+    children,
+    ...rest
+  }: PropsWithChildren<Record<string, unknown>>) => (
     <div data-testid="table" {...rest}>
       {children}
     </div>
@@ -26,10 +29,18 @@ vi.mock('@heroui/react', () => ({
   TableHeader: ({ children }: PropsWithChildren) => (
     <div data-testid="table-header">{children}</div>
   ),
-  TableBody: ({ children }: PropsWithChildren) => <div data-testid="table-body">{children}</div>,
-  TableColumn: ({ children }: PropsWithChildren) => <div role="columnheader">{children}</div>,
-  TableRow: ({ children }: PropsWithChildren) => <div role="row">{children}</div>,
-  TableCell: ({ children }: PropsWithChildren) => <div role="cell">{children}</div>
+  TableBody: ({ children }: PropsWithChildren) => (
+    <div data-testid="table-body">{children}</div>
+  ),
+  TableColumn: ({ children }: PropsWithChildren) => (
+    <div role="columnheader">{children}</div>
+  ),
+  TableRow: ({ children }: PropsWithChildren) => (
+    <div role="row">{children}</div>
+  ),
+  TableCell: ({ children }: PropsWithChildren) => (
+    <div role="cell">{children}</div>
+  )
 }))
 
 describe('ModelSearchViewFiles', () => {
@@ -46,7 +57,9 @@ describe('ModelSearchViewFiles', () => {
     const header = screen.getByTestId('header')
     expect(within(header).getByText('title: Files')).toBeInTheDocument()
     expect(
-      within(header).getByText('href: https://huggingface.co/author/model/tree/main')
+      within(header).getByText(
+        'href: https://huggingface.co/author/model/tree/main'
+      )
     ).toBeInTheDocument()
 
     // Table and headers

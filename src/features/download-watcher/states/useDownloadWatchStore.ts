@@ -8,10 +8,12 @@ export interface UseDownloadWatcherStore {
   onSetId: (id: string) => void
 }
 
-export const useDownloadWatcherStore = create<UseDownloadWatcherStore>((set) => ({
-  id: '',
-  percent: 0.0,
+export const useDownloadWatcherStore = create<UseDownloadWatcherStore>(
+  (set) => ({
+    id: '',
+    percent: 0.0,
 
-  onUpdatePercent: (percent: number) => set({ percent }),
-  onSetId: (id: string) => set({ id })
-}))
+    onUpdatePercent: (percent: number) => set({ percent }),
+    onSetId: (id: string) => set({ id })
+  })
+)

@@ -34,7 +34,9 @@ describe('MEMORY_OPTIONS Constants', () => {
 
   it('should include specific scale factor values', () => {
     const expectedScaleFactors = [0.5, 0.6, 0.7, 0.8, 0.9]
-    const actualScaleFactors = MEMORY_OPTIONS.map((option) => option.scaleFactor)
+    const actualScaleFactors = MEMORY_OPTIONS.map(
+      (option) => option.scaleFactor
+    )
     expect(actualScaleFactors).toEqual(expectedScaleFactors)
   })
 })

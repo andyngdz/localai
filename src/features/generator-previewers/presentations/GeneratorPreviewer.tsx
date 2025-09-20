@@ -10,7 +10,12 @@ const GeneratorPreviewerGrid = () => {
 
   const ImageComponents = useMemo(() => {
     return imageStepEnds.map((imageStepEnd) => {
-      return <GeneratorPreviewerItem key={imageStepEnd.index} imageStepEnd={imageStepEnd} />
+      return (
+        <GeneratorPreviewerItem
+          key={imageStepEnd.index}
+          imageStepEnd={imageStepEnd}
+        />
+      )
     })
   }, [imageStepEnds])
 

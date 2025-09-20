@@ -65,7 +65,9 @@ describe('useHistories', () => {
   })
 
   it('defaults to empty list when query data is undefined', () => {
-    vi.mocked(useHistoriesQuery).mockReturnValue(createMockQueryResult<HistoryItem[]>(undefined))
+    vi.mocked(useHistoriesQuery).mockReturnValue(
+      createMockQueryResult<HistoryItem[]>(undefined)
+    )
     vi.mocked(useHistoryGroups).mockReturnValue([])
 
     const { result } = renderHook(() => useHistories(), {

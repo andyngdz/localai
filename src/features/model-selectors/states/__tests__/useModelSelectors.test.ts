@@ -57,7 +57,9 @@ describe('useModelSelectors', () => {
     })
 
     // Mock the query result with test utility
-    vi.mocked(useDownloadedModelsQuery).mockReturnValue(createMockQueryResult(mockModels))
+    vi.mocked(useDownloadedModelsQuery).mockReturnValue(
+      createMockQueryResult(mockModels)
+    )
 
     // Mock the first function from es-toolkit
     vi.mocked(esToolkit.first).mockImplementation((arr) => {
@@ -98,7 +100,9 @@ describe('useModelSelectors', () => {
   })
 
   it('should not set id when data is empty', () => {
-    vi.mocked(useDownloadedModelsQuery).mockReturnValue(createMockQueryResult([]))
+    vi.mocked(useDownloadedModelsQuery).mockReturnValue(
+      createMockQueryResult([])
+    )
 
     renderHook(() => useModelSelectors())
 
@@ -107,7 +111,9 @@ describe('useModelSelectors', () => {
 
   it('should handle undefined data gracefully', () => {
     // undefined is treated as empty data
-    vi.mocked(useDownloadedModelsQuery).mockReturnValue(createMockQueryResult([]))
+    vi.mocked(useDownloadedModelsQuery).mockReturnValue(
+      createMockQueryResult([])
+    )
 
     const { result } = renderHook(() => useModelSelectors())
 

@@ -67,8 +67,13 @@ vi.mock('@heroui/react', () => ({
       Loading...
     </div>
   ),
-  Modal: ({ children, isOpen }: { children: React.ReactNode; isOpen: boolean }) =>
-    isOpen ? <div data-testid="modal">{children}</div> : null,
+  Modal: ({
+    children,
+    isOpen
+  }: {
+    children: React.ReactNode
+    isOpen: boolean
+  }) => (isOpen ? <div data-testid="modal">{children}</div> : null),
   ModalContent: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="modal-content">{children}</div>
   ),
@@ -123,12 +128,19 @@ describe('ModelManagement', () => {
     })
 
     it('has correct loading container styling', () => {
-      vi.mocked(api.getDownloadedModels).mockImplementation(() => new Promise(() => {}))
+      vi.mocked(api.getDownloadedModels).mockImplementation(
+        () => new Promise(() => {})
+      )
 
       render(<ModelManagement />, { wrapper })
 
       const container = screen.getByTestId('spinner').parentElement
-      expect(container).toHaveClass('flex', 'justify-center', 'items-center', 'h-32')
+      expect(container).toHaveClass(
+        'flex',
+        'justify-center',
+        'items-center',
+        'h-32'
+      )
     })
   })
 
@@ -165,7 +177,9 @@ describe('ModelManagement', () => {
       render(<ModelManagement />, { wrapper })
 
       expect(await screen.findByText('Installed Models')).toBeInTheDocument()
-      expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent('Installed Models')
+      expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent(
+        'Installed Models'
+      )
     })
 
     it('renders models listbox with correct aria-label', async () => {
@@ -181,7 +195,9 @@ describe('ModelManagement', () => {
 
       await screen.findByText('stable-diffusion-xl-base-1.0')
 
-      expect(screen.getByText('stable-diffusion-xl-base-1.0')).toBeInTheDocument()
+      expect(
+        screen.getByText('stable-diffusion-xl-base-1.0')
+      ).toBeInTheDocument()
       expect(screen.getByText('stable-diffusion-v1-5')).toBeInTheDocument()
       expect(screen.getByText('dreamshaper-v8')).toBeInTheDocument()
 
@@ -286,8 +302,12 @@ describe('ModelManagement', () => {
 
   describe('error handling', () => {
     it('handles API errors gracefully', async () => {
-      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
-      vi.mocked(api.getDownloadedModels).mockRejectedValue(new Error('API Error'))
+      const consoleErrorSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {})
+      vi.mocked(api.getDownloadedModels).mockRejectedValue(
+        new Error('API Error')
+      )
 
       render(<ModelManagement />, { wrapper })
 
@@ -347,7 +367,10 @@ describe('ModelManagement', () => {
       const listbox = await screen.findByTestId('listbox')
 
       // Title should come before listbox in the DOM
-      expect(title.compareDocumentPosition(listbox) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+      expect(
+        title.compareDocumentPosition(listbox) &
+          Node.DOCUMENT_POSITION_FOLLOWING
+      ).toBeTruthy()
     })
   })
 

@@ -30,7 +30,9 @@ vi.mock('react-hook-form', () => ({
 }))
 
 // Import after mocks
-const mockSearchModel = api.searchModel as MockedFunction<typeof api.searchModel>
+const mockSearchModel = api.searchModel as MockedFunction<
+  typeof api.searchModel
+>
 const mockOnResetModelId = vi.mocked(selectorStores.onResetModelId)
 const mockOnUpdateModelId = vi.mocked(selectorStores.onUpdateModelId)
 

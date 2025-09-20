@@ -13,7 +13,9 @@ vi.mock('@/services/api', () => ({
   }
 }))
 
-const mockedModelDetails = api.modelDetails as MockedFunction<typeof api.modelDetails>
+const mockedModelDetails = api.modelDetails as MockedFunction<
+  typeof api.modelDetails
+>
 
 describe('useModelSearchView', () => {
   beforeEach(() => {

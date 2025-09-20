@@ -109,7 +109,9 @@ describe('ModelSearchItem', () => {
 
     // We can check that they're in different containers
     // by verifying they have different parent elements
-    expect(zeroElements[0].parentElement).not.toBe(zeroElements[1].parentElement)
+    expect(zeroElements[0].parentElement).not.toBe(
+      zeroElements[1].parentElement
+    )
 
     // Both zero values should be inside span elements with text-xs class
     zeroElements.forEach((element) => {

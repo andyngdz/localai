@@ -14,7 +14,9 @@ describe('GeneratorConfigExtra', () => {
     render(<GeneratorConfigExtra />)
 
     // Check that the button with aria-label is present
-    expect(screen.getByRole('button', { name: 'Add Extra' })).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: 'Add Extra' })
+    ).toBeInTheDocument()
   })
 
   it('should render the Plus icon in the button', () => {

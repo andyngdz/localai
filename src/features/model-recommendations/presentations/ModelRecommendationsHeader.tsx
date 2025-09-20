@@ -8,11 +8,9 @@ interface ModelRecommendationsHeaderProps {
   isRecommended: boolean
 }
 
-export const ModelRecommendationsHeader: FC<ModelRecommendationsHeaderProps> = ({
-  title,
-  description,
-  isRecommended
-}) => {
+export const ModelRecommendationsHeader: FC<
+  ModelRecommendationsHeaderProps
+> = ({ title, description, isRecommended }) => {
   return (
     <div className="flex flex-col">
       <div className="flex items-center gap-2">

@@ -9,7 +9,9 @@ export interface ModelSearchItemProps {
   modelSearchInfo: ModelSearchInfo
 }
 
-export const ModelSearchItem: FC<ModelSearchItemProps> = ({ modelSearchInfo }) => {
+export const ModelSearchItem: FC<ModelSearchItemProps> = ({
+  modelSearchInfo
+}) => {
   const { id, author, downloads, likes } = modelSearchInfo
 
   return (

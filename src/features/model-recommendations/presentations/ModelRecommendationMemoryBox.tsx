@@ -5,10 +5,9 @@ export interface ModelRecommendationMemoryBoxProps {
   content: string
 }
 
-export const ModelRecommendationMemoryBox: FC<ModelRecommendationMemoryBoxProps> = ({
-  icon,
-  content
-}) => {
+export const ModelRecommendationMemoryBox: FC<
+  ModelRecommendationMemoryBoxProps
+> = ({ icon, content }) => {
   return (
     <div className="w-24 flex items-center gap-2">
       <span className="text-muted-content">{icon}</span>

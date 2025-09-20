@@ -48,7 +48,9 @@ export const useGenerator = () => {
     }
   })
 
-  const onGenerate: SubmitHandler<GeneratorConfigFormValues> = async (config) => {
+  const onGenerate: SubmitHandler<GeneratorConfigFormValues> = async (
+    config
+  ) => {
     try {
       onSetIsGenerating(true)
       const history_id = await addHistory.mutateAsync(config)

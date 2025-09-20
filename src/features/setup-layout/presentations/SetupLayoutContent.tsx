@@ -5,11 +5,9 @@ export interface SetupLayoutContentProps {
   description: string
 }
 
-export const SetupLayoutContent: FC<PropsWithChildren<SetupLayoutContentProps>> = ({
-  title,
-  description,
-  children
-}) => {
+export const SetupLayoutContent: FC<
+  PropsWithChildren<SetupLayoutContentProps>
+> = ({ title, description, children }) => {
   return (
     <div className="max-w-4xl flex flex-1 items-center justify-center">
       <div className="mx-auto flex flex-col gap-12">

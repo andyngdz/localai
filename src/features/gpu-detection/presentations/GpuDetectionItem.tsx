@@ -9,7 +9,10 @@ export interface GpuDetectionItemProps extends RadioProps {
   gpu: GpuInfo
 }
 
-export const GpuDetectionItem: FC<GpuDetectionItemProps> = ({ gpu, ...restProps }) => {
+export const GpuDetectionItem: FC<GpuDetectionItemProps> = ({
+  gpu,
+  ...restProps
+}) => {
   const { name, cuda_compute_capability, memory } = gpu
 
   return (
@@ -28,7 +31,9 @@ export const GpuDetectionItem: FC<GpuDetectionItemProps> = ({ gpu, ...restProps 
     >
       <div className="ml-2 flex items-center justify-between gap-2 w-full">
         <span className="font-bold">{name}</span>
-        <span className="text-sm text-default-500 font-medium">{formatter.bytes(memory)}</span>
+        <span className="text-sm text-default-500 font-medium">
+          {formatter.bytes(memory)}
+        </span>
       </div>
     </Radio>
   )

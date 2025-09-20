@@ -1,7 +1,10 @@
 import { createQueryClientWrapper } from '@/cores/test-utils'
 import { useDownloadWatcherStore } from '@/features/download-watcher'
 import type { UseDownloadWatcherStore } from '@/features/download-watcher'
-import { ModelRecommendationResponse, ModelRecommendationSection } from '@/types/api'
+import {
+  ModelRecommendationResponse,
+  ModelRecommendationSection
+} from '@/types/api'
 import { render, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ModelRecommendations } from '../ModelRecommendations'
@@ -121,7 +124,14 @@ vi.mock('react-hook-form', () => {
 
 // Mock HeroUI Button
 vi.mock('@heroui/react', () => ({
-  Button: ({ children, onPress, ...props }: { children: React.ReactNode; onPress: () => void }) => (
+  Button: ({
+    children,
+    onPress,
+    ...props
+  }: {
+    children: React.ReactNode
+    onPress: () => void
+  }) => (
     <button onClick={onPress} {...props}>
       {children}
     </button>
@@ -231,7 +241,9 @@ describe('ModelRecommendations', () => {
 
     render(<ModelRecommendations />, { wrapper: createQueryClientWrapper() })
 
-    expect(screen.queryByTestId('mock-recommendations-list')).not.toBeInTheDocument()
+    expect(
+      screen.queryByTestId('mock-recommendations-list')
+    ).not.toBeInTheDocument()
   })
 
   it('passes form submission handler to SetupLayout', () => {
@@ -279,7 +291,9 @@ describe('ModelRecommendations', () => {
 
     render(<ModelRecommendations />, { wrapper: createQueryClientWrapper() })
 
-    expect(screen.queryByTestId('mock-download-status-line')).not.toBeInTheDocument()
+    expect(
+      screen.queryByTestId('mock-download-status-line')
+    ).not.toBeInTheDocument()
   })
 
   it('renders skip button when not downloading', () => {
@@ -296,7 +310,9 @@ describe('ModelRecommendations', () => {
 
     render(<ModelRecommendations />, { wrapper: createQueryClientWrapper() })
 
-    expect(screen.queryByRole('button', { name: /skip for now/i })).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: /skip for now/i })
+    ).not.toBeInTheDocument()
   })
 
   it('skip button has correct text and is clickable', () => {

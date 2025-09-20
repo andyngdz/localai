@@ -5,7 +5,8 @@ import { GeneratorConfigStyleModal } from '../GeneratorConfigStyleModal'
 
 // Mock HeroUI components
 vi.mock('@heroui/react', async () => {
-  const actual = await vi.importActual<typeof import('@heroui/react')>('@heroui/react')
+  const actual =
+    await vi.importActual<typeof import('@heroui/react')>('@heroui/react')
   return {
     ...actual,
     Modal: ({
@@ -65,7 +66,13 @@ vi.mock('@heroui/react', async () => {
         {children}
       </div>
     ),
-    ModalBody: ({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) => (
+    ModalBody: ({
+      children,
+      ...props
+    }: {
+      children: React.ReactNode
+      [key: string]: unknown
+    }) => (
       <div data-testid="modal-body" {...props}>
         {children}
       </div>
@@ -104,7 +111,11 @@ vi.mock('@heroui/react', async () => {
 
 // Mock GeneratorConfigStyleSection component
 vi.mock('../GeneratorConfigStyleSection', () => ({
-  GeneratorConfigStyleSection: ({ styleSections }: { styleSections: StyleSection[] }) => (
+  GeneratorConfigStyleSection: ({
+    styleSections
+  }: {
+    styleSections: StyleSection[]
+  }) => (
     <div data-testid="generator-config-style-section">
       {styleSections.map((section) => (
         <div key={section.id} data-testid={`style-section-${section.id}`}>
@@ -198,9 +209,15 @@ describe('GeneratorConfigStyleModal', () => {
     it('renders GeneratorConfigStyleSection with style sections', () => {
       render(<GeneratorConfigStyleModal {...defaultProps} />)
 
-      expect(screen.getByTestId('generator-config-style-section')).toBeInTheDocument()
-      expect(screen.getByTestId('style-section-abstract')).toHaveTextContent('2 styles')
-      expect(screen.getByTestId('style-section-realistic')).toHaveTextContent('1 styles')
+      expect(
+        screen.getByTestId('generator-config-style-section')
+      ).toBeInTheDocument()
+      expect(screen.getByTestId('style-section-abstract')).toHaveTextContent(
+        '2 styles'
+      )
+      expect(screen.getByTestId('style-section-realistic')).toHaveTextContent(
+        '1 styles'
+      )
     })
   })
 
@@ -223,7 +240,9 @@ describe('GeneratorConfigStyleModal', () => {
         isDismissable: false
       }
 
-      render(<GeneratorConfigStyleModal {...defaultProps} {...additionalProps} />)
+      render(
+        <GeneratorConfigStyleModal {...defaultProps} {...additionalProps} />
+      )
 
       const modal = screen.getByTestId('modal')
       expect(modal).toHaveAttribute('data-is-open', 'false')
@@ -237,7 +256,12 @@ describe('GeneratorConfigStyleModal', () => {
       render(<GeneratorConfigStyleModal {...defaultProps} />)
 
       const header = screen.getByTestId('modal-header')
-      expect(header).toHaveClass('flex', 'justify-between', 'items-center', 'gap-2')
+      expect(header).toHaveClass(
+        'flex',
+        'justify-between',
+        'items-center',
+        'gap-2'
+      )
     })
 
     it('applies correct CSS classes to warning chip', () => {
@@ -258,7 +282,9 @@ describe('GeneratorConfigStyleModal', () => {
       render(<GeneratorConfigStyleModal {...emptyProps} />)
 
       expect(screen.getByTestId('modal')).toBeInTheDocument()
-      expect(screen.getByTestId('generator-config-style-section')).toBeInTheDocument()
+      expect(
+        screen.getByTestId('generator-config-style-section')
+      ).toBeInTheDocument()
       expect(screen.queryByTestId(/style-section-/)).not.toBeInTheDocument()
     })
 
@@ -271,7 +297,9 @@ describe('GeneratorConfigStyleModal', () => {
       render(<GeneratorConfigStyleModal {...singleSectionProps} />)
 
       expect(screen.getByTestId('style-section-abstract')).toBeInTheDocument()
-      expect(screen.queryByTestId('style-section-realistic')).not.toBeInTheDocument()
+      expect(
+        screen.queryByTestId('style-section-realistic')
+      ).not.toBeInTheDocument()
     })
 
     it('handles style sections with no styles', () => {
@@ -287,7 +315,9 @@ describe('GeneratorConfigStyleModal', () => {
 
       render(<GeneratorConfigStyleModal {...emptySectionProps} />)
 
-      expect(screen.getByTestId('style-section-empty-section')).toHaveTextContent('0 styles')
+      expect(
+        screen.getByTestId('style-section-empty-section')
+      ).toHaveTextContent('0 styles')
     })
   })
 
@@ -297,7 +327,9 @@ describe('GeneratorConfigStyleModal', () => {
         styleSections: mockStyleSections
       }
 
-      expect(() => render(<GeneratorConfigStyleModal {...minimalProps} />)).not.toThrow()
+      expect(() =>
+        render(<GeneratorConfigStyleModal {...minimalProps} />)
+      ).not.toThrow()
     })
 
     it('omits children prop from ModalProps', () => {
@@ -311,7 +343,9 @@ describe('GeneratorConfigStyleModal', () => {
         // children should not be allowed here
       }
 
-      expect(() => render(<GeneratorConfigStyleModal {...propsWithoutChildren} />)).not.toThrow()
+      expect(() =>
+        render(<GeneratorConfigStyleModal {...propsWithoutChildren} />)
+      ).not.toThrow()
     })
   })
 })

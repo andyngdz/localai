@@ -3,7 +3,11 @@ import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { GpuDetection } from '../GpuDetection'
-import { createMockQuery, renderWithAct, setupRouterMock } from '@/cores/test-utils'
+import {
+  createMockQuery,
+  renderWithAct,
+  setupRouterMock
+} from '@/cores/test-utils'
 import { HardwareResponse } from '@/types'
 
 // Mock the modules
@@ -31,7 +35,11 @@ vi.mock('@/features/setup-layout/presentations/SetupLayout', () => ({
       <h1>{title}</h1>
       <p>{description}</p>
       <div>{children}</div>
-      <button data-testid="next-button" onClick={onNext} disabled={isNextDisabled}>
+      <button
+        data-testid="next-button"
+        onClick={onNext}
+        disabled={isNextDisabled}
+      >
         Next
       </button>
       <button data-testid="back-button" onClick={onBack}>
@@ -42,8 +50,14 @@ vi.mock('@/features/setup-layout/presentations/SetupLayout', () => ({
 }))
 
 vi.mock('../GpuDetectionContent', () => ({
-  GpuDetectionContent: ({ hardwareData }: { hardwareData: HardwareResponse }) => (
-    <div data-testid="mock-gpu-detection-content">Hardware Data: {hardwareData.message}</div>
+  GpuDetectionContent: ({
+    hardwareData
+  }: {
+    hardwareData: HardwareResponse
+  }) => (
+    <div data-testid="mock-gpu-detection-content">
+      Hardware Data: {hardwareData.message}
+    </div>
   )
 }))
 
@@ -101,10 +115,14 @@ describe('GpuDetection', () => {
 
     expect(screen.getByText('GPU & Hardware Detection')).toBeInTheDocument()
     expect(
-      screen.getByText('Detecting your GPU and CUDA capabilities for optimal performance')
+      screen.getByText(
+        'Detecting your GPU and CUDA capabilities for optimal performance'
+      )
     ).toBeInTheDocument()
     expect(screen.getByTestId('mock-gpu-detection-content')).toBeInTheDocument()
-    expect(screen.getByText('Hardware Data: Hardware detected successfully')).toBeInTheDocument()
+    expect(
+      screen.getByText('Hardware Data: Hardware detected successfully')
+    ).toBeInTheDocument()
   })
 
   it('provides form context to children', async () => {
@@ -125,7 +143,9 @@ describe('GpuDetection', () => {
     const mockPush = vi.fn()
     const mockBack = vi.fn()
 
-    vi.mocked(useHardwareQuery).mockReturnValue(createMockQuery(mockHardwareData))
+    vi.mocked(useHardwareQuery).mockReturnValue(
+      createMockQuery(mockHardwareData)
+    )
 
     vi.mocked(useRouter).mockReturnValue({
       push: mockPush,
@@ -177,6 +197,8 @@ describe('GpuDetection', () => {
 
     await renderWithAct(<GpuDetection />)
 
-    expect(screen.getByText('Hardware Data: Hardware detected successfully')).toBeInTheDocument()
+    expect(
+      screen.getByText('Hardware Data: Hardware detected successfully')
+    ).toBeInTheDocument()
   })
 })

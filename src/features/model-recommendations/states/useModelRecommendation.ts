@@ -11,7 +11,9 @@ export const useModelRecommendation = () => {
   const { data } = useModelRecommendationsQuery()
   const { setValue } = methods
 
-  const onSubmit: SubmitHandler<ModelRecommendationFormProps> = async (values) => {
+  const onSubmit: SubmitHandler<ModelRecommendationFormProps> = async (
+    values
+  ) => {
     const id = values.id
 
     if (id) {

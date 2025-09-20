@@ -7,7 +7,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 // Mock dependencies
 vi.mock('@heroui/react', async () => {
-  const actual = await vi.importActual<typeof import('@heroui/react')>('@heroui/react')
+  const actual =
+    await vi.importActual<typeof import('@heroui/react')>('@heroui/react')
   return {
     ...actual,
     Button: ({
@@ -33,7 +34,13 @@ vi.mock('@heroui/react', async () => {
         {children}
       </button>
     ),
-    Tooltip: ({ children, content }: { children: React.ReactNode; content: string }) => (
+    Tooltip: ({
+      children,
+      content
+    }: {
+      children: React.ReactNode
+      content: string
+    }) => (
       <div data-testid="tooltip" data-content={content}>
         {children}
       </div>
@@ -88,7 +95,10 @@ describe('HistoryUseConfigButton', () => {
     render(<HistoryUseConfigButton history={mockHistory} />)
 
     expect(useUseConfig).toHaveBeenCalledWith(mockHistory)
-    expect(screen.getByTestId('tooltip')).toHaveAttribute('data-content', 'Use this config')
+    expect(screen.getByTestId('tooltip')).toHaveAttribute(
+      'data-content',
+      'Use this config'
+    )
     expect(screen.getByTestId('button')).toBeInTheDocument()
     expect(screen.getByTestId('bolt-icon')).toBeInTheDocument()
   })

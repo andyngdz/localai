@@ -7,19 +7,27 @@ import { Generator } from '../Generator'
 
 // Mock all the feature components
 vi.mock('@/features/generator-actions', () => ({
-  GeneratorAction: () => <div data-testid="generator-action">GeneratorAction</div>
+  GeneratorAction: () => (
+    <div data-testid="generator-action">GeneratorAction</div>
+  )
 }))
 
 vi.mock('@/features/generator-configs', () => ({
-  GeneratorConfig: () => <div data-testid="generator-config">GeneratorConfig</div>
+  GeneratorConfig: () => (
+    <div data-testid="generator-config">GeneratorConfig</div>
+  )
 }))
 
 vi.mock('@/features/generator-previewers', () => ({
-  GeneratorPreviewer: () => <div data-testid="generator-previewer">GeneratorPreviewer</div>
+  GeneratorPreviewer: () => (
+    <div data-testid="generator-previewer">GeneratorPreviewer</div>
+  )
 }))
 
 vi.mock('@/features/generator-prompts', () => ({
-  GeneratorPrompt: () => <div data-testid="generator-prompt">GeneratorPrompt</div>
+  GeneratorPrompt: () => (
+    <div data-testid="generator-prompt">GeneratorPrompt</div>
+  )
 }))
 
 vi.mock('@/features/histories', () => ({
@@ -53,8 +61,17 @@ vi.mock('allotment', () => {
   )
 
   const AllotmentComponent = Object.assign(
-    ({ children, defaultSizes }: { children: React.ReactNode; defaultSizes: number[] }) => (
-      <div data-testid="allotment" data-default-sizes={JSON.stringify(defaultSizes)}>
+    ({
+      children,
+      defaultSizes
+    }: {
+      children: React.ReactNode
+      defaultSizes: number[]
+    }) => (
+      <div
+        data-testid="allotment"
+        data-default-sizes={JSON.stringify(defaultSizes)}
+      >
         {children}
       </div>
     ),
@@ -180,7 +197,10 @@ describe('Generator', () => {
     render(<Generator />)
 
     const allotment = screen.getByTestId('allotment')
-    expect(allotment).toHaveAttribute('data-default-sizes', JSON.stringify([300, 0, 300]))
+    expect(allotment).toHaveAttribute(
+      'data-default-sizes',
+      JSON.stringify([300, 0, 300])
+    )
   })
 
   it('renders three Allotment panes with correct configurations', () => {

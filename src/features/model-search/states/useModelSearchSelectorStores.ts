@@ -4,9 +4,11 @@ export interface UseModelSearchSelectorStore {
   model_id: string
 }
 
-export const useModelSearchSelectorStore = create<UseModelSearchSelectorStore>(() => ({
-  model_id: ''
-}))
+export const useModelSearchSelectorStore = create<UseModelSearchSelectorStore>(
+  () => ({
+    model_id: ''
+  })
+)
 
 export const onUpdateModelId = (model_id: string) => {
   useModelSearchSelectorStore.setState({

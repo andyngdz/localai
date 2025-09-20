@@ -5,11 +5,14 @@ import { HistoryLoader } from '../HistoryLoader'
 
 // Mock Skeleton to a simple div we can count
 vi.mock('@heroui/react', async () => {
-  const actual = await vi.importActual<typeof import('@heroui/react')>('@heroui/react')
+  const actual =
+    await vi.importActual<typeof import('@heroui/react')>('@heroui/react')
   type SkeletonProps = { className?: string } & HTMLAttributes<HTMLDivElement>
   return {
     ...actual,
-    Skeleton: (props: SkeletonProps) => <div data-testid="skeleton" {...props} />
+    Skeleton: (props: SkeletonProps) => (
+      <div data-testid="skeleton" {...props} />
+    )
   }
 })
 

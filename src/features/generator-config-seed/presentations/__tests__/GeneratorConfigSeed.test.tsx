@@ -56,7 +56,9 @@ describe('GeneratorConfigSeed', () => {
       </MockFormProvider>
     )
 
-    expect(screen.getByText('Seed', { selector: 'span.font-semibold' })).toBeInTheDocument()
+    expect(
+      screen.getByText('Seed', { selector: 'span.font-semibold' })
+    ).toBeInTheDocument()
   })
 
   it('should render number input for seed value', () => {

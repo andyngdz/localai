@@ -1,4 +1,7 @@
-import { useFormValuesStore, useUseImageGenerationStore } from '@/features/generators'
+import {
+  useFormValuesStore,
+  useUseImageGenerationStore
+} from '@/features/generators'
 import { HistoryItem } from '@/types'
 
 export const useUseConfig = (history: HistoryItem) => {

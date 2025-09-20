@@ -29,7 +29,13 @@ vi.mock('@/cores/presentations/NumberInputController', () => ({
 
 // Mock the Tooltip component from @heroui/react
 vi.mock('@heroui/react', () => ({
-  Tooltip: ({ content, children }: { content: string; children: ReactNode }) => (
+  Tooltip: ({
+    content,
+    children
+  }: {
+    content: string
+    children: ReactNode
+  }) => (
     <div data-testid="tooltip" data-tooltip-content={content}>
       {children}
     </div>
@@ -70,7 +76,9 @@ describe('GeneratorConfigQuantity', () => {
       </MockFormProvider>
     )
 
-    expect(screen.getByTestId('number-input-number_of_images')).toBeInTheDocument()
+    expect(
+      screen.getByTestId('number-input-number_of_images')
+    ).toBeInTheDocument()
     expect(screen.getByText('Number of images')).toBeInTheDocument()
     expect(screen.getByText('Images')).toBeInTheDocument()
   })
@@ -84,6 +92,9 @@ describe('GeneratorConfigQuantity', () => {
 
     const tooltip = screen.getByTestId('tooltip')
     expect(tooltip).toBeInTheDocument()
-    expect(tooltip).toHaveAttribute('data-tooltip-content', 'Number of images will be generated')
+    expect(tooltip).toHaveAttribute(
+      'data-tooltip-content',
+      'Number of images will be generated'
+    )
   })
 })

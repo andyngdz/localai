@@ -1,6 +1,7 @@
 import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import serve from 'electron-serve'
 import path from 'path'
+import { startBackend } from '../scripts/backend'
 
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true'
 process.env.IBUS_USE_PORTAL = '1'
@@ -8,7 +9,8 @@ process.env.IBUS_USE_PORTAL = '1'
 const appDir = app.getAppPath()
 const IS_PRODUCTION = app.isPackaged
 const DEV_URL = 'http://localhost:3000'
-const appServe = IS_PRODUCTION && serve({ directory: path.join(appDir, 'dist/renderer') })
+const appServe =
+  IS_PRODUCTION && serve({ directory: path.join(appDir, 'dist/renderer') })
 
 const onSetLinuxGpuFlags = () => {
   if (process.platform !== 'linux') return
@@ -24,9 +26,9 @@ const onCreateWindow = async () => {
     height: 800,
     autoHideMenuBar: true,
     show: false,
-    backgroundColor: '#0b0b0b',
+    backgroundColor: '#0B0B0B',
     webPreferences: {
-      preload: path.join(appDir, 'electron', 'preload.cjs'),
+      preload: path.join(appDir, 'electron', 'preload.js'),
       sandbox: true,
       contextIsolation: true,
       nodeIntegration: false,
@@ -84,6 +86,7 @@ if (!gotLock) {
     onSetLinuxGpuFlags()
     onCreateWindow()
     onDownloadImage()
+    startBackend({ userDataPath: app.getPath('userData') })
   })
 
   app.on('window-all-closed', () => {

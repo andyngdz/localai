@@ -10,10 +10,9 @@ interface ModelRecommendationsSectionProps {
   isDefaultRecommended: boolean
 }
 
-export const ModelRecommendationsSection: FC<ModelRecommendationsSectionProps> = ({
-  section,
-  isDefaultRecommended
-}) => {
+export const ModelRecommendationsSection: FC<
+  ModelRecommendationsSectionProps
+> = ({ section, isDefaultRecommended }) => {
   return (
     <div className="flex flex-col gap-4">
       <ModelRecommendationsHeader

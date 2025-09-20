@@ -26,12 +26,20 @@ vi.mock('@/cores/presentations/ModelWithAvatar', () => ({
 
 // Mock UI wrappers used from @heroui/react
 vi.mock('@heroui/react', () => ({
-  ScrollShadow: ({ children, className }: { children: ReactNode; className?: string }) => (
+  ScrollShadow: ({
+    children,
+    className
+  }: {
+    children: ReactNode
+    className?: string
+  }) => (
     <div data-testid="scrollshadow" className={className}>
       {children}
     </div>
   ),
-  Chip: ({ children }: { children: ReactNode }) => <div data-testid="chip">{children}</div>
+  Chip: ({ children }: { children: ReactNode }) => (
+    <div data-testid="chip">{children}</div>
+  )
 }))
 
 describe('ModelSearchViewCard', () => {
@@ -50,13 +58,19 @@ describe('ModelSearchViewCard', () => {
     const header = screen.getByTestId('header')
     expect(within(header).getByText('title: Model Card')).toBeInTheDocument()
     expect(
-      within(header).getByText('href: https://huggingface.co/test-author/test-model-123')
+      within(header).getByText(
+        'href: https://huggingface.co/test-author/test-model-123'
+      )
     ).toBeInTheDocument()
 
     // Avatar data
     const avatar = screen.getByTestId('model-with-avatar')
-    expect(within(avatar).getByText('avatar-id: test-author/test-model-123')).toBeInTheDocument()
-    expect(within(avatar).getByText('avatar-author: test-author')).toBeInTheDocument()
+    expect(
+      within(avatar).getByText('avatar-id: test-author/test-model-123')
+    ).toBeInTheDocument()
+    expect(
+      within(avatar).getByText('avatar-author: test-author')
+    ).toBeInTheDocument()
 
     // Static label
     expect(screen.getByText('Text to Image')).toBeInTheDocument()
@@ -74,7 +88,13 @@ describe('ModelSearchViewCard', () => {
 
   it('renders without tags when tags array is empty', () => {
     render(
-      <ModelSearchViewCard id="test/model" author="author" downloads={0} likes={0} tags={[]} />
+      <ModelSearchViewCard
+        id="test/model"
+        author="author"
+        downloads={0}
+        likes={0}
+        tags={[]}
+      />
     )
 
     // Still shows header and avatar

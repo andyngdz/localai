@@ -36,7 +36,9 @@ describe('MaxMemoryScaleFactorPreview', () => {
   })
 
   it('displays a message when no data is available', () => {
-    vi.mocked(useMemoryQuery).mockReturnValue({} as UseQueryResult<MemoryResponse, ApiError>)
+    vi.mocked(useMemoryQuery).mockReturnValue(
+      {} as UseQueryResult<MemoryResponse, ApiError>
+    )
 
     render(
       <FormWrapper>
@@ -44,7 +46,9 @@ describe('MaxMemoryScaleFactorPreview', () => {
       </FormWrapper>
     )
 
-    expect(screen.getByText('Select a memory option to see preview')).toBeInTheDocument()
+    expect(
+      screen.getByText('Select a memory option to see preview')
+    ).toBeInTheDocument()
   })
 
   it('displays memory usage preview when data is available', () => {

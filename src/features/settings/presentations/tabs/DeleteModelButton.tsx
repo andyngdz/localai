@@ -1,5 +1,12 @@
 import { useDeleteModel } from '@/features/settings/states/useDeleteModel'
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@heroui/react'
+import {
+  Button,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader
+} from '@heroui/react'
 import { Trash2 } from 'lucide-react'
 import { FC, useState } from 'react'
 
@@ -35,13 +42,19 @@ export const DeleteModelButton: FC<DeleteModelButtonProps> = ({ model_id }) => {
           <ModalHeader>Delete model</ModalHeader>
           <ModalBody>
             <div>Are you sure you want to delete this model?</div>
-            <div className="text-danger-500 font-medium break-all">{model_id}</div>
+            <div className="text-danger-500 font-medium break-all">
+              {model_id}
+            </div>
           </ModalBody>
           <ModalFooter>
             <Button variant="light" onPress={() => setIsOpen(false)}>
               Cancel
             </Button>
-            <Button color="danger" isLoading={deleteModel.isPending} onPress={onConfirm}>
+            <Button
+              color="danger"
+              isLoading={deleteModel.isPending}
+              onPress={onConfirm}
+            >
               Delete
             </Button>
           </ModalFooter>

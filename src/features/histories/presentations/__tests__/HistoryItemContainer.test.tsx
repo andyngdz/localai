@@ -116,9 +116,15 @@ describe('HistoryItemContainer', () => {
 
     const images = screen.getAllByTestId('next-image')
     expect(images).toHaveLength(2)
-    expect(images[0]).toHaveAttribute('data-src', 'http://localhost:8000/static/images/image1.png')
+    expect(images[0]).toHaveAttribute(
+      'data-src',
+      'http://localhost:8000/static/images/image1.png'
+    )
     expect(images[0]).toHaveAttribute('data-alt', 'Generated image 1')
-    expect(images[1]).toHaveAttribute('data-src', 'http://localhost:8000/static/images/image2.png')
+    expect(images[1]).toHaveAttribute(
+      'data-src',
+      'http://localhost:8000/static/images/image2.png'
+    )
     expect(images[1]).toHaveAttribute('data-alt', 'Generated image 2')
   })
 

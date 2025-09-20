@@ -66,7 +66,9 @@ describe('ModelSearchOpenIconButton', () => {
 
       // Modal should not be visible initially
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-      expect(screen.queryByTestId('model-search-container')).not.toBeInTheDocument()
+      expect(
+        screen.queryByTestId('model-search-container')
+      ).not.toBeInTheDocument()
     })
 
     it('opens modal when button is pressed', async () => {
@@ -233,7 +235,9 @@ describe('ModelSearchOpenIconButton', () => {
 
       render(<ModelSearchOpenIconButton />)
 
-      expect(screen.queryByTestId('model-search-container')).not.toBeInTheDocument()
+      expect(
+        screen.queryByTestId('model-search-container')
+      ).not.toBeInTheDocument()
     })
 
     it('applies correct modal body styling', async () => {
@@ -360,7 +364,9 @@ describe('ModelSearchOpenIconButton', () => {
 
       // Modal and its content should not be in DOM when closed
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-      expect(screen.queryByTestId('model-search-container')).not.toBeInTheDocument()
+      expect(
+        screen.queryByTestId('model-search-container')
+      ).not.toBeInTheDocument()
       expect(screen.queryByText('Model search')).not.toBeInTheDocument()
     })
 

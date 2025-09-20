@@ -9,7 +9,11 @@ export interface ModelSearchViewHeaderProps {
   href?: string
 }
 
-export const ModelSearchViewHeader: FC<ModelSearchViewHeaderProps> = ({ Icon, title, href }) => {
+export const ModelSearchViewHeader: FC<ModelSearchViewHeaderProps> = ({
+  Icon,
+  title,
+  href
+}) => {
   return (
     <div className="flex gap-2">
       <div className="flex items-center gap-2">

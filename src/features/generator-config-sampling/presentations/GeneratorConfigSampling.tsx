@@ -25,7 +25,9 @@ export const GeneratorConfigSampling = () => {
         controlName="cfg_scale"
         maximumFractionDigits={2}
         minValue={1}
-        startContent={<span className="text-sm text-default-500 min-w-fit">CFG Scale</span>}
+        startContent={
+          <span className="text-sm text-default-500 min-w-fit">CFG Scale</span>
+        }
       />
     </div>
   )

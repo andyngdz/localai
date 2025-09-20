@@ -277,7 +277,9 @@ describe('useImageViewModeStore', () => {
     })
 
     it('should work correctly in component lifecycle scenarios', () => {
-      const { result, unmount, rerender } = renderHook(() => useImageViewModeStore())
+      const { result, unmount, rerender } = renderHook(() =>
+        useImageViewModeStore()
+      )
 
       // Set initial state
       act(() => {

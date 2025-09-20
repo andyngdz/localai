@@ -15,16 +15,22 @@ export const DownloadWatcher: FC<PropsWithChildren> = ({ children }) => {
   const { onUpdatePercent, onSetId } = useDownloadWatcherStore()
 
   useEffect(() => {
-    socket.on(SocketEvents.DOWNLOAD_START, (data: DownloadModelStartResponse) => {
-      onSetId(data.id)
-    })
+    socket.on(
+      SocketEvents.DOWNLOAD_START,
+      (data: DownloadModelStartResponse) => {
+        onSetId(data.id)
+      }
+    )
 
-    socket.on(SocketEvents.DOWNLOAD_STEP_PROGRESS, (data: DownloadStepProgressResponse) => {
-      const { id, step, total } = data
+    socket.on(
+      SocketEvents.DOWNLOAD_STEP_PROGRESS,
+      (data: DownloadStepProgressResponse) => {
+        const { id, step, total } = data
 
-      onUpdatePercent(step / total)
-      onSetId(id)
-    })
+        onUpdatePercent(step / total)
+        onSetId(id)
+      }
+    )
 
     socket.on(SocketEvents.DOWNLOAD_COMPLETED, () => {
       onUpdatePercent(0.0)

@@ -1,24 +1,68 @@
 import '@testing-library/jest-dom/vitest'
 import 'core-js/actual'
 import type React from 'react'
-import { vi } from 'vitest'
+import { afterEach, beforeEach, vi } from 'vitest'
 
-// Mock ResizeObserver for tests since jsdom doesn't support it
-// Using vi.fn() to create mock functions
-const ResizeObserverMock = vi.fn(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn()
-}))
+/**
+ * Global Mocks
+ * Setup global mocks that are needed across all tests
+ */
 
-// Stub the global ResizeObserver object with the mock implementation
-vi.stubGlobal('ResizeObserver', ResizeObserverMock)
+// Mock ResizeObserver since jsdom doesn't provide it
+const createResizeObserverMock = () =>
+  vi.fn(() => ({
+    observe: vi.fn(),
+    unobserve: vi.fn(),
+    disconnect: vi.fn()
+  }))
 
-// Partially mock framer-motion to avoid window access during tests
+vi.stubGlobal('ResizeObserver', createResizeObserverMock())
+
+/**
+ * Module Mocks
+ * Mock external modules that cause issues in test environment
+ */
+
+// Mock framer-motion to prevent window access issues during tests
 vi.mock('framer-motion', async () => {
-  const actual = await vi.importActual<typeof import('framer-motion')>('framer-motion')
+  const actual =
+    await vi.importActual<typeof import('framer-motion')>('framer-motion')
   return {
     ...actual,
-    LazyMotion: ({ children }: { children: React.ReactNode }) => children as React.ReactElement
+    LazyMotion: ({ children }: { children: React.ReactNode }) =>
+      children as React.ReactElement
   }
+})
+
+/**
+ * ElectronAPI Mock
+ * Provides a mock implementation of the Electron API for testing
+ */
+
+type ElectronAPI = Window['electronAPI']
+
+const noop = (): void => {}
+
+const createElectronAPIMock = (): ElectronAPI => ({
+  downloadImage: vi.fn().mockReturnThis(),
+  onBackendSetupStatus: vi.fn().mockReturnValue(noop)
+})
+
+/**
+ * Test Setup and Cleanup
+ * Configure the test environment before and after each test
+ */
+
+beforeEach(() => {
+  // Setup ElectronAPI mock on window object
+  Object.defineProperty(window, 'electronAPI', {
+    configurable: true,
+    writable: true,
+    value: createElectronAPIMock()
+  })
+})
+
+afterEach(() => {
+  // Clean up ElectronAPI mock
+  Reflect.deleteProperty(window, 'electronAPI')
 })

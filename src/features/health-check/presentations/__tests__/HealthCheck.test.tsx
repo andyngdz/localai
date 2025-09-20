@@ -1,6 +1,10 @@
 import React from 'react'
 import { DeviceSelection } from '@/cores/constants'
-import { createMockQuery, renderWithAct, setupRouterMock } from '@/cores/test-utils'
+import {
+  createMockQuery,
+  renderWithAct,
+  setupRouterMock
+} from '@/cores/test-utils'
 import { api } from '@/services'
 import * as queries from '@/services'
 import { HealthResponse } from '@/types/api'
@@ -31,7 +35,11 @@ vi.mock('@/features/setup-layout/presentations/SetupLayout', () => ({
       <h1>{title}</h1>
       <p>{description}</p>
       <div>{children}</div>
-      <button data-testid="next-button" onClick={onNext} disabled={isNextDisabled}>
+      <button
+        data-testid="next-button"
+        onClick={onNext}
+        disabled={isNextDisabled}
+      >
         Next
       </button>
     </div>
@@ -40,7 +48,9 @@ vi.mock('@/features/setup-layout/presentations/SetupLayout', () => ({
 
 vi.mock('../HealthCheckContent', () => ({
   HealthCheckContent: ({ isHealthy }: { isHealthy: boolean }) => (
-    <div data-testid="mock-health-check-content">{isHealthy ? 'Healthy' : 'Not Healthy'}</div>
+    <div data-testid="mock-health-check-content">
+      {isHealthy ? 'Healthy' : 'Not Healthy'}
+    </div>
   )
 }))
 

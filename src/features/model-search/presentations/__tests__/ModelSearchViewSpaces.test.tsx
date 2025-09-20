@@ -16,7 +16,9 @@ vi.mock('../ModelSearchViewHeader', () => ({
 
 // Mock avatar to avoid external requests and simplify DOM
 vi.mock('@/cores/presentations/AuthorAvatar', () => ({
-  AuthorAvatar: ({ id }: { id: string }) => <div data-testid="author-avatar">avatar-{id}</div>
+  AuthorAvatar: ({ id }: { id: string }) => (
+    <div data-testid="author-avatar">avatar-{id}</div>
+  )
 }))
 
 // Mock heroui components with type-safe props

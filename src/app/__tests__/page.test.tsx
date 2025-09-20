@@ -4,7 +4,9 @@ import HomeScreen from '../page'
 
 // Mock the HealthCheck component
 vi.mock('@/features/health-check', () => ({
-  HealthCheck: () => <div data-testid="health-check">Health Check Component</div>
+  HealthCheck: () => (
+    <div data-testid="health-check">Health Check Component</div>
+  )
 }))
 
 describe('HomeScreen', () => {

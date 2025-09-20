@@ -33,7 +33,9 @@ vi.mock('@heroui/react', () => ({
       {children}
     </div>
   ),
-  Button: ({ children }: { children: React.ReactNode }) => <button type="button">{children}</button>
+  Button: ({ children }: { children: React.ReactNode }) => (
+    <button type="button">{children}</button>
+  )
 }))
 
 // Create mock functions outside of the vi.mock call
@@ -66,7 +68,13 @@ vi.mock('react-hook-form', () => {
 
 // Mock the child components
 vi.mock('../ModelRecommendationMemoryBox', () => ({
-  ModelRecommendationMemoryBox: ({ icon, content }: { icon: React.ReactNode; content: string }) => (
+  ModelRecommendationMemoryBox: ({
+    icon,
+    content
+  }: {
+    icon: React.ReactNode
+    content: string
+  }) => (
     <div data-testid="memory-box" data-content={content}>
       {icon}
     </div>
@@ -74,7 +82,9 @@ vi.mock('../ModelRecommendationMemoryBox', () => ({
 }))
 
 vi.mock('../ModelRecommendationsBadge', () => ({
-  ModelRecommendationsBadge: () => <div data-testid="recommendations-badge">Star</div>
+  ModelRecommendationsBadge: () => (
+    <div data-testid="recommendations-badge">Star</div>
+  )
 }))
 
 vi.mock('../ModelRecommendationsTags', () => ({
@@ -181,7 +191,9 @@ describe('ModelRecommendationsCard', () => {
 
     render(<ModelRecommendationsCard model={nonRecommendedModel} />)
 
-    expect(screen.queryByTestId('recommendations-badge')).not.toBeInTheDocument()
+    expect(
+      screen.queryByTestId('recommendations-badge')
+    ).not.toBeInTheDocument()
   })
 
   it('displays memory boxes with correct content', () => {

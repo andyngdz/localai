@@ -8,7 +8,9 @@ export interface HistoryUseConfigButtonProps {
   history: HistoryItem
 }
 
-export const HistoryUseConfigButton: FC<HistoryUseConfigButtonProps> = ({ history }) => {
+export const HistoryUseConfigButton: FC<HistoryUseConfigButtonProps> = ({
+  history
+}) => {
   const { onUseConfig } = useUseConfig(history)
 
   return (

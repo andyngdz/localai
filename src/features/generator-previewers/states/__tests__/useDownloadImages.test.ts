@@ -1,22 +1,16 @@
 import { useDownloadImages } from '@/features/generator-previewers/states/useDownloadImages'
 import { addToast } from '@heroui/react'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 // Partial mock to override only addToast while keeping other exports intact
 vi.mock('@heroui/react', async () => {
-  const actual = await vi.importActual<typeof import('@heroui/react')>('@heroui/react')
+  const actual =
+    await vi.importActual<typeof import('@heroui/react')>('@heroui/react')
   return {
     ...actual,
     addToast: vi.fn()
   }
 })
-
-// Type alias for window with electronAPI
-type WindowWithElectronAPI = Window & {
-  electronAPI: {
-    downloadImage: ReturnType<typeof vi.fn>
-  }
-}
 
 describe('useDownloadImages', () => {
   const testUrl = 'https://example.com/image.png'
@@ -25,13 +19,7 @@ describe('useDownloadImages', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mockDownloadImage = vi.fn().mockResolvedValue(undefined)
-    ;(window as unknown as WindowWithElectronAPI).electronAPI = {
-      downloadImage: mockDownloadImage
-    }
-  })
-
-  afterEach(() => {
-    delete (window as unknown as { electronAPI?: unknown }).electronAPI
+    window.electronAPI.downloadImage = mockDownloadImage
   })
 
   it('calls electronAPI.downloadImage with given URL', async () => {

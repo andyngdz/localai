@@ -9,7 +9,9 @@ export interface GeneratorConfigStyleItemProps {
   styleItem: StyleItem
 }
 
-export const GeneratorConfigStyleItem: FC<GeneratorConfigStyleItemProps> = ({ styleItem }) => {
+export const GeneratorConfigStyleItem: FC<GeneratorConfigStyleItemProps> = ({
+  styleItem
+}) => {
   const { isSelected, onClick } = useGeneratorConfigStyle(styleItem.id)
 
   return (

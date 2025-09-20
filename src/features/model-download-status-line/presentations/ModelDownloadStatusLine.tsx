@@ -6,7 +6,9 @@ export interface ModelDownloadStatusLineProps {
   id: string
 }
 
-export const ModelDownloadStatusLine: FC<ModelDownloadStatusLineProps> = ({ id }) => {
+export const ModelDownloadStatusLine: FC<ModelDownloadStatusLineProps> = ({
+  id
+}) => {
   const { percent } = useDownloadWatcher(id)
 
   const Indicator = useMemo(() => {
@@ -16,7 +18,9 @@ export const ModelDownloadStatusLine: FC<ModelDownloadStatusLineProps> = ({ id }
       <div className="ml-0.5 mr-0.5 absolute flex flex-col h-1 inset-0">
         <Skeleton className="h-full w-full absolute" />
         <div
-          className={'h-full absolute bg-primary transition-all duration-500 ease-in-out'}
+          className={
+            'h-full absolute bg-primary transition-all duration-500 ease-in-out'
+          }
           style={{ width: `${percent * 100}%` }}
         />
       </div>

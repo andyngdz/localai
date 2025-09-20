@@ -8,7 +8,13 @@ export const EditorNavbar = () => {
   return (
     <Navbar maxWidth="full" className="bg-content1">
       <NavbarBrand>
-        <NextImage src={LocalAILogo} alt="LocalAI Logo" width={32} height={32} priority />
+        <NextImage
+          src={LocalAILogo}
+          alt="LocalAI Logo"
+          width={32}
+          height={32}
+          priority
+        />
       </NavbarBrand>
       <NavbarContent justify="center">
         <NavbarItem className="flex items-center gap-2">

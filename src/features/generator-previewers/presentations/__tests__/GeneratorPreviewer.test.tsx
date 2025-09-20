@@ -18,7 +18,11 @@ vi.mock('@/features/generator-previewers/states', () => ({
 
 // Mock the GeneratorPreviewerItem component
 vi.mock('../GeneratorPreviewerItem', () => ({
-  GeneratorPreviewerItem: ({ imageStepEnd }: { imageStepEnd: ImageGenerationStepEndResponse }) => (
+  GeneratorPreviewerItem: ({
+    imageStepEnd
+  }: {
+    imageStepEnd: ImageGenerationStepEndResponse
+  }) => (
     <div data-testid="previewer-item" data-index={imageStepEnd.index}>
       Mock Item {imageStepEnd.index}
     </div>
@@ -27,7 +31,9 @@ vi.mock('../GeneratorPreviewerItem', () => ({
 
 // Mock the GeneratorPreviewerSlider component
 vi.mock('../GeneratorPreviewerSlider', () => ({
-  GeneratorPreviewerSlider: () => <div data-testid="slider-component">Mock Slider</div>
+  GeneratorPreviewerSlider: () => (
+    <div data-testid="slider-component">Mock Slider</div>
+  )
 }))
 
 // Mock Swiper components
@@ -88,8 +94,12 @@ describe('GeneratorPreviewer', () => {
 
   it('should render grid view when viewMode is grid', () => {
     // Arrange
-    const mockedViewModeStore = vi.mocked(imageViewModeStoreModule.useImageViewModeStore)
-    const mockedPreviewerStore = vi.mocked(generatorPreviewerModule.useGeneratorPreviewer)
+    const mockedViewModeStore = vi.mocked(
+      imageViewModeStoreModule.useImageViewModeStore
+    )
+    const mockedPreviewerStore = vi.mocked(
+      generatorPreviewerModule.useGeneratorPreviewer
+    )
 
     mockedViewModeStore.mockReturnValue({
       viewMode: 'grid' as ImageViewMode,
@@ -110,7 +120,9 @@ describe('GeneratorPreviewer', () => {
     // Should have a grid container with the correct classes
     const gridContainer = screen.getByText(/Mock Item 0/).parentElement
     expect(gridContainer).toHaveClass('grid')
-    expect(gridContainer).toHaveClass('grid-cols-[repeat(auto-fill,minmax(256px,1fr))]')
+    expect(gridContainer).toHaveClass(
+      'grid-cols-[repeat(auto-fill,minmax(256px,1fr))]'
+    )
     expect(gridContainer).toHaveClass('gap-4')
     expect(gridContainer).toHaveClass('p-4')
 
@@ -123,8 +135,12 @@ describe('GeneratorPreviewer', () => {
 
   it('should render slider view when viewMode is slider', () => {
     // Arrange
-    const mockedViewModeStore = vi.mocked(imageViewModeStoreModule.useImageViewModeStore)
-    const mockedPreviewerStore = vi.mocked(generatorPreviewerModule.useGeneratorPreviewer)
+    const mockedViewModeStore = vi.mocked(
+      imageViewModeStoreModule.useImageViewModeStore
+    )
+    const mockedPreviewerStore = vi.mocked(
+      generatorPreviewerModule.useGeneratorPreviewer
+    )
 
     mockedViewModeStore.mockReturnValue({
       viewMode: 'slider' as ImageViewMode,
@@ -146,8 +162,12 @@ describe('GeneratorPreviewer', () => {
 
   it('should handle empty state in grid view', () => {
     // Arrange
-    const mockedViewModeStore = vi.mocked(imageViewModeStoreModule.useImageViewModeStore)
-    const mockedPreviewerStore = vi.mocked(generatorPreviewerModule.useGeneratorPreviewer)
+    const mockedViewModeStore = vi.mocked(
+      imageViewModeStoreModule.useImageViewModeStore
+    )
+    const mockedPreviewerStore = vi.mocked(
+      generatorPreviewerModule.useGeneratorPreviewer
+    )
 
     mockedViewModeStore.mockReturnValue({
       viewMode: 'grid' as ImageViewMode,
@@ -164,7 +184,8 @@ describe('GeneratorPreviewer', () => {
 
     // Assert
     // In empty state, we should still have the grid container but with no children
-    const gridContainer = screen.getByTestId('grid-container') || screen.getByRole('presentation')
+    const gridContainer =
+      screen.getByTestId('grid-container') || screen.getByRole('presentation')
     expect(gridContainer).toBeInTheDocument()
     expect(gridContainer).toHaveClass('grid')
     expect(gridContainer.children).toHaveLength(0)

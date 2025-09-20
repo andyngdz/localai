@@ -45,7 +45,9 @@ describe('ModelSearchViewFooter', () => {
     // Assert
     expect(screen.getByTestId('info-icon')).toBeInTheDocument()
     expect(
-      screen.getByText('Optimized download: Only essential files are downloaded, saving space')
+      screen.getByText(
+        'Optimized download: Only essential files are downloaded, saving space'
+      )
     ).toBeInTheDocument()
   })
 
@@ -95,7 +97,10 @@ describe('ModelSearchViewFooter', () => {
 
   it('re-renders correctly when id prop changes', () => {
     // Arrange
-    const mockCheckDownloaded = vi.fn().mockReturnValueOnce(false).mockReturnValueOnce(true)
+    const mockCheckDownloaded = vi
+      .fn()
+      .mockReturnValueOnce(false)
+      .mockReturnValueOnce(true)
 
     vi.mocked(useDownloadedModels).mockReturnValue({
       onCheckDownloaded: mockCheckDownloaded,

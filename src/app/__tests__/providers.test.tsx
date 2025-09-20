@@ -26,7 +26,10 @@ vi.mock('@tanstack/react-query', () => ({
 
 vi.mock('@tanstack/react-query-devtools', () => ({
   ReactQueryDevtools: (props: { initialIsOpen: boolean }) => (
-    <div data-testid="react-query-devtools" data-initial-open={props.initialIsOpen} />
+    <div
+      data-testid="react-query-devtools"
+      data-initial-open={props.initialIsOpen}
+    />
   )
 }))
 
@@ -118,6 +121,8 @@ describe('Providers', () => {
     expect(screen.getByTestId('query-client-provider')).toBeInTheDocument()
     expect(screen.getByTestId('download-watcher')).toBeInTheDocument()
     expect(screen.getByTestId('react-query-devtools')).toBeInTheDocument()
-    expect(container.firstChild).toContainElement(screen.getByTestId('query-client-provider'))
+    expect(container.firstChild).toContainElement(
+      screen.getByTestId('query-client-provider')
+    )
   })
 })

@@ -16,7 +16,9 @@ export const GeneratorConfigQuantity = () => {
           control={control}
           controlName="number_of_images"
           minValue={1}
-          startContent={<span className="text-sm text-default-500 min-w-fit">Images</span>}
+          startContent={
+            <span className="text-sm text-default-500 min-w-fit">Images</span>
+          }
           endContent={
             <Tooltip content="Number of images will be generated">
               <Info className="text-default-500" />

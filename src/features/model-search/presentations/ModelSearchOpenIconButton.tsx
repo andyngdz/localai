@@ -18,9 +18,16 @@ export const ModelSearchOpenIconButton = () => {
       <Button onPress={onOpen} variant="light" color="primary" isIconOnly>
         <Plus />
       </Button>
-      <Modal isOpen={isOpen} size="full" onClose={onClose} scrollBehavior="inside">
+      <Modal
+        isOpen={isOpen}
+        size="full"
+        onClose={onClose}
+        scrollBehavior="inside"
+      >
         <ModalContent>
-          <ModalHeader className="flex flex-col gap-1">Model search</ModalHeader>
+          <ModalHeader className="flex flex-col gap-1">
+            Model search
+          </ModalHeader>
           <Divider />
           <ModalBody className="p-0">
             <ModelSearchContainer />

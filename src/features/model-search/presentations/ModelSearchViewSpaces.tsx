@@ -9,7 +9,9 @@ export interface ModelSearchViewSpacesProps {
   spaces: string[]
 }
 
-export const ModelSearchViewSpaces: FC<ModelSearchViewSpacesProps> = ({ spaces }) => {
+export const ModelSearchViewSpaces: FC<ModelSearchViewSpacesProps> = ({
+  spaces
+}) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const showMoreText = isExpanded ? 'Show less' : 'Show more'
 

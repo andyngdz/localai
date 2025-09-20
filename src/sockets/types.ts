@@ -13,4 +13,8 @@ interface DownloadModelStartResponse {
   id: string
 }
 
-export type { DownloadStepProgressResponse, DownloadModelResponse, DownloadModelStartResponse }
+export type {
+  DownloadStepProgressResponse,
+  DownloadModelResponse,
+  DownloadModelStartResponse
+}

@@ -1,9 +1,17 @@
 import { StyleSection } from '@/types'
-import { Chip, Modal, ModalBody, ModalContent, ModalHeader, ModalProps } from '@heroui/react'
+import {
+  Chip,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalHeader,
+  ModalProps
+} from '@heroui/react'
 import { FC } from 'react'
 import { GeneratorConfigStyleSection } from './GeneratorConfigStyleSection'
 
-export interface GeneratorConfigStyleModalProps extends Omit<ModalProps, 'children'> {
+export interface GeneratorConfigStyleModalProps
+  extends Omit<ModalProps, 'children'> {
   styleSections: StyleSection[]
 }
 
@@ -16,7 +24,13 @@ export const GeneratorConfigStyleModal: FC<GeneratorConfigStyleModalProps> = ({
       <ModalContent>
         <ModalHeader className="flex justify-between items-center gap-2">
           <span>Styles</span>
-          <Chip color="warning" variant="flat" size="sm" className="mr-4" role="alert">
+          <Chip
+            color="warning"
+            variant="flat"
+            size="sm"
+            className="mr-4"
+            role="alert"
+          >
             Some styles may contain NSFW content. Please preview before applying
           </Chip>
         </ModalHeader>
