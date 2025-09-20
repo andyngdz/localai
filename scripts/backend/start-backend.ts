@@ -1,3 +1,4 @@
+import { ensurePython311 } from './ensure-python'
 import { setupBackend } from './setup-backend'
 import { BackendStatusEmitter, BackendStatusLevel } from './status'
 
@@ -18,6 +19,7 @@ export const startBackend = async ({ userDataPath }: StartBackendOptions) => {
   const emit = createDefaultStatusEmitter()
 
   try {
+    await ensurePython311({ emit })
     await setupBackend({ userDataPath, emit })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error'
