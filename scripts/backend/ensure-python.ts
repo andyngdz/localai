@@ -47,7 +47,7 @@ const parseVersion = (output: string) => {
 
 const tryCandidate = async (candidate: PythonCandidate) => {
   const args = [...candidate.baseArgs, '--version']
-  const result = await $`${candidate.command} ${args}`.nothrow()
+  const result = await $(candidate.command, ...args).nothrow()
 
   if (result.exitCode !== 0) {
     return
