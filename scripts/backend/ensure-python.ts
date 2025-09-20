@@ -15,6 +15,17 @@ interface MissingInstruction {
   commands: Command[]
 }
 
+/**
+ * Matches Python version output strings.
+ * Accepts formats like:
+ *   - 'Python 3.11'
+ *   - 'Python 3.11.0'
+ *   - 'Python 3.11.7'
+ * Capturing groups:
+ *   1: Major version (e.g., '3')
+ *   2: Minor version (e.g., '11')
+ *   3: Patch version (e.g., '0', '7'), optional
+ */
 const versionRegex = /Python\s+(\d+)\.(\d+)(?:\.(\d+))?/i
 
 const pythonCandidates = (): PythonCandidate[] => {
