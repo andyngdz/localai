@@ -14,12 +14,8 @@ export interface RunCommandOptions {
   cwd?: string
 }
 
-export function runCommand(
-  command: string,
-  args: string[],
-  options: RunCommandOptions = {}
-): Promise<void> {
-  return new Promise((resolve, reject) => {
+export const runCommand = (command: string, args: string[], options: RunCommandOptions = {}) =>
+  new Promise<void>((resolve, reject) => {
     const child = spawn(command, args, {
       stdio: 'inherit',
       shell: isWindows,
@@ -37,4 +33,12 @@ export function runCommand(
 
     child.on('error', reject)
   })
+
+export const runAsScript = async (task: () => Promise<void>, failureMessage: string) => {
+  try {
+    await task()
+  } catch (error) {
+    console.error(failureMessage, (error as Error).message)
+    process.exit(1)
+  }
 }

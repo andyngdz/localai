@@ -18,7 +18,7 @@ The frontend communicates with the backend server running on port 8000.
 ## Development Commands
 
 - `npm run dev` - Start Next.js development server with Turbopack
-- `npm run dev:desktop` - Start the Electron desktop version using `./scripts/run-desktop.sh`
+- `npm run desktop` - Start the Electron desktop version using `./scripts/devall.ts`
 - `npm run build` - Build the application and create Electron distribution
 - `npm run start` - Start production Next.js server
 - `npm run lint` - Run ESLint
