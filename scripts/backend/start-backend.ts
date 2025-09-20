@@ -8,8 +8,8 @@ export interface StartBackendOptions {
 const createDefaultStatusEmitter = (): BackendStatusEmitter => (payload) => {
   const prefix =
     payload.level === BackendStatusLevel.Error
-      ? '[Backend Setup][Error]'
-      : '[Backend Setup][Info]'
+      ? '[Backend][Error]'
+      : '[Backend][Info]'
 
   console.log(`${prefix} ${payload.message}`)
 }
