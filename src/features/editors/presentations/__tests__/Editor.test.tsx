@@ -30,7 +30,9 @@ describe('Editor', () => {
   })
 
   it('renders with proper structure and CSS classes', () => {
-    const { container } = render(<Editor />, { wrapper: createQueryClientWrapper() })
+    const { container } = render(<Editor />, {
+      wrapper: createQueryClientWrapper()
+    })
 
     // Check that there's a wrapping div with correct classes
     const wrapperDiv = container.firstChild

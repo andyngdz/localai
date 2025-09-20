@@ -44,8 +44,14 @@ describe('useStreamingMessage', () => {
   it('subscribes to socket events on mount', () => {
     renderHook(() => useStreamingMessage())
 
-    expect(socket.on).toHaveBeenCalledWith(SocketEvents.MODEL_LOAD_COMPLETED, expect.any(Function))
-    expect(socket.on).toHaveBeenCalledWith(SocketEvents.DOWNLOAD_COMPLETED, expect.any(Function))
+    expect(socket.on).toHaveBeenCalledWith(
+      SocketEvents.MODEL_LOAD_COMPLETED,
+      expect.any(Function)
+    )
+    expect(socket.on).toHaveBeenCalledWith(
+      SocketEvents.DOWNLOAD_COMPLETED,
+      expect.any(Function)
+    )
   })
 
   it('resets message on MODEL_LOAD_COMPLETED', () => {

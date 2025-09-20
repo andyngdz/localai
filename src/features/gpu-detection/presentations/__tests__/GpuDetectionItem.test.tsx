@@ -7,7 +7,9 @@ import { GpuDetectionItem } from '../GpuDetectionItem'
 // Mock the formatter service
 vi.mock('@/services', () => ({
   formatter: {
-    bytes: vi.fn((bytes: number) => `${(bytes / 1024 / 1024 / 1024).toFixed(1)} GB`)
+    bytes: vi.fn(
+      (bytes: number) => `${(bytes / 1024 / 1024 / 1024).toFixed(1)} GB`
+    )
   }
 }))
 
@@ -77,7 +79,12 @@ describe('GpuDetectionItem', () => {
   it('passes through additional props to Radio component', () => {
     render(
       <RadioGroupWrapper>
-        <GpuDetectionItem gpu={mockGpu} value="0" isDisabled={true} data-testid="gpu-radio" />
+        <GpuDetectionItem
+          gpu={mockGpu}
+          value="0"
+          isDisabled={true}
+          data-testid="gpu-radio"
+        />
       </RadioGroupWrapper>
     )
 

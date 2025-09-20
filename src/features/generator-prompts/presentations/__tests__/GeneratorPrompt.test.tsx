@@ -11,7 +11,9 @@ vi.mock('react-hook-form', () => ({
     return {
       register: vi.fn(),
       formState: {
-        errors: hasErrors ? { prompt: { type: 'required', message: 'Required' } } : {}
+        errors: hasErrors
+          ? { prompt: { type: 'required', message: 'Required' } }
+          : {}
       },
       watch: vi.fn()
     } as unknown as UseFormReturn<FieldValues>
@@ -67,7 +69,9 @@ describe('GeneratorPrompt', () => {
 
     // Check if the text areas are rendered
     const promptTextarea = screen.getByTestId('textarea-prompt')
-    const negativePromptTextarea = screen.getByTestId('textarea-negative-prompt')
+    const negativePromptTextarea = screen.getByTestId(
+      'textarea-negative-prompt'
+    )
 
     expect(promptTextarea).toBeInTheDocument()
     expect(promptTextarea).toHaveClass('font-mono')
@@ -96,7 +100,9 @@ describe('GeneratorPrompt', () => {
 
     // Use data-testid to find the textarea elements
     const promptTextarea = screen.getByTestId('textarea-prompt')
-    const negativePromptTextarea = screen.getByTestId('textarea-negative-prompt')
+    const negativePromptTextarea = screen.getByTestId(
+      'textarea-negative-prompt'
+    )
 
     // Verify prompt textarea has error state
     expect(promptTextarea).toBeInTheDocument()

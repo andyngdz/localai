@@ -22,8 +22,15 @@ vi.mock('../../states', () => ({
 }))
 
 vi.mock('../ModelSearchItem', () => ({
-  ModelSearchItem: ({ modelSearchInfo }: { modelSearchInfo: ModelSearchInfo }) => (
-    <div data-testid="mock-model-search-item" data-model-id={modelSearchInfo.id}>
+  ModelSearchItem: ({
+    modelSearchInfo
+  }: {
+    modelSearchInfo: ModelSearchInfo
+  }) => (
+    <div
+      data-testid="mock-model-search-item"
+      data-model-id={modelSearchInfo.id}
+    >
       Model: {modelSearchInfo.id}
     </div>
   )
@@ -65,7 +72,9 @@ describe('ModelSearchListModel', () => {
     // Should show a spinner when loading
     expect(screen.getByLabelText('Loading')).toBeInTheDocument()
     expect(screen.queryByText('No models found')).not.toBeInTheDocument()
-    expect(screen.queryByTestId('mock-model-search-item')).not.toBeInTheDocument()
+    expect(
+      screen.queryByTestId('mock-model-search-item')
+    ).not.toBeInTheDocument()
   })
 
   it('shows an alert when no models are found', () => {
@@ -80,7 +89,9 @@ describe('ModelSearchListModel', () => {
     // Should show an alert when no models are found
     expect(screen.getByText('No models found')).toBeInTheDocument()
     expect(screen.queryByRole('status')).not.toBeInTheDocument()
-    expect(screen.queryByTestId('mock-model-search-item')).not.toBeInTheDocument()
+    expect(
+      screen.queryByTestId('mock-model-search-item')
+    ).not.toBeInTheDocument()
   })
 
   it('renders a list of models when available', () => {
@@ -121,6 +132,8 @@ describe('ModelSearchListModel', () => {
     // When data is undefined and not loading, component should render nothing
     expect(screen.queryByRole('status')).not.toBeInTheDocument()
     expect(screen.queryByText('No models found')).not.toBeInTheDocument()
-    expect(screen.queryByTestId('mock-model-search-item')).not.toBeInTheDocument()
+    expect(
+      screen.queryByTestId('mock-model-search-item')
+    ).not.toBeInTheDocument()
   })
 })

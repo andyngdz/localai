@@ -27,6 +27,9 @@ export const useHistoryGroups = (histories: HistoryItem[]): HistoryGroup[] => {
       groups[date].push(history)
     })
 
-    return Object.entries(groups).map(([date, histories]) => ({ date, histories }))
+    return Object.entries(groups).map(([date, histories]) => ({
+      date,
+      histories
+    }))
   }, [histories])
 }

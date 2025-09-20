@@ -20,7 +20,9 @@ const onCreateDefaultItem = (): ImageGenerationItem => ({
   file_name: ''
 })
 
-const onCreateDefaultImageStepEnd = (index: number): ImageGenerationStepEndResponse => ({
+const onCreateDefaultImageStepEnd = (
+  index: number
+): ImageGenerationStepEndResponse => ({
   index,
   current_step: 0,
   timestep: 0,
@@ -80,5 +82,9 @@ const useUseImageGenerationStore = create<UseImageGenerationStore>()(
   }))
 )
 
-export { onCreateDefaultItem, onCreateDefaultImageStepEnd, useUseImageGenerationStore }
+export {
+  onCreateDefaultItem,
+  onCreateDefaultImageStepEnd,
+  useUseImageGenerationStore
+}
 export type { UseImageGenerationStore }

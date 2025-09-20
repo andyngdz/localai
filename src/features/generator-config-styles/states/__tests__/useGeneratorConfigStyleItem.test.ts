@@ -10,7 +10,11 @@ vi.mock('react-hook-form', () => ({
   useFormContext: () => ({
     watch: (field: string, defaultValue: unknown) => {
       mockWatch(field, defaultValue)
-      return mockWatch.mock.results[mockWatch.mock.results.length - 1]?.value || defaultValue || []
+      return (
+        mockWatch.mock.results[mockWatch.mock.results.length - 1]?.value ||
+        defaultValue ||
+        []
+      )
     },
     setValue: mockSetValue,
     getValues: vi.fn(),

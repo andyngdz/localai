@@ -8,7 +8,9 @@ export interface ModelSearchViewFooterProps {
   id: string
 }
 
-export const ModelSearchViewFooter: FC<ModelSearchViewFooterProps> = ({ id }) => {
+export const ModelSearchViewFooter: FC<ModelSearchViewFooterProps> = ({
+  id
+}) => {
   const { onCheckDownloaded } = useDownloadedModels()
   const isDownloaded = onCheckDownloaded(id)
 
@@ -24,7 +26,8 @@ export const ModelSearchViewFooter: FC<ModelSearchViewFooterProps> = ({ id }) =>
         <div className="flex items-center gap-2 text-default-500">
           <Info size={16} />
           <span className="text-xs">
-            Optimized download: Only essential files are downloaded, saving space
+            Optimized download: Only essential files are downloaded, saving
+            space
           </span>
         </div>
         {DownloadButtonStateComponent}

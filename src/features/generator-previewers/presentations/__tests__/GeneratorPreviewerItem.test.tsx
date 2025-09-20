@@ -3,7 +3,10 @@ import { render, fireEvent } from '@testing-library/react'
 import { useFormContext } from 'react-hook-form'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { useDownloadImages, useGeneratorPreviewer } from '../../states'
-import { GeneratorPreviewerItem, GeneratorPreviewerItemProps } from '../GeneratorPreviewerItem'
+import {
+  GeneratorPreviewerItem,
+  GeneratorPreviewerItemProps
+} from '../GeneratorPreviewerItem'
 
 vi.mock('react-hook-form', () => ({
   useFormContext: vi.fn()
@@ -18,7 +21,8 @@ vi.mock('next/image', () => mockNextImage())
 
 // Mock HeroUI components
 vi.mock('@heroui/react', async () => {
-  const actual = await vi.importActual<typeof import('@heroui/react')>('@heroui/react')
+  const actual =
+    await vi.importActual<typeof import('@heroui/react')>('@heroui/react')
   return {
     ...actual,
     Button: ({
@@ -104,7 +108,9 @@ describe('GeneratorPreviewerItem', () => {
 
     const { getByTestId } = render(<GeneratorPreviewerItem {...props} />)
     const image = getByTestId('mock-next-image')
-    expect(image.getAttribute('data-src')).toBe('data:image/png;base64,test-base64-string')
+    expect(image.getAttribute('data-src')).toBe(
+      'data:image/png;base64,test-base64-string'
+    )
   })
 
   it('should render NextImage with http URL when image path is available', () => {
@@ -123,7 +129,9 @@ describe('GeneratorPreviewerItem', () => {
 
     const { getByTestId } = render(<GeneratorPreviewerItem {...props} />)
     const image = getByTestId('mock-next-image')
-    expect(image.getAttribute('data-src')).toBe('http://localhost:8000/images/test.png')
+    expect(image.getAttribute('data-src')).toBe(
+      'http://localhost:8000/images/test.png'
+    )
   })
 
   it('should call onDownloadImage with correct URL when download button is clicked', () => {
@@ -134,12 +142,16 @@ describe('GeneratorPreviewerItem', () => {
     })
 
     // Act: render and click the download button
-    const { getByLabelText } = render(<GeneratorPreviewerItem {...defaultProps} />)
+    const { getByLabelText } = render(
+      <GeneratorPreviewerItem {...defaultProps} />
+    )
     const downloadButton = getByLabelText('Download image')
     fireEvent.click(downloadButton)
 
     // Assert: onDownloadImage is called with the composed HTTP URL
     expect(mockOnDownloadImage).toHaveBeenCalledTimes(1)
-    expect(mockOnDownloadImage).toHaveBeenCalledWith('http://localhost:8000/images/test.png')
+    expect(mockOnDownloadImage).toHaveBeenCalledWith(
+      'http://localhost:8000/images/test.png'
+    )
   })
 })

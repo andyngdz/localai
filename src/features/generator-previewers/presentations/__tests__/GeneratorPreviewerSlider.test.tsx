@@ -10,8 +10,14 @@ vi.mock('@/features/generator-previewers/states', () => ({
 
 // Mock GeneratorPreviewerItem component
 vi.mock('../GeneratorPreviewerItem', () => ({
-  GeneratorPreviewerItem: ({ imageStepEnd }: { imageStepEnd: { index: number } }) => (
-    <div data-testid={`previewer-item-${imageStepEnd.index}`}>Item {imageStepEnd.index}</div>
+  GeneratorPreviewerItem: ({
+    imageStepEnd
+  }: {
+    imageStepEnd: { index: number }
+  }) => (
+    <div data-testid={`previewer-item-${imageStepEnd.index}`}>
+      Item {imageStepEnd.index}
+    </div>
   )
 }))
 
@@ -49,10 +55,18 @@ vi.mock('swiper/css', () => ({}))
 vi.mock('../GeneratorPreviewerSliderActions', () => ({
   GeneratorPreviewerSliderActions: () => (
     <div data-testid="slider-actions">
-      <button data-testid="prev-button" aria-label="Previous image" onClick={() => mockSlidePrev()}>
+      <button
+        data-testid="prev-button"
+        aria-label="Previous image"
+        onClick={() => mockSlidePrev()}
+      >
         Previous
       </button>
-      <button data-testid="next-button" aria-label="Next image" onClick={() => mockSlideNext()}>
+      <button
+        data-testid="next-button"
+        aria-label="Next image"
+        onClick={() => mockSlideNext()}
+      >
         Next
       </button>
     </div>
@@ -88,7 +102,12 @@ describe('GeneratorPreviewerSlider', () => {
       render(<GeneratorPreviewerSlider />)
 
       const emptyState = screen.getByText('No images to display')
-      expect(emptyState).toHaveClass('flex', 'justify-center', 'items-center', 'text-default-500')
+      expect(emptyState).toHaveClass(
+        'flex',
+        'justify-center',
+        'items-center',
+        'text-default-500'
+      )
     })
   })
 
@@ -132,8 +151,12 @@ describe('GeneratorPreviewerSlider', () => {
       render(<GeneratorPreviewerSlider />)
 
       mockImageStepEnds.forEach((imageStepEnd) => {
-        expect(screen.getByTestId(`previewer-item-${imageStepEnd.index}`)).toBeInTheDocument()
-        expect(screen.getByText(`Item ${imageStepEnd.index}`)).toBeInTheDocument()
+        expect(
+          screen.getByTestId(`previewer-item-${imageStepEnd.index}`)
+        ).toBeInTheDocument()
+        expect(
+          screen.getByText(`Item ${imageStepEnd.index}`)
+        ).toBeInTheDocument()
       })
     })
 
@@ -204,7 +227,9 @@ describe('GeneratorPreviewerSlider', () => {
 
   describe('memoization', () => {
     it('should memoize slides based on imageStepEnds', () => {
-      const imageStepEnds = [{ index: 0, current_step: 10, timestep: 100, image_base64: 'img1' }]
+      const imageStepEnds = [
+        { index: 0, current_step: 10, timestep: 100, image_base64: 'img1' }
+      ]
 
       mockUseGeneratorPreviewer.mockReturnValue({
         imageStepEnds,
@@ -224,7 +249,9 @@ describe('GeneratorPreviewerSlider', () => {
     it('should update slides when imageStepEnds changes', () => {
       // Initial render with one image
       mockUseGeneratorPreviewer.mockReturnValue({
-        imageStepEnds: [{ index: 0, current_step: 10, timestep: 100, image_base64: 'img1' }],
+        imageStepEnds: [
+          { index: 0, current_step: 10, timestep: 100, image_base64: 'img1' }
+        ],
         items: []
       })
 

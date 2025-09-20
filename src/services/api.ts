@@ -59,7 +59,9 @@ class API {
   }
 
   async getModelRecommendations() {
-    const { data } = await client.get<ModelRecommendationResponse>('/models/recommendations')
+    const { data } = await client.get<ModelRecommendationResponse>(
+      '/models/recommendations'
+    )
 
     return data
   }
@@ -79,7 +81,9 @@ class API {
   }
 
   async modelDetails(model_id: string) {
-    const { data } = await client.get<ModelDetailsResponse>(`/models/details?id=${model_id}`)
+    const { data } = await client.get<ModelDetailsResponse>(
+      `/models/details?id=${model_id}`
+    )
 
     return data
   }
@@ -101,7 +105,10 @@ class API {
   }
 
   async generator(request: ImageGenerationRequest) {
-    const { data } = await client.post<ImageGenerationResponse>(`/generators`, request)
+    const { data } = await client.post<ImageGenerationResponse>(
+      `/generators`,
+      request
+    )
 
     return data
   }

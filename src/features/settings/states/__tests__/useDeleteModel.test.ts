@@ -121,7 +121,9 @@ describe('useDeleteModel', () => {
         wrapper: createQueryClientWrapper()
       })
 
-      await expect(result.current.mutateAsync('model-1')).rejects.toThrow(errorMessage)
+      await expect(result.current.mutateAsync('model-1')).rejects.toThrow(
+        errorMessage
+      )
 
       expect(addToast).toHaveBeenCalledWith({
         title: 'Delete failed',

@@ -9,12 +9,24 @@ vi.mock('swiper/css/pagination', () => ({}))
 
 // Mock Swiper components and modules with simplified implementation
 vi.mock('swiper/react', () => ({
-  Swiper: ({ children, initialSlide }: { children: React.ReactNode; initialSlide?: number }) => (
+  Swiper: ({
+    children,
+    initialSlide
+  }: {
+    children: React.ReactNode
+    initialSlide?: number
+  }) => (
     <div data-testid="swiper" data-initial-slide={initialSlide}>
       {children}
     </div>
   ),
-  SwiperSlide: ({ children, className }: { children: React.ReactNode; className?: string }) => (
+  SwiperSlide: ({
+    children,
+    className
+  }: {
+    children: React.ReactNode
+    className?: string
+  }) => (
     <div data-testid="swiper-slide" className={className}>
       {children}
     </div>
@@ -42,7 +54,8 @@ vi.mock('../ModelRecommendationsSection', () => ({
 
 // Mock the es-toolkit findIndex function with the native implementation
 vi.mock('es-toolkit/compat', () => ({
-  findIndex: (arr: unknown[], predicate: (item: unknown) => boolean) => arr.findIndex(predicate)
+  findIndex: (arr: unknown[], predicate: (item: unknown) => boolean) =>
+    arr.findIndex(predicate)
 }))
 
 // Mock Swiper modules
@@ -76,7 +89,12 @@ describe('ModelRecommendationsList', () => {
   ]
 
   it('renders swiper component with correct initialSlide', () => {
-    render(<ModelRecommendationsList sections={mockSections} defaultSection="section2" />)
+    render(
+      <ModelRecommendationsList
+        sections={mockSections}
+        defaultSection="section2"
+      />
+    )
 
     const swiper = screen.getByTestId('swiper')
     expect(swiper).toBeInTheDocument()
@@ -84,14 +102,24 @@ describe('ModelRecommendationsList', () => {
   })
 
   it('renders correct number of slides', () => {
-    render(<ModelRecommendationsList sections={mockSections} defaultSection="section1" />)
+    render(
+      <ModelRecommendationsList
+        sections={mockSections}
+        defaultSection="section1"
+      />
+    )
 
     const slides = screen.getAllByTestId('swiper-slide')
     expect(slides).toHaveLength(3)
   })
 
   it('passes correct props to ModelRecommendationsSection', () => {
-    render(<ModelRecommendationsList sections={mockSections} defaultSection="section2" />)
+    render(
+      <ModelRecommendationsList
+        sections={mockSections}
+        defaultSection="section2"
+      />
+    )
 
     const sections = screen.getAllByTestId('model-recommendations-section')
 
@@ -107,7 +135,12 @@ describe('ModelRecommendationsList', () => {
   })
 
   it('renders section names inside each slide', () => {
-    render(<ModelRecommendationsList sections={mockSections} defaultSection="section1" />)
+    render(
+      <ModelRecommendationsList
+        sections={mockSections}
+        defaultSection="section1"
+      />
+    )
 
     expect(screen.getByText('Section 1')).toBeInTheDocument()
     expect(screen.getByText('Section 2')).toBeInTheDocument()
@@ -116,7 +149,10 @@ describe('ModelRecommendationsList', () => {
 
   it('applies correct styling to container', () => {
     const { container } = render(
-      <ModelRecommendationsList sections={mockSections} defaultSection="section1" />
+      <ModelRecommendationsList
+        sections={mockSections}
+        defaultSection="section1"
+      />
     )
 
     const mainDiv = container.firstChild
@@ -124,7 +160,12 @@ describe('ModelRecommendationsList', () => {
   })
 
   it('applies correct classes to slides', () => {
-    render(<ModelRecommendationsList sections={mockSections} defaultSection="section1" />)
+    render(
+      <ModelRecommendationsList
+        sections={mockSections}
+        defaultSection="section1"
+      />
+    )
 
     const slides = screen.getAllByTestId('swiper-slide')
     slides.forEach((slide) => {

@@ -7,7 +7,9 @@ export interface ModelSearchViewDownloadButtonProps {
   id: string
 }
 
-export const ModelSearchViewDownloadButton: FC<ModelSearchViewDownloadButtonProps> = ({ id }) => {
+export const ModelSearchViewDownloadButton: FC<
+  ModelSearchViewDownloadButtonProps
+> = ({ id }) => {
   const { onDownload } = useDownloadButton(id)
   const { isDownloading } = useDownloadWatcher(id)
 

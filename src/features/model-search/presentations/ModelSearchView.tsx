@@ -24,7 +24,10 @@ export const ModelSearchView = () => {
             tags={modelDetails.tags}
           />
           <ModelSearchViewSpaces spaces={modelDetails.spaces} />
-          <ModelSearchViewFiles id={modelDetails.id} siblings={modelDetails.siblings} />
+          <ModelSearchViewFiles
+            id={modelDetails.id}
+            siblings={modelDetails.siblings}
+          />
         </ScrollShadow>
         <div className="flex flex-col">
           <ModelDownloadStatusLine id={modelDetails.id} />

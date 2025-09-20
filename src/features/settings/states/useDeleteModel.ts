@@ -11,7 +11,9 @@ export const useDeleteModel = () => {
     mutationKey: ['deleteModel'],
     mutationFn: (id: string) => {
       if (selected_model_id === id) {
-        throw new Error('The model is being used. Please unload before deleting')
+        throw new Error(
+          'The model is being used. Please unload before deleting'
+        )
       }
 
       return api.deleteModel(id)

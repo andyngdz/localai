@@ -1,4 +1,12 @@
-import { Modal, ModalContent, ModalHeader, ModalBody, Tabs, Tab, Divider } from '@heroui/react'
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  Tabs,
+  Tab,
+  Divider
+} from '@heroui/react'
 import { GeneralSettings, ModelManagement } from './tabs'
 import { FC } from 'react'
 

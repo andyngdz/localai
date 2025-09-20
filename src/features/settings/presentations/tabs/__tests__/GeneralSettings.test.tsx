@@ -97,7 +97,9 @@ describe('GeneralSettings', () => {
     it('has correct container structure and styling', () => {
       render(<GeneralSettings />)
 
-      const container = screen.getByText('API Base URL').closest('div')?.parentElement
+      const container = screen
+        .getByText('API Base URL')
+        .closest('div')?.parentElement
       expect(container).toHaveClass('flex', 'flex-col', 'gap-8')
     })
   })
@@ -276,21 +278,26 @@ describe('GeneralSettings', () => {
       const switchWrapper = screen.getByTestId('switch-wrapper')
 
       expect(
-        input.compareDocumentPosition(switchWrapper) & Node.DOCUMENT_POSITION_FOLLOWING
+        input.compareDocumentPosition(switchWrapper) &
+          Node.DOCUMENT_POSITION_FOLLOWING
       ).toBeTruthy()
     })
 
     it('maintains consistent gap between form elements', () => {
       render(<GeneralSettings />)
 
-      const container = screen.getByText('API Base URL').closest('div')?.parentElement
+      const container = screen
+        .getByText('API Base URL')
+        .closest('div')?.parentElement
       expect(container).toHaveClass('gap-8')
     })
 
     it('uses flexbox layout correctly', () => {
       render(<GeneralSettings />)
 
-      const container = screen.getByText('API Base URL').closest('div')?.parentElement
+      const container = screen
+        .getByText('API Base URL')
+        .closest('div')?.parentElement
       expect(container).toHaveClass('flex', 'flex-col')
     })
   })
@@ -327,7 +334,9 @@ describe('GeneralSettings', () => {
       })
 
       // The component will throw when trying to call register, which is expected
-      expect(() => render(<GeneralSettings />)).toThrow('register is not a function')
+      expect(() => render(<GeneralSettings />)).toThrow(
+        'register is not a function'
+      )
 
       consoleSpy.mockRestore()
     })

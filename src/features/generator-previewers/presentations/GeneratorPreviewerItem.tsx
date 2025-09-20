@@ -11,7 +11,9 @@ export interface GeneratorPreviewerItemProps {
   imageStepEnd: ImageGenerationStepEndResponse
 }
 
-export const GeneratorPreviewerItem: FC<GeneratorPreviewerItemProps> = ({ imageStepEnd }) => {
+export const GeneratorPreviewerItem: FC<GeneratorPreviewerItemProps> = ({
+  imageStepEnd
+}) => {
   const { onDownloadImage } = useDownloadImages()
   const { watch } = useFormContext<GeneratorConfigFormValues>()
   const { items } = useGeneratorPreviewer()
@@ -57,7 +59,8 @@ export const GeneratorPreviewerItem: FC<GeneratorPreviewerItemProps> = ({ imageS
   }, [imageStepEnd, items])
 
   const hasImage =
-    items[imageStepEnd.index]?.path.length > 0 || imageStepEnd.image_base64.length > 0
+    items[imageStepEnd.index]?.path.length > 0 ||
+    imageStepEnd.image_base64.length > 0
 
   return (
     <div

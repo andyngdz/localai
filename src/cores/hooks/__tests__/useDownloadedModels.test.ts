@@ -49,7 +49,9 @@ describe('useDownloadedModels', () => {
       }
     ]
 
-    vi.mocked(useDownloadedModelsQuery).mockReturnValue(createMockQueryResult(mockData))
+    vi.mocked(useDownloadedModelsQuery).mockReturnValue(
+      createMockQueryResult(mockData)
+    )
 
     // Act
     const { result } = renderHook(() => useDownloadedModels(), {
@@ -80,7 +82,9 @@ describe('useDownloadedModels', () => {
         }
       ]
 
-      vi.mocked(useDownloadedModelsQuery).mockReturnValue(createMockQueryResult(mockData))
+      vi.mocked(useDownloadedModelsQuery).mockReturnValue(
+        createMockQueryResult(mockData)
+      )
 
       // Act
       const { result } = renderHook(() => useDownloadedModels(), {
@@ -110,7 +114,9 @@ describe('useDownloadedModels', () => {
         }
       ]
 
-      vi.mocked(useDownloadedModelsQuery).mockReturnValue(createMockQueryResult(mockData))
+      vi.mocked(useDownloadedModelsQuery).mockReturnValue(
+        createMockQueryResult(mockData)
+      )
 
       // Act
       const { result } = renderHook(() => useDownloadedModels(), {
@@ -123,7 +129,9 @@ describe('useDownloadedModels', () => {
 
     it('should return false when data is empty', () => {
       // Arrange
-      vi.mocked(useDownloadedModelsQuery).mockReturnValue(createMockQueryResult([]))
+      vi.mocked(useDownloadedModelsQuery).mockReturnValue(
+        createMockQueryResult([])
+      )
 
       // Act
       const { result } = renderHook(() => useDownloadedModels(), {

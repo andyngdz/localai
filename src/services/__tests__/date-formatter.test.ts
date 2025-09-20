@@ -149,9 +149,15 @@ describe('DateFormatter', () => {
 
     it('handles various ISO 8601 formats', () => {
       expect(dateFormatter.date('2024-03-15T10:30:00Z')).toBe('Mar 15, 2024')
-      expect(dateFormatter.date('2024-03-15T10:30:00.000Z')).toBe('Mar 15, 2024')
-      expect(dateFormatter.date('2024-03-15T10:30:00+00:00')).toBe('Mar 15, 2024')
-      expect(dateFormatter.date('2024-03-15T10:30:00-05:00')).toBe('Mar 15, 2024')
+      expect(dateFormatter.date('2024-03-15T10:30:00.000Z')).toBe(
+        'Mar 15, 2024'
+      )
+      expect(dateFormatter.date('2024-03-15T10:30:00+00:00')).toBe(
+        'Mar 15, 2024'
+      )
+      expect(dateFormatter.date('2024-03-15T10:30:00-05:00')).toBe(
+        'Mar 15, 2024'
+      )
     })
 
     it('handles invalid date string gracefully', () => {
@@ -170,7 +176,9 @@ describe('DateFormatter', () => {
       const result1 = dateFormatter.date(null as unknown as string)
       const result2 = dateFormatter.date(undefined as unknown as string)
       const expected1 = dayjs(null as unknown as string).format('MMM D, YYYY')
-      const expected2 = dayjs(undefined as unknown as string).format('MMM D, YYYY')
+      const expected2 = dayjs(undefined as unknown as string).format(
+        'MMM D, YYYY'
+      )
       expect(result1).toBe(expected1)
       expect(result2).toBe(expected2)
     })
@@ -218,7 +226,9 @@ describe('DateFormatter', () => {
 
     it('handles non-string inputs', () => {
       // dayjs handles numbers as milliseconds since epoch
-      expect(dateFormatter.time(12345 as unknown as string)).toBe(dayjs(12345).format('HH:mm'))
+      expect(dateFormatter.time(12345 as unknown as string)).toBe(
+        dayjs(12345).format('HH:mm')
+      )
       expect(dateFormatter.date(12345 as unknown as string)).toBe(
         dayjs(12345).format('MMM D, YYYY')
       )

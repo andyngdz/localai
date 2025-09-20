@@ -18,7 +18,10 @@ describe('useStyleSections', () => {
   it('should return empty arrays as default data when query returns undefined', () => {
     // Arrange
     vi.mocked(useStyleSectionsQuery).mockReturnValue(
-      createMockQueryResult<StyleSection[]>(undefined, { isLoading: false, error: null })
+      createMockQueryResult<StyleSection[]>(undefined, {
+        isLoading: false,
+        error: null
+      })
     )
 
     // Act
@@ -52,7 +55,9 @@ describe('useStyleSections', () => {
       }
     ]
 
-    vi.mocked(useStyleSectionsQuery).mockReturnValue(createMockQueryResult(mockData))
+    vi.mocked(useStyleSectionsQuery).mockReturnValue(
+      createMockQueryResult(mockData)
+    )
 
     // Act
     const { result } = renderHook(() => useStyleSections(), {
@@ -105,7 +110,9 @@ describe('useStyleSections', () => {
       }
     ]
 
-    vi.mocked(useStyleSectionsQuery).mockReturnValue(createMockQueryResult(mockData))
+    vi.mocked(useStyleSectionsQuery).mockReturnValue(
+      createMockQueryResult(mockData)
+    )
 
     // Act
     const { result } = renderHook(() => useStyleSections(), {
@@ -113,7 +120,11 @@ describe('useStyleSections', () => {
     })
 
     // Assert
-    expect(result.current.styleItems).toEqual([mockStyleItem1, mockStyleItem2, mockStyleItem3])
+    expect(result.current.styleItems).toEqual([
+      mockStyleItem1,
+      mockStyleItem2,
+      mockStyleItem3
+    ])
     expect(result.current.styleItems).toHaveLength(3)
   })
 
@@ -130,7 +141,9 @@ describe('useStyleSections', () => {
       }
     ]
 
-    vi.mocked(useStyleSectionsQuery).mockReturnValue(createMockQueryResult(mockData))
+    vi.mocked(useStyleSectionsQuery).mockReturnValue(
+      createMockQueryResult(mockData)
+    )
 
     // Act
     const { result } = renderHook(() => useStyleSections(), {
@@ -168,7 +181,9 @@ describe('useStyleSections', () => {
       }
     ]
 
-    vi.mocked(useStyleSectionsQuery).mockReturnValue(createMockQueryResult(mockData))
+    vi.mocked(useStyleSectionsQuery).mockReturnValue(
+      createMockQueryResult(mockData)
+    )
 
     // Act
     const { result } = renderHook(() => useStyleSections(), {
@@ -233,7 +248,9 @@ describe('useStyleSections', () => {
       }
     ]
 
-    vi.mocked(useStyleSectionsQuery).mockReturnValue(createMockQueryResult(mockData))
+    vi.mocked(useStyleSectionsQuery).mockReturnValue(
+      createMockQueryResult(mockData)
+    )
 
     // Act
     const { result, rerender } = renderHook(() => useStyleSections(), {
@@ -285,7 +302,9 @@ describe('useStyleSections', () => {
       }
     ]
 
-    vi.mocked(useStyleSectionsQuery).mockReturnValue(createMockQueryResult(initialData))
+    vi.mocked(useStyleSectionsQuery).mockReturnValue(
+      createMockQueryResult(initialData)
+    )
 
     // Act
     const { result, rerender } = renderHook(() => useStyleSections(), {
@@ -296,7 +315,9 @@ describe('useStyleSections', () => {
     expect(initialStyleItems).toEqual([mockStyleItem1])
 
     // Update the mock to return different data
-    vi.mocked(useStyleSectionsQuery).mockReturnValue(createMockQueryResult(updatedData))
+    vi.mocked(useStyleSectionsQuery).mockReturnValue(
+      createMockQueryResult(updatedData)
+    )
 
     rerender()
 

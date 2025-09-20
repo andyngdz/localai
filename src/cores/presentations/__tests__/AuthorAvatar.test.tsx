@@ -14,7 +14,11 @@ import { AuthorAvatar, AuthorAvatarProps } from '../AuthorAvatar'
 // Mock the Avatar component
 vi.mock('@heroui/react', () => ({
   Avatar: vi.fn(({ src, ...props }) => (
-    <div data-testid="mock-avatar" data-src={src} data-props={JSON.stringify(props)}>
+    <div
+      data-testid="mock-avatar"
+      data-src={src}
+      data-props={JSON.stringify(props)}
+    >
       Mock Avatar
     </div>
   ))
@@ -53,7 +57,9 @@ describe('AuthorAvatar', () => {
     const avatarElement = screen.getByTestId('mock-avatar')
 
     // Assert
-    const passedProps = JSON.parse(avatarElement.getAttribute('data-props') || '{}')
+    const passedProps = JSON.parse(
+      avatarElement.getAttribute('data-props') || '{}'
+    )
     expect(passedProps.className).toBe('custom-avatar')
     expect(passedProps.alt).toBe('Author Profile Picture')
     expect(passedProps.size).toBe('lg')

@@ -7,8 +7,14 @@ import { MaxMemoryScaleFactorItems } from '../MaxMemoryScaleFactorItems'
 
 // Mock the MaxMemoryScaleFactorItem component
 vi.mock('../MaxMemoryScaleFactorItem', () => ({
-  MaxMemoryScaleFactorItem: ({ option }: { option: { scaleFactor: number } }) => (
-    <div data-testid={`memory-item-${option.scaleFactor}`}>Memory Item {option.scaleFactor}</div>
+  MaxMemoryScaleFactorItem: ({
+    option
+  }: {
+    option: { scaleFactor: number }
+  }) => (
+    <div data-testid={`memory-item-${option.scaleFactor}`}>
+      Memory Item {option.scaleFactor}
+    </div>
   )
 }))
 
@@ -30,7 +36,9 @@ describe('MaxMemoryScaleFactorItems', () => {
 
     // Check that each memory option is rendered
     MEMORY_OPTIONS.forEach((option) => {
-      expect(screen.getByTestId(`memory-item-${option.scaleFactor}`)).toBeInTheDocument()
+      expect(
+        screen.getByTestId(`memory-item-${option.scaleFactor}`)
+      ).toBeInTheDocument()
     })
   })
 

@@ -4,7 +4,8 @@ import { ImageGenerationStepEndResponse } from '@/types'
 import { useCallback, useEffect } from 'react'
 
 export const useGeneratorPreviewer = () => {
-  const { imageStepEnds, onUpdateImageStepEnd, items } = useUseImageGenerationStore()
+  const { imageStepEnds, onUpdateImageStepEnd, items } =
+    useUseImageGenerationStore()
 
   const onImageGenerationStepEnd = useCallback(() => {
     socket.on(

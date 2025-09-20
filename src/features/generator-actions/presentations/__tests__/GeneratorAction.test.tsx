@@ -17,7 +17,9 @@ vi.mock('@/features/generator-previewers/states/useImageViewModeStore', () => {
 
 // Mock the GeneratorActionSubmitButton component
 vi.mock('../GeneratorActionSubmitButton', () => ({
-  GeneratorActionSubmitButton: () => <div data-testid="submit-button-mock">Submit Button</div>
+  GeneratorActionSubmitButton: () => (
+    <div data-testid="submit-button-mock">Submit Button</div>
+  )
 }))
 
 // Mock HeroUI components
@@ -49,12 +51,20 @@ vi.mock('@heroui/react', () => {
           aria-label={ariaLabel}
           onClick={() => mockSelectionChange(new Set(['slider']))}
         >
-          {selectedKeys && <span data-testid="selected-key">{selectedKeys[0]}</span>}
+          {selectedKeys && (
+            <span data-testid="selected-key">{selectedKeys[0]}</span>
+          )}
           {children}
         </div>
       )
     },
-    SelectItem: ({ children, key }: { children: React.ReactNode; key?: string }) => (
+    SelectItem: ({
+      children,
+      key
+    }: {
+      children: React.ReactNode
+      key?: string
+    }) => (
       <div data-testid="select-item" data-key={key}>
         {children}
       </div>
@@ -71,7 +81,9 @@ describe('GeneratorAction', () => {
     setViewModeMock.mockReset()
 
     // Update the mock implementation for useImageViewModeStore
-    const storeModule = await import('@/features/generator-previewers/states/useImageViewModeStore')
+    const storeModule = await import(
+      '@/features/generator-previewers/states/useImageViewModeStore'
+    )
     const mockedStore = vi.mocked(storeModule.useImageViewModeStore)
     mockedStore.mockImplementation(() => ({
       viewMode: 'grid' as ImageViewMode,
@@ -105,7 +117,10 @@ describe('GeneratorAction', () => {
 
     // Assert
     expect(screen.getByTestId('select-mock')).toHaveClass('max-w-32')
-    expect(screen.getByTestId('select-mock')).toHaveAttribute('aria-label', 'View')
+    expect(screen.getByTestId('select-mock')).toHaveAttribute(
+      'aria-label',
+      'View'
+    )
   })
 
   it('should change view mode when selection changes', async () => {

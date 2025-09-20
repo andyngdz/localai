@@ -1,6 +1,13 @@
 import { formatter } from '@/services'
 import { ModelDetailsSibling } from '@/types'
-import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from '@heroui/react'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow
+} from '@heroui/react'
 import { Container } from 'lucide-react'
 import { FC } from 'react'
 import { ModelSearchViewHeader } from './ModelSearchViewHeader'
@@ -10,7 +17,10 @@ export interface ModelSearchViewFilesProps {
   siblings: ModelDetailsSibling[]
 }
 
-export const ModelSearchViewFiles: FC<ModelSearchViewFilesProps> = ({ id, siblings }) => {
+export const ModelSearchViewFiles: FC<ModelSearchViewFilesProps> = ({
+  id,
+  siblings
+}) => {
   return (
     <div className="flex flex-col gap-6">
       <ModelSearchViewHeader

@@ -8,14 +8,23 @@ export interface MaxMemoryScaleFactorItemProps {
   option: MemoryOption
 }
 
-export const MaxMemoryScaleFactorItem: FC<MaxMemoryScaleFactorItemProps> = ({ option }) => {
+export const MaxMemoryScaleFactorItem: FC<MaxMemoryScaleFactorItemProps> = ({
+  option
+}) => {
   const percent = option.scaleFactor * 100
   const colors = maxMemoryScaleFactorService.memoryColor(option.scaleFactor)
   const { bgClassName, textClassName, color } = colors
 
   return (
-    <Card key={option.scaleFactor} className={clsx('border-none shadow-none', bgClassName)}>
-      <Radio value={option.scaleFactor.toString()} color={color} className="p-5">
+    <Card
+      key={option.scaleFactor}
+      className={clsx('border-none shadow-none', bgClassName)}
+    >
+      <Radio
+        value={option.scaleFactor.toString()}
+        color={color}
+        className="p-5"
+      >
         <span className={clsx('font-medium', textClassName)}>
           {percent}% GPU / {percent}% RAM
         </span>

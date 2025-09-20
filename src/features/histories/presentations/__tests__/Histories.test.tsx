@@ -16,13 +16,20 @@ vi.mock('next/image', () => ({
 
 // Mock dependencies
 vi.mock('@heroui/react', async () => {
-  const actual = await vi.importActual<typeof import('@heroui/react')>('@heroui/react')
+  const actual =
+    await vi.importActual<typeof import('@heroui/react')>('@heroui/react')
   return {
     ...actual,
     Accordion: ({ children }: { children: React.ReactNode }) => (
       <div data-testid="accordion">{children}</div>
     ),
-    AccordionItem: ({ children, title }: { children: React.ReactNode; title: string }) => (
+    AccordionItem: ({
+      children,
+      title
+    }: {
+      children: React.ReactNode
+      title: string
+    }) => (
       <div data-testid="accordion-item" data-title={title}>
         {children}
       </div>

@@ -39,7 +39,9 @@ vi.mock('@heroui/react', () => ({
       data-color={color}
       className={className}
       aria-label={ariaLabel}
-      data-testid={ariaLabel?.includes('Previous') ? 'prev-button' : 'next-button'}
+      data-testid={
+        ariaLabel?.includes('Previous') ? 'prev-button' : 'next-button'
+      }
     >
       {children}
     </button>

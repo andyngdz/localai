@@ -198,7 +198,11 @@ describe('ModelSearchInput', () => {
 
   describe('Form Validation Integration', () => {
     it('works with form validation rules', async () => {
-      const TestWrapperWithValidation = ({ children }: { children: React.ReactNode }) => {
+      const TestWrapperWithValidation = ({
+        children
+      }: {
+        children: React.ReactNode
+      }) => {
         const methods = useForm<ModelSearchFormValues>({
           defaultValues: { query: '' },
           mode: 'onChange'
@@ -208,7 +212,9 @@ describe('ModelSearchInput', () => {
           <FormProvider {...methods}>
             <form>
               {children}
-              <div data-testid="form-state">{String(methods.formState.isValid)}</div>
+              <div data-testid="form-state">
+                {String(methods.formState.isValid)}
+              </div>
             </form>
           </FormProvider>
         )
@@ -228,7 +234,11 @@ describe('ModelSearchInput', () => {
     it('maintains form state consistency', async () => {
       const user = userEvent.setup()
 
-      const TestWrapperWithState = ({ children }: { children: React.ReactNode }) => {
+      const TestWrapperWithState = ({
+        children
+      }: {
+        children: React.ReactNode
+      }) => {
         const methods = useForm<ModelSearchFormValues>({
           defaultValues: { query: '' }
         })
@@ -237,7 +247,9 @@ describe('ModelSearchInput', () => {
           <FormProvider {...methods}>
             <form>
               {children}
-              <div data-testid="form-values">{JSON.stringify(methods.watch())}</div>
+              <div data-testid="form-values">
+                {JSON.stringify(methods.watch())}
+              </div>
             </form>
           </FormProvider>
         )
@@ -302,7 +314,11 @@ describe('ModelSearchInput', () => {
     it('works with different form states', async () => {
       const user = userEvent.setup()
 
-      const TestWrapperWithReset = ({ children }: { children: React.ReactNode }) => {
+      const TestWrapperWithReset = ({
+        children
+      }: {
+        children: React.ReactNode
+      }) => {
         const methods = useForm<ModelSearchFormValues>({
           defaultValues: { query: 'initial' }
         })
@@ -405,7 +421,11 @@ describe('ModelSearchInput', () => {
   describe('Type Safety', () => {
     it('correctly types the form values', () => {
       // This test ensures TypeScript compilation works correctly
-      const TestWrapperTyped = ({ children }: { children: React.ReactNode }) => {
+      const TestWrapperTyped = ({
+        children
+      }: {
+        children: React.ReactNode
+      }) => {
         const methods = useForm<ModelSearchFormValues>({
           defaultValues: { query: '' }
         })

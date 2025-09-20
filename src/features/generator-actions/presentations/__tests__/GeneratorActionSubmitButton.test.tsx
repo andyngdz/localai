@@ -57,7 +57,9 @@ describe('GeneratorActionSubmitButton', () => {
     )
 
     // Assert
-    expect(screen.getByTestId('submit-button')).toHaveTextContent('Generate 4 images')
+    expect(screen.getByTestId('submit-button')).toHaveTextContent(
+      'Generate 4 images'
+    )
     expect(screen.getByTestId('submit-button')).not.toBeDisabled()
   })
 
@@ -77,7 +79,9 @@ describe('GeneratorActionSubmitButton', () => {
     )
 
     // Assert
-    expect(screen.getByTestId('submit-button')).toHaveTextContent('Generate 4 images')
+    expect(screen.getByTestId('submit-button')).toHaveTextContent(
+      'Generate 4 images'
+    )
     expect(screen.getByTestId('submit-button')).toBeDisabled()
   })
 
@@ -89,7 +93,11 @@ describe('GeneratorActionSubmitButton', () => {
       reset: vi.fn()
     })
 
-    const CustomFormProviderWrapper = ({ children }: { children: React.ReactNode }) => {
+    const CustomFormProviderWrapper = ({
+      children
+    }: {
+      children: React.ReactNode
+    }) => {
       const methods = useForm({
         defaultValues: {
           number_of_images: 8
@@ -106,6 +114,8 @@ describe('GeneratorActionSubmitButton', () => {
     )
 
     // Assert
-    expect(screen.getByTestId('submit-button')).toHaveTextContent('Generate 8 images')
+    expect(screen.getByTestId('submit-button')).toHaveTextContent(
+      'Generate 8 images'
+    )
   })
 })

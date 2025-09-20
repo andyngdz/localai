@@ -112,7 +112,8 @@ describe('DeleteModelButton', () => {
       const buttons = screen.getAllByRole('button')
       const confirmButton = buttons.find(
         (button) =>
-          button.textContent === 'Delete' && button.getAttribute('data-color') === 'danger'
+          button.textContent === 'Delete' &&
+          button.getAttribute('data-color') === 'danger'
       )
       expect(confirmButton).toBeDefined()
       fireEvent.click(confirmButton!)
@@ -136,7 +137,8 @@ describe('DeleteModelButton', () => {
       const buttons = screen.getAllByRole('button')
       const confirmButton = buttons.find(
         (button) =>
-          button.textContent === 'Delete' && button.getAttribute('data-color') === 'danger'
+          button.textContent === 'Delete' &&
+          button.getAttribute('data-color') === 'danger'
       )
       expect(confirmButton).toBeDefined()
       fireEvent.click(confirmButton!)
@@ -161,7 +163,8 @@ describe('DeleteModelButton', () => {
       const buttons = screen.getAllByRole('button')
       const confirmButton = buttons.find(
         (button) =>
-          button.textContent === 'Delete' && button.getAttribute('data-color') === 'danger'
+          button.textContent === 'Delete' &&
+          button.getAttribute('data-color') === 'danger'
       )
       expect(confirmButton).toBeDefined()
       fireEvent.click(confirmButton!)
@@ -222,7 +225,9 @@ describe('DeleteModelButton', () => {
 
       // Check that the model ID is displayed in the modal
       expect(screen.getByText(specificModelId)).toBeInTheDocument()
-      expect(screen.getByText('Are you sure you want to delete this model?')).toBeInTheDocument()
+      expect(
+        screen.getByText('Are you sure you want to delete this model?')
+      ).toBeInTheDocument()
     })
   })
 
@@ -312,7 +317,9 @@ describe('DeleteModelButton', () => {
 
       // Check modal text content
       expect(screen.getByText('Delete model')).toBeInTheDocument()
-      expect(screen.getByText('Are you sure you want to delete this model?')).toBeInTheDocument()
+      expect(
+        screen.getByText('Are you sure you want to delete this model?')
+      ).toBeInTheDocument()
     })
   })
 })

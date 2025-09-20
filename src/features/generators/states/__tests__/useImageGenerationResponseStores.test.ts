@@ -144,7 +144,9 @@ describe('useImageGenerationResponseStores', () => {
         })
 
         expect(result.current.items).toEqual(mockResponse.items)
-        expect(result.current.nsfw_content_detected).toEqual(mockResponse.nsfw_content_detected)
+        expect(result.current.nsfw_content_detected).toEqual(
+          mockResponse.nsfw_content_detected
+        )
       })
 
       it('should handle empty response', () => {
@@ -186,8 +188,12 @@ describe('useImageGenerationResponseStores', () => {
 
         expect(result.current.imageStepEnds[1]).toEqual(updatedStepEnd)
         // Other indices should remain unchanged
-        expect(result.current.imageStepEnds[0]).toEqual(onCreateDefaultImageStepEnd(0))
-        expect(result.current.imageStepEnds[2]).toEqual(onCreateDefaultImageStepEnd(2))
+        expect(result.current.imageStepEnds[0]).toEqual(
+          onCreateDefaultImageStepEnd(0)
+        )
+        expect(result.current.imageStepEnds[2]).toEqual(
+          onCreateDefaultImageStepEnd(2)
+        )
       })
 
       it('should handle multiple updates to the same index', () => {
@@ -351,9 +357,13 @@ describe('useImageGenerationResponseStores', () => {
         })
 
         expect(result.current.items).toEqual(completion.items)
-        expect(result.current.nsfw_content_detected).toEqual(completion.nsfw_content_detected)
+        expect(result.current.nsfw_content_detected).toEqual(
+          completion.nsfw_content_detected
+        )
         expect(result.current.imageStepEnds[0]).toEqual(stepUpdate)
-        expect(result.current.imageStepEnds[1]).toEqual(onCreateDefaultImageStepEnd(1))
+        expect(result.current.imageStepEnds[1]).toEqual(
+          onCreateDefaultImageStepEnd(1)
+        )
       })
     })
   })

@@ -1,6 +1,12 @@
 'use client'
 
-import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@heroui/react'
+import {
+  Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger
+} from '@heroui/react'
 import { map } from 'es-toolkit/compat'
 import { ChevronDown } from 'lucide-react'
 import { useMemo } from 'react'
@@ -21,7 +27,11 @@ export const ModelSelector = () => {
     return (
       <Dropdown>
         <DropdownTrigger>
-          <Button variant="light" color="primary" endContent={<ChevronDown size={16} />}>
+          <Button
+            variant="light"
+            color="primary"
+            endContent={<ChevronDown size={16} />}
+          >
             {selected_model_id}
           </Button>
         </DropdownTrigger>

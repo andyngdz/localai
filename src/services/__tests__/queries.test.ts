@@ -66,7 +66,9 @@ describe('React Query Hooks', () => {
       const mockResponse = { status: 'ok', message: 'Server is healthy' }
       vi.mocked(api.health).mockResolvedValue(mockResponse)
 
-      const { result } = renderHook(() => useHealthQuery(), { wrapper: testEnv.wrapper })
+      const { result } = renderHook(() => useHealthQuery(), {
+        wrapper: testEnv.wrapper
+      })
 
       await waitFor(() => {
         expect(result.current.isSuccess).toBe(true)
@@ -80,7 +82,9 @@ describe('React Query Hooks', () => {
       const mockError = new Error('Network error')
       vi.mocked(api.health).mockRejectedValue(mockError)
 
-      const { result } = renderHook(() => useHealthQuery(), { wrapper: testEnv.wrapper })
+      const { result } = renderHook(() => useHealthQuery(), {
+        wrapper: testEnv.wrapper
+      })
 
       await waitFor(() => {
         expect(result.current.isError).toBe(true)
@@ -108,7 +112,9 @@ describe('React Query Hooks', () => {
       }
       vi.mocked(api.getHardwareStatus).mockResolvedValue(mockResponse)
 
-      const { result } = renderHook(() => useHardwareQuery(), { wrapper: testEnv.wrapper })
+      const { result } = renderHook(() => useHardwareQuery(), {
+        wrapper: testEnv.wrapper
+      })
 
       await waitFor(() => {
         expect(result.current.isSuccess).toBe(true)
@@ -124,7 +130,9 @@ describe('React Query Hooks', () => {
       const mockResponse = { gpu: 24576000000, ram: 32000000000 }
       vi.mocked(api.getMemory).mockResolvedValue(mockResponse)
 
-      const { result } = renderHook(() => useMemoryQuery(), { wrapper: testEnv.wrapper })
+      const { result } = renderHook(() => useMemoryQuery(), {
+        wrapper: testEnv.wrapper
+      })
 
       await waitFor(() => {
         expect(result.current.isSuccess).toBe(true)
@@ -195,7 +203,9 @@ describe('React Query Hooks', () => {
       ]
       vi.mocked(api.getDownloadedModels).mockResolvedValue(mockResponse)
 
-      const { result } = renderHook(() => useDownloadedModelsQuery(), { wrapper: testEnv.wrapper })
+      const { result } = renderHook(() => useDownloadedModelsQuery(), {
+        wrapper: testEnv.wrapper
+      })
 
       await waitFor(() => {
         expect(result.current.isSuccess).toBe(true)
@@ -226,7 +236,9 @@ describe('React Query Hooks', () => {
       ]
       vi.mocked(api.styles).mockResolvedValue(mockResponse)
 
-      const { result } = renderHook(() => useStyleSectionsQuery(), { wrapper: testEnv.wrapper })
+      const { result } = renderHook(() => useStyleSectionsQuery(), {
+        wrapper: testEnv.wrapper
+      })
 
       await waitFor(() => {
         expect(result.current.isSuccess).toBe(true)
@@ -283,7 +295,9 @@ describe('React Query Hooks', () => {
       ]
       vi.mocked(api.getHistories).mockResolvedValue(mockResponse)
 
-      const { result } = renderHook(() => useHistoriesQuery(), { wrapper: testEnv.wrapper })
+      const { result } = renderHook(() => useHistoriesQuery(), {
+        wrapper: testEnv.wrapper
+      })
 
       await waitFor(() => {
         expect(result.current.isSuccess).toBe(true)
@@ -297,7 +311,9 @@ describe('React Query Hooks', () => {
       const mockResponse: never[] = []
       vi.mocked(api.getHistories).mockResolvedValue(mockResponse)
 
-      const { result } = renderHook(() => useHistoriesQuery(), { wrapper: testEnv.wrapper })
+      const { result } = renderHook(() => useHistoriesQuery(), {
+        wrapper: testEnv.wrapper
+      })
 
       await waitFor(() => {
         expect(result.current.isSuccess).toBe(true)
@@ -311,7 +327,9 @@ describe('React Query Hooks', () => {
       const mockError = new Error('Failed to fetch histories')
       vi.mocked(api.getHistories).mockRejectedValue(mockError)
 
-      const { result } = renderHook(() => useHistoriesQuery(), { wrapper: testEnv.wrapper })
+      const { result } = renderHook(() => useHistoriesQuery(), {
+        wrapper: testEnv.wrapper
+      })
 
       await waitFor(() => {
         expect(result.current.isError).toBe(true)

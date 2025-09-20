@@ -11,7 +11,12 @@ vi.mock('@heroui/react', () => ({
   Button: ({ children, href, target, className }: ButtonProps) => {
     if (href) {
       return (
-        <a data-testid="button-link" href={href} target={target} className={className}>
+        <a
+          data-testid="button-link"
+          href={href}
+          target={target}
+          className={className}
+        >
           {children}
         </a>
       )
@@ -25,7 +30,9 @@ vi.mock('@heroui/react', () => ({
 }))
 
 // Provide a lightweight Icon implementation to assert it renders and receives className
-const DummyIcon: FC<LucideProps> = (props) => <svg data-testid="icon" {...props} />
+const DummyIcon: FC<LucideProps> = (props) => (
+  <svg data-testid="icon" {...props} />
+)
 
 describe('ModelSearchViewHeader', () => {
   it('renders icon and title without action button when href is not provided', () => {
@@ -45,7 +52,9 @@ describe('ModelSearchViewHeader', () => {
     const href = 'https://huggingface.co/author/model'
 
     // Act
-    render(<ModelSearchViewHeader Icon={DummyIcon} title="Model Card" href={href} />)
+    render(
+      <ModelSearchViewHeader Icon={DummyIcon} title="Model Card" href={href} />
+    )
 
     // Assert
     const link = screen.getByTestId('button-link')

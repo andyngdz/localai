@@ -38,7 +38,9 @@ describe('GeneratorConfigCommonSteps', () => {
 
     // Check that all buttons from COMMON_STEPS are rendered
     COMMON_STEPS.forEach((step) => {
-      expect(screen.getByRole('button', { name: step.toString() })).toBeInTheDocument()
+      expect(
+        screen.getByRole('button', { name: step.toString() })
+      ).toBeInTheDocument()
     })
   })
 
@@ -102,7 +104,10 @@ describe('GeneratorConfigCommonSteps', () => {
 
     // Check each button has the light variant class
     buttons.forEach((button) => {
-      expect(button).toHaveAttribute('class', expect.stringContaining('text-default-500'))
+      expect(button).toHaveAttribute(
+        'class',
+        expect.stringContaining('text-default-500')
+      )
     })
   })
 })

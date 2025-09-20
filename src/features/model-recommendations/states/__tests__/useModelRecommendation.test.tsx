@@ -30,7 +30,8 @@ vi.mock('react-hook-form', () => ({
 }))
 
 describe('useModelRecommendation', () => {
-  const setValue = vi.fn() as UseFormReturn<ModelRecommendationFormProps>['setValue']
+  const setValue =
+    vi.fn() as UseFormReturn<ModelRecommendationFormProps>['setValue']
   const mockForm: Partial<UseFormReturn<ModelRecommendationFormProps>> = {
     setValue
   }
@@ -41,7 +42,9 @@ describe('useModelRecommendation', () => {
     // Setup router mock with proper replace function
     await setupRouterMock()
 
-    vi.mocked(useForm).mockReturnValue(mockForm as UseFormReturn<ModelRecommendationFormProps>)
+    vi.mocked(useForm).mockReturnValue(
+      mockForm as UseFormReturn<ModelRecommendationFormProps>
+    )
   })
 
   it('should set default id from data', () => {
@@ -79,24 +82,32 @@ describe('useModelRecommendation', () => {
     const { mockReplace } = await setupRouterMock()
 
     // Mock the socket.on and socket.off methods
-    vi.spyOn(socket, 'on').mockImplementation((event: string, cb: VoidFunction) => {
-      if (event === SocketEvents.DOWNLOAD_COMPLETED) {
-        cb() // Immediately call the callback to trigger navigation
+    vi.spyOn(socket, 'on').mockImplementation(
+      (event: string, cb: VoidFunction) => {
+        if (event === SocketEvents.DOWNLOAD_COMPLETED) {
+          cb() // Immediately call the callback to trigger navigation
+        }
+        return socket // Return the socket object as per socket.io API
       }
-      return socket // Return the socket object as per socket.io API
-    })
+    )
 
     const { unmount } = renderHook(() => useModelRecommendation())
 
     // Check that navigation happened
     expect(mockReplace).toHaveBeenCalledWith('/editor')
-    expect(socket.on).toHaveBeenCalledWith(SocketEvents.DOWNLOAD_COMPLETED, expect.any(Function))
+    expect(socket.on).toHaveBeenCalledWith(
+      SocketEvents.DOWNLOAD_COMPLETED,
+      expect.any(Function)
+    )
 
     // Unmount the hook to trigger cleanup
     unmount()
 
     // Verify that socket.off was called with the correct event
-    expect(socket.off).toHaveBeenCalledWith(SocketEvents.DOWNLOAD_COMPLETED, expect.any(Function))
+    expect(socket.off).toHaveBeenCalledWith(
+      SocketEvents.DOWNLOAD_COMPLETED,
+      expect.any(Function)
+    )
   })
 
   it('should navigate to editor when onSkip is called', async () => {

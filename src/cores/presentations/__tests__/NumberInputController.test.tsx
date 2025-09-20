@@ -92,9 +92,11 @@ describe('NumberInputController', () => {
     render(<NumberInputController control={control} controlName="testNumber" />)
 
     // Verify the default maximumFractionDigits value
-    expect(vi.mocked(NumberInput).mock.calls[0][0].formatOptions).toMatchObject({
-      maximumFractionDigits: 0
-    })
+    expect(vi.mocked(NumberInput).mock.calls[0][0].formatOptions).toMatchObject(
+      {
+        maximumFractionDigits: 0
+      }
+    )
   })
 
   it('passes error state when field has errors', () => {
@@ -115,7 +117,9 @@ describe('NumberInputController', () => {
         isValidating: false
       },
       formState: {
-        errors: { testNumber: { type: 'validate', message: 'Input is required' } },
+        errors: {
+          testNumber: { type: 'validate', message: 'Input is required' }
+        },
         isDirty: false,
         dirtyFields: {},
         touchedFields: { testNumber: true },

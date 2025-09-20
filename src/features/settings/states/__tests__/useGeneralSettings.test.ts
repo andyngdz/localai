@@ -106,10 +106,10 @@ describe('useGeneralSettings', () => {
     it('should use useShallowCompareEffect to sync form values with store', () => {
       renderHook(() => useGeneralSettings())
 
-      expect(useShallowCompareEffect).toHaveBeenCalledWith(expect.any(Function), [
-        mockFormValues,
-        mockSetValues
-      ])
+      expect(useShallowCompareEffect).toHaveBeenCalledWith(
+        expect.any(Function),
+        [mockFormValues, mockSetValues]
+      )
     })
 
     it('should call setValues with current form values in effect', () => {
@@ -209,10 +209,10 @@ describe('useGeneralSettings', () => {
     it('should include formValues and setValues in useShallowCompareEffect dependencies', () => {
       renderHook(() => useGeneralSettings())
 
-      expect(useShallowCompareEffect).toHaveBeenCalledWith(expect.any(Function), [
-        mockFormValues,
-        mockSetValues
-      ])
+      expect(useShallowCompareEffect).toHaveBeenCalledWith(
+        expect.any(Function),
+        [mockFormValues, mockSetValues]
+      )
     })
 
     it('should update dependencies when form values change', () => {
@@ -228,10 +228,10 @@ describe('useGeneralSettings', () => {
 
       rerender()
 
-      expect(useShallowCompareEffect).toHaveBeenLastCalledWith(expect.any(Function), [
-        newFormValues,
-        mockSetValues
-      ])
+      expect(useShallowCompareEffect).toHaveBeenLastCalledWith(
+        expect.any(Function),
+        [newFormValues, mockSetValues]
+      )
     })
   })
 

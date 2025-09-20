@@ -13,7 +13,8 @@ export const GeneratorConfigStyleSelectedPreviewer = () => {
     return styles.map((styleId) => {
       const styleItem = styleItems.find((s) => s.id === styleId)
 
-      if (styleItem) return <GeneratorConfigStyleItem key={styleId} styleItem={styleItem} />
+      if (styleItem)
+        return <GeneratorConfigStyleItem key={styleId} styleItem={styleItem} />
     })
   }, [styles, styleItems])
 

@@ -22,7 +22,10 @@ export const GeneratorConfigSeed = () => {
         <Button
           variant="light"
           onPress={() => {
-            setValue('seed', seedService.generate(), { shouldValidate: true, shouldTouch: true })
+            setValue('seed', seedService.generate(), {
+              shouldValidate: true,
+              shouldTouch: true
+            })
           }}
           isIconOnly
         >

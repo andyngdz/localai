@@ -3,7 +3,8 @@ import { Textarea } from '@heroui/input'
 import { useFormContext } from 'react-hook-form'
 
 export const GeneratorPrompt = () => {
-  const { register, watch, formState } = useFormContext<GeneratorConfigFormValues>()
+  const { register, watch, formState } =
+    useFormContext<GeneratorConfigFormValues>()
 
   return (
     <div className="p-4">

@@ -106,7 +106,11 @@ describe('GeneratorConfigStyleItem', () => {
 
   it('handles multiple styles in selection correctly', () => {
     render(
-      <TestWrapper defaultValues={{ styles: ['other-style', 'test-style-id', 'another-style'] }}>
+      <TestWrapper
+        defaultValues={{
+          styles: ['other-style', 'test-style-id', 'another-style']
+        }}
+      >
         <GeneratorConfigStyleItem styleItem={mockStyleItem} />
       </TestWrapper>
     )

@@ -9,7 +9,9 @@ export const AppLayout: FC<PropsWithChildren> = ({ children }) => {
       <main className="flex justify-center flex-1">{children}</main>
       <footer className="sticky bottom-0 z-10 backdrop-blur-md bg-content1">
         <div className="px-4 flex justify-between items-center">
-          <div className="text-sm text-default-500">© {new Date().getFullYear()} LocalAI</div>
+          <div className="text-sm text-default-500">
+            © {new Date().getFullYear()} LocalAI
+          </div>
           <SettingsButton />
         </div>
       </footer>

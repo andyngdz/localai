@@ -5,7 +5,8 @@ export const useDownloadImages = () => {
     try {
       await window.electronAPI.downloadImage(url)
     } catch (error) {
-      const description = error instanceof Error ? error.message : 'Unknown error occurred'
+      const description =
+        error instanceof Error ? error.message : 'Unknown error occurred'
 
       addToast({
         title: 'Failed to download image',

@@ -8,7 +8,10 @@ import { GeneratorConfigStyleSection } from '../GeneratorConfigStyleSection'
 // Mock the GeneratorConfigStyleItem component
 vi.mock('../GeneratorConfigStyleItem', () => ({
   GeneratorConfigStyleItem: ({ styleItem }: { styleItem: StyleItem }) => (
-    <div data-testid={`style-item-${styleItem.id}`} data-style-name={styleItem.name}>
+    <div
+      data-testid={`style-item-${styleItem.id}`}
+      data-style-name={styleItem.name}
+    >
       {styleItem.name}
     </div>
   )
@@ -121,7 +124,9 @@ describe('GeneratorConfigStyleSection', () => {
     expect(screen.getByText('Anime Style 2')).toBeInTheDocument()
 
     // Check realistic section styles
-    expect(screen.getByTestId('style-item-realistic-style-1')).toBeInTheDocument()
+    expect(
+      screen.getByTestId('style-item-realistic-style-1')
+    ).toBeInTheDocument()
     expect(screen.getByText('Realistic Style 1')).toBeInTheDocument()
   })
 
@@ -145,8 +150,14 @@ describe('GeneratorConfigStyleSection', () => {
     )
 
     const animeStyles = screen.getAllByTestId(/style-item-anime-style-/)
-    expect(animeStyles[0]).toHaveAttribute('data-testid', 'style-item-anime-style-1')
-    expect(animeStyles[1]).toHaveAttribute('data-testid', 'style-item-anime-style-2')
+    expect(animeStyles[0]).toHaveAttribute(
+      'data-testid',
+      'style-item-anime-style-1'
+    )
+    expect(animeStyles[1]).toHaveAttribute(
+      'data-testid',
+      'style-item-anime-style-2'
+    )
   })
 
   it('handles empty style sections array', () => {
@@ -204,7 +215,9 @@ describe('GeneratorConfigStyleSection', () => {
       </TestWrapper>
     )
 
-    const styleItemContainers = screen.getAllByTestId(/style-item-/).map((el) => el.parentElement)
+    const styleItemContainers = screen
+      .getAllByTestId(/style-item-/)
+      .map((el) => el.parentElement)
 
     styleItemContainers.forEach((container) => {
       expect(container).toHaveClass('flex', 'flex-wrap', 'gap-2')
@@ -248,6 +261,9 @@ describe('GeneratorConfigStyleSection', () => {
     expect(animeStyle1).toHaveAttribute('data-style-name', 'Anime Style 1')
 
     const realisticStyle1 = screen.getByTestId('style-item-realistic-style-1')
-    expect(realisticStyle1).toHaveAttribute('data-style-name', 'Realistic Style 1')
+    expect(realisticStyle1).toHaveAttribute(
+      'data-style-name',
+      'Realistic Style 1'
+    )
   })
 })

@@ -20,7 +20,9 @@ export const HistoryItemContainer: FC<HistoryItemProps> = ({ history }) => {
           <HistoryUseConfigButton history={history} />
         </div>
         <div className="flex flex-col gap-1">
-          <span className="text-default-500 font-semibold truncate">{history.model}</span>
+          <span className="text-default-500 font-semibold truncate">
+            {history.model}
+          </span>
           <span className="truncate">{history.prompt}</span>
         </div>
       </div>

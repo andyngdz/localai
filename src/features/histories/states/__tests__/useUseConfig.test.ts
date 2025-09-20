@@ -1,4 +1,7 @@
-import { useFormValuesStore, useUseImageGenerationStore } from '@/features/generators'
+import {
+  useFormValuesStore,
+  useUseImageGenerationStore
+} from '@/features/generators'
 import { HistoryItem } from '@/types'
 import { renderHook } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
