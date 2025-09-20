@@ -26,8 +26,6 @@ const tscArgs = [
   'node',
   '--esModuleInterop',
   '--allowSyntheticDefaultImports',
-  '--noEmit',
-  'false',
   '--skipLibCheck'
 ]
 
