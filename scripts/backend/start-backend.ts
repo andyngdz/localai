@@ -1,6 +1,6 @@
 import { ensurePython311 } from './ensure-python'
 import { setupBackend } from './setup-backend'
-import { BackendStatusEmitter, BackendStatusLevel } from './status'
+import { BackendStatusEmitter, BackendStatusLevel } from './types'
 
 export interface StartBackendOptions {
   userDataPath: string

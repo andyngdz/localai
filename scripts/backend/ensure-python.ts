@@ -1,18 +1,18 @@
-import type { ProcessOutput } from 'zx'
 import { $ } from 'zx'
-import { BackendStatusEmitter, BackendStatusLevel } from './status'
-
-$.quiet = true
+import { BackendStatusEmitter, BackendStatusLevel, Command } from './types'
 
 interface PythonCandidate {
   command: string
   baseArgs: string[]
 }
 
-interface PythonInfo {
-  command: string
-  args: string[]
-  version: string
+interface EnsurePythonOptions {
+  emit: BackendStatusEmitter
+}
+
+interface MissingInstruction {
+  message: string
+  commands: Command[]
 }
 
 const versionRegex = /Python\s+(\d+)\.(\d+)(?:\.(\d+))?/i
@@ -47,8 +47,7 @@ const parseVersion = (output: string) => {
 
 const tryCandidate = async (candidate: PythonCandidate) => {
   const args = [...candidate.baseArgs, '--version']
-  const result =
-    (await $`${candidate.command} ${args}`.nothrow()) as ProcessOutput
+  const result = await $`${candidate.command} ${args}`.nothrow()
 
   if (result.exitCode !== 0) {
     return
@@ -76,20 +75,52 @@ const findPython = async () => {
   }
 }
 
-const missingInstructions = () => {
+const missingInstructions = (): MissingInstruction => {
   if (process.platform === 'darwin') {
-    return 'Python 3.11 is required. Install it via Homebrew (brew install python@3.11) or download it from https://www.python.org/downloads/macos/.'
+    return {
+      message:
+        'Python 3.11 is required. Install it via Homebrew or download it from python.org.',
+      commands: [
+        {
+          label: 'Install with Homebrew',
+          command: 'brew install python@3.11'
+        }
+      ]
+    }
   }
 
   if (process.platform === 'win32') {
-    return 'Python 3.11 is required. Install it from the Microsoft Store, winget (winget install Python.Python.3.11), or https://www.python.org/downloads/windows/.'
+    return {
+      message:
+        'Python 3.11 is required. Install it using winget, Chocolatey, or from python.org.',
+      commands: [
+        {
+          label: 'Install with winget',
+          command:
+            'winget install Python.Python.3.11 --exact --silent --accept-package-agreements --accept-source-agreements'
+        },
+        {
+          label: 'Install with Chocolatey',
+          command: 'choco install python --version=3.11.9 -y'
+        }
+      ]
+    }
   }
 
-  return 'Python 3.11 is required. Install it with your package manager, for example: sudo apt install python3.11.'
-}
-
-export interface EnsurePythonOptions {
-  emit: BackendStatusEmitter
+  return {
+    message:
+      'Python 3.11 is required. Install it with your system package manager.',
+    commands: [
+      {
+        label: 'Update packages',
+        command: 'sudo apt update'
+      },
+      {
+        label: 'Install Python 3.11',
+        command: 'sudo apt install python3.11'
+      }
+    ]
+  }
 }
 
 export const ensurePython311 = async ({ emit }: EnsurePythonOptions) => {
@@ -104,11 +135,12 @@ export const ensurePython311 = async ({ emit }: EnsurePythonOptions) => {
     return existing
   }
 
-  const instructions = missingInstructions()
+  const { message, commands } = missingInstructions()
 
   emit({
     level: BackendStatusLevel.Error,
-    message: instructions
+    message,
+    commands
   })
 
   throw new Error('Python 3.11 is not installed.')
