@@ -10,7 +10,7 @@ const backendSourceFiles = [
   'scripts/backend/run-command.ts',
   'scripts/backend/setup-backend.ts',
   'scripts/backend/start-backend.ts',
-  'scripts/backend/status.ts'
+  'scripts/backend/types.ts'
 ] as const
 
 const tscArgs = [
