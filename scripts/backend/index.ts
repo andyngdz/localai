@@ -1,6 +1,7 @@
 export * from './constants'
 export * from './ensure-python'
 export * from './git'
+export * from './install-uv'
 export * from './run-command'
 export * from './setup-backend'
 export * from './start-backend'

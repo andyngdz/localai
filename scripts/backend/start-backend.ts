@@ -1,4 +1,5 @@
 import { ensurePython311 } from './ensure-python'
+import { installUv } from './install-uv'
 import { setupBackend } from './setup-backend'
 import { BackendStatusEmitter, BackendStatusLevel } from './types'
 
@@ -20,6 +21,7 @@ export const startBackend = async ({ userDataPath }: StartBackendOptions) => {
 
   try {
     await ensurePython311({ emit })
+    await installUv({ emit })
     await setupBackend({ userDataPath, emit })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error'
