@@ -30,16 +30,17 @@ export const installDependencies = async ({
     message: 'Installing Python dependencies…'
   })
 
+  const installCommand = `cd ${backendPath} && uv pip install -r requirements.txt`
   const commands: Command[] = [
     {
       label: 'Install dependencies manually',
-      command: `cd ${backendPath} && uv pip install -r requirements.txt`
+      command: installCommand
     }
   ]
 
   try {
     // Use uv to install dependencies in the virtual environment
-    await $`cd ${backendPath} && uv pip install -r requirements.txt`
+    await $`${installCommand}`
 
     emit({
       level: BackendStatusLevel.Info,
