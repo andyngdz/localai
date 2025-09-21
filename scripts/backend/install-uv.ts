@@ -35,22 +35,22 @@ const detectUv = async () => {
 
 const getInstallCommand = (): InstallCommand => {
   if (process.platform === 'win32') {
-    const script = 'irm https://astral.sh/uv/install.ps1 | iex'
+    const command =
+      'powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"'
 
     return {
       label: 'Install uv via PowerShell',
-      command:
-        'powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"',
-      run: () => $`powershell -ExecutionPolicy ByPass -c ${script}`
+      command,
+      run: () => $`${command}`
     }
   }
 
-  const shellCommand = 'curl -LsSf https://astral.sh/uv/install.sh | sh'
+  const command = 'curl -LsSf https://astral.sh/uv/install.sh | sh'
 
   return {
     label: 'Install uv via shell script',
-    command: shellCommand,
-    run: () => $`sh -c ${shellCommand}`
+    command,
+    run: () => $`${command}`
   }
 }
 
@@ -86,17 +86,17 @@ export const installUv = async ({ emit }: InstallUvOptions) => {
   }
 
   const install = getInstallCommand()
-  const commands = installationCommandsByPlatform()
 
   emit({
     level: BackendStatusLevel.Info,
-    message: 'Installing uv…',
-    commands
+    message: 'Installing uv…'
   })
 
   try {
     await install.run()
   } catch (error) {
+    const commands = installationCommandsByPlatform()
+
     emit({
       level: BackendStatusLevel.Error,
       message: 'uv installation failed. Run the command manually.',
@@ -113,8 +113,7 @@ export const installUv = async ({ emit }: InstallUvOptions) => {
   if (!installed) {
     emit({
       level: BackendStatusLevel.Error,
-      message: 'uv installation finished but version could not be detected.',
-      commands
+      message: 'uv installation finished but version could not be detected.'
     })
 
     throw new Error('uv installation completed but could not verify version.')

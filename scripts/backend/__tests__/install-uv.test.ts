@@ -36,7 +36,7 @@ const setPlatform = (platform: NodeJS.Platform) => {
 }
 
 beforeAll(async () => {
-  ;({ installUv } = await import('../install-uv'))
+  ;({ installUv: installUv } = await import('../install-uv'))
 })
 
 beforeEach(() => {
