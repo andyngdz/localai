@@ -1,4 +1,4 @@
-import path from 'path'
+import * as path from 'path'
 import { BACKEND_BRANCH, BACKEND_DIRNAME, BACKEND_REPO_URL } from './constants'
 import { cloneRepository, isGitAvailable, updateRepository } from './git'
 import { BackendStatusEmitter, BackendStatusLevel } from './types'

@@ -1,5 +1,5 @@
 import { $ } from 'zx'
-import path from 'path'
+import * as path from 'path'
 import { BackendStatusEmitter, BackendStatusLevel } from './types'
 import { pathExists, normalizeError } from './utils'
 
