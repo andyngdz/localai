@@ -46,16 +46,17 @@ export const setupVenv = async ({
     message: 'Creating virtual environment with Python 3.11…'
   })
 
+  const createVenvCommand = `cd ${backendPath} && uv venv .venv --python 3.11`
   const commands: Command[] = [
     {
       label: 'Create virtual environment manually',
-      command: `cd ${backendPath} && uv venv .venv --python 3.11`
+      command: createVenvCommand
     }
   ]
 
   try {
     // Use uv to create virtual environment with Python 3.11
-    await $`cd ${backendPath} && uv venv .venv --python 3.11`
+    await $`${createVenvCommand}`
 
     emit({
       level: BackendStatusLevel.Info,
