@@ -1,5 +1,6 @@
 import { $ } from 'zx'
 import { BackendStatusEmitter, BackendStatusLevel, Command } from './types'
+import { normalizeError } from './utils'
 
 interface InstallUvOptions {
   emit: BackendStatusEmitter
@@ -103,9 +104,7 @@ export const installUv = async ({ emit }: InstallUvOptions) => {
       commands
     })
 
-    throw error instanceof Error
-      ? error
-      : new Error('Failed to install uv via provided command.')
+    throw normalizeError(error, 'Failed to install uv via provided command.')
   }
 
   const installed = await detectUv()
