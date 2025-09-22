@@ -4,13 +4,19 @@ import { projectRoot, runCommand } from './utils'
 
 const electronSourceFiles = ['electron/main.ts', 'electron/preload.ts'] as const
 const backendSourceFiles = [
+  'scripts/backend/clone-backend.ts',
   'scripts/backend/constants.ts',
+  'scripts/backend/ensure-python.ts',
   'scripts/backend/git.ts',
   'scripts/backend/index.ts',
+  'scripts/backend/install-dependencies.ts',
+  'scripts/backend/install-uv.ts',
+  'scripts/backend/run-backend.ts',
   'scripts/backend/run-command.ts',
-  'scripts/backend/setup-backend.ts',
+  'scripts/backend/setup-venv.ts',
   'scripts/backend/start-backend.ts',
-  'scripts/backend/types.ts'
+  'scripts/backend/types.ts',
+  'scripts/backend/utils.ts'
 ] as const
 
 const tscArgs = [

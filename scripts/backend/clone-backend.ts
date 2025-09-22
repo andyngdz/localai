@@ -1,25 +1,12 @@
-import fs from 'fs/promises'
-import path from 'path'
+import * as path from 'path'
 import { BACKEND_BRANCH, BACKEND_DIRNAME, BACKEND_REPO_URL } from './constants'
 import { cloneRepository, isGitAvailable, updateRepository } from './git'
 import { BackendStatusEmitter, BackendStatusLevel } from './types'
+import { pathExists } from './utils'
 
 export interface SetupBackendOptions {
   userDataPath: string
   emit: BackendStatusEmitter
-}
-
-const pathExists = async (targetPath: string) => {
-  try {
-    await fs.access(targetPath)
-    return true
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
-      return false
-    }
-
-    throw error
-  }
 }
 
 const ensureGitRepository = async (repositoryPath: string) => {
@@ -27,7 +14,7 @@ const ensureGitRepository = async (repositoryPath: string) => {
   return pathExists(gitDirectory)
 }
 
-export const setupBackend = async ({
+export const cloneBackend = async ({
   userDataPath,
   emit
 }: SetupBackendOptions) => {
