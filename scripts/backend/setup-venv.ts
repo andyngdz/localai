@@ -1,8 +1,8 @@
-import { $ } from 'zx'
 import * as path from 'path'
+import { $ } from 'zx'
 import { BACKEND_DIRNAME } from './constants'
 import { BackendStatusEmitter, BackendStatusLevel, Command } from './types'
-import { pathExists, normalizeError } from './utils'
+import { normalizeError, pathExists } from './utils'
 
 export interface SetupVenvOptions {
   userDataPath: string

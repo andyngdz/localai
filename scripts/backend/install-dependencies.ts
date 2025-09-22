@@ -1,17 +1,15 @@
-import { $ } from 'zx'
 import * as path from 'path'
+import { $ } from 'zx'
 import { BackendStatusEmitter, BackendStatusLevel, Command } from './types'
-import { pathExists, normalizeError } from './utils'
+import { normalizeError, pathExists } from './utils'
 
 export interface InstallDependenciesOptions {
   backendPath: string
-  venvPath: string
   emit: BackendStatusEmitter
 }
 
 export const installDependencies = async ({
   backendPath,
-  venvPath,
   emit
 }: InstallDependenciesOptions): Promise<void> => {
   const requirementsPath = path.join(backendPath, 'requirements.txt')

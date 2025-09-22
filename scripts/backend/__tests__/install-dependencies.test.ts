@@ -16,7 +16,6 @@ const mockNormalizeError = vi.mocked(utilsModule.normalizeError)
 
 describe('installDependencies', () => {
   const mockBackendPath = '/test/backend'
-  const mockVenvPath = '/test/backend/.venv'
   const mockEmit = vi.fn()
 
   beforeEach(() => {
@@ -35,7 +34,6 @@ describe('installDependencies', () => {
     it('should install dependencies successfully when requirements.txt exists', async () => {
       await installDependencies({
         backendPath: mockBackendPath,
-        venvPath: mockVenvPath,
         emit: mockEmit
       })
 
@@ -69,7 +67,6 @@ describe('installDependencies', () => {
       await expect(
         installDependencies({
           backendPath: mockBackendPath,
-          venvPath: mockVenvPath,
           emit: mockEmit
         })
       ).rejects.toThrow('requirements.txt not found')
@@ -91,7 +88,6 @@ describe('installDependencies', () => {
       await expect(
         installDependencies({
           backendPath: mockBackendPath,
-          venvPath: mockVenvPath,
           emit: mockEmit
         })
       ).rejects.toThrow('pip install failed')
@@ -125,7 +121,6 @@ describe('installDependencies', () => {
       await expect(
         installDependencies({
           backendPath: mockBackendPath,
-          venvPath: mockVenvPath,
           emit: mockEmit
         })
       ).rejects.toThrow('File system error')
@@ -144,7 +139,6 @@ describe('installDependencies', () => {
       await expect(
         installDependencies({
           backendPath: mockBackendPath,
-          venvPath: mockVenvPath,
           emit: mockEmit
         })
       ).rejects.toThrow('Failed to install dependencies')
@@ -162,7 +156,6 @@ describe('installDependencies', () => {
 
       await installDependencies({
         backendPath: customBackendPath,
-        venvPath: mockVenvPath,
         emit: mockEmit
       })
 
@@ -182,7 +175,6 @@ describe('installDependencies', () => {
       await expect(
         installDependencies({
           backendPath: customBackendPath,
-          venvPath: mockVenvPath,
           emit: mockEmit
         })
       ).rejects.toThrow()
@@ -206,7 +198,6 @@ describe('installDependencies', () => {
 
       await installDependencies({
         backendPath: emptyPath,
-        venvPath: mockVenvPath,
         emit: mockEmit
       })
 
@@ -222,7 +213,6 @@ describe('installDependencies', () => {
 
       await installDependencies({
         backendPath: specialPath,
-        venvPath: mockVenvPath,
         emit: mockEmit
       })
 
@@ -234,11 +224,8 @@ describe('installDependencies', () => {
     })
 
     it('should handle venvPath parameter (even though not currently used)', async () => {
-      const customVenvPath = '/custom/venv/path'
-
       await installDependencies({
         backendPath: mockBackendPath,
-        venvPath: customVenvPath,
         emit: mockEmit
       })
 
@@ -253,7 +240,6 @@ describe('installDependencies', () => {
 
       await installDependencies({
         backendPath,
-        venvPath: mockVenvPath,
         emit: mockEmit
       })
 
@@ -267,7 +253,6 @@ describe('installDependencies', () => {
 
       await installDependencies({
         backendPath: relativePath,
-        venvPath: mockVenvPath,
         emit: mockEmit
       })
 
@@ -281,7 +266,6 @@ describe('installDependencies', () => {
     it('should emit correct sequence of status messages for successful installation', async () => {
       await installDependencies({
         backendPath: mockBackendPath,
-        venvPath: mockVenvPath,
         emit: mockEmit
       })
 
@@ -304,7 +288,6 @@ describe('installDependencies', () => {
       await expect(
         installDependencies({
           backendPath: mockBackendPath,
-          venvPath: mockVenvPath,
           emit: mockEmit
         })
       ).rejects.toThrow()
@@ -322,7 +305,6 @@ describe('installDependencies', () => {
       await expect(
         installDependencies({
           backendPath: mockBackendPath,
-          venvPath: mockVenvPath,
           emit: mockEmit
         })
       ).rejects.toThrow()

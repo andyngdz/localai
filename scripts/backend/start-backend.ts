@@ -25,10 +25,10 @@ export const startBackend = async ({ userDataPath }: StartBackendOptions) => {
     const { backendPath } = await cloneBackend({ userDataPath, emit })
 
     // Step 4: Create virtual environment with uv and Python 3.11
-    const { venvPath } = await setupVenv({ userDataPath, emit })
+    await setupVenv({ userDataPath, emit })
 
     // Step 5: Install dependencies using uv
-    await installDependencies({ backendPath, venvPath, emit })
+    await installDependencies({ backendPath, emit })
 
     // Step 6: Run the LocalAI Backend with uvicorn
     await runBackend({ backendPath, emit })
