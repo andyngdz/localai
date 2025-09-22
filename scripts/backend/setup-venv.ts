@@ -20,6 +20,7 @@ export const setupVenv = async ({
 }: SetupVenvOptions): Promise<VenvInfo> => {
   const backendPath = path.join(userDataPath, BACKEND_DIRNAME)
   const venvPath = path.join(backendPath, '.venv')
+  $.cwd = backendPath
 
   // Check if backend directory exists
   const backendExists = await pathExists(backendPath)
@@ -46,7 +47,7 @@ export const setupVenv = async ({
     message: 'Creating virtual environment with Python 3.11…'
   })
 
-  const createVenvCommand = `cd ${backendPath} && uv venv .venv --python 3.11`
+  const createVenvCommand = `uv venv .venv --python 3.11`
   const commands: Command[] = [
     {
       label: 'Create virtual environment manually',

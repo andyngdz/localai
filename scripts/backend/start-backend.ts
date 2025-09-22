@@ -4,6 +4,7 @@ import { installDependencies } from './install-dependencies'
 import { installUv } from './install-uv'
 import { runBackend } from './run-backend'
 import { setupVenv } from './setup-venv'
+import { switchToVenv } from './switch-to-venv'
 import { BackendStatusLevel } from './types'
 import { createDefaultStatusEmitter, normalizeError } from './utils'
 
@@ -26,6 +27,9 @@ export const startBackend = async ({ userDataPath }: StartBackendOptions) => {
 
     // Step 4: Create virtual environment with uv and Python 3.11
     await setupVenv({ userDataPath, emit })
+
+    // Step 4.1: Switch to the virtual environment
+    await switchToVenv({ backendPath, emit })
 
     // Step 5: Install dependencies using uv
     await installDependencies({ backendPath, emit })

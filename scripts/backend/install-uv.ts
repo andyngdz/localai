@@ -1,13 +1,9 @@
 import { $ } from 'zx'
 import { BackendStatusEmitter, BackendStatusLevel, Command } from './types'
-import { normalizeError } from './utils'
+import { isWindows, normalizeError } from './utils'
 
 interface InstallUvOptions {
   emit: BackendStatusEmitter
-}
-
-interface UvInfo {
-  version: string
 }
 
 interface InstallCommand {
@@ -35,7 +31,7 @@ const detectUv = async () => {
 }
 
 const getInstallCommand = (): InstallCommand => {
-  if (process.platform === 'win32') {
+  if (isWindows) {
     const command =
       'powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"'
 
@@ -56,7 +52,7 @@ const getInstallCommand = (): InstallCommand => {
 }
 
 const installationCommandsByPlatform = (): Command[] => {
-  if (process.platform === 'win32') {
+  if (isWindows) {
     return [
       {
         label: 'Install with PowerShell',
