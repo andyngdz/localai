@@ -69,7 +69,6 @@ describe('startBackend', () => {
     })
     expect(vi.mocked(installDependencies)).toHaveBeenCalledWith({
       backendPath: mockBackendPath,
-      venvPath: mockVenvPath,
       emit: mockEmit
     })
     expect(vi.mocked(runBackend)).toHaveBeenCalledWith({
@@ -262,7 +261,6 @@ describe('startBackend', () => {
 
     expect(vi.mocked(installDependencies)).toHaveBeenCalledWith({
       backendPath: customBackendPath,
-      venvPath: customVenvPath,
       emit: mockEmit
     })
     expect(vi.mocked(runBackend)).toHaveBeenCalledWith({
