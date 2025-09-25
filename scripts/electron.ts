@@ -1,6 +1,11 @@
 import { readFile, rename, rm, writeFile } from 'fs/promises'
 import { join } from 'path'
-import { projectRoot, runCommand } from './utils'
+import { $ } from 'zx'
+import { projectRoot } from './utils'
+
+process.env.FORCE_COLOR = '1'
+$.stdio = 'inherit'
+$.verbose = true
 
 const electronSourceFiles = ['electron/main.ts', 'electron/preload.ts'] as const
 const backendSourceFiles = [
@@ -12,7 +17,6 @@ const backendSourceFiles = [
   'scripts/backend/install-dependencies.ts',
   'scripts/backend/install-uv.ts',
   'scripts/backend/run-backend.ts',
-  'scripts/backend/run-command.ts',
   'scripts/backend/setup-venv.ts',
   'scripts/backend/start-backend.ts',
   'scripts/backend/types.ts',
@@ -59,7 +63,7 @@ export const compileElectron = async () => {
     rm(join(electronDir, 'scripts'), { recursive: true, force: true })
   ])
 
-  await runCommand('npx', ['tsc', ...tscArgs])
+  await $`npx tsc ${tscArgs}`
 
   // Fix import paths in main.js before renaming
   const mainJsPath = join(electronBuildDir, 'main.js')
@@ -83,7 +87,7 @@ export const compileElectron = async () => {
 
 export const startElectron = async () => {
   console.log('🚀 Starting Electron...')
-  await runCommand('npx', ['electron', '.'])
+  await $`npx electron .`
 }
 
 export const startDesktopDev = async () => {
@@ -93,5 +97,5 @@ export const startDesktopDev = async () => {
 
 export const startFullDev = async () => {
   console.log('🚀 Starting full development environment...')
-  await runCommand('npx', ['concurrently', ...concurrentlyArgs])
+  await $`npx concurrently ${concurrentlyArgs}`
 }

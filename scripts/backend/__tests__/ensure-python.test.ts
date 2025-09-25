@@ -1,10 +1,10 @@
 import {
-  describe,
-  expect,
-  it,
   afterEach,
   beforeAll,
   beforeEach,
+  describe,
+  expect,
+  it,
   vi
 } from 'vitest'
 import type { ensurePython311 as ensurePython311Type } from '../ensure-python'
@@ -13,8 +13,18 @@ import { BackendStatusLevel } from '../types'
 const mock$ = vi.fn()
 
 vi.mock('zx', () => ({
-  $: (...args: unknown[]) => mock$(...args)
+  $: mock$
 }))
+
+// Mock utils to control platform detection
+vi.mock('../utils', async () => {
+  const actual = await vi.importActual('../utils')
+  return {
+    ...actual,
+    isWindows: false,
+    isMac: false
+  }
+})
 
 let ensurePython311: typeof ensurePython311Type
 
@@ -37,7 +47,8 @@ const createOutput = (
   exitCode: 0,
   stdout: '',
   stderr: '',
-  ...overrides
+  ...overrides,
+  nothrow: () => Promise.resolve({ ...createOutput(overrides) })
 })
 
 beforeEach(() => {
@@ -56,10 +67,9 @@ describe('ensurePython311', () => {
 
     const outputs = [createOutput({ stdout: 'Python 3.11.5\n' })]
 
-    mock$.mockImplementation(() => ({
-      nothrow: () =>
-        Promise.resolve(outputs.shift() ?? createOutput({ exitCode: 1 }))
-    }))
+    mock$.mockImplementation(() => {
+      return outputs.shift() ?? createOutput({ exitCode: 1 })
+    })
 
     const emit = vi.fn()
 
@@ -85,10 +95,9 @@ describe('ensurePython311', () => {
       createOutput({ stdout: 'Python 3.11.1\n' })
     ]
 
-    mock$.mockImplementation(() => ({
-      nothrow: () =>
-        Promise.resolve(outputs.shift() ?? createOutput({ exitCode: 1 }))
-    }))
+    mock$.mockImplementation(() => {
+      return outputs.shift() ?? createOutput({ exitCode: 1 })
+    })
 
     const emit = vi.fn()
 
@@ -123,9 +132,7 @@ describe('ensurePython311', () => {
     })
   })
 
-  it('emits install options for Windows', async () => {
-    setPlatform('win32')
-
+  it('emits install options for default platform (Linux-like)', async () => {
     mock$.mockImplementation(() => ({
       nothrow: () => Promise.resolve(createOutput({ exitCode: 1 }))
     }))
@@ -139,17 +146,10 @@ describe('ensurePython311', () => {
     expect(emit).toHaveBeenCalledWith({
       level: BackendStatusLevel.Error,
       message:
-        'Python 3.11 is required. Install it using winget, Chocolatey, or from python.org.',
+        'Python 3.11 is required. Install it with your system package manager.',
       commands: [
-        {
-          label: 'Install with winget',
-          command:
-            'winget install Python.Python.3.11 --exact --silent --accept-package-agreements --accept-source-agreements'
-        },
-        {
-          label: 'Install with Chocolatey',
-          command: 'choco install python --version=3.11.9 -y'
-        }
+        { label: 'Update packages', command: 'sudo apt update' },
+        { label: 'Install Python 3.11', command: 'sudo apt install python3.11' }
       ]
     })
   })

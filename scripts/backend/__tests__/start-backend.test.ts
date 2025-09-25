@@ -6,6 +6,7 @@ import { installUv } from '../install-uv'
 import { runBackend } from '../run-backend'
 import { setupVenv } from '../setup-venv'
 import { startBackend, type StartBackendOptions } from '../start-backend'
+import { switchToVenv } from '../switch-to-venv'
 import { BackendStatusLevel } from '../types'
 import { createDefaultStatusEmitter, normalizeError } from '../utils'
 
@@ -16,6 +17,7 @@ vi.mock('../install-dependencies')
 vi.mock('../install-uv')
 vi.mock('../run-backend')
 vi.mock('../setup-venv')
+vi.mock('../switch-to-venv')
 vi.mock('../utils')
 
 describe('startBackend', () => {
@@ -45,8 +47,12 @@ describe('startBackend', () => {
     vi.mocked(installUv).mockResolvedValue({
       version: '1.0.0'
     })
+    vi.mocked(switchToVenv).mockResolvedValue(undefined)
     vi.mocked(installDependencies).mockResolvedValue(undefined)
     vi.mocked(runBackend).mockResolvedValue(undefined)
+    vi.mocked(normalizeError).mockImplementation((error, defaultMessage) =>
+      error instanceof Error ? error : new Error(defaultMessage)
+    )
   })
 
   afterEach(() => {
@@ -65,6 +71,10 @@ describe('startBackend', () => {
     })
     expect(vi.mocked(setupVenv)).toHaveBeenCalledWith({
       userDataPath: mockOptions.userDataPath,
+      emit: mockEmit
+    })
+    expect(vi.mocked(switchToVenv)).toHaveBeenCalledWith({
+      backendPath: mockBackendPath,
       emit: mockEmit
     })
     expect(vi.mocked(installDependencies)).toHaveBeenCalledWith({
@@ -140,6 +150,7 @@ describe('startBackend', () => {
 
     // Verify subsequent steps are not called
     expect(vi.mocked(setupVenv)).not.toHaveBeenCalled()
+    expect(vi.mocked(switchToVenv)).not.toHaveBeenCalled()
   })
 
   it('should handle error during virtual environment setup', async () => {
@@ -156,6 +167,7 @@ describe('startBackend', () => {
     })
 
     // Verify subsequent steps are not called
+    expect(vi.mocked(switchToVenv)).not.toHaveBeenCalled()
     expect(vi.mocked(installDependencies)).not.toHaveBeenCalled()
   })
 
@@ -166,6 +178,12 @@ describe('startBackend', () => {
 
     await startBackend(mockOptions)
 
+    // Verify all steps up to installDependencies are called
+    expect(vi.mocked(ensurePython311)).toHaveBeenCalled()
+    expect(vi.mocked(installUv)).toHaveBeenCalled()
+    expect(vi.mocked(cloneBackend)).toHaveBeenCalled()
+    expect(vi.mocked(setupVenv)).toHaveBeenCalled()
+    expect(vi.mocked(switchToVenv)).toHaveBeenCalled()
     expect(vi.mocked(installDependencies)).toHaveBeenCalled()
     expect(mockEmit).toHaveBeenCalledWith({
       level: BackendStatusLevel.Error,
@@ -183,6 +201,13 @@ describe('startBackend', () => {
 
     await startBackend(mockOptions)
 
+    // Verify all steps up to runBackend are called
+    expect(vi.mocked(ensurePython311)).toHaveBeenCalled()
+    expect(vi.mocked(installUv)).toHaveBeenCalled()
+    expect(vi.mocked(cloneBackend)).toHaveBeenCalled()
+    expect(vi.mocked(setupVenv)).toHaveBeenCalled()
+    expect(vi.mocked(switchToVenv)).toHaveBeenCalled()
+    expect(vi.mocked(installDependencies)).toHaveBeenCalled()
     expect(vi.mocked(runBackend)).toHaveBeenCalled()
     expect(mockEmit).toHaveBeenCalledWith({
       level: BackendStatusLevel.Error,
@@ -225,6 +250,10 @@ describe('startBackend', () => {
       userDataPath: mockOptions.userDataPath,
       ...expectedEmitArg
     })
+    expect(vi.mocked(switchToVenv)).toHaveBeenCalledWith({
+      backendPath: mockBackendPath,
+      ...expectedEmitArg
+    })
   })
 
   it('should pass correct userDataPath to relevant steps', async () => {
@@ -259,6 +288,10 @@ describe('startBackend', () => {
 
     await startBackend(mockOptions)
 
+    expect(vi.mocked(switchToVenv)).toHaveBeenCalledWith({
+      backendPath: customBackendPath,
+      emit: mockEmit
+    })
     expect(vi.mocked(installDependencies)).toHaveBeenCalledWith({
       backendPath: customBackendPath,
       emit: mockEmit

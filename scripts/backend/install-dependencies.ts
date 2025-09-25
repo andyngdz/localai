@@ -18,15 +18,18 @@ export const installDependencies = async ({
     message: 'Installing Python dependencies…'
   })
 
+  const command = 'uv'
+  const args = ['pip', 'install', '-r', 'requirements.txt']
+  const installCommand = [command, ...args].join(' ')
+
   try {
-    await $`uv pip install -r requirements.txt`
+    await $`${command} ${args}`
 
     emit({
       level: BackendStatusLevel.Info,
       message: 'Dependencies installed successfully'
     })
   } catch (error) {
-    const installCommand = `uv pip install -r requirements.txt`
     const commands: Command[] = [
       {
         label: 'Install dependencies manually',

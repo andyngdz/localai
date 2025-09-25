@@ -24,12 +24,16 @@ export const switchToVenv = async ({
     message: `Switching to virtual environment`
   })
 
-  const switchCommand = isWindows
-    ? 'call .venv\\Scripts\\Activate.ps1'
-    : 'source .venv/bin/activate'
+  const windowsCommand = 'call .venv\\Scripts\\Activate.ps1'
+  const unixCommand = 'source .venv/bin/activate'
+  const switchCommand = isWindows ? windowsCommand : unixCommand
 
   try {
-    await $`${switchCommand}`
+    if (isWindows) {
+      await $`${windowsCommand}`
+    } else {
+      await $`bash -c ${unixCommand}`
+    }
 
     emit({
       level: BackendStatusLevel.Info,

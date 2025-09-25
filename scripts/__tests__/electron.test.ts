@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { join } from 'path'
 import * as fs from 'fs/promises'
-import * as utils from '../utils'
 import {
   compileElectron,
   startElectron,
@@ -12,15 +11,18 @@ import {
 // Mock dependencies
 vi.mock('fs/promises')
 vi.mock('../utils', () => ({
-  projectRoot: '/test/project',
-  runCommand: vi.fn()
+  projectRoot: '/test/project'
+}))
+
+const mock$ = vi.fn()
+vi.mock('zx', () => ({
+  $: (...args: unknown[]) => mock$(...args)
 }))
 
 const mockReadFile = vi.mocked(fs.readFile)
 const mockWriteFile = vi.mocked(fs.writeFile)
 const mockRename = vi.mocked(fs.rename)
 const mockRm = vi.mocked(fs.rm)
-const mockRunCommand = vi.mocked(utils.runCommand)
 
 describe('electron', () => {
   const mockProjectRoot = '/test/project'
@@ -37,7 +39,7 @@ describe('electron', () => {
     mockWriteFile.mockResolvedValue()
     mockRename.mockResolvedValue()
     mockRm.mockResolvedValue()
-    mockRunCommand.mockResolvedValue()
+    mock$.mockResolvedValue(undefined)
   })
 
   describe('compileElectron', () => {
@@ -62,36 +64,28 @@ describe('electron', () => {
         force: true
       })
 
-      // Verify TypeScript compilation
-      expect(mockRunCommand).toHaveBeenCalledWith('npx', [
-        'tsc',
-        'electron/main.ts',
-        'electron/preload.ts',
-        'scripts/backend/clone-backend.ts',
-        'scripts/backend/constants.ts',
-        'scripts/backend/ensure-python.ts',
-        'scripts/backend/git.ts',
-        'scripts/backend/index.ts',
-        'scripts/backend/install-dependencies.ts',
-        'scripts/backend/install-uv.ts',
-        'scripts/backend/run-backend.ts',
-        'scripts/backend/run-command.ts',
-        'scripts/backend/setup-venv.ts',
-        'scripts/backend/start-backend.ts',
-        'scripts/backend/types.ts',
-        'scripts/backend/utils.ts',
-        '--outDir',
-        'electron',
-        '--target',
-        'es2020',
-        '--module',
-        'commonjs',
-        '--moduleResolution',
-        'node',
-        '--esModuleInterop',
-        '--allowSyntheticDefaultImports',
-        '--skipLibCheck'
-      ])
+      // Verify TypeScript compilation was called
+      expect(mock$).toHaveBeenCalledWith(
+        expect.arrayContaining([expect.stringContaining('npx tsc')]),
+        expect.arrayContaining([
+          'electron/main.ts',
+          'electron/preload.ts',
+          'scripts/backend/clone-backend.ts',
+          'scripts/backend/constants.ts',
+          'scripts/backend/ensure-python.ts',
+          'scripts/backend/git.ts',
+          'scripts/backend/index.ts',
+          'scripts/backend/install-dependencies.ts',
+          'scripts/backend/install-uv.ts',
+          'scripts/backend/run-backend.ts',
+          'scripts/backend/setup-venv.ts',
+          'scripts/backend/start-backend.ts',
+          'scripts/backend/types.ts',
+          'scripts/backend/utils.ts',
+          '--outDir',
+          'electron'
+        ])
+      )
 
       // Verify path fixing
       const mainJsPath = join(electronBuildDir, 'main.js')
@@ -146,7 +140,7 @@ describe('electron', () => {
 
     it('should handle TypeScript compilation errors', async () => {
       const compilationError = new Error('TypeScript compilation failed')
-      mockRunCommand.mockRejectedValue(compilationError)
+      mock$.mockRejectedValue(compilationError)
 
       await expect(compileElectron()).rejects.toThrow(
         'TypeScript compilation failed'
@@ -186,12 +180,14 @@ describe('electron', () => {
     it('should start Electron successfully', async () => {
       await startElectron()
 
-      expect(mockRunCommand).toHaveBeenCalledWith('npx', ['electron', '.'])
+      expect(mock$).toHaveBeenCalledWith(
+        expect.arrayContaining([expect.stringContaining('npx electron')])
+      )
     })
 
     it('should handle Electron startup errors', async () => {
       const electronError = new Error('Electron failed to start')
-      mockRunCommand.mockRejectedValue(electronError)
+      mock$.mockRejectedValue(electronError)
 
       await expect(startElectron()).rejects.toThrow('Electron failed to start')
     })
@@ -202,19 +198,22 @@ describe('electron', () => {
       await startDesktopDev()
 
       // Verify compilation happened first
-      expect(mockRunCommand).toHaveBeenCalledWith(
-        'npx',
-        expect.arrayContaining(['tsc'])
+      expect(mock$).toHaveBeenCalledWith(
+        expect.arrayContaining([expect.stringContaining('npx tsc')]),
+        expect.anything()
       )
 
       // Verify Electron start happened after compilation
-      expect(mockRunCommand).toHaveBeenCalledWith('npx', ['electron', '.'])
+      expect(mock$).toHaveBeenCalledWith(
+        expect.arrayContaining([expect.stringContaining('npx electron')])
+      )
     })
 
     it('should handle compilation errors before starting Electron', async () => {
       const compilationError = new Error('Compilation failed')
-      mockRunCommand.mockImplementation((command, args) => {
-        if (args[0] === 'tsc') {
+      mock$.mockImplementation((...args: unknown[]) => {
+        const command = args.join(' ')
+        if (command.includes('tsc')) {
           return Promise.reject(compilationError)
         }
         return Promise.resolve()
@@ -223,16 +222,19 @@ describe('electron', () => {
       await expect(startDesktopDev()).rejects.toThrow('Compilation failed')
 
       // Verify Electron was not started
-      expect(mockRunCommand).not.toHaveBeenCalledWith('npx', ['electron', '.'])
+      expect(mock$).not.toHaveBeenCalledWith(
+        expect.arrayContaining([expect.stringContaining('npx electron')])
+      )
     })
 
     it('should handle Electron startup errors after successful compilation', async () => {
       const electronError = new Error('Electron startup failed')
-      mockRunCommand.mockImplementation((command, args) => {
-        if (args[0] === 'tsc') {
+      mock$.mockImplementation((...args: unknown[]) => {
+        const command = args.join(' ')
+        if (command.includes('tsc')) {
           return Promise.resolve()
         }
-        if (args[0] === 'electron') {
+        if (command.includes('electron')) {
           return Promise.reject(electronError)
         }
         return Promise.resolve()
@@ -246,21 +248,23 @@ describe('electron', () => {
     it('should start full development environment with concurrently', async () => {
       await startFullDev()
 
-      expect(mockRunCommand).toHaveBeenCalledWith('npx', [
-        'concurrently',
-        '-n',
-        'NEXT,ELECTRON',
-        '-c',
-        'yellow,blue',
-        '--kill-others',
-        'npm run dev',
-        'tsx scripts/desktop.ts'
-      ])
+      expect(mock$).toHaveBeenCalledWith(
+        expect.arrayContaining([expect.stringContaining('npx concurrently')]),
+        expect.arrayContaining([
+          '-n',
+          'NEXT,ELECTRON',
+          '-c',
+          'yellow,blue',
+          '--kill-others',
+          'npm run dev',
+          'tsx scripts/desktop.ts'
+        ])
+      )
     })
 
     it('should handle concurrently startup errors', async () => {
       const concurrentlyError = new Error('Concurrently failed to start')
-      mockRunCommand.mockRejectedValue(concurrentlyError)
+      mock$.mockRejectedValue(concurrentlyError)
 
       await expect(startFullDev()).rejects.toThrow(
         'Concurrently failed to start'

@@ -1,4 +1,4 @@
-import path from 'path'
+import * as path from 'path'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { BACKEND_DIRNAME } from '../constants'
 import { setupVenv } from '../setup-venv'
@@ -160,7 +160,7 @@ describe('setupVenv', () => {
         commands: [
           {
             label: 'Create virtual environment manually',
-            command: `cd ${expectedBackendPath} && uv venv .venv --python 3.11`
+            command: `uv venv .venv --python 3.11`
           }
         ]
       })
@@ -376,7 +376,7 @@ describe('setupVenv', () => {
         commands: [
           {
             label: 'Create virtual environment manually',
-            command: `cd ${customBackendPath} && uv venv .venv --python 3.11`
+            command: `uv venv .venv --python 3.11`
           }
         ]
       })
@@ -479,7 +479,7 @@ describe('setupVenv', () => {
         commands: [
           {
             label: 'Create virtual environment manually',
-            command: `cd ${expectedBackendPath} && uv venv .venv --python 3.11`
+            command: `uv venv .venv --python 3.11`
           }
         ]
       })

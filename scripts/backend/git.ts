@@ -1,10 +1,10 @@
-import { runCommand } from './run-command'
+import { $ } from 'zx'
 
 export const isGitAvailable = async (): Promise<boolean> => {
   try {
-    await runCommand('git', ['--version'])
+    await $`git --version`
     return true
-  } catch (error) {
+  } catch {
     return false
   }
 }
@@ -14,18 +14,18 @@ export const cloneRepository = async (
   destination: string,
   branch: string
 ) => {
-  await runCommand('git', [
-    'clone',
-    '--branch',
-    branch,
-    '--single-branch',
-    repoUrl,
-    destination
-  ])
+  await $`git clone --branch ${branch} --single-branch ${repoUrl} ${destination}`
 }
 
 export const updateRepository = async (repoPath: string, branch: string) => {
-  await runCommand('git', ['fetch', 'origin', branch], { cwd: repoPath })
-  await runCommand('git', ['checkout', branch], { cwd: repoPath })
-  await runCommand('git', ['pull', 'origin', branch], { cwd: repoPath })
+  $.cwd = repoPath
+  try {
+    await $`git fetch origin ${branch}`
+    await $`git checkout ${branch}`
+    await $`git reset --hard origin/${branch}`
+  } catch (error) {
+    throw new Error(`Failed to update repository: ${error}`)
+  } finally {
+    $.cwd = process.cwd()
+  }
 }
