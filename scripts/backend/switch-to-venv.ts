@@ -24,7 +24,8 @@ export const switchToVenv = async ({
     message: `Switching to virtual environment`
   })
 
-  const windowsCommand = 'call .venv\\Scripts\\Activate.ps1'
+  const windowsCommand =
+    'powershell -NoProfile -ExecutionPolicy ByPass -Command ". .venv\\Scripts\\Activate.ps1"'
   const unixCommand = 'source .venv/bin/activate'
   const switchCommand = isWindows ? windowsCommand : unixCommand
 
