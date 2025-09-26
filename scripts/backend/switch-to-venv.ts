@@ -30,9 +30,9 @@ export const switchToVenv = async ({
 
   try {
     if (isWindows) {
-      await $`${windowsCommand}`
+      await $`${switchCommand}`
     } else {
-      await $`bash -c ${unixCommand}`
+      await $`bash -c ${switchCommand}`
     }
 
     emit({
