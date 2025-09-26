@@ -12,7 +12,7 @@ export interface FormValuesStore {
 
 export const useFormValuesStore = create<FormValuesStore>()(
   persist(
-    immer((set, get, store) => ({
+    immer((set, _get, store) => ({
       values: FORM_DEFAULT_VALUES,
       onSetValues: (values: GeneratorConfigFormValues) => {
         set((state) => {

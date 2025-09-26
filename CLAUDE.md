@@ -1,163 +1,84 @@
-- Always say 'CLAUDE.md is working' at the start
-- Do not make any changes, until you have 95% confidence that you know what to build ask me follow up questions until you have that confidence
-
 # CLAUDE.md
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Project Overview
-
-LocalAI is a Next.js-based Electron application for running AI models locally. It provides a web interface for image generation with Stable Diffusion, model management, and AI inference capabilities. The workspace contains two main projects:
-
-- `localai/` - Next.js/React frontend for the user interface
-- `localai_backend/` - Python FastAPI backend service
-- `electron/` - Electron layer for desktop application integration
-
-The frontend communicates with the backend server running on port 8000.
-
 ## Development Commands
 
-- `npm run dev` - Start Next.js development server with Turbopack
-- `npm run desktop` - Start the Electron desktop version using `./scripts/devall.ts`
-- `npm run build` - Build the application and create Electron distribution
-- `npm run start` - Start production Next.js server
-- `npm run lint` - Run ESLint
-- `npm run format` - Format code with Prettier
-- `npm run test` - Run tests with Vitest
-- `npm run test:coverage` - Run tests with coverage reporting
-- `npm run ci:lint` - Run linting for CI (outputs JSON report)
-- `npm run ci:format` - Check formatting for CI
-- `npx lint-staged` - To verify type errors, linter and formatter, you need to `git add .` before running
+### Common Tasks
 
-## Architecture
+- **Start development server**: `npm run dev` (Next.js with Turbopack)
+- **Start desktop development**: `npm run desktop` (runs Next.js + Electron concurrently)
+- **Build for production**: `npm run build` (compiles Electron + builds Next.js + packages with electron-builder)
+- **Compile Electron only**: `npm run compile`
 
-### Feature-Based Structure
+### Testing & Quality
 
-The codebase follows a feature-first architecture where each feature is self-contained in `src/features/`. New functionality should be encapsulated within a new or existing directory in `src/features/`.
+- **Run all tests**: `npm test` (Vitest)
+- **Run single test**: `npm test -- path/to/test.tsx`
+- **Run tests with coverage**: `npm run test:coverage`
+- **Type checking**: `npm run type-check`
+- **Lint code**: `npm run lint` (ESLint)
+- **Format code**: `npm run format` (Prettier)
+- **CI lint**: `npm run ci:lint` (with JSON output)
+- **CI format check**: `npm run ci:format`
 
-- **generators** - Core image generation functionality with Stable Diffusion
-- **histories** - History management for generated content
-- **model-search** - Model discovery and download capabilities
-- **model-recommendations** - AI model recommendations based on hardware
-- **gpu-detection** - Hardware detection and GPU compatibility
-- **max-memory-scale-factor** - Memory management for models
-- **generator-configs** - Configuration management for generation parameters
-- **streaming-messages** - Real-time messaging and notifications
+## Architecture Overview
 
-### Project Structure (`src/`)
+This is a Next.js/React frontend with Electron integration and a separate Python FastAPI backend. The project uses a feature-first architecture.
+
+### Core Structure
+
+- **Frontend**: Next.js 15 with App Router in TypeScript
+- **Desktop**: Electron wrapper for native desktop app
+- **Backend**: Separate Python FastAPI service (localai_backend/)
+- **State Management**: Zustand stores
+- **Styling**: Tailwind CSS 4 + HeroUI components
+- **Testing**: Vitest + React Testing Library
+- **Real-time**: Socket.io for WebSocket communication
+
+### Key Directories
 
 ```
 src/
-├── app/            # Next.js app router components
-├── cores/          # Core utilities and constants
-├── features/       # Feature modules (feature-first architecture)
+├── app/              # Next.js app router pages
+├── cores/            # Core utilities and constants
+├── features/         # Feature modules (feature-first architecture)
 │   └── feature-name/
-│       ├── presentations/ # UI components
-│       │   └── __tests__/  # Component tests
-│       └── states/        # State management (Zustand stores, hooks)
-│           └── __tests__/  # State tests
-├── services/       # API and data services
-├── sockets/        # Socket.io configuration
-└── types/          # TypeScript type definitions
+│       ├── presentations/  # UI components + tests
+│       └── states/         # Zustand stores + hooks + tests
+├── services/         # API integration (axios + React Query)
+└── sockets/          # Socket.io configuration
 ```
 
-Each feature typically contains:
+### Development Patterns
 
-- `presentations/` - React components and UI, Modular design
-- `states/` - State management hooks (Zustand stores)
-- `types/` - TypeScript type definitions
-- `constants/` - Feature-specific constants
-- `services/` - Business logic and API calls
-- `__tests__/` - Vitest test files
+- **Features**: Self-contained modules in `src/features/` with presentations (UI) and states (logic)
+- **Components**: Use HeroUI + Tailwind, keep small and focused
+- **State**: Zustand stores following the reset pattern with `getInitialState()`
+- **API**: Centralized in `src/services/api.ts` with React Query hooks
+- **Socket Events**: Real-time communication using shared socket instance and constants
 
-### Key Architectural Patterns
+### Scripts Architecture
 
-**State Management**: Uses Zustand for global state, React Query for server state, and React Hook Form for form state management.
+The `scripts/` directory contains TypeScript utilities for development and build processes:
 
-**API Communication**: Axios-based client (`src/services/api.ts`) communicates with backend at `http://localhost:8000`. Real-time features use Socket.io for WebSocket connections. Query hooks are defined in `src/services/queries.ts`.
-
-**Styling**: TailwindCSS with `clsx` for conditional classes. Use `@heroui/react` for UI primitives. Custom CSS modules for specific features like timeline styles.
-
-**Testing**: Vitest with React Testing Library, comprehensive test coverage including snapshots for UI components. Follow AAA pattern (Arrange → Act → Assert) and use descriptive test names.
-
-## Development Patterns & Guidelines
-
-### Coding Standards
-
-- **Feature-First**: New functionality should be encapsulated within a new or existing directory in `src/features/`
-- **Reusability**: If code is used in more than two places, extract it into a reusable utility/hook/component
-- **Component Design**: Keep components small, focused, and prefer composition. Avoid deep nesting
-- **Type Safety**: Use TypeScript consistently. Avoid `any` where possible
-- Use English for all code and documentation
-- Always declare types for variables and functions
-- Use JSDoc to document public classes and methods
-
-### State Management (Zustand)
-
-Follow the existing store creation pattern:
-
-```typescript
-export const useMessageStore = create<MessageStoreProps>(
-  (set, _get, store) => ({
-    message: '',
-    setMessage: (message) => set({ message }),
-    reset: () => set(store.getInitialState())
-  })
-)
-```
-
-### Socket Integration
-
-Use the shared socket instance from `@/sockets` and event constants from `SocketEvents`:
-
-```typescript
-useEffect(() => {
-  socket.on(SocketEvents.DOWNLOAD_START, () => {
-    setMessage('Downloading model')
-  })
-  return () => {
-    socket.off(SocketEvents.DOWNLOAD_START)
-  }
-}, [])
-```
+- **Backend management**: Python environment setup, LocalAI backend cloning/starting
+- **Electron compilation**: TypeScript to CommonJS compilation for Electron main/preload
+- **Development orchestration**: Concurrent Next.js and Electron processes
 
 ## Testing Guidelines
 
-- **Frameworks**: Use **Vitest** and **@testing-library/react**
-- **Location**: Test files mirror the source structure in `__tests__` folders
-- **Pattern**: Follow AAA pattern (Arrange → Act → Assert)
-- **Naming**: Use descriptive test names (e.g., `"shows error message when API fails"`)
-- **Mocks**: Use `vi.mock` for modules and clean up with `afterEach`
-- **Coverage**: Target ≥ 80% coverage for functions, lines, and branches
-- **No Over-testing**: You must not over-testing, make sure to reach best coverage but do not over-testing
-- **Type Safe**: You must fixed all the type errors, you can't use `any` at all. You can use `npx lint-staged` to make sure all type-safe
-- **Mocks**: Check the `@cores/test-utils` to see all the predefined mock functions, mock tests, if not then create, or reusable
+- **Framework**: Vitest + React Testing Library
+- **Location**: Tests in `__tests__/` folders mirroring source structure
+- **Patterns**: AAA pattern (Arrange-Act-Assert), descriptive test names
+- **Mocking**: Use `vi.mock()` and clean up with `afterEach`
+- **Coverage**: Target ≥80% for functions, lines, and branches
 
-### Running Tests
+## Pre-Commit Checklist
 
-- `npm run test` - Run all tests
-- `npm test -- <path/to/test.tsx>` - Run single test file
-- `npm run test:coverage` - Run tests with coverage reporting
-- Test files are located in `__tests__/` directories within each feature
+Before committing changes:
 
-## Backend Integration
-
-The application expects a LocalAI backend server running on `http://localhost:8000` providing REST API endpoints for:
-
-- Health checks (`/`)
-- Model management and downloads
-- Hardware detection
-- Image generation
-- Memory management
-- Model recommendations
-
-WebSocket connection for real-time updates during model operations.
-
-## Pre-PR Checklist
-
-Before submitting pull requests, ensure:
-
-1. **Run affected unit tests** (`npm test -- <file>`)
-2. **Run linter** (`npm run lint`) if TS/JS files changed
-3. **Run formatter** (`npm run format`)
-4. If backend contracts in `localai_backend/` were changed, ensure corresponding frontend types in `src/types` are updated
+1. Run affected tests: `npm test -- path/to/changed/files`
+2. Run linter: `npm run lint`
+3. Run type checker: `npm run type-check`
+4. Format code: `npm run format`
