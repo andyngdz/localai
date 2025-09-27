@@ -5,7 +5,7 @@ import {
   normalizeError,
   createDefaultStatusEmitter
 } from '../utils'
-import { BackendStatusLevel } from '../types'
+import { BackendStatusLevel } from '@types'
 
 vi.mock('fs/promises')
 

@@ -8,7 +8,7 @@ import {
   vi
 } from 'vitest'
 import type { ensurePython311 as ensurePython311Type } from '../ensure-python'
-import { BackendStatusLevel } from '../types'
+import { BackendStatusLevel } from '@types'
 
 type CommandRecorder = (
   pieces: TemplateStringsArray,

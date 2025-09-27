@@ -1,7 +1,7 @@
 import path from 'path'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { runBackend } from '../run-backend'
-import { BackendStatusLevel } from '../types'
+import { BackendStatusLevel } from '@types'
 import * as utilsModule from '../utils'
 
 // Mock dependencies

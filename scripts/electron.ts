@@ -17,25 +17,10 @@ const backendSourceFiles = [
   'scripts/backend/run-backend.ts',
   'scripts/backend/setup-venv.ts',
   'scripts/backend/start-backend.ts',
-  'scripts/backend/types.ts',
   'scripts/backend/utils.ts'
 ]
 
-const tscArgs = [
-  ...electronSourceFiles,
-  ...backendSourceFiles,
-  '--outDir',
-  'electron',
-  '--target',
-  'es2020',
-  '--module',
-  'commonjs',
-  '--moduleResolution',
-  'node',
-  '--esModuleInterop',
-  '--allowSyntheticDefaultImports',
-  '--skipLibCheck'
-]
+const tscArgs = ['--project', 'tsconfig.electron.json']
 
 const electronDir = join(projectRoot, 'electron')
 const electronBuildDir = join(electronDir, 'electron')

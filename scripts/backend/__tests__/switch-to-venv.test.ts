@@ -1,5 +1,5 @@
 import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest'
-import { BackendStatusLevel } from '../types'
+import { BackendStatusLevel } from '@types'
 import { switchToVenv } from '../switch-to-venv'
 
 type CommandRecorder = (

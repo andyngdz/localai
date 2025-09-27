@@ -1,4 +1,5 @@
 import { BrowserWindow } from 'electron'
+import type { LogLevel } from '@types'
 
 let isStreaming = false
 const originalConsole = {
@@ -8,7 +9,7 @@ const originalConsole = {
   error: console.error.bind(console)
 }
 
-const sendLog = (level: string, message: string) => {
+const sendLog = (level: LogLevel, message: string) => {
   BrowserWindow.getAllWindows().forEach((window) => {
     if (!window.isDestroyed()) {
       window.webContents.send('backend:log', {
@@ -20,7 +21,7 @@ const sendLog = (level: string, message: string) => {
   })
 }
 
-const intercept = (level: string, original: typeof console.log) => {
+const intercept = (level: LogLevel, original: typeof console.log) => {
   return (...args: unknown[]) => {
     original(...args)
     if (isStreaming) {

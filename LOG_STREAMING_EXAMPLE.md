@@ -5,8 +5,10 @@ Streams each console log from Electron backend to frontend.
 ## API
 
 ```typescript
+type LogLevel = 'log' | 'info' | 'warn' | 'error'
+
 interface LogEntry {
-  level: string
+  level: LogLevel
   message: string
   timestamp: number
 }

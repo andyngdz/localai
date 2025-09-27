@@ -1,7 +1,11 @@
 import * as path from 'path'
 import { $ } from 'zx'
 import { BACKEND_DIRNAME } from './constants'
-import { BackendStatusEmitter, BackendStatusLevel, Command } from './types'
+import {
+  BackendStatusEmitter,
+  BackendStatusLevel,
+  BackendStatusCommand
+} from '@types'
 import { normalizeError, pathExists } from './utils'
 
 export interface SetupVenvOptions {
@@ -48,7 +52,7 @@ const setupVenv = async ({
   })
 
   const createVenvCommand = `uv venv .venv --python 3.11`
-  const commands: Command[] = [
+  const commands: BackendStatusCommand[] = [
     {
       label: 'Create virtual environment manually',
       command: createVenvCommand

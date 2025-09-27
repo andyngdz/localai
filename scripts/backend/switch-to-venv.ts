@@ -1,5 +1,5 @@
 import { $ } from 'zx'
-import { BackendStatusEmitter, BackendStatusLevel } from './types'
+import { BackendStatusEmitter, BackendStatusLevel } from '@types'
 import { isWindows, normalizeError } from './utils'
 
 export interface SwitchToVenvOptions {

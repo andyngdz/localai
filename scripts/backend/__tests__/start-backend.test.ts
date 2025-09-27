@@ -7,7 +7,7 @@ import { runBackend } from '../run-backend'
 import { setupVenv } from '../setup-venv'
 import { startBackend, type StartBackendOptions } from '../start-backend'
 import { switchToVenv } from '../switch-to-venv'
-import { BackendStatusLevel } from '../types'
+import { BackendStatusLevel } from '@types'
 import { createDefaultStatusEmitter, normalizeError } from '../utils'
 
 // Mock all the backend modules

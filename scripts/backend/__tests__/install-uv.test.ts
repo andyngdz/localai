@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { BackendStatusLevel } from '../types'
+import { BackendStatusLevel } from '@types'
 
 const mock$ = vi.fn()
 

@@ -1,14 +1,9 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import type {
   BackendStatusEmitter,
-  BackendStatusPayload
-} from '../scripts/backend'
-
-interface LogEntry {
-  level: string
-  message: string
-  timestamp: number
-}
+  BackendStatusPayload,
+  LogEntry
+} from '@types'
 
 contextBridge.exposeInMainWorld('electronAPI', {
   downloadImage: (url: string) => ipcRenderer.invoke('download-image', url),
