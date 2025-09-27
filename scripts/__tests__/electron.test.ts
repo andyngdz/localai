@@ -23,7 +23,8 @@ const { runAsScriptMock, runAsScriptCalls } = vi.hoisted(() => {
 vi.mock('fs/promises')
 vi.mock('../utils', () => ({
   projectRoot: '/test/project',
-  runAsScript: runAsScriptMock
+  runAsScript: runAsScriptMock,
+  setupLog: vi.fn()
 }))
 vi.mock('zx', () => ({
   $: (...args: unknown[]) => mock$(...args)
