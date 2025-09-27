@@ -2,6 +2,11 @@ import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import serve from 'electron-serve'
 import path from 'path'
 import { startBackend } from '../scripts/backend'
+import {
+  startLogStreaming,
+  stopLogStreaming,
+  isLogStreaming
+} from './log-streamer'
 
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true'
 process.env.IBUS_USE_PORTAL = '1'
@@ -68,6 +73,20 @@ const onDownloadImage = () => {
   })
 }
 
+const onLogStreaming = () => {
+  ipcMain.handle('backend:start-log-stream', () => {
+    startLogStreaming()
+  })
+
+  ipcMain.handle('backend:stop-log-stream', () => {
+    stopLogStreaming()
+  })
+
+  ipcMain.handle('backend:log-stream-status', () => {
+    return isLogStreaming()
+  })
+}
+
 const gotLock = app.requestSingleInstanceLock()
 
 if (!gotLock) {
@@ -86,6 +105,7 @@ if (!gotLock) {
     onSetLinuxGpuFlags()
     onCreateWindow()
     onDownloadImage()
+    onLogStreaming()
     startBackend({ userDataPath: app.getPath('userData') })
   })
 
