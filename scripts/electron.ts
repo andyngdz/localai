@@ -1,7 +1,9 @@
 import { readFile, rename, rm, writeFile } from 'fs/promises'
 import { join } from 'path'
 import { $ } from 'zx'
-import { projectRoot } from './utils'
+import { projectRoot, setupLog } from './utils'
+
+setupLog($)
 
 const electronSourceFiles = ['electron/main.ts', 'electron/preload.ts']
 const backendSourceFiles = [

@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 import { $ } from 'zx'
-import { runAsScript } from './utils'
+import { runAsScript, setupLog } from './utils'
+
+setupLog($)
 
 const concurrentlyArgs = [
   '-n',

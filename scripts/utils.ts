@@ -1,5 +1,6 @@
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
+import { $ } from 'zx'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -17,4 +18,10 @@ const runAsScript = async (
   }
 }
 
-export { runAsScript, projectRoot, __dirname, __filename }
+const setupLog = (shell: $) => {
+  process.env.FORCE_COLOR = '1'
+  shell.verbose = true
+  shell.stdio = 'inherit'
+}
+
+export { runAsScript, setupLog, projectRoot, __dirname, __filename }
