@@ -3,11 +3,7 @@ import { join } from 'path'
 import { $ } from 'zx'
 import { projectRoot } from './utils'
 
-process.env.FORCE_COLOR = '1'
-$.stdio = 'inherit'
-$.verbose = true
-
-const electronSourceFiles = ['electron/main.ts', 'electron/preload.ts'] as const
+const electronSourceFiles = ['electron/main.ts', 'electron/preload.ts']
 const backendSourceFiles = [
   'scripts/backend/clone-backend.ts',
   'scripts/backend/constants.ts',
@@ -21,7 +17,7 @@ const backendSourceFiles = [
   'scripts/backend/start-backend.ts',
   'scripts/backend/types.ts',
   'scripts/backend/utils.ts'
-] as const
+]
 
 const tscArgs = [
   ...electronSourceFiles,
@@ -39,20 +35,10 @@ const tscArgs = [
   '--skipLibCheck'
 ]
 
-const concurrentlyArgs = [
-  '-n',
-  'NEXT,ELECTRON',
-  '-c',
-  'yellow,blue',
-  '--kill-others',
-  'npm run dev',
-  'tsx scripts/desktop.ts'
-]
-
 const electronDir = join(projectRoot, 'electron')
 const electronBuildDir = join(electronDir, 'electron')
 
-export const compileElectron = async () => {
+const compileElectron = async () => {
   console.log('🔨 Compiling Electron TypeScript files...')
 
   await Promise.all([
@@ -85,17 +71,17 @@ export const compileElectron = async () => {
   console.log('✅ Electron compilation complete')
 }
 
-export const startElectron = async () => {
+const startElectron = async () => {
   console.log('🚀 Starting Electron...')
   await $`npx electron .`
 }
 
-export const startDesktopDev = async () => {
-  await compileElectron()
-  await startElectron()
-}
-
-export const startFullDev = async () => {
-  console.log('🚀 Starting full development environment...')
-  await $`npx concurrently ${concurrentlyArgs}`
+export {
+  compileElectron,
+  startElectron,
+  electronSourceFiles,
+  backendSourceFiles,
+  tscArgs,
+  electronBuildDir,
+  electronDir
 }

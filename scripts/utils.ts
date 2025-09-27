@@ -3,9 +3,9 @@ import { fileURLToPath } from 'url'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
-export const projectRoot = join(__dirname, '..')
+const projectRoot = join(__dirname, '..')
 
-export const runAsScript = async (
+const runAsScript = async (
   task: () => Promise<void>,
   failureMessage: string
 ) => {
@@ -16,3 +16,5 @@ export const runAsScript = async (
     process.exit(1)
   }
 }
+
+export { runAsScript, projectRoot, __dirname, __filename }

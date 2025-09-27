@@ -135,7 +135,7 @@ const missingInstructions = (): MissingInstruction => {
   }
 }
 
-export const ensurePython311 = async ({ emit }: EnsurePythonOptions) => {
+const ensurePython311 = async ({ emit }: EnsurePythonOptions) => {
   const existing = await findPython()
 
   if (existing) {
@@ -157,3 +157,5 @@ export const ensurePython311 = async ({ emit }: EnsurePythonOptions) => {
 
   throw new Error('Python 3.11 is not installed.')
 }
+
+export { ensurePython311 }

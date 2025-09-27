@@ -1,7 +1,22 @@
 #!/usr/bin/env node
-import { startFullDev } from './electron'
+import { $ } from 'zx'
 import { runAsScript } from './utils'
+
+const concurrentlyArgs = [
+  '-n',
+  'NEXT,ELECTRON',
+  '-c',
+  'yellow,blue',
+  '--kill-others',
+  'npm run dev',
+  'tsx scripts/desktop.ts'
+]
+
+const startFullDev = async () => {
+  console.log('🚀 Starting full development environment...')
+  await $`npx concurrently ${concurrentlyArgs}`
+}
 
 runAsScript(startFullDev, '❌ Full development startup failed:')
 
-export { startFullDev } from './electron'
+export { concurrentlyArgs, startFullDev }

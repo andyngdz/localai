@@ -1,6 +1,6 @@
 import { $ } from 'zx'
 
-export const isGitAvailable = async (): Promise<boolean> => {
+const isGitAvailable = async (): Promise<boolean> => {
   try {
     await $`git --version`
     return true
@@ -9,7 +9,7 @@ export const isGitAvailable = async (): Promise<boolean> => {
   }
 }
 
-export const cloneRepository = async (
+const cloneRepository = async (
   repoUrl: string,
   destination: string,
   branch: string
@@ -17,7 +17,7 @@ export const cloneRepository = async (
   await $`git clone --branch ${branch} --single-branch ${repoUrl} ${destination}`
 }
 
-export const updateRepository = async (repoPath: string, branch: string) => {
+const updateRepository = async (repoPath: string, branch: string) => {
   $.cwd = repoPath
   try {
     await $`git fetch origin ${branch}`
@@ -29,3 +29,5 @@ export const updateRepository = async (repoPath: string, branch: string) => {
     $.cwd = process.cwd()
   }
 }
+
+export { isGitAvailable, cloneRepository, updateRepository }

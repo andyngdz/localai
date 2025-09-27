@@ -12,7 +12,7 @@ export interface StartBackendOptions {
   userDataPath: string
 }
 
-export const startBackend = async ({ userDataPath }: StartBackendOptions) => {
+const startBackend = async ({ userDataPath }: StartBackendOptions) => {
   const emit = createDefaultStatusEmitter()
 
   try {
@@ -45,3 +45,5 @@ export const startBackend = async ({ userDataPath }: StartBackendOptions) => {
     })
   }
 }
+
+export { startBackend }

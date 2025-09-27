@@ -70,7 +70,7 @@ const installationCommandsByPlatform = (): Command[] => {
   ]
 }
 
-export const installUv = async ({ emit }: InstallUvOptions) => {
+const installUv = async ({ emit }: InstallUvOptions) => {
   const existing = await detectUv()
 
   if (existing) {
@@ -121,3 +121,5 @@ export const installUv = async ({ emit }: InstallUvOptions) => {
 
   return installed
 }
+
+export { installUv }

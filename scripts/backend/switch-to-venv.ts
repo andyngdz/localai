@@ -13,10 +13,7 @@ export interface VenvActivationInfo {
   isWindows: boolean
 }
 
-export const switchToVenv = async ({
-  backendPath,
-  emit
-}: SwitchToVenvOptions) => {
+const switchToVenv = async ({ backendPath, emit }: SwitchToVenvOptions) => {
   $.cwd = backendPath
 
   emit({
@@ -56,3 +53,5 @@ export const switchToVenv = async ({
     throw normalizeError(error, 'Failed to activate virtual environment')
   }
 }
+
+export { switchToVenv }
