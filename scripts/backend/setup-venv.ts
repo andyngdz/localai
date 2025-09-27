@@ -14,7 +14,7 @@ export interface VenvInfo {
   backendPath: string
 }
 
-export const setupVenv = async ({
+const setupVenv = async ({
   userDataPath,
   emit
 }: SetupVenvOptions): Promise<VenvInfo> => {
@@ -76,3 +76,5 @@ export const setupVenv = async ({
     throw normalizeError(error, 'Failed to create virtual environment')
   }
 }
+
+export { setupVenv }

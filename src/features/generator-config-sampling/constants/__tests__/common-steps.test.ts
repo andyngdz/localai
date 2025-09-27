@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { COMMON_STEPS } from '../index'
+import { COMMON_STEPS } from '../common-steps'
 
 describe('Generator Config Sampling Constants', () => {
   describe('COMMON_STEPS', () => {

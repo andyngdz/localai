@@ -7,7 +7,7 @@ export interface InstallDependenciesOptions {
   emit: BackendStatusEmitter
 }
 
-export const installDependencies = async ({
+const installDependencies = async ({
   backendPath,
   emit
 }: InstallDependenciesOptions): Promise<void> => {
@@ -46,3 +46,5 @@ export const installDependencies = async ({
     throw normalizeError(error, 'Failed to install dependencies')
   }
 }
+
+export { installDependencies }

@@ -14,10 +14,7 @@ const ensureGitRepository = async (repositoryPath: string) => {
   return pathExists(gitDirectory)
 }
 
-export const cloneBackend = async ({
-  userDataPath,
-  emit
-}: SetupBackendOptions) => {
+const cloneBackend = async ({ userDataPath, emit }: SetupBackendOptions) => {
   emit({
     level: BackendStatusLevel.Info,
     message: 'Checking for Git installation…'
@@ -75,3 +72,5 @@ export const cloneBackend = async ({
 
   return { backendPath }
 }
+
+export { ensureGitRepository, cloneBackend }

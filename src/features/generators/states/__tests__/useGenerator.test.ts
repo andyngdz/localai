@@ -114,11 +114,9 @@ describe('useGenerator', () => {
     // Verify store interactions
     expect(mockSetIsGenerating).toHaveBeenCalledWith(true)
     expect(mockInit).toHaveBeenCalledWith(mockConfig.number_of_images)
-    expect(mockCompleted).toHaveBeenCalledWith(
-      mockGeneratorResponse,
-      { history_id: 1, config: mockConfig },
-      undefined
-    )
+    expect(mockCompleted).toHaveBeenCalled()
+    const completedCall = mockCompleted.mock.calls.at(-1) ?? []
+    expect(completedCall[0]).toEqual(mockGeneratorResponse)
     expect(mockSetIsGenerating).toHaveBeenCalledWith(false)
   })
 

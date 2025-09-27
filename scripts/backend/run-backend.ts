@@ -8,7 +8,7 @@ export interface RunBackendOptions {
   emit: BackendStatusEmitter
 }
 
-export const runBackend = async ({
+const runBackend = async ({
   backendPath,
   emit
 }: RunBackendOptions): Promise<void> => {
@@ -48,3 +48,5 @@ export const runBackend = async ({
     throw normalizeError(error, 'Failed to start LocalAI Backend')
   }
 }
+
+export { runBackend }

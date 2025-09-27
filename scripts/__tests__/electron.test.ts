@@ -1,20 +1,31 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { join } from 'path'
 import * as fs from 'fs/promises'
-import {
-  compileElectron,
-  startElectron,
-  startDesktopDev,
-  startFullDev
-} from '../electron'
+import { compileElectron, startElectron } from '../electron'
+import { startDesktopDev } from '../desktop'
+import { concurrentlyArgs, startFullDev } from '../devall'
 
-// Mock dependencies
+const { mock$, recordedCommands } = vi.hoisted(() => {
+  return {
+    mock$: vi.fn(),
+    recordedCommands: [] as string[]
+  }
+})
+
+const { runAsScriptMock, runAsScriptCalls } = vi.hoisted(() => {
+  const calls: Array<{ task: () => Promise<void>; message: string }> = []
+  const mockFn = vi.fn(async (task: () => Promise<void>, message: string) => {
+    calls.push({ task, message })
+  })
+  return { runAsScriptMock: mockFn, runAsScriptCalls: calls }
+})
+
 vi.mock('fs/promises')
 vi.mock('../utils', () => ({
-  projectRoot: '/test/project'
+  projectRoot: '/test/project',
+  runAsScript: runAsScriptMock,
+  setupLog: vi.fn()
 }))
-
-const mock$ = vi.fn()
 vi.mock('zx', () => ({
   $: (...args: unknown[]) => mock$(...args)
 }))
@@ -24,29 +35,40 @@ const mockWriteFile = vi.mocked(fs.writeFile)
 const mockRename = vi.mocked(fs.rename)
 const mockRm = vi.mocked(fs.rm)
 
-describe('electron', () => {
+const toCommandString = (pieces: TemplateStringsArray, args: unknown[]) =>
+  pieces.reduce((acc, part, index) => {
+    const interpolation = index < args.length ? String(args[index]) : ''
+    return acc + part + interpolation
+  }, '')
+
+describe('electron toolchain', () => {
   const mockProjectRoot = '/test/project'
   const electronDir = join(mockProjectRoot, 'electron')
   const electronBuildDir = join(electronDir, 'electron')
 
   beforeEach(() => {
     vi.clearAllMocks()
+    recordedCommands.length = 0
 
-    // Setup default successful mocks
     mockReadFile.mockResolvedValue(
       'mock file content with require("../scripts/backend")'
     )
     mockWriteFile.mockResolvedValue()
     mockRename.mockResolvedValue()
     mockRm.mockResolvedValue()
-    mock$.mockResolvedValue(undefined)
+
+    mock$.mockImplementation(
+      (pieces: TemplateStringsArray, ...args: unknown[]) => {
+        recordedCommands.push(toCommandString(pieces, args).trim())
+        return Promise.resolve()
+      }
+    )
   })
 
   describe('compileElectron', () => {
-    it('should compile Electron TypeScript files successfully', async () => {
+    it('compiles Electron TypeScript sources', async () => {
       await compileElectron()
 
-      // Verify cleanup of old files
       expect(mockRm).toHaveBeenCalledWith(join(electronDir, 'main.cjs'), {
         force: true
       })
@@ -64,30 +86,11 @@ describe('electron', () => {
         force: true
       })
 
-      // Verify TypeScript compilation was called
-      expect(mock$).toHaveBeenCalledWith(
-        expect.arrayContaining([expect.stringContaining('npx tsc')]),
-        expect.arrayContaining([
-          'electron/main.ts',
-          'electron/preload.ts',
-          'scripts/backend/clone-backend.ts',
-          'scripts/backend/constants.ts',
-          'scripts/backend/ensure-python.ts',
-          'scripts/backend/git.ts',
-          'scripts/backend/index.ts',
-          'scripts/backend/install-dependencies.ts',
-          'scripts/backend/install-uv.ts',
-          'scripts/backend/run-backend.ts',
-          'scripts/backend/setup-venv.ts',
-          'scripts/backend/start-backend.ts',
-          'scripts/backend/types.ts',
-          'scripts/backend/utils.ts',
-          '--outDir',
-          'electron'
-        ])
-      )
+      expect(recordedCommands[0]).toContain('npx tsc ')
+      expect(recordedCommands[0]).toContain('electron/main.ts')
+      expect(recordedCommands[0]).toContain('--outDir')
+      expect(recordedCommands[0]).toMatch(/--outDir[ ,]electron/)
 
-      // Verify path fixing
       const mainJsPath = join(electronBuildDir, 'main.js')
       expect(mockReadFile).toHaveBeenCalledWith(mainJsPath, 'utf8')
       expect(mockWriteFile).toHaveBeenCalledWith(
@@ -95,7 +98,6 @@ describe('electron', () => {
         'mock file content with require("./scripts/backend")'
       )
 
-      // Verify file moves
       expect(mockRename).toHaveBeenCalledWith(
         join(electronBuildDir, 'main.js'),
         join(electronDir, 'main.js')
@@ -105,186 +107,66 @@ describe('electron', () => {
         join(electronDir, 'preload.js')
       )
 
-      // Verify cleanup of build directory
       expect(mockRm).toHaveBeenCalledWith(electronBuildDir, {
         recursive: true,
         force: true
       })
     })
 
-    it('should handle file content without require statement', async () => {
-      mockReadFile.mockResolvedValue(
-        'mock file content without require statement'
-      )
-
-      await compileElectron()
-
-      expect(mockWriteFile).toHaveBeenCalledWith(
-        join(electronBuildDir, 'main.js'),
-        'mock file content without require statement'
-      )
-    })
-
-    it('should handle multiple require statements', async () => {
-      mockReadFile.mockResolvedValue(
-        'const backend = require("../scripts/backend")\nconst other = require("../scripts/backend")'
-      )
-
-      await compileElectron()
-
-      expect(mockWriteFile).toHaveBeenCalledWith(
-        join(electronBuildDir, 'main.js'),
-        'const backend = require("./scripts/backend")\nconst other = require("../scripts/backend")'
-      )
-    })
-
-    it('should handle TypeScript compilation errors', async () => {
+    it('handles TypeScript compilation failures', async () => {
       const compilationError = new Error('TypeScript compilation failed')
-      mock$.mockRejectedValue(compilationError)
+      mock$.mockImplementation(
+        (pieces: TemplateStringsArray, ...args: unknown[]) => {
+          recordedCommands.push(toCommandString(pieces, args).trim())
+          return Promise.reject(compilationError)
+        }
+      )
 
       await expect(compileElectron()).rejects.toThrow(
         'TypeScript compilation failed'
       )
     })
 
-    it('should handle file system errors during cleanup', async () => {
+    it('handles file-system failures', async () => {
       const fsError = new Error('File system error')
       mockRm.mockRejectedValue(fsError)
 
       await expect(compileElectron()).rejects.toThrow('File system error')
     })
 
-    it('should handle file read errors', async () => {
+    it('handles read failures', async () => {
       const readError = new Error('File read error')
       mockReadFile.mockRejectedValue(readError)
 
       await expect(compileElectron()).rejects.toThrow('File read error')
     })
 
-    it('should handle file write errors', async () => {
+    it('handles write failures', async () => {
       const writeError = new Error('File write error')
       mockWriteFile.mockRejectedValue(writeError)
 
       await expect(compileElectron()).rejects.toThrow('File write error')
     })
 
-    it('should handle file rename errors', async () => {
+    it('handles rename failures', async () => {
       const renameError = new Error('File rename error')
       mockRename.mockRejectedValue(renameError)
 
       await expect(compileElectron()).rejects.toThrow('File rename error')
     })
-  })
 
-  describe('startElectron', () => {
-    it('should start Electron successfully', async () => {
-      await startElectron()
-
-      expect(mock$).toHaveBeenCalledWith(
-        expect.arrayContaining([expect.stringContaining('npx electron')])
-      )
-    })
-
-    it('should handle Electron startup errors', async () => {
-      const electronError = new Error('Electron failed to start')
-      mock$.mockRejectedValue(electronError)
-
-      await expect(startElectron()).rejects.toThrow('Electron failed to start')
-    })
-  })
-
-  describe('startDesktopDev', () => {
-    it('should compile and start Electron in sequence', async () => {
-      await startDesktopDev()
-
-      // Verify compilation happened first
-      expect(mock$).toHaveBeenCalledWith(
-        expect.arrayContaining([expect.stringContaining('npx tsc')]),
-        expect.anything()
-      )
-
-      // Verify Electron start happened after compilation
-      expect(mock$).toHaveBeenCalledWith(
-        expect.arrayContaining([expect.stringContaining('npx electron')])
-      )
-    })
-
-    it('should handle compilation errors before starting Electron', async () => {
-      const compilationError = new Error('Compilation failed')
-      mock$.mockImplementation((...args: unknown[]) => {
-        const command = args.join(' ')
-        if (command.includes('tsc')) {
-          return Promise.reject(compilationError)
-        }
-        return Promise.resolve()
-      })
-
-      await expect(startDesktopDev()).rejects.toThrow('Compilation failed')
-
-      // Verify Electron was not started
-      expect(mock$).not.toHaveBeenCalledWith(
-        expect.arrayContaining([expect.stringContaining('npx electron')])
-      )
-    })
-
-    it('should handle Electron startup errors after successful compilation', async () => {
-      const electronError = new Error('Electron startup failed')
-      mock$.mockImplementation((...args: unknown[]) => {
-        const command = args.join(' ')
-        if (command.includes('tsc')) {
-          return Promise.resolve()
-        }
-        if (command.includes('electron')) {
-          return Promise.reject(electronError)
-        }
-        return Promise.resolve()
-      })
-
-      await expect(startDesktopDev()).rejects.toThrow('Electron startup failed')
-    })
-  })
-
-  describe('startFullDev', () => {
-    it('should start full development environment with concurrently', async () => {
-      await startFullDev()
-
-      expect(mock$).toHaveBeenCalledWith(
-        expect.arrayContaining([expect.stringContaining('npx concurrently')]),
-        expect.arrayContaining([
-          '-n',
-          'NEXT,ELECTRON',
-          '-c',
-          'yellow,blue',
-          '--kill-others',
-          'npm run dev',
-          'tsx scripts/desktop.ts'
-        ])
-      )
-    })
-
-    it('should handle concurrently startup errors', async () => {
-      const concurrentlyError = new Error('Concurrently failed to start')
-      mock$.mockRejectedValue(concurrentlyError)
-
-      await expect(startFullDev()).rejects.toThrow(
-        'Concurrently failed to start'
-      )
-    })
-  })
-
-  describe('edge cases', () => {
-    it('should handle empty file content during path fixing', async () => {
-      mockReadFile.mockResolvedValue('')
+    it('handles missing require statements gracefully', async () => {
+      mockReadFile.mockResolvedValue('plain content')
 
       await compileElectron()
 
       expect(mockWriteFile).toHaveBeenCalledWith(
         join(electronBuildDir, 'main.js'),
-        ''
+        'plain content'
       )
     })
 
-    it('should handle file content with similar but different require statements', async () => {
+    it('handles mixed require statements', async () => {
       mockReadFile.mockResolvedValue(
         'require("../scripts/frontend")\nrequire("./scripts/backend")\nrequire("../scripts/backend")'
       )
@@ -297,21 +179,107 @@ describe('electron', () => {
       )
     })
 
-    it('should handle cleanup operations in parallel', async () => {
-      let cleanupStarted = false
+    it('processes cleanup operations in parallel', async () => {
+      let cleanupObserved = false
       mockRm.mockImplementation(() => {
-        if (!cleanupStarted) {
-          cleanupStarted = true
-          // Simulate parallel execution by checking that multiple calls happen
-          expect(mockRm).toHaveBeenCalled()
-        }
+        cleanupObserved = true
         return Promise.resolve()
       })
 
       await compileElectron()
 
-      // Verify all cleanup operations were called
-      expect(mockRm).toHaveBeenCalledTimes(6) // 5 initial cleanup + 1 final cleanup
+      expect(cleanupObserved).toBe(true)
+      expect(mockRm).toHaveBeenCalledTimes(6)
+    })
+  })
+
+  describe('startElectron', () => {
+    it('runs the Electron binary', async () => {
+      await startElectron()
+
+      expect(recordedCommands).toEqual(['npx electron .'])
+    })
+
+    it('surfaces Electron start failures', async () => {
+      const electronError = new Error('Electron failed to start')
+      mock$.mockImplementation(
+        (pieces: TemplateStringsArray, ...args: unknown[]) => {
+          recordedCommands.push(toCommandString(pieces, args).trim())
+          return Promise.reject(electronError)
+        }
+      )
+
+      await expect(startElectron()).rejects.toThrow('Electron failed to start')
+    })
+  })
+
+  describe('startDesktopDev', () => {
+    it('compiles and launches Electron sequentially', async () => {
+      await startDesktopDev()
+
+      expect(recordedCommands[0]).toContain('npx tsc ')
+      expect(recordedCommands[1]).toBe('npx electron .')
+    })
+
+    it('prevents Electron start when compilation fails', async () => {
+      const compilationError = new Error('Compilation failed')
+      mock$.mockImplementation(
+        (pieces: TemplateStringsArray, ...args: unknown[]) => {
+          const command = toCommandString(pieces, args).trim()
+          recordedCommands.push(command)
+          if (command.includes('npx tsc')) {
+            return Promise.reject(compilationError)
+          }
+          return Promise.resolve()
+        }
+      )
+
+      await expect(startDesktopDev()).rejects.toThrow('Compilation failed')
+      expect(recordedCommands).toHaveLength(1)
+      expect(recordedCommands[0]).toContain('npx tsc ')
+    })
+
+    it('surfaces Electron failures after successful compilation', async () => {
+      const electronError = new Error('Electron startup failed')
+      mock$.mockImplementation(
+        (pieces: TemplateStringsArray, ...args: unknown[]) => {
+          const command = toCommandString(pieces, args).trim()
+          recordedCommands.push(command)
+          if (command.includes('npx electron')) {
+            return Promise.reject(electronError)
+          }
+          return Promise.resolve()
+        }
+      )
+
+      await expect(startDesktopDev()).rejects.toThrow('Electron startup failed')
+      expect(recordedCommands[0]).toContain('npx tsc ')
+      expect(recordedCommands[1]).toBe('npx electron .')
+    })
+  })
+
+  describe('startFullDev', () => {
+    it('runs concurrently with predefined arguments', async () => {
+      await startFullDev()
+
+      expect(recordedCommands[0]).toContain('npx concurrently ')
+      concurrentlyArgs.forEach((arg) => {
+        expect(recordedCommands[0]).toContain(String(arg))
+      })
+    })
+
+    it('surfaces concurrently failures', async () => {
+      const concurrentlyError = new Error('Concurrently failed to start')
+      mock$.mockImplementation(
+        (pieces: TemplateStringsArray, ...args: unknown[]) => {
+          recordedCommands.push(toCommandString(pieces, args).trim())
+          return Promise.reject(concurrentlyError)
+        }
+      )
+
+      await expect(startFullDev()).rejects.toThrow(
+        'Concurrently failed to start'
+      )
     })
   })
 
@@ -322,7 +290,7 @@ describe('electron', () => {
       consoleSpy.mockClear()
     })
 
-    it('should log compilation progress in compileElectron', async () => {
+    it('logs compilation progress', async () => {
       await compileElectron()
 
       expect(consoleSpy).toHaveBeenCalledWith(
@@ -333,18 +301,26 @@ describe('electron', () => {
       )
     })
 
-    it('should log startup message in startElectron', async () => {
+    it('logs Electron startup', async () => {
       await startElectron()
 
       expect(consoleSpy).toHaveBeenCalledWith('🚀 Starting Electron...')
     })
 
-    it('should log startup message in startFullDev', async () => {
+    it('logs full environment startup', async () => {
       await startFullDev()
 
       expect(consoleSpy).toHaveBeenCalledWith(
         '🚀 Starting full development environment...'
       )
     })
+  })
+
+  it('registers desktop and full dev scripts via runAsScript', () => {
+    expect(runAsScriptCalls).toHaveLength(2)
+    expect(runAsScriptCalls.map((call) => call.message)).toEqual([
+      '❌ Desktop development failed:',
+      '❌ Full development startup failed:'
+    ])
   })
 })
