@@ -22,10 +22,8 @@ sonar-report.xml
 
 # production
 /build
-/electron/*.cjs
-/electron/*.js
-/electron/scripts/backend/*.cjs
-/electron/scripts/backend/*.js
+/electron/**/*.js
+/electron/**/*.cjs
 dist
 
 # misc

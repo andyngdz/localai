@@ -1,4 +1,4 @@
-import { readFile, rename, rm, writeFile } from 'fs/promises'
+import { cp, mkdir, readFile, rename, rm, writeFile } from 'fs/promises'
 import { join } from 'path'
 import { $ } from 'zx'
 import { projectRoot, setupLog } from './utils'
@@ -24,6 +24,8 @@ const tscArgs = ['--project', 'tsconfig.electron.json']
 
 const electronDir = join(projectRoot, 'electron')
 const electronBuildDir = join(electronDir, 'electron')
+const compiledTypesDir = join(electronDir, 'types')
+const runtimeTypesDir = join(electronDir, 'node_modules', '@types')
 
 const compileElectron = async () => {
   console.log('🔨 Compiling Electron TypeScript files...')
@@ -33,7 +35,8 @@ const compileElectron = async () => {
     rm(join(electronDir, 'main.js'), { force: true }),
     rm(join(electronDir, 'preload.cjs'), { force: true }),
     rm(join(electronDir, 'preload.js'), { force: true }),
-    rm(join(electronDir, 'scripts'), { recursive: true, force: true })
+    rm(join(electronDir, 'scripts'), { recursive: true, force: true }),
+    rm(join(electronDir, 'types'), { recursive: true, force: true })
   ])
 
   await $`npx tsc ${tscArgs}`
@@ -52,6 +55,14 @@ const compileElectron = async () => {
     join(electronBuildDir, 'preload.js'),
     join(electronDir, 'preload.js')
   )
+  await rename(
+    join(electronBuildDir, 'log-streamer.js'),
+    join(electronDir, 'log-streamer.js')
+  )
+
+  await rm(runtimeTypesDir, { recursive: true, force: true })
+  await mkdir(runtimeTypesDir, { recursive: true })
+  await cp(compiledTypesDir, runtimeTypesDir, { recursive: true })
 
   await rm(electronBuildDir, { recursive: true, force: true })
 
