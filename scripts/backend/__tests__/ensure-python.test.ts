@@ -1,19 +1,55 @@
 import {
-  describe,
-  expect,
-  it,
   afterEach,
   beforeAll,
   beforeEach,
+  describe,
+  expect,
+  it,
   vi
 } from 'vitest'
 import type { ensurePython311 as ensurePython311Type } from '../ensure-python'
 import { BackendStatusLevel } from '../types'
 
-const mock$ = vi.fn()
+type CommandRecorder = (
+  pieces: TemplateStringsArray,
+  ...args: unknown[]
+) => {
+  nothrow: () => Promise<{ exitCode: number; stdout: string; stderr: string }>
+}
+
+type CommandResult = {
+  exitCode: number
+  stdout: string
+  stderr: string
+}
+
+const { mock$, commandQueue, recordedCommands, platformState } = vi.hoisted(
+  () => {
+    const queue: CommandResult[] = []
+    const commands: string[] = []
+    const innerMock$ = vi.fn<CommandRecorder>()
+    const state = { platform: process.platform, isWindows: false, isMac: false }
+
+    return {
+      mock$: innerMock$,
+      commandQueue: queue,
+      recordedCommands: commands,
+      platformState: state
+    }
+  }
+)
 
 vi.mock('zx', () => ({
-  $: (...args: unknown[]) => mock$(...args)
+  $: (...args: Parameters<CommandRecorder>) => mock$(...args)
+}))
+
+vi.mock('../utils', () => ({
+  get isWindows() {
+    return platformState.isWindows
+  },
+  get isMac() {
+    return platformState.isMac
+  }
 }))
 
 let ensurePython311: typeof ensurePython311Type
@@ -29,37 +65,57 @@ const setPlatform = (platform: NodeJS.Platform) => {
     value: platform,
     configurable: true
   })
+  platformState.platform = platform
 }
 
-const createOutput = (
-  overrides: Partial<{ exitCode: number; stdout: string }>
-) => ({
+const resetPlatform = () => {
+  Object.defineProperty(process, 'platform', {
+    value: originalPlatform,
+    configurable: true
+  })
+  platformState.platform = originalPlatform
+}
+
+const makeResult = (overrides: Partial<CommandResult> = {}): CommandResult => ({
   exitCode: 0,
-  stdout: '',
+  stdout: 'Python 3.11.0\n',
   stderr: '',
   ...overrides
 })
 
 beforeEach(() => {
-  mock$.mockReset()
+  commandQueue.length = 0
+  recordedCommands.length = 0
+  platformState.isWindows = false
+  platformState.isMac = false
   setPlatform(originalPlatform)
+
+  mock$.mockImplementation(
+    (pieces: TemplateStringsArray, ...args: unknown[]) => {
+      const command = pieces.reduce((acc, part, index) => {
+        const interpolation = index < args.length ? String(args[index]) : ''
+        return acc + part + interpolation
+      }, '')
+
+      recordedCommands.push(command.trim())
+
+      return {
+        nothrow: () =>
+          Promise.resolve(commandQueue.shift() ?? makeResult({ exitCode: 1 }))
+      }
+    }
+  )
 })
 
 afterEach(() => {
   mock$.mockReset()
-  setPlatform(originalPlatform)
+  resetPlatform()
 })
 
 describe('ensurePython311', () => {
-  it('resolves when Python 3.11 is detected', async () => {
+  it('detects Python 3.11 using the first successful candidate', async () => {
     setPlatform('linux')
-
-    const outputs = [createOutput({ stdout: 'Python 3.11.5\n' })]
-
-    mock$.mockImplementation(() => ({
-      nothrow: () =>
-        Promise.resolve(outputs.shift() ?? createOutput({ exitCode: 1 }))
-    }))
+    commandQueue.push(makeResult({ stdout: 'Python 3.11.5\n' }))
 
     const emit = vi.fn()
 
@@ -70,71 +126,62 @@ describe('ensurePython311', () => {
       args: [],
       version: '3.11.5'
     })
-    expect(emit).toHaveBeenCalledTimes(1)
+    expect(recordedCommands).toEqual(['python3.11 --version'])
     expect(emit).toHaveBeenCalledWith({
       level: BackendStatusLevel.Info,
       message: 'Python 3.11.5 detected.'
     })
   })
 
-  it('continues checking candidates until a 3.11 interpreter is found', async () => {
+  it('continues through candidates until a 3.11 interpreter is found', async () => {
     setPlatform('linux')
 
-    const outputs = [
-      createOutput({ stdout: 'Python 3.10.12\n' }),
-      createOutput({ stdout: 'Python 3.11.1\n' })
-    ]
-
-    mock$.mockImplementation(() => ({
-      nothrow: () =>
-        Promise.resolve(outputs.shift() ?? createOutput({ exitCode: 1 }))
-    }))
+    commandQueue.push(
+      makeResult({ stdout: 'Python 3.10.12\n' }),
+      makeResult({ stdout: 'Python 3.11\n' })
+    )
 
     const emit = vi.fn()
 
     const result = await ensurePython311({ emit })
 
-    expect(result).toEqual({ command: 'python3', args: [], version: '3.11.1' })
-    expect(mock$).toHaveBeenCalledTimes(2)
-  })
-
-  it('emits install guidance with commands when Python is missing on Linux', async () => {
-    setPlatform('linux')
-
-    mock$.mockImplementation(() => ({
-      nothrow: () => Promise.resolve(createOutput({ exitCode: 1 }))
-    }))
-
-    const emit = vi.fn()
-
-    await expect(ensurePython311({ emit })).rejects.toThrow(
-      'Python 3.11 is not installed.'
-    )
-
-    expect(emit).toHaveBeenCalledTimes(1)
+    expect(result).toEqual({ command: 'python3', args: [], version: '3.11.0' })
+    expect(recordedCommands).toEqual([
+      'python3.11 --version',
+      'python3 --version'
+    ])
     expect(emit).toHaveBeenCalledWith({
-      level: BackendStatusLevel.Error,
-      message:
-        'Python 3.11 is required. Install it with your system package manager.',
-      commands: [
-        { label: 'Update packages', command: 'sudo apt update' },
-        { label: 'Install Python 3.11', command: 'sudo apt install python3.11' }
-      ]
+      level: BackendStatusLevel.Info,
+      message: 'Python 3.11.0 detected.'
     })
   })
 
-  it('emits install options for Windows', async () => {
+  it('uses Windows-specific instructions when no interpreter is available', async () => {
     setPlatform('win32')
+    platformState.isWindows = true
 
-    mock$.mockImplementation(() => ({
-      nothrow: () => Promise.resolve(createOutput({ exitCode: 1 }))
-    }))
+    // Exhaust all candidates with failures
+    commandQueue.push(
+      makeResult({ exitCode: 1 }),
+      makeResult({ exitCode: 1 }),
+      makeResult({ exitCode: 1 }),
+      makeResult({ exitCode: 1 }),
+      makeResult({ exitCode: 1 })
+    )
 
     const emit = vi.fn()
 
     await expect(ensurePython311({ emit })).rejects.toThrow(
       'Python 3.11 is not installed.'
     )
+
+    expect(recordedCommands).toEqual([
+      'py -3.11,--version',
+      'python3.11 --version',
+      'python3 --version',
+      'python --version',
+      'py -3,--version'
+    ])
 
     expect(emit).toHaveBeenCalledWith({
       level: BackendStatusLevel.Error,
@@ -150,6 +197,73 @@ describe('ensurePython311', () => {
           label: 'Install with Chocolatey',
           command: 'choco install python --version=3.11.9 -y'
         }
+      ]
+    })
+  })
+
+  it('uses macOS-specific instructions when no interpreter is available', async () => {
+    setPlatform('darwin')
+    platformState.isMac = true
+
+    commandQueue.push(
+      makeResult({ exitCode: 1 }),
+      makeResult({ exitCode: 1 }),
+      makeResult({ exitCode: 1 })
+    )
+
+    const emit = vi.fn()
+
+    await expect(ensurePython311({ emit })).rejects.toThrow(
+      'Python 3.11 is not installed.'
+    )
+
+    expect(recordedCommands).toEqual([
+      'python3.11 --version',
+      'python3 --version',
+      'python --version'
+    ])
+
+    expect(emit).toHaveBeenCalledWith({
+      level: BackendStatusLevel.Error,
+      message:
+        'Python 3.11 is required. Install it via Homebrew or download it from python.org.',
+      commands: [
+        {
+          label: 'Install with Homebrew',
+          command: 'brew install python@3.11'
+        }
+      ]
+    })
+  })
+
+  it('defaults to Linux-style instructions when platform is not macOS or Windows', async () => {
+    setPlatform('linux')
+
+    commandQueue.push(
+      makeResult({ exitCode: 1 }),
+      makeResult({ exitCode: 1 }),
+      makeResult({ exitCode: 1 })
+    )
+
+    const emit = vi.fn()
+
+    await expect(ensurePython311({ emit })).rejects.toThrow(
+      'Python 3.11 is not installed.'
+    )
+
+    expect(recordedCommands).toEqual([
+      'python3.11 --version',
+      'python3 --version',
+      'python --version'
+    ])
+
+    expect(emit).toHaveBeenCalledWith({
+      level: BackendStatusLevel.Error,
+      message:
+        'Python 3.11 is required. Install it with your system package manager.',
+      commands: [
+        { label: 'Update packages', command: 'sudo apt update' },
+        { label: 'Install Python 3.11', command: 'sudo apt install python3.11' }
       ]
     })
   })

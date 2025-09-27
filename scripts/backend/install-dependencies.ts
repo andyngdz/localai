@@ -1,7 +1,6 @@
-import * as path from 'path'
 import { $ } from 'zx'
 import { BackendStatusEmitter, BackendStatusLevel, Command } from './types'
-import { normalizeError, pathExists } from './utils'
+import { normalizeError } from './utils'
 
 export interface InstallDependenciesOptions {
   backendPath: string
@@ -12,39 +11,32 @@ export const installDependencies = async ({
   backendPath,
   emit
 }: InstallDependenciesOptions): Promise<void> => {
-  const requirementsPath = path.join(backendPath, 'requirements.txt')
-  const requirementsExists = await pathExists(requirementsPath)
-
-  if (!requirementsExists) {
-    emit({
-      level: BackendStatusLevel.Error,
-      message: 'requirements.txt not found in backend directory'
-    })
-    throw new Error('requirements.txt not found')
-  }
+  $.cwd = backendPath
 
   emit({
     level: BackendStatusLevel.Info,
     message: 'Installing Python dependencies…'
   })
 
-  const installCommand = `cd ${backendPath} && uv pip install -r requirements.txt`
-  const commands: Command[] = [
-    {
-      label: 'Install dependencies manually',
-      command: installCommand
-    }
-  ]
+  const command = 'uv'
+  const args = ['pip', 'install', '-r', 'requirements.txt']
+  const installCommand = [command, ...args].join(' ')
 
   try {
-    // Use uv to install dependencies in the virtual environment
-    await $`${installCommand}`
+    await $`${command} ${args}`
 
     emit({
       level: BackendStatusLevel.Info,
       message: 'Dependencies installed successfully'
     })
   } catch (error) {
+    const commands: Command[] = [
+      {
+        label: 'Install dependencies manually',
+        command: installCommand
+      }
+    ]
+
     emit({
       level: BackendStatusLevel.Error,
       message: 'Failed to install dependencies. Run the command manually.',

@@ -1,13 +1,4 @@
-import {
-  afterEach,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi
-} from 'vitest'
-import type { installUv as installUvType } from '../install-uv'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { BackendStatusLevel } from '../types'
 
 const mock$ = vi.fn()
@@ -15,6 +6,20 @@ const mock$ = vi.fn()
 vi.mock('zx', () => ({
   $: (...args: unknown[]) => mock$(...args)
 }))
+
+const mockIsWindows = vi.fn()
+const mockIsLinux = vi.fn()
+const mockIsMac = vi.fn()
+
+vi.mock('../utils', async () => {
+  const actual = await vi.importActual('../utils')
+  return {
+    ...actual,
+    isWindows: mockIsWindows,
+    isLinux: mockIsLinux,
+    isMac: mockIsMac
+  }
+})
 
 const makeProcessOutput = (
   overrides: Partial<{ exitCode: number; stdout: string; stderr: string }>
@@ -25,28 +30,44 @@ const makeProcessOutput = (
   ...overrides
 })
 
-let installUv: typeof installUvType
-const originalPlatform = process.platform
-
 const setPlatform = (platform: NodeJS.Platform) => {
-  Object.defineProperty(process, 'platform', {
-    value: platform,
-    configurable: true
-  })
+  mockIsWindows.mockReturnValue(platform === 'win32')
+  mockIsLinux.mockReturnValue(platform === 'linux')
+  mockIsMac.mockReturnValue(platform === 'darwin')
 }
 
-beforeAll(async () => {
-  ;({ installUv: installUv } = await import('../install-uv'))
-})
+const getInstallUv = async () => {
+  // Clear module cache to ensure fresh import with current mocks
+  vi.resetModules()
+  // Force mock the utils module
+  vi.doMock('../utils', () => ({
+    isWindows: mockIsWindows(),
+    isLinux: mockIsLinux(),
+    isMac: mockIsMac(),
+    normalizeError: vi
+      .fn()
+      .mockImplementation((error, defaultMessage) =>
+        error instanceof Error ? error : new Error(defaultMessage)
+      ),
+    pathExists: vi.fn()
+  }))
+  const installUvModule = await import('../install-uv')
+  return installUvModule.installUv
+}
 
 beforeEach(() => {
   mock$.mockReset()
-  setPlatform(originalPlatform)
+  // Reset all platform mocks to false first
+  mockIsWindows.mockReturnValue(false)
+  mockIsLinux.mockReturnValue(false)
+  mockIsMac.mockReturnValue(false)
 })
 
 afterEach(() => {
   mock$.mockReset()
-  setPlatform(originalPlatform)
+  mockIsWindows.mockReset()
+  mockIsLinux.mockReset()
+  mockIsMac.mockReset()
 })
 
 describe('installUv', () => {
@@ -61,6 +82,7 @@ describe('installUv', () => {
     })
 
     const emit = vi.fn()
+    const installUv = await getInstallUv()
 
     const result = await installUv({ emit })
 
@@ -85,6 +107,7 @@ describe('installUv', () => {
     })
 
     const emit = vi.fn()
+    const installUv = await getInstallUv()
 
     const result = await installUv({ emit })
 
@@ -124,6 +147,7 @@ describe('installUv', () => {
     })
 
     const emit = vi.fn()
+    const installUv = await getInstallUv()
 
     const result = await installUv({ emit })
 
@@ -153,15 +177,15 @@ describe('installUv', () => {
       }
 
       // Verify the install command is correct for Unix systems
-      // The $ function receives template parts and substitutions
-      const fullCommand = args.join('')
-      expect(fullCommand).toContain(
+      // For template literals, the command is the second argument
+      expect(args[1]).toContain(
         'curl -LsSf https://astral.sh/uv/install.sh | sh'
       )
       return Promise.resolve(next.result)
     })
 
     const emit = vi.fn()
+    const installUv = await getInstallUv()
 
     const result = await installUv({ emit })
 
@@ -199,15 +223,15 @@ describe('installUv', () => {
       }
 
       // Verify the install command is correct for Windows
-      // The $ function receives template parts and substitutions
-      const fullCommand = args.join('')
-      expect(fullCommand).toContain(
+      // For template literals, the command is the second argument
+      expect(args[1]).toContain(
         'powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"'
       )
       return Promise.resolve(next.result)
     })
 
     const emit = vi.fn()
+    const installUv = await getInstallUv()
 
     const result = await installUv({ emit })
 
@@ -247,6 +271,7 @@ describe('installUv', () => {
     })
 
     const emit = vi.fn()
+    const installUv = await getInstallUv()
 
     await expect(installUv({ emit })).rejects.toThrow('Install failed')
 
@@ -292,6 +317,7 @@ describe('installUv', () => {
     })
 
     const emit = vi.fn()
+    const installUv = await getInstallUv()
 
     await expect(installUv({ emit })).rejects.toThrow('Network error')
 
@@ -333,6 +359,7 @@ describe('installUv', () => {
     })
 
     const emit = vi.fn()
+    const installUv = await getInstallUv()
 
     await expect(installUv({ emit })).rejects.toThrow(
       'uv installation completed but could not verify version.'
@@ -373,6 +400,7 @@ describe('installUv', () => {
     })
 
     const emit = vi.fn()
+    const installUv = await getInstallUv()
 
     await expect(installUv({ emit })).rejects.toThrow(
       'Failed to install uv via provided command.'
@@ -425,6 +453,7 @@ describe('installUv', () => {
       return Promise.resolve(next.result)
     })
 
+    const installUv = await getInstallUv()
     const result = await installUv({ emit })
 
     expect(result).toEqual({ version: '1.0.0' })

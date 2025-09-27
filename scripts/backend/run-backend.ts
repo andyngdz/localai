@@ -1,7 +1,7 @@
-import { $ } from 'zx'
 import * as path from 'path'
+import { $ } from 'zx'
 import { BackendStatusEmitter, BackendStatusLevel } from './types'
-import { pathExists, normalizeError } from './utils'
+import { normalizeError, pathExists } from './utils'
 
 export interface RunBackendOptions {
   backendPath: string

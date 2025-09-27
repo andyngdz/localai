@@ -1,5 +1,6 @@
 import { $ } from 'zx'
 import { BackendStatusEmitter, BackendStatusLevel, Command } from './types'
+import { isMac, isWindows } from './utils'
 
 interface PythonCandidate {
   command: string
@@ -87,7 +88,7 @@ const findPython = async () => {
 }
 
 const missingInstructions = (): MissingInstruction => {
-  if (process.platform === 'darwin') {
+  if (isMac) {
     return {
       message:
         'Python 3.11 is required. Install it via Homebrew or download it from python.org.',
@@ -100,7 +101,7 @@ const missingInstructions = (): MissingInstruction => {
     }
   }
 
-  if (process.platform === 'win32') {
+  if (isWindows) {
     return {
       message:
         'Python 3.11 is required. Install it using winget, Chocolatey, or from python.org.',

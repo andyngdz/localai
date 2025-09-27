@@ -8,7 +8,7 @@ export interface GenerationStatusStore {
 }
 
 export const useGenerationStatusStore = create<GenerationStatusStore>()(
-  immer((set, get, store) => ({
+  immer((set, _get, store) => ({
     isGenerating: false,
     onSetIsGenerating: (status: boolean) => {
       set((state) => {

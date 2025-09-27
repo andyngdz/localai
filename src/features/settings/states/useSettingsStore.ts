@@ -11,7 +11,7 @@ interface UseSettingsStore {
 const useSettingsStore = create<UseSettingsStore>()(
   devtools(
     persist(
-      (set, get, state) => ({
+      (set, _get, state) => ({
         values: {
           baseUrl: 'http://localhost:8000',
           safetyCheck: true

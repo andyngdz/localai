@@ -70,7 +70,7 @@ describe('useGeneratorPreviewer', () => {
   it('should call onUpdateImageStepEnd when receiving socket event', () => {
     // Arrange
     let socketCallback: (response: ImageGenerationStepEndResponse) => void
-    vi.mocked(socket.on).mockImplementation((event, callback) => {
+    vi.mocked(socket.on).mockImplementation((_event, callback) => {
       socketCallback = callback
       return socket
     })

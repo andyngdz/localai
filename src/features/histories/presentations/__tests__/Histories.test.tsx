@@ -9,7 +9,6 @@ import { HistoryGroup } from '../HistoryGroup'
 vi.mock('next/image', () => ({
   __esModule: true,
   default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => {
-    // eslint-disable-next-line @next/next/no-img-element
     return <img {...props} alt="Test image" />
   }
 }))
