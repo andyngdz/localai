@@ -5,7 +5,7 @@ import { installUv } from './install-uv'
 import { runBackend } from './run-backend'
 import { setupVenv } from './setup-venv'
 import { switchToVenv } from './switch-to-venv'
-import { BackendStatusLevel } from './types'
+import { BackendStatusLevel } from '@types'
 import { createDefaultStatusEmitter, normalizeError } from './utils'
 
 export interface StartBackendOptions {

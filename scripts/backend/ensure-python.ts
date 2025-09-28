@@ -1,5 +1,9 @@
 import { $ } from 'zx'
-import { BackendStatusEmitter, BackendStatusLevel, Command } from './types'
+import {
+  BackendStatusEmitter,
+  BackendStatusLevel,
+  BackendStatusCommand
+} from '@types'
 import { isMac, isWindows } from './utils'
 
 interface PythonCandidate {
@@ -13,7 +17,7 @@ interface EnsurePythonOptions {
 
 interface MissingInstruction {
   message: string
-  commands: Command[]
+  commands: BackendStatusCommand[]
 }
 
 /**

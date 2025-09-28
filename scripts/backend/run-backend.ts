@@ -1,6 +1,6 @@
 import * as path from 'path'
 import { $ } from 'zx'
-import { BackendStatusEmitter, BackendStatusLevel } from './types'
+import { BackendStatusEmitter, BackendStatusLevel } from '@types'
 import { normalizeError, pathExists } from './utils'
 
 export interface RunBackendOptions {

@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { cloneBackend } from '../clone-backend'
 import { BACKEND_BRANCH, BACKEND_DIRNAME, BACKEND_REPO_URL } from '../constants'
 import * as gitModule from '../git'
-import { BackendStatusLevel } from '../types'
+import { BackendStatusLevel } from '@types'
 import * as utilsModule from '../utils'
 
 // Mock dependencies

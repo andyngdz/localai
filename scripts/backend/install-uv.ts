@@ -1,5 +1,9 @@
 import { $ } from 'zx'
-import { BackendStatusEmitter, BackendStatusLevel, Command } from './types'
+import {
+  BackendStatusEmitter,
+  BackendStatusLevel,
+  BackendStatusCommand
+} from '@types'
 import { isWindows, normalizeError } from './utils'
 
 interface InstallUvOptions {
@@ -51,7 +55,7 @@ const getInstallCommand = (): InstallCommand => {
   }
 }
 
-const installationCommandsByPlatform = (): Command[] => {
+const installationCommandsByPlatform = (): BackendStatusCommand[] => {
   if (isWindows) {
     return [
       {

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { installDependencies } from '../install-dependencies'
-import { BackendStatusLevel } from '../types'
+import { BackendStatusLevel } from '@types'
 import * as utilsModule from '../utils'
 
 // Mock dependencies
@@ -13,6 +13,7 @@ vi.mock('../utils')
 import { $ } from 'zx'
 const mock$ = vi.mocked($)
 const mockNormalizeError = vi.mocked(utilsModule.normalizeError)
+const zxWithCwd = mock$ as typeof mock$ & { cwd?: string }
 
 describe('installDependencies', () => {
   const mockBackendPath = '/test/backend'
@@ -21,6 +22,7 @@ describe('installDependencies', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mock$.mockReset()
+    zxWithCwd.cwd = ''
 
     // Setup default successful mocks
     mock$.mockResolvedValue({})
@@ -35,6 +37,8 @@ describe('installDependencies', () => {
         backendPath: mockBackendPath,
         emit: mockEmit
       })
+
+      expect(zxWithCwd.cwd).toBe(mockBackendPath)
 
       // Verify status emissions
       expect(mockEmit).toHaveBeenCalledWith({
@@ -66,6 +70,8 @@ describe('installDependencies', () => {
           emit: mockEmit
         })
       ).rejects.toThrow('pip install failed')
+
+      expect(zxWithCwd.cwd).toBe(mockBackendPath)
 
       expect(mockEmit).toHaveBeenCalledWith({
         level: BackendStatusLevel.Info,
@@ -116,6 +122,7 @@ describe('installDependencies', () => {
         emit: mockEmit
       })
 
+      expect(zxWithCwd.cwd).toBe('/custom/path/to/backend')
       expect(mock$).toHaveBeenCalledTimes(1)
     })
 
@@ -129,6 +136,7 @@ describe('installDependencies', () => {
         })
       ).rejects.toThrow()
 
+      expect(zxWithCwd.cwd).toBe(mockBackendPath)
       expect(mockEmit).toHaveBeenCalledWith({
         level: BackendStatusLevel.Error,
         message: 'Failed to install dependencies. Run the command manually.',
@@ -149,6 +157,7 @@ describe('installDependencies', () => {
         emit: mockEmit
       })
 
+      expect(zxWithCwd.cwd).toBe('')
       expect(mock$).toHaveBeenCalledTimes(1)
     })
 
@@ -158,6 +167,7 @@ describe('installDependencies', () => {
         emit: mockEmit
       })
 
+      expect(zxWithCwd.cwd).toBe('/path with spaces/special-chars_123')
       expect(mock$).toHaveBeenCalledTimes(1)
     })
   })

@@ -1,5 +1,9 @@
 import { $ } from 'zx'
-import { BackendStatusEmitter, BackendStatusLevel, Command } from './types'
+import {
+  BackendStatusEmitter,
+  BackendStatusLevel,
+  BackendStatusCommand
+} from '@types'
 import { normalizeError } from './utils'
 
 export interface InstallDependenciesOptions {
@@ -30,7 +34,7 @@ const installDependencies = async ({
       message: 'Dependencies installed successfully'
     })
   } catch (error) {
-    const commands: Command[] = [
+    const commands: BackendStatusCommand[] = [
       {
         label: 'Install dependencies manually',
         command: installCommand

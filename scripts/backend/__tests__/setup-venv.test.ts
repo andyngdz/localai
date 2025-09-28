@@ -2,7 +2,7 @@ import * as path from 'path'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { BACKEND_DIRNAME } from '../constants'
 import { setupVenv } from '../setup-venv'
-import { BackendStatusLevel } from '../types'
+import { BackendStatusLevel } from '@types'
 import * as utilsModule from '../utils'
 
 // Mock dependencies
