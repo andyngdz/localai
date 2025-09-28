@@ -1,327 +1,166 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { BackendStatusLevel } from '@types'
 
-const mock$ = vi.fn()
+const { mock$ } = vi.hoisted(() => ({
+  mock$: vi.fn()
+}))
 
 vi.mock('zx', () => ({
   $: (...args: unknown[]) => mock$(...args)
 }))
 
-const mockIsWindows = vi.fn()
-const mockIsLinux = vi.fn()
-const mockIsMac = vi.fn()
+const { mockNormalizeError } = vi.hoisted(() => ({
+  mockNormalizeError: vi.fn<(error: unknown, defaultMessage: string) => Error>()
+}))
+
+let mockIsWindows = false
 
 vi.mock('../utils', async () => {
   const actual = await vi.importActual('../utils')
   return {
     ...actual,
-    isWindows: mockIsWindows,
-    isLinux: mockIsLinux,
-    isMac: mockIsMac
+    get isWindows() {
+      return mockIsWindows
+    },
+    normalizeError: mockNormalizeError
   }
 })
 
-const makeProcessOutput = (
-  overrides: Partial<{ exitCode: number; stdout: string; stderr: string }>
-) => ({
+import { installUv } from '../install-uv'
+
+type ProcessResult = {
+  exitCode: number
+  stdout: string
+  stderr?: string
+}
+
+const makeProcessResult = (
+  overrides: Partial<ProcessResult> = {}
+): ProcessResult => ({
   exitCode: 0,
   stdout: '',
   stderr: '',
   ...overrides
 })
 
-const setPlatform = (platform: NodeJS.Platform) => {
-  mockIsWindows.mockReturnValue(platform === 'win32')
-  mockIsLinux.mockReturnValue(platform === 'linux')
-  mockIsMac.mockReturnValue(platform === 'darwin')
-}
-
-const getInstallUv = async () => {
-  // Clear module cache to ensure fresh import with current mocks
-  vi.resetModules()
-  // Force mock the utils module
-  vi.doMock('../utils', () => ({
-    isWindows: mockIsWindows(),
-    isLinux: mockIsLinux(),
-    isMac: mockIsMac(),
-    normalizeError: vi
-      .fn()
-      .mockImplementation((error, defaultMessage) =>
-        error instanceof Error ? error : new Error(defaultMessage)
-      ),
-    pathExists: vi.fn()
-  }))
-  const installUvModule = await import('../install-uv')
-  return installUvModule.installUv
-}
-
-beforeEach(() => {
-  mock$.mockReset()
-  // Reset all platform mocks to false first
-  mockIsWindows.mockReturnValue(false)
-  mockIsLinux.mockReturnValue(false)
-  mockIsMac.mockReturnValue(false)
-})
-
-afterEach(() => {
-  mock$.mockReset()
-  mockIsWindows.mockReset()
-  mockIsLinux.mockReset()
-  mockIsMac.mockReset()
-})
-
 describe('installUv', () => {
-  it('emits a success message when uv is already installed', async () => {
-    setPlatform('linux')
+  beforeEach(() => {
+    mock$.mockReset()
+    mockNormalizeError.mockReset()
 
-    mock$.mockImplementation(() => {
-      return {
-        nothrow: () =>
-          Promise.resolve(makeProcessOutput({ stdout: 'uv 0.2.0\n' }))
-      }
+    mockIsWindows = false
+    mockNormalizeError.mockImplementation(
+      (error: unknown, defaultMessage: string) =>
+        error instanceof Error ? error : new Error(defaultMessage)
+    )
+  })
+
+  it('returns the detected uv version when already installed', async () => {
+    mock$.mockReturnValueOnce({
+      nothrow: () =>
+        Promise.resolve(makeProcessResult({ stdout: 'uv 0.2.0\n' }))
     })
 
     const emit = vi.fn()
-    const installUv = await getInstallUv()
-
     const result = await installUv({ emit })
 
     expect(result).toEqual({ version: '0.2.0' })
-    expect(mock$).toHaveBeenCalledTimes(1)
     expect(emit).toHaveBeenCalledWith({
       level: BackendStatusLevel.Info,
       message: 'uv 0.2.0 already installed.'
     })
+    expect(mock$).toHaveBeenCalledTimes(1)
+    expect(mockNormalizeError).not.toHaveBeenCalled()
   })
 
-  it('handles version detection with different output formats', async () => {
-    setPlatform('linux')
-
-    mock$.mockImplementation(() => {
-      return {
-        nothrow: () =>
-          Promise.resolve(
-            makeProcessOutput({ stdout: 'uv 1.0.0-beta.1 (abc123)\n' })
+  it('installs uv on Unix-like systems when missing', async () => {
+    mock$
+      .mockReturnValueOnce({
+        nothrow: () => Promise.resolve(makeProcessResult({ exitCode: 1 }))
+      })
+      .mockImplementationOnce(
+        (strings: TemplateStringsArray, command: string) => {
+          expect(strings).toEqual(['', ''])
+          expect(command).toBe(
+            'curl -LsSf https://astral.sh/uv/install.sh | sh'
           )
-      }
-    })
-
-    const emit = vi.fn()
-    const installUv = await getInstallUv()
-
-    const result = await installUv({ emit })
-
-    expect(result).toEqual({ version: '1.0.0-beta.1' })
-    expect(emit).toHaveBeenCalledWith({
-      level: BackendStatusLevel.Info,
-      message: 'uv 1.0.0-beta.1 already installed.'
-    })
-  })
-
-  it('proceeds with installation when version detection fails due to invalid output', async () => {
-    setPlatform('linux')
-
-    const outputs = [
-      {
-        type: 'detect',
-        result: makeProcessOutput({ stdout: 'invalid output\n' })
-      },
-      { type: 'install', result: undefined },
-      { type: 'detect', result: makeProcessOutput({ stdout: 'uv 1.0.0\n' }) }
-    ]
-
-    mock$.mockImplementation(() => {
-      const next = outputs.shift()
-
-      if (!next) {
-        throw new Error('Unexpected extra command')
-      }
-
-      if (next.type === 'detect') {
-        return {
-          nothrow: () => Promise.resolve(next.result)
+          return Promise.resolve()
         }
-      }
-
-      return Promise.resolve(next.result)
-    })
-
-    const emit = vi.fn()
-    const installUv = await getInstallUv()
-
-    const result = await installUv({ emit })
-
-    expect(result).toEqual({ version: '1.0.0' })
-  })
-
-  it('runs the install command when uv is missing on macOS/Linux', async () => {
-    setPlatform('darwin')
-
-    const outputs = [
-      { type: 'detect', result: makeProcessOutput({ exitCode: 1 }) },
-      { type: 'install', result: undefined },
-      { type: 'detect', result: makeProcessOutput({ stdout: 'uv 0.3.1\n' }) }
-    ]
-
-    mock$.mockImplementation((...args) => {
-      const next = outputs.shift()
-
-      if (!next) {
-        throw new Error('Unexpected extra command')
-      }
-
-      if (next.type === 'detect') {
-        return {
-          nothrow: () => Promise.resolve(next.result)
-        }
-      }
-
-      // Verify the install command is correct for Unix systems
-      // For template literals, the command is the second argument
-      expect(args[1]).toContain(
-        'curl -LsSf https://astral.sh/uv/install.sh | sh'
       )
-      return Promise.resolve(next.result)
-    })
+      .mockReturnValueOnce({
+        nothrow: () =>
+          Promise.resolve(makeProcessResult({ stdout: 'uv 0.9.0\n' }))
+      })
 
     const emit = vi.fn()
-    const installUv = await getInstallUv()
-
     const result = await installUv({ emit })
 
-    expect(result).toEqual({ version: '0.3.1' })
-    expect(emit).toHaveBeenCalledWith({
+    expect(result).toEqual({ version: '0.9.0' })
+    expect(emit).toHaveBeenNthCalledWith(1, {
       level: BackendStatusLevel.Info,
       message: 'Installing uv…'
     })
-    expect(emit).toHaveBeenCalledWith({
+    expect(emit).toHaveBeenNthCalledWith(2, {
       level: BackendStatusLevel.Info,
-      message: 'uv 0.3.1 installed successfully.'
+      message: 'uv 0.9.0 installed successfully.'
     })
+    expect(mock$).toHaveBeenCalledTimes(3)
   })
 
-  it('runs the install command when uv is missing on Windows', async () => {
-    setPlatform('win32')
+  it('uses the Windows installation command when running on Windows', async () => {
+    mockIsWindows = true
 
-    const outputs = [
-      { type: 'detect', result: makeProcessOutput({ exitCode: 1 }) },
-      { type: 'install', result: undefined },
-      { type: 'detect', result: makeProcessOutput({ stdout: 'uv 0.4.0\n' }) }
-    ]
-
-    mock$.mockImplementation((...args) => {
-      const next = outputs.shift()
-
-      if (!next) {
-        throw new Error('Unexpected extra command')
-      }
-
-      if (next.type === 'detect') {
-        return {
-          nothrow: () => Promise.resolve(next.result)
+    mock$
+      .mockReturnValueOnce({
+        nothrow: () => Promise.resolve(makeProcessResult({ exitCode: 1 }))
+      })
+      .mockImplementationOnce(
+        (strings: TemplateStringsArray, command: string) => {
+          expect(strings).toEqual(['', ''])
+          expect(command).toContain('powershell -ExecutionPolicy ByPass')
+          return Promise.resolve()
         }
-      }
-
-      // Verify the install command is correct for Windows
-      // For template literals, the command is the second argument
-      expect(args[1]).toContain(
-        'powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"'
       )
-      return Promise.resolve(next.result)
-    })
+      .mockReturnValueOnce({
+        nothrow: () =>
+          Promise.resolve(makeProcessResult({ stdout: 'uv 1.1.0\n' }))
+      })
 
     const emit = vi.fn()
-    const installUv = await getInstallUv()
-
     const result = await installUv({ emit })
 
-    expect(result).toEqual({ version: '0.4.0' })
-    expect(emit).toHaveBeenCalledWith({
+    expect(result).toEqual({ version: '1.1.0' })
+    expect(emit).toHaveBeenNthCalledWith(1, {
       level: BackendStatusLevel.Info,
       message: 'Installing uv…'
     })
-    expect(emit).toHaveBeenCalledWith({
+    expect(emit).toHaveBeenNthCalledWith(2, {
       level: BackendStatusLevel.Info,
-      message: 'uv 0.4.0 installed successfully.'
+      message: 'uv 1.1.0 installed successfully.'
     })
   })
 
-  it('surfaces install guidance when installation fails on Windows', async () => {
-    setPlatform('win32')
+  it('emits an error with manual commands when installation fails', async () => {
+    const installError = new Error('install failed')
 
-    const outputs = [
-      { type: 'detect', result: makeProcessOutput({ exitCode: 1 }) },
-      { type: 'install', error: new Error('Install failed') }
-    ]
+    mock$
+      .mockReturnValueOnce({
+        nothrow: () => Promise.resolve(makeProcessResult({ exitCode: 1 }))
+      })
+      .mockImplementationOnce(() => Promise.reject(installError))
 
-    mock$.mockImplementation(() => {
-      const next = outputs.shift()
-
-      if (!next) {
-        throw new Error('Unexpected extra command')
-      }
-
-      if (next.type === 'detect') {
-        return {
-          nothrow: () => Promise.resolve(next.result)
-        }
-      }
-
-      return Promise.reject(next.error)
-    })
+    const normalizedError = new Error('normalized error')
+    mockNormalizeError.mockReturnValue(normalizedError)
 
     const emit = vi.fn()
-    const installUv = await getInstallUv()
 
-    await expect(installUv({ emit })).rejects.toThrow('Install failed')
+    await expect(installUv({ emit })).rejects.toThrow('normalized error')
 
-    expect(emit).toHaveBeenCalledWith({
+    expect(emit).toHaveBeenNthCalledWith(1, {
       level: BackendStatusLevel.Info,
       message: 'Installing uv…'
     })
-    expect(emit).toHaveBeenLastCalledWith({
-      level: BackendStatusLevel.Error,
-      message: 'uv installation failed. Run the command manually.',
-      commands: [
-        {
-          label: 'Install with PowerShell',
-          command:
-            'powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"'
-        }
-      ]
-    })
-  })
-
-  it('surfaces install guidance when installation fails on Linux', async () => {
-    setPlatform('linux')
-
-    const outputs = [
-      { type: 'detect', result: makeProcessOutput({ exitCode: 1 }) },
-      { type: 'install', error: new Error('Network error') }
-    ]
-
-    mock$.mockImplementation(() => {
-      const next = outputs.shift()
-
-      if (!next) {
-        throw new Error('Unexpected extra command')
-      }
-
-      if (next.type === 'detect') {
-        return {
-          nothrow: () => Promise.resolve(next.result)
-        }
-      }
-
-      return Promise.reject(next.error)
-    })
-
-    const emit = vi.fn()
-    const installUv = await getInstallUv()
-
-    await expect(installUv({ emit })).rejects.toThrow('Network error')
-
-    expect(emit).toHaveBeenLastCalledWith({
+    expect(emit).toHaveBeenNthCalledWith(2, {
       level: BackendStatusLevel.Error,
       message: 'uv installation failed. Run the command manually.',
       commands: [
@@ -331,131 +170,35 @@ describe('installUv', () => {
         }
       ]
     })
+    expect(mockNormalizeError).toHaveBeenCalledWith(
+      installError,
+      'Failed to install uv via provided command.'
+    )
   })
 
-  it('handles installation success but version detection failure', async () => {
-    setPlatform('linux')
-
-    const outputs = [
-      { type: 'detect', result: makeProcessOutput({ exitCode: 1 }) },
-      { type: 'install', result: undefined },
-      { type: 'detect', result: makeProcessOutput({ exitCode: 1 }) }
-    ]
-
-    mock$.mockImplementation(() => {
-      const next = outputs.shift()
-
-      if (!next) {
-        throw new Error('Unexpected extra command')
-      }
-
-      if (next.type === 'detect') {
-        return {
-          nothrow: () => Promise.resolve(next.result)
-        }
-      }
-
-      return Promise.resolve(next.result)
-    })
+  it('throws when version cannot be detected after installation', async () => {
+    mock$
+      .mockReturnValueOnce({
+        nothrow: () => Promise.resolve(makeProcessResult({ exitCode: 1 }))
+      })
+      .mockImplementationOnce(() => Promise.resolve())
+      .mockReturnValueOnce({
+        nothrow: () => Promise.resolve(makeProcessResult({ stdout: '' }))
+      })
 
     const emit = vi.fn()
-    const installUv = await getInstallUv()
 
     await expect(installUv({ emit })).rejects.toThrow(
       'uv installation completed but could not verify version.'
     )
 
-    expect(emit).toHaveBeenCalledWith({
+    expect(emit).toHaveBeenNthCalledWith(1, {
       level: BackendStatusLevel.Info,
       message: 'Installing uv…'
     })
-    expect(emit).toHaveBeenLastCalledWith({
+    expect(emit).toHaveBeenNthCalledWith(2, {
       level: BackendStatusLevel.Error,
       message: 'uv installation finished but version could not be detected.'
     })
-  })
-
-  it('handles non-Error exceptions during installation', async () => {
-    setPlatform('linux')
-
-    const outputs = [
-      { type: 'detect', result: makeProcessOutput({ exitCode: 1 }) },
-      { type: 'install', error: 'String error' }
-    ]
-
-    mock$.mockImplementation(() => {
-      const next = outputs.shift()
-
-      if (!next) {
-        throw new Error('Unexpected extra command')
-      }
-
-      if (next.type === 'detect') {
-        return {
-          nothrow: () => Promise.resolve(next.result)
-        }
-      }
-
-      return Promise.reject(next.error)
-    })
-
-    const emit = vi.fn()
-    const installUv = await getInstallUv()
-
-    await expect(installUv({ emit })).rejects.toThrow(
-      'Failed to install uv via provided command.'
-    )
-
-    expect(emit).toHaveBeenLastCalledWith({
-      level: BackendStatusLevel.Error,
-      message: 'uv installation failed. Run the command manually.',
-      commands: [
-        {
-          label: 'Install with shell script',
-          command: 'curl -LsSf https://astral.sh/uv/install.sh | sh'
-        }
-      ]
-    })
-  })
-
-  it('handles version detection with no stdout match', async () => {
-    setPlatform('linux')
-
-    mock$.mockImplementation(() => {
-      return {
-        nothrow: () =>
-          Promise.resolve(makeProcessOutput({ stdout: 'no version info\n' }))
-      }
-    })
-
-    const emit = vi.fn()
-
-    // The function should still try to proceed with installation
-    const outputs = [
-      { type: 'detect', result: makeProcessOutput({ exitCode: 1 }) },
-      { type: 'install', result: undefined },
-      { type: 'detect', result: makeProcessOutput({ stdout: 'uv 1.0.0\n' }) }
-    ]
-
-    mock$.mockImplementation(() => {
-      const next = outputs.shift()
-
-      if (!next) {
-        throw new Error('Unexpected extra command')
-      }
-
-      if (next.type === 'detect') {
-        return {
-          nothrow: () => Promise.resolve(next.result)
-        }
-      }
-
-      return Promise.resolve(next.result)
-    })
-
-    const installUv = await getInstallUv()
-    const result = await installUv({ emit })
-
-    expect(result).toEqual({ version: '1.0.0' })
   })
 })

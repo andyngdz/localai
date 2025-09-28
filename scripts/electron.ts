@@ -67,6 +67,10 @@ const relocateCompiledArtifacts = async () => {
   )
 }
 
+const relocateBackendScripts = async () => {
+  await rename(join(electronBuildDir, 'scripts'), join(electronDir, 'scripts'))
+}
+
 const syncRuntimeTypes = async () => {
   await rm(runtimeTypesDir, { recursive: true, force: true })
   await mkdir(runtimeTypesDir, { recursive: true })
@@ -84,6 +88,7 @@ const compileElectron = async () => {
   await transpileElectronSources()
   await patchMainImport()
   await relocateCompiledArtifacts()
+  await relocateBackendScripts()
   await syncRuntimeTypes()
   await finalizeTranspileArtifacts()
 

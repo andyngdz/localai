@@ -34,6 +34,8 @@ const mockReadFile = vi.mocked(fs.readFile)
 const mockWriteFile = vi.mocked(fs.writeFile)
 const mockRename = vi.mocked(fs.rename)
 const mockRm = vi.mocked(fs.rm)
+const mockMkdir = vi.mocked(fs.mkdir)
+const mockCp = vi.mocked(fs.cp)
 
 const toCommandString = (pieces: TemplateStringsArray, args: unknown[]) =>
   pieces.reduce((acc, part, index) => {
@@ -45,6 +47,8 @@ describe('electron toolchain', () => {
   const mockProjectRoot = '/test/project'
   const electronDir = join(mockProjectRoot, 'electron')
   const electronBuildDir = join(electronDir, 'electron')
+  const compiledTypesDir = join(electronDir, 'types')
+  const runtimeTypesDir = join(electronDir, 'node_modules', '@types')
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -56,6 +60,8 @@ describe('electron toolchain', () => {
     mockWriteFile.mockResolvedValue()
     mockRename.mockResolvedValue()
     mockRm.mockResolvedValue()
+    mockMkdir.mockReturnThis()
+    mockCp.mockResolvedValue()
 
     mock$.mockImplementation(
       (pieces: TemplateStringsArray, ...args: unknown[]) => {
@@ -86,10 +92,9 @@ describe('electron toolchain', () => {
         force: true
       })
 
-      expect(recordedCommands[0]).toContain('npx tsc ')
-      expect(recordedCommands[0]).toContain('electron/main.ts')
-      expect(recordedCommands[0]).toContain('--outDir')
-      expect(recordedCommands[0]).toMatch(/--outDir[ ,]electron/)
+      expect(recordedCommands[0]).toBe(
+        'npx tsc --project,tsconfig.electron.json'
+      )
 
       const mainJsPath = join(electronBuildDir, 'main.js')
       expect(mockReadFile).toHaveBeenCalledWith(mainJsPath, 'utf8')
@@ -106,6 +111,25 @@ describe('electron toolchain', () => {
         join(electronBuildDir, 'preload.js'),
         join(electronDir, 'preload.js')
       )
+      expect(mockRename).toHaveBeenCalledWith(
+        join(electronBuildDir, 'log-streamer.js'),
+        join(electronDir, 'log-streamer.js')
+      )
+      expect(mockRename).toHaveBeenCalledWith(
+        join(electronBuildDir, 'scripts'),
+        join(electronDir, 'scripts')
+      )
+
+      expect(mockRm).toHaveBeenCalledWith(runtimeTypesDir, {
+        recursive: true,
+        force: true
+      })
+      expect(mockMkdir).toHaveBeenCalledWith(runtimeTypesDir, {
+        recursive: true
+      })
+      expect(mockCp).toHaveBeenCalledWith(compiledTypesDir, runtimeTypesDir, {
+        recursive: true
+      })
 
       expect(mockRm).toHaveBeenCalledWith(electronBuildDir, {
         recursive: true,
@@ -189,7 +213,7 @@ describe('electron toolchain', () => {
       await compileElectron()
 
       expect(cleanupObserved).toBe(true)
-      expect(mockRm).toHaveBeenCalledTimes(6)
+      expect(mockRm).toHaveBeenCalledTimes(8)
     })
   })
 
