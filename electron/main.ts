@@ -101,9 +101,9 @@ if (!gotLock) {
     }
   })
 
-  app.whenReady().then(() => {
+  app.whenReady().then(async () => {
+    await onCreateWindow()
     onSetLinuxGpuFlags()
-    onCreateWindow()
     onDownloadImage()
     onLogStreaming()
     startBackend({ userDataPath: app.getPath('userData') })

@@ -1,11 +1,32 @@
 'use client'
 
-import { useBackendLog } from '../states'
+import {
+  Button,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  useDisclosure
+} from '@heroui/react'
+import { SquareChevronRight } from 'lucide-react'
 
 export const BackendLog = () => {
-  const { logs } = useBackendLog()
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
-  console.info(logs)
-
-  return <div></div>
+  return (
+    <section>
+      <Button
+        variant="light"
+        className="italic text-default-700"
+        onPress={onOpen}
+        endContent={<SquareChevronRight size={16} />}
+      >
+        Console
+      </Button>
+      <Modal isOpen={isOpen} onClose={onClose} size="2xl" placement="bottom">
+        <ModalContent>
+          <ModalHeader>Backend Logs</ModalHeader>
+        </ModalContent>
+      </Modal>
+    </section>
+  )
 }
