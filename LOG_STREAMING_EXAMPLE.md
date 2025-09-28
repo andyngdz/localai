@@ -42,7 +42,7 @@ await window.electronAPI.backend.stopLogStream()
 
 ```typescript
 import { useEffect, useState, useCallback } from 'react'
-import type { LogEntry } from '@/types/window'
+import type { LogEntry } from '@/types'
 
 export const useBackendLogs = () => {
   const [logs, setLogs] = useState<LogEntry[]>([])
