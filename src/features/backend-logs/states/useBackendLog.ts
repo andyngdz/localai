@@ -3,6 +3,8 @@
 import { LogEntry } from '@types'
 import { useEffect, useState, useCallback } from 'react'
 
+export const MAX_LOGS = 250
+
 export const useBackendLog = () => {
   const [logs, setLogs] = useState<LogEntry[]>([])
   const [isStreaming, setIsStreaming] = useState(false)
@@ -27,7 +29,11 @@ export const useBackendLog = () => {
 
     // Listen to logs
     const unsubscribe = window.electronAPI.backend.onLog((log) => {
-      setLogs((prev) => [...prev, log])
+      setLogs((prev) => {
+        const newLogs = [...prev, log]
+        // Keep only the last logs to prevent memory issues
+        return newLogs.length > MAX_LOGS ? newLogs.slice(-MAX_LOGS) : newLogs
+      })
     })
 
     return unsubscribe
