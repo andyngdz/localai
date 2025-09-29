@@ -46,12 +46,6 @@ export const useBackendLog = () => {
     startStreaming()
   }, [startStreaming])
 
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight
-    }
-  }, [logs])
-
   return {
     logs,
     isStreaming,

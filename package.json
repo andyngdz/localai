@@ -24,6 +24,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@tanstack/react-virtual": "^3.13.12",
     "dayjs": "^1.11.18",
     "electron-serve": "^3.0.0",
     "react-use": "^17.6.0",
