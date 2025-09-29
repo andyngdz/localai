@@ -3,11 +3,13 @@
 import {
   Button,
   Modal,
+  ModalBody,
   ModalContent,
   ModalHeader,
   useDisclosure
 } from '@heroui/react'
 import { SquareChevronRight } from 'lucide-react'
+import { BackendLogList } from './BackendLogList'
 
 export const BackendLog = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -22,9 +24,21 @@ export const BackendLog = () => {
       >
         Console
       </Button>
-      <Modal isOpen={isOpen} onClose={onClose} size="2xl" placement="bottom">
-        <ModalContent>
+      <Modal
+        isOpen={isOpen}
+        shouldBlockScroll={false}
+        isDismissable={false}
+        onClose={onClose}
+        size="5xl"
+        backdrop="transparent"
+        placement="bottom"
+        scrollBehavior="inside"
+      >
+        <ModalContent className="max-h-96">
           <ModalHeader>Backend Logs</ModalHeader>
+          <ModalBody>
+            <BackendLogList />
+          </ModalBody>
         </ModalContent>
       </Modal>
     </section>
