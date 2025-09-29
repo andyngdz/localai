@@ -34,7 +34,7 @@ export const BackendLog = () => {
         placement="bottom"
         scrollBehavior="inside"
       >
-        <ModalContent className="max-h-96">
+        <ModalContent className="max-h-2/3">
           <ModalHeader>Backend Logs</ModalHeader>
           <ModalBody>
             <BackendLogList />

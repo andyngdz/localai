@@ -55,7 +55,7 @@ const runBackend = async ({
     uvicornCommand.stderr.on('data', (data) => {
       const output = data.toString().trim()
       if (output) {
-        console.error(`[Backend Error] ${output}`)
+        console.log(`[Backend] ${output}`)
       }
     })
 
