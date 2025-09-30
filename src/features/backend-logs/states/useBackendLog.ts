@@ -1,5 +1,6 @@
 'use client'
 
+import { useVirtualizer } from '@tanstack/react-virtual'
 import { useCallback, useEffect, useRef } from 'react'
 import { useBackendLogStore } from './useBackendLogStore'
 
@@ -32,6 +33,14 @@ export const useBackendLog = () => {
     setIsStreaming(false)
   }, [setIsStreaming])
 
+  const rowVirtualizer = useVirtualizer({
+    count: logs.length,
+    getScrollElement: () => scrollRef.current,
+    estimateSize: () => 50,
+    overscan: 10,
+    measureElement: (element) => element.getBoundingClientRect().height
+  })
+
   useEffect(() => {
     window.electronAPI.backend.isLogStreaming().then(setIsStreaming)
 
@@ -46,6 +55,12 @@ export const useBackendLog = () => {
     startStreaming()
   }, [startStreaming])
 
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight
+    }
+  }, [logs])
+
   return {
     logs,
     isStreaming,
@@ -53,6 +68,7 @@ export const useBackendLog = () => {
     stopStreaming,
     clearLogs,
     onGetLogColor,
-    scrollRef
+    scrollRef,
+    rowVirtualizer
   }
 }

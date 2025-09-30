@@ -1,17 +1,10 @@
 import { dateFormatter } from '@/services'
 import { ScrollShadow } from '@heroui/react'
-import { useVirtualizer } from '@tanstack/react-virtual'
 import { useMemo } from 'react'
 import { useBackendLog } from '../states'
 
 export const BackendLogList = () => {
-  const { logs, onGetLogColor, scrollRef } = useBackendLog()
-
-  const rowVirtualizer = useVirtualizer({
-    count: logs.length,
-    getScrollElement: () => scrollRef.current,
-    estimateSize: () => 40
-  })
+  const { logs, onGetLogColor, scrollRef, rowVirtualizer } = useBackendLog()
 
   const LogsComponent = useMemo(() => {
     return rowVirtualizer.getVirtualItems().map((virtualItem) => {
@@ -21,17 +14,20 @@ export const BackendLogList = () => {
       return (
         <div
           key={virtualItem.key}
-          className="absolute inset-0 w-full"
+          data-index={virtualItem.index}
+          ref={rowVirtualizer.measureElement}
+          className="absolute inset-x-0 w-full"
           style={{
-            height: `${virtualItem.size}px`,
             transform: `translateY(${virtualItem.start}px)`
           }}
         >
-          <div className="flex gap-1 text-sm">
+          <div className="flex gap-1 text-sm py-1">
             <span className="flex-shrink-0 min-w-10 text-default-500">
               {dateFormatter.time(timestamp.toString())}
             </span>
-            <span className={onGetLogColor(level)}>{log.message}</span>
+            <span className={`break-words ${onGetLogColor(level)}`}>
+              {log.message}
+            </span>
           </div>
         </div>
       )
