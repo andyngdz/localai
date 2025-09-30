@@ -9,6 +9,7 @@ interface BackendLogStore {
   addLog: (log: LogEntry) => void
   clearLogs: () => void
   setIsStreaming: (isStreaming: boolean) => void
+  reset: () => void
 }
 
 const getInitialState = () => ({
