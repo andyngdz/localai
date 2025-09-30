@@ -9,7 +9,6 @@ interface BackendLogStore {
   addLog: (log: LogEntry) => void
   clearLogs: () => void
   setIsStreaming: (isStreaming: boolean) => void
-  reset: () => void
 }
 
 const getInitialState = () => ({
@@ -36,9 +35,5 @@ export const useBackendLogStore = create<BackendLogStore>((set) => ({
 
   setIsStreaming: (isStreaming: boolean) => {
     set({ isStreaming })
-  },
-
-  reset: () => {
-    set(getInitialState())
   }
 }))

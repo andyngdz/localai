@@ -5,9 +5,8 @@ import { MAX_LOGS, useBackendLogStore } from '../useBackendLogStore'
 
 describe('useBackendLogStore', () => {
   beforeEach(() => {
-    const { result } = renderHook(() => useBackendLogStore())
     act(() => {
-      result.current.reset()
+      useBackendLogStore.setState({ logs: [], isStreaming: false })
     })
   })
 
@@ -182,48 +181,6 @@ describe('useBackendLogStore', () => {
       expect(result.current.logs).toHaveLength(1)
       expect(result.current.logs[0]).toEqual(logEntry)
       expect(result.current.isStreaming).toBe(true)
-    })
-  })
-
-  describe('reset', () => {
-    it('should reset to initial state', () => {
-      const { result } = renderHook(() => useBackendLogStore())
-
-      act(() => {
-        result.current.addLog({
-          timestamp: Date.now(),
-          level: 'info',
-          message: 'Test log'
-        })
-        result.current.setIsStreaming(true)
-        result.current.reset()
-      })
-
-      expect(result.current.logs).toEqual([])
-      expect(result.current.isStreaming).toBe(false)
-    })
-
-    it('should reset multiple times correctly', () => {
-      const { result } = renderHook(() => useBackendLogStore())
-
-      act(() => {
-        result.current.addLog({
-          timestamp: Date.now(),
-          level: 'info',
-          message: 'Test log'
-        })
-        result.current.reset()
-        result.current.addLog({
-          timestamp: Date.now() + 1000,
-          level: 'error',
-          message: 'Error log'
-        })
-        result.current.setIsStreaming(true)
-        result.current.reset()
-      })
-
-      expect(result.current.logs).toEqual([])
-      expect(result.current.isStreaming).toBe(false)
     })
   })
 })
