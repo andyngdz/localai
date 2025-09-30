@@ -243,5 +243,52 @@ describe('useBackendLog', () => {
       expect(result.current.scrollRef).toBeDefined()
       expect(result.current.scrollRef.current).toBeNull()
     })
+
+    it('should auto-scroll to bottom when logs change', async () => {
+      const { result, rerender } = renderHook(() => useBackendLog())
+
+      const mockScrollElement = {
+        scrollTop: 0,
+        scrollHeight: 1000
+      } as HTMLDivElement
+
+      result.current.scrollRef.current = mockScrollElement
+
+      const newLogs: LogEntry[] = [
+        { timestamp: Date.now(), level: 'info', message: 'New log' }
+      ]
+      vi.mocked(useBackendLogStore).mockReturnValue({
+        logs: newLogs,
+        isStreaming: false,
+        addLog: mockAddLog,
+        clearLogs: mockClearLogs,
+        setIsStreaming: mockSetIsStreaming,
+        reset: vi.fn()
+      })
+
+      rerender()
+
+      await waitFor(() => {
+        expect(mockScrollElement.scrollTop).toBe(1000)
+      })
+    })
+
+    it('should not throw when scrollRef is null', async () => {
+      const { rerender } = renderHook(() => useBackendLog())
+
+      const newLogs: LogEntry[] = [
+        { timestamp: Date.now(), level: 'info', message: 'New log' }
+      ]
+      vi.mocked(useBackendLogStore).mockReturnValue({
+        logs: newLogs,
+        isStreaming: false,
+        addLog: mockAddLog,
+        clearLogs: mockClearLogs,
+        setIsStreaming: mockSetIsStreaming,
+        reset: vi.fn()
+      })
+
+      expect(() => rerender()).not.toThrow()
+    })
   })
 })
