@@ -24,12 +24,12 @@ export const useBackendLog = () => {
   }
 
   const startStreaming = useCallback(async () => {
-    await window.electronAPI.backend.startLogStream()
+    await globalThis.window.electronAPI.backend.startLogStream()
     setIsStreaming(true)
   }, [setIsStreaming])
 
   const stopStreaming = useCallback(async () => {
-    await window.electronAPI.backend.stopLogStream()
+    await globalThis.window.electronAPI.backend.stopLogStream()
     setIsStreaming(false)
   }, [setIsStreaming])
 
@@ -42,9 +42,9 @@ export const useBackendLog = () => {
   })
 
   useEffect(() => {
-    window.electronAPI.backend.isLogStreaming().then(setIsStreaming)
+    globalThis.window.electronAPI.backend.isLogStreaming().then(setIsStreaming)
 
-    const unsubscribe = window.electronAPI.backend.onLog((log) => {
+    const unsubscribe = globalThis.window.electronAPI.backend.onLog((log) => {
       addLog(log)
     })
 
