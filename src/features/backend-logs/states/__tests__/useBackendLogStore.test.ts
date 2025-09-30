@@ -1,7 +1,7 @@
-import { renderHook, act } from '@testing-library/react'
-import { describe, it, expect, beforeEach } from 'vitest'
-import { useBackendLogStore, MAX_LOGS } from '../useBackendLogStore'
+import { act, renderHook } from '@testing-library/react'
 import type { LogEntry } from '@types'
+import { beforeEach, describe, expect, it } from 'vitest'
+import { MAX_LOGS, useBackendLogStore } from '../useBackendLogStore'
 
 describe('useBackendLogStore', () => {
   beforeEach(() => {
