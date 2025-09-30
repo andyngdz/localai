@@ -8,6 +8,16 @@ export interface RunBackendOptions {
   emit: BackendStatusEmitter
 }
 
+const onLogOutput = (output: string) => {
+  if (output) {
+    if (output.includes('ERROR')) {
+      console.error(output)
+    } else {
+      console.info(output)
+    }
+  }
+}
+
 const runBackend = async ({
   backendPath,
   emit
@@ -47,26 +57,12 @@ const runBackend = async ({
     // Stream the output to console so it gets picked up by log streaming
     uvicornCommand.stdout.on('data', (data) => {
       const output = data.toString().trim()
-
-      if (output) {
-        if (output.includes('ERROR')) {
-          console.error(output)
-        } else {
-          console.info(output)
-        }
-      }
+      onLogOutput(output)
     })
 
     uvicornCommand.stderr.on('data', (data) => {
       const output = data.toString().trim()
-
-      if (output) {
-        if (output.includes('ERROR')) {
-          console.error(output)
-        } else {
-          console.info(output)
-        }
-      }
+      onLogOutput(output)
     })
 
     // Don't await - let it run in background
