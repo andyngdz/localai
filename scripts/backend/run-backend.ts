@@ -1,6 +1,6 @@
+import { BackendStatusEmitter, BackendStatusLevel } from '@types'
 import * as path from 'path'
 import { $ } from 'zx'
-import { BackendStatusEmitter, BackendStatusLevel } from '@types'
 import { normalizeError, pathExists } from './utils'
 
 export interface RunBackendOptions {
@@ -47,15 +47,25 @@ const runBackend = async ({
     // Stream the output to console so it gets picked up by log streaming
     uvicornCommand.stdout.on('data', (data) => {
       const output = data.toString().trim()
+
       if (output) {
-        console.log(`[Backend] ${output}`)
+        if (output.includes('ERROR')) {
+          console.error(output)
+        } else {
+          console.info(output)
+        }
       }
     })
 
     uvicornCommand.stderr.on('data', (data) => {
       const output = data.toString().trim()
+
       if (output) {
-        console.log(`[Backend] ${output}`)
+        if (output.includes('ERROR')) {
+          console.error(output)
+        } else {
+          console.info(output)
+        }
       }
     })
 
