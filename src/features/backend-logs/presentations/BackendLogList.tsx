@@ -21,7 +21,7 @@ export const BackendLogList = () => {
             transform: `translateY(${virtualItem.start}px)`
           }}
         >
-          <div className="flex gap-1 text-sm py-1">
+          <div className="flex gap-1 text-sm">
             <span className="flex-shrink-0 min-w-10 text-default-500">
               {dateFormatter.time(timestamp.toString())}
             </span>

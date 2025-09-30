@@ -29,10 +29,10 @@ export const BackendLog = () => {
         shouldBlockScroll={false}
         isDismissable={false}
         onClose={onClose}
-        size="5xl"
         backdrop="transparent"
         placement="bottom"
         scrollBehavior="inside"
+        className="max-w-full w-6xl h-[40vh]"
       >
         <ModalContent>
           <ModalHeader>Backend Logs</ModalHeader>
