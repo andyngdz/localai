@@ -107,7 +107,10 @@ if (!gotLock) {
     await onCreateWindow()
     onDownloadImage()
     onLogStreaming()
-    startBackend({ userDataPath: app.getPath('userData') })
+
+    if (process.env.SKIP_BACKEND !== 'true') {
+      startBackend({ userDataPath: app.getPath('userData') })
+    }
   })
 
   app.on('window-all-closed', () => {

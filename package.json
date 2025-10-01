@@ -11,6 +11,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "desktop": "tsx scripts/devall.ts",
+    "desktop:local": "SKIP_BACKEND=true tsx scripts/devall.ts",
     "compile": "tsx scripts/compile.ts",
     "build": "npm run compile && next build && electron-builder",
     "start": "next start",
