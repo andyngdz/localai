@@ -1,11 +1,23 @@
+import { BackendStatusEmitter, BackendStatusLevel } from '@types'
 import * as path from 'path'
 import { $ } from 'zx'
-import { BackendStatusEmitter, BackendStatusLevel } from '@types'
 import { normalizeError, pathExists } from './utils'
 
 export interface RunBackendOptions {
   backendPath: string
   emit: BackendStatusEmitter
+}
+
+const onLogOutput = (data: Buffer | string) => {
+  const output = data.toString().trim()
+
+  if (output) {
+    if (output.includes('ERROR')) {
+      console.error(output)
+    } else {
+      console.info(output)
+    }
+  }
 }
 
 const runBackend = async ({
@@ -31,12 +43,30 @@ const runBackend = async ({
   })
 
   try {
-    // Run uvicorn with the LocalAI Backend app
-    await $`cd ${backendPath} && uvicorn main:app`
-
     emit({
       level: BackendStatusLevel.Info,
       message: 'LocalAI Backend started successfully'
+    })
+
+    // Configure zx to stream output and run uvicorn
+    // This will run uvicorn and stream its output to console.log
+    // which will then be captured by the log streamer
+    process.chdir(backendPath)
+
+    // Run uvicorn in a way that streams output to console
+    const uvicornCommand = $`uvicorn main:app`
+
+    // Stream the output to console so it gets picked up by log streaming
+    uvicornCommand.stdout.on('data', onLogOutput)
+
+    uvicornCommand.stderr.on('data', onLogOutput)
+
+    // Don't await - let it run in background
+    uvicornCommand.catch((error) => {
+      emit({
+        level: BackendStatusLevel.Error,
+        message: `Backend process failed: ${error.message}`
+      })
     })
   } catch (error) {
     emit({

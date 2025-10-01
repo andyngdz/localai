@@ -4,81 +4,57 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Development Commands
 
-### Common Tasks
+- **Dev server**: `npm run dev` (Next.js with Turbopack)
+- **Desktop dev**: `npm run desktop` (Next.js + Electron concurrently)
+- **Build**: `npm run build`
+- **Tests**: `npm test` or `npm test -- path/to/test.tsx`
+- **Type check**: `npm run type-check`
+- **Lint/Format**: `npm run lint` / `npm run format`
 
-- **Start development server**: `npm run dev` (Next.js with Turbopack)
-- **Start desktop development**: `npm run desktop` (runs Next.js + Electron concurrently)
-- **Build for production**: `npm run build` (compiles Electron + builds Next.js + packages with electron-builder)
-- **Compile Electron only**: `npm run compile`
+## Architecture
 
-### Testing & Quality
+Next.js 15 + Electron desktop app + Python FastAPI backend.
 
-- **Run all tests**: `npm test` (Vitest)
-- **Run single test**: `npm test -- path/to/test.tsx`
-- **Run tests with coverage**: `npm run test:coverage`
-- **Type checking**: `npm run type-check`
-- **Lint code**: `npm run lint` (ESLint)
-- **Format code**: `npm run format` (Prettier)
-- **CI lint**: `npm run ci:lint` (with JSON output)
-- **CI format check**: `npm run ci:format`
+**Key Patterns:**
 
-## Architecture Overview
+- **Feature-first**: `src/features/feature-name/{presentations,states}`
+- **State**: Zustand stores with `reset()` pattern
+- **Types**: Use `@types` for shared types, `@/*` for src
+- **Electron IPC**: Frontend calls `window.electronAPI.backend.method()`
+- **Sockets**: Real-time via Socket.io (`src/sockets/socket.ts`)
 
-This is a Next.js/React frontend with Electron integration and a separate Python FastAPI backend. The project uses a feature-first architecture.
-
-### Core Structure
-
-- **Frontend**: Next.js 15 with App Router in TypeScript
-- **Desktop**: Electron wrapper for native desktop app
-- **Backend**: Separate Python FastAPI service (localai_backend/)
-- **State Management**: Zustand stores
-- **Styling**: Tailwind CSS 4 + HeroUI components
-- **Testing**: Vitest + React Testing Library
-- **Real-time**: Socket.io for WebSocket communication
-
-### Key Directories
+**Directory Structure:**
 
 ```
-src/
-├── app/              # Next.js app router pages
-├── cores/            # Core utilities and constants
-├── features/         # Feature modules (feature-first architecture)
-│   └── feature-name/
-│       ├── presentations/  # UI components + tests
-│       └── states/         # Zustand stores + hooks + tests
-├── services/         # API integration (axios + React Query)
-└── sockets/          # Socket.io configuration
+src/features/  # Feature modules
+electron/      # Main process + preload
+scripts/       # Build scripts (Python backend, Electron compile)
+types/         # Shared TypeScript types
 ```
 
-### Development Patterns
+## Coding Style
 
-- **Features**: Self-contained modules in `src/features/` with presentations (UI) and states (logic)
-- **Components**: Use HeroUI + Tailwind, keep small and focused
-- **State**: Zustand stores following the reset pattern with `getInitialState()`
-- **API**: Centralized in `src/services/api.ts` with React Query hooks
-- **Socket Events**: Real-time communication using shared socket instance and constants
+- **Language**: TypeScript with ES modules, path aliases (`@/*`, `@types`)
+- **Format**: Prettier (2 spaces, single quotes, no semicolons, 100-char width)
+- **Naming**: PascalCase for components, camelCase for functions/variables, kebab-case for directories
+- **Commits**: Conventional format (`feat:`, `fix:`, `test:`, `chore:`)
 
-### Scripts Architecture
-
-The `scripts/` directory contains TypeScript utilities for development and build processes:
-
-- **Backend management**: Python environment setup, LocalAI backend cloning/starting
-- **Electron compilation**: TypeScript to CommonJS compilation for Electron main/preload
-- **Development orchestration**: Concurrent Next.js and Electron processes
-
-## Testing Guidelines
+## Testing
 
 - **Framework**: Vitest + React Testing Library
-- **Location**: Tests in `__tests__/` folders mirroring source structure
-- **Patterns**: AAA pattern (Arrange-Act-Assert), descriptive test names
-- **Mocking**: Use `vi.mock()` and clean up with `afterEach`
-- **Coverage**: Target ≥80% for functions, lines, and branches
+- **Location**: `__tests__/` folders next to source
+- **Mocking**: Reset Zustand stores in `beforeEach`, mock Electron API via `global.window.electronAPI`
+- **Keep tests simple and focused** - avoid over-testing edge cases
+- **Always verify**: Run `npm run type-check && npm run lint && npm run format && npm test -- path/to/test` before completing
 
-## Pre-Commit Checklist
+## Security
 
-Before committing changes:
+- Renderer cannot access Node APIs directly—use IPC bridges in `electron/preload.ts`
+- Use `window.electronAPI` for all Electron interactions
 
-1. Run affected tests: `npm test -- path/to/changed/files`
-2. Run linter: `npm run lint`
-3. Run type checker: `npm run type-check`
-4. Format code: `npm run format`
+## Important Reminders
+
+- Do what's asked, nothing more
+- Prefer editing over creating new files
+- Keep tests simple and concise (not 500 lines!)
+- Never proactively create documentation files

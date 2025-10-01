@@ -115,10 +115,6 @@ describe('electron toolchain', () => {
         join(electronBuildDir, 'log-streamer.js'),
         join(electronDir, 'log-streamer.js')
       )
-      expect(mockRename).toHaveBeenCalledWith(
-        join(electronBuildDir, 'scripts'),
-        join(electronDir, 'scripts')
-      )
 
       expect(mockRm).toHaveBeenCalledWith(runtimeTypesDir, {
         recursive: true,

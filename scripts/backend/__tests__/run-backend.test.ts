@@ -3,8 +3,17 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { runBackend } from '../run-backend'
 import { BackendStatusLevel } from '@types'
 import * as utilsModule from '../utils'
+import { EventEmitter } from 'events'
 
 // Mock dependencies
+const mockStdout = new EventEmitter()
+const mockStderr = new EventEmitter()
+const mockProcessInstance = {
+  stdout: mockStdout,
+  stderr: mockStderr,
+  catch: vi.fn()
+}
+
 const mock$ = vi.fn()
 vi.mock('zx', () => ({
   $: (...args: unknown[]) => mock$(...args)
@@ -21,13 +30,24 @@ describe('runBackend', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mock$.mockReset()
+    mockStdout.removeAllListeners()
+    mockStderr.removeAllListeners()
+    mockProcessInstance.catch.mockClear()
 
     // Setup default successful mocks
     mockPathExists.mockResolvedValue(true)
-    mock$.mockResolvedValue({})
+    mock$.mockReturnValue(mockProcessInstance)
+    mockProcessInstance.catch.mockReturnValue(mockProcessInstance)
     mockNormalizeError.mockImplementation((error, defaultMessage) =>
       error instanceof Error ? error : new Error(defaultMessage)
     )
+
+    // Mock process.chdir to avoid changing actual directory
+    vi.spyOn(process, 'chdir').mockImplementation(() => {})
+
+    // Mock console methods to avoid test output pollution
+    vi.spyOn(console, 'info').mockImplementation(() => {})
+    vi.spyOn(console, 'error').mockImplementation(() => {})
   })
 
   describe('successful backend startup', () => {
@@ -58,6 +78,33 @@ describe('runBackend', () => {
 
       expect(mockEmit).toHaveBeenCalledTimes(2)
     })
+
+    it('should setup stdout stream listener', async () => {
+      await runBackend({
+        backendPath: mockBackendPath,
+        emit: mockEmit
+      })
+
+      expect(mockStdout.listenerCount('data')).toBe(1)
+    })
+
+    it('should setup stderr stream listener', async () => {
+      await runBackend({
+        backendPath: mockBackendPath,
+        emit: mockEmit
+      })
+
+      expect(mockStderr.listenerCount('data')).toBe(1)
+    })
+
+    it('should setup error handler for uvicorn process', async () => {
+      await runBackend({
+        backendPath: mockBackendPath,
+        emit: mockEmit
+      })
+
+      expect(mockProcessInstance.catch).toHaveBeenCalledTimes(1)
+    })
   })
 
   describe('error handling', () => {
@@ -83,7 +130,9 @@ describe('runBackend', () => {
 
     it('should handle uvicorn startup failure', async () => {
       const startupError = new Error('uvicorn failed to start')
-      mock$.mockRejectedValue(startupError)
+      mock$.mockImplementation(() => {
+        throw startupError
+      })
       mockNormalizeError.mockReturnValue(startupError)
 
       await expect(
@@ -129,7 +178,9 @@ describe('runBackend', () => {
     it('should normalize non-Error objects thrown by uvicorn command', async () => {
       const stringError = 'String error message'
       const normalizedError = new Error('Failed to start LocalAI Backend')
-      mock$.mockRejectedValue(stringError)
+      mock$.mockImplementation(() => {
+        throw stringError
+      })
       mockNormalizeError.mockReturnValue(normalizedError)
 
       await expect(
@@ -143,6 +194,23 @@ describe('runBackend', () => {
         stringError,
         'Failed to start LocalAI Backend'
       )
+    })
+
+    it('should emit error when uvicorn process fails after starting', async () => {
+      await runBackend({
+        backendPath: mockBackendPath,
+        emit: mockEmit
+      })
+
+      // Simulate process failure after starting
+      const errorCallback = mockProcessInstance.catch.mock.calls[0][0]
+      const processError = new Error('Process crashed')
+      errorCallback(processError)
+
+      expect(mockEmit).toHaveBeenCalledWith({
+        level: BackendStatusLevel.Error,
+        message: 'Backend process failed: Process crashed'
+      })
     })
   })
 
@@ -277,29 +345,119 @@ describe('runBackend', () => {
           'main.py not found in backend directory. Try restarting the application.'
       })
     })
+  })
 
-    it('should emit correct sequence for uvicorn startup failure', async () => {
-      mock$.mockRejectedValue(new Error('Command failed'))
+  describe('log streaming', () => {
+    it('should log stdout data to console.info', async () => {
+      const consoleInfoSpy = vi
+        .spyOn(console, 'info')
+        .mockImplementation(() => {})
 
-      await expect(
-        runBackend({
-          backendPath: mockBackendPath,
-          emit: mockEmit
-        })
-      ).rejects.toThrow()
-
-      expect(mockEmit).toHaveBeenNthCalledWith(1, {
-        level: BackendStatusLevel.Info,
-        message: 'Starting LocalAI Backend…'
+      await runBackend({
+        backendPath: mockBackendPath,
+        emit: mockEmit
       })
 
-      expect(mockEmit).toHaveBeenNthCalledWith(2, {
-        level: BackendStatusLevel.Error,
-        message:
-          'Failed to start LocalAI Backend. Please restart the application.'
+      mockStdout.emit('data', Buffer.from('Server started on port 8000'))
+
+      expect(consoleInfoSpy).toHaveBeenCalledWith('Server started on port 8000')
+    })
+
+    it('should log stderr data to console.info if no ERROR keyword', async () => {
+      const consoleInfoSpy = vi
+        .spyOn(console, 'info')
+        .mockImplementation(() => {})
+
+      await runBackend({
+        backendPath: mockBackendPath,
+        emit: mockEmit
       })
 
-      expect(mockEmit).toHaveBeenCalledTimes(2)
+      mockStderr.emit('data', Buffer.from('Warning: deprecated API'))
+
+      expect(consoleInfoSpy).toHaveBeenCalledWith('Warning: deprecated API')
+    })
+
+    it('should log stdout ERROR messages to console.error', async () => {
+      const consoleErrorSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {})
+
+      await runBackend({
+        backendPath: mockBackendPath,
+        emit: mockEmit
+      })
+
+      mockStdout.emit('data', Buffer.from('ERROR: Connection failed'))
+
+      expect(consoleErrorSpy).toHaveBeenCalledWith('ERROR: Connection failed')
+    })
+
+    it('should log stderr ERROR messages to console.error', async () => {
+      const consoleErrorSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {})
+
+      await runBackend({
+        backendPath: mockBackendPath,
+        emit: mockEmit
+      })
+
+      mockStderr.emit('data', Buffer.from('ERROR: Database connection lost'))
+
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        'ERROR: Database connection lost'
+      )
+    })
+
+    it('should trim whitespace from log output', async () => {
+      const consoleInfoSpy = vi
+        .spyOn(console, 'info')
+        .mockImplementation(() => {})
+
+      await runBackend({
+        backendPath: mockBackendPath,
+        emit: mockEmit
+      })
+
+      mockStdout.emit('data', Buffer.from('  Test message  \n'))
+
+      expect(consoleInfoSpy).toHaveBeenCalledWith('Test message')
+    })
+
+    it('should not log empty strings', async () => {
+      const consoleInfoSpy = vi
+        .spyOn(console, 'info')
+        .mockImplementation(() => {})
+
+      await runBackend({
+        backendPath: mockBackendPath,
+        emit: mockEmit
+      })
+
+      mockStdout.emit('data', Buffer.from('   \n\n   '))
+
+      expect(consoleInfoSpy).not.toHaveBeenCalled()
+    })
+
+    it('should handle multiple log lines', async () => {
+      const consoleInfoSpy = vi
+        .spyOn(console, 'info')
+        .mockImplementation(() => {})
+
+      await runBackend({
+        backendPath: mockBackendPath,
+        emit: mockEmit
+      })
+
+      mockStdout.emit('data', Buffer.from('Line 1'))
+      mockStdout.emit('data', Buffer.from('Line 2'))
+      mockStderr.emit('data', Buffer.from('Line 3'))
+
+      expect(consoleInfoSpy).toHaveBeenCalledTimes(3)
+      expect(consoleInfoSpy).toHaveBeenNthCalledWith(1, 'Line 1')
+      expect(consoleInfoSpy).toHaveBeenNthCalledWith(2, 'Line 2')
+      expect(consoleInfoSpy).toHaveBeenNthCalledWith(3, 'Line 3')
     })
   })
 
@@ -308,7 +466,7 @@ describe('runBackend', () => {
       let commandExecuted = false
       mock$.mockImplementation(() => {
         commandExecuted = true
-        return Promise.resolve({})
+        return mockProcessInstance
       })
 
       await runBackend({
@@ -322,7 +480,9 @@ describe('runBackend', () => {
 
     it('should handle uvicorn command timeout or hanging', async () => {
       const timeoutError = new Error('Command timeout')
-      mock$.mockRejectedValue(timeoutError)
+      mock$.mockImplementation(() => {
+        throw timeoutError
+      })
 
       await expect(
         runBackend({
@@ -341,10 +501,14 @@ describe('runBackend', () => {
 
   describe('concurrent operations', () => {
     it('should handle multiple concurrent runBackend calls', async () => {
+      const emit1 = vi.fn()
+      const emit2 = vi.fn()
+      const emit3 = vi.fn()
+
       const promises = [
-        runBackend({ backendPath: '/path1', emit: mockEmit }),
-        runBackend({ backendPath: '/path2', emit: mockEmit }),
-        runBackend({ backendPath: '/path3', emit: mockEmit })
+        runBackend({ backendPath: '/path1', emit: emit1 }),
+        runBackend({ backendPath: '/path2', emit: emit2 }),
+        runBackend({ backendPath: '/path3', emit: emit3 })
       ]
 
       await Promise.all(promises)
@@ -354,25 +518,42 @@ describe('runBackend', () => {
       // Each call should execute uvicorn
       expect(mock$).toHaveBeenCalledTimes(3)
       // Each call should emit 2 status messages (start + success)
-      expect(mockEmit).toHaveBeenCalledTimes(6)
+      expect(emit1).toHaveBeenCalledTimes(2)
+      expect(emit2).toHaveBeenCalledTimes(2)
+      expect(emit3).toHaveBeenCalledTimes(2)
     })
 
     it('should handle mixed success and failure scenarios', async () => {
+      const emit1 = vi.fn()
+      const emit2 = vi.fn()
+      const emit3 = vi.fn()
+
       mockPathExists
         .mockResolvedValueOnce(true) // First call succeeds
         .mockResolvedValueOnce(false) // Second call fails
         .mockResolvedValueOnce(true) // Third call succeeds
 
       const promises = [
-        runBackend({ backendPath: '/path1', emit: mockEmit }),
-        runBackend({ backendPath: '/path2', emit: mockEmit }).catch(() => {}), // Catch to prevent unhandled rejection
-        runBackend({ backendPath: '/path3', emit: mockEmit })
+        runBackend({ backendPath: '/path1', emit: emit1 }),
+        runBackend({ backendPath: '/path2', emit: emit2 }).catch(() => {}), // Catch to prevent unhandled rejection
+        runBackend({ backendPath: '/path3', emit: emit3 })
       ]
 
       await Promise.all(promises)
 
       expect(mockPathExists).toHaveBeenCalledTimes(3)
       expect(mock$).toHaveBeenCalledTimes(2) // Only successful calls execute uvicorn
+    })
+  })
+
+  describe('process.chdir', () => {
+    it('should change directory to backendPath before running uvicorn', async () => {
+      await runBackend({
+        backendPath: mockBackendPath,
+        emit: mockEmit
+      })
+
+      expect(process.chdir).toHaveBeenCalledWith(mockBackendPath)
     })
   })
 })

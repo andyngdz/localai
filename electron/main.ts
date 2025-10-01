@@ -3,9 +3,9 @@ import serve from 'electron-serve'
 import path from 'path'
 import { startBackend } from '../scripts/backend'
 import {
+  isLogStreaming,
   startLogStreaming,
-  stopLogStreaming,
-  isLogStreaming
+  stopLogStreaming
 } from './log-streamer'
 
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true'
@@ -101,9 +101,10 @@ if (!gotLock) {
     }
   })
 
-  app.whenReady().then(() => {
+  app.whenReady().then(async () => {
     onSetLinuxGpuFlags()
-    onCreateWindow()
+
+    await onCreateWindow()
     onDownloadImage()
     onLogStreaming()
     startBackend({ userDataPath: app.getPath('userData') })

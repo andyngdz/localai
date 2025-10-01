@@ -5,21 +5,6 @@ import { projectRoot, setupLog } from './utils'
 
 setupLog($)
 
-const electronSourceFiles = ['electron/main.ts', 'electron/preload.ts']
-const backendSourceFiles = [
-  'scripts/backend/clone-backend.ts',
-  'scripts/backend/constants.ts',
-  'scripts/backend/ensure-python.ts',
-  'scripts/backend/git.ts',
-  'scripts/backend/index.ts',
-  'scripts/backend/install-dependencies.ts',
-  'scripts/backend/install-uv.ts',
-  'scripts/backend/run-backend.ts',
-  'scripts/backend/setup-venv.ts',
-  'scripts/backend/start-backend.ts',
-  'scripts/backend/utils.ts'
-]
-
 const tscArgs = ['--project', 'tsconfig.electron.json']
 
 const electronDir = join(projectRoot, 'electron')
@@ -67,10 +52,6 @@ const relocateCompiledArtifacts = async () => {
   )
 }
 
-const relocateBackendScripts = async () => {
-  await rename(join(electronBuildDir, 'scripts'), join(electronDir, 'scripts'))
-}
-
 const syncRuntimeTypes = async () => {
   await rm(runtimeTypesDir, { recursive: true, force: true })
   await mkdir(runtimeTypesDir, { recursive: true })
@@ -88,7 +69,6 @@ const compileElectron = async () => {
   await transpileElectronSources()
   await patchMainImport()
   await relocateCompiledArtifacts()
-  await relocateBackendScripts()
   await syncRuntimeTypes()
   await finalizeTranspileArtifacts()
 
@@ -100,12 +80,4 @@ const startElectron = async () => {
   await $`npx electron .`
 }
 
-export {
-  compileElectron,
-  startElectron,
-  electronSourceFiles,
-  backendSourceFiles,
-  tscArgs,
-  electronBuildDir,
-  electronDir
-}
+export { compileElectron, startElectron }

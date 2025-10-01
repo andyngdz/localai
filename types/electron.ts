@@ -1,7 +1,7 @@
 // Electron API types shared between main process, preload, and frontend
 
-import type { LogEntry } from './logging'
 import type { BackendStatusEmitter } from './backend'
+import type { LogEntry } from './logging'
 
 export interface ElectronAPI {
   downloadImage: (url: string) => Promise<void>

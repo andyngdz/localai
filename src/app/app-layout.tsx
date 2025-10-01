@@ -1,5 +1,6 @@
 'use client'
 
+import { BackendLog } from '@/features/backend-logs'
 import { SettingsButton } from '@/features/settings'
 import { FC, PropsWithChildren } from 'react'
 
@@ -12,7 +13,10 @@ export const AppLayout: FC<PropsWithChildren> = ({ children }) => {
           <div className="text-sm text-default-500">
             © {new Date().getFullYear()} LocalAI
           </div>
-          <SettingsButton />
+          <div className="flex gap-2">
+            <BackendLog />
+            <SettingsButton />
+          </div>
         </div>
       </footer>
     </div>

@@ -1,5 +1,5 @@
-import { BrowserWindow } from 'electron'
 import type { LogLevel } from '@types'
+import { BrowserWindow } from 'electron'
 
 let isStreaming = false
 const originalConsole = {
