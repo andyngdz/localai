@@ -28,7 +28,7 @@ export const ModelDownloadStatusLine: FC<ModelDownloadStatusLineProps> = ({
   }, [percent])
 
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <Divider className="h-1" />
       {Indicator}
     </div>

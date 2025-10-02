@@ -36,7 +36,7 @@ describe('ModelSearchViewFooter', () => {
     // Arrange
     vi.mocked(useDownloadedModels).mockReturnValue({
       onCheckDownloaded: () => false,
-      data: []
+      downloadedModels: []
     })
 
     // Act
@@ -56,7 +56,7 @@ describe('ModelSearchViewFooter', () => {
     const mockCheckDownloaded = vi.fn().mockReturnValue(false)
     vi.mocked(useDownloadedModels).mockReturnValue({
       onCheckDownloaded: mockCheckDownloaded,
-      data: []
+      downloadedModels: []
     })
 
     // Act
@@ -75,7 +75,7 @@ describe('ModelSearchViewFooter', () => {
     const mockCheckDownloaded = vi.fn().mockReturnValue(true)
     vi.mocked(useDownloadedModels).mockReturnValue({
       onCheckDownloaded: mockCheckDownloaded,
-      data: [
+      downloadedModels: [
         {
           model_id: 'test-model-id',
           id: 1,
@@ -104,7 +104,7 @@ describe('ModelSearchViewFooter', () => {
 
     vi.mocked(useDownloadedModels).mockReturnValue({
       onCheckDownloaded: mockCheckDownloaded,
-      data: []
+      downloadedModels: []
     })
 
     // Act

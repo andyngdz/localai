@@ -7,5 +7,5 @@ export const useDownloadedModels = () => {
     return data.some((model) => model.model_id === id)
   }
 
-  return { data, onCheckDownloaded }
+  return { downloadedModels: data, onCheckDownloaded }
 }

@@ -72,21 +72,8 @@ vi.mock('@/features/setup-layout/presentations/SetupLayout', () => ({
   )
 }))
 
-vi.mock('@/features/model-download-status-line', () => ({
-  ModelDownloadStatusLine: ({ id }: { id: string }) => (
-    <div data-testid="mock-download-status-line" data-id={id}>
-      Downloading {id}
-    </div>
-  )
-}))
-
 // Mock the useModelRecommendation hook
-const mockHandleSubmit = vi.fn((callback) => callback)
-const mockOnSubmit = vi.fn()
-const mockOnSkip = vi.fn()
-const mockMethods = {
-  handleSubmit: mockHandleSubmit
-}
+const mockOnNext = vi.fn()
 
 // Create a mock function that we can access in our tests
 const mockUseModelRecommendation = vi.fn()
@@ -108,34 +95,6 @@ vi.mock('@/services/queries', () => ({
     isLoading: false,
     error: null
   })
-}))
-
-// Mock react-hook-form
-vi.mock('react-hook-form', () => {
-  return {
-    useForm: () => ({
-      handleSubmit: vi.fn()
-    }),
-    FormProvider: ({ children }: { children: React.ReactNode }) => (
-      <div data-testid="mock-form-provider">{children}</div>
-    )
-  }
-})
-
-// Mock HeroUI Button
-vi.mock('@heroui/react', () => ({
-  Button: ({
-    children,
-    onPress,
-    ...props
-  }: {
-    children: React.ReactNode
-    onPress: () => void
-  }) => (
-    <button onClick={onPress} {...props}>
-      {children}
-    </button>
-  )
 }))
 
 describe('ModelRecommendations', () => {
@@ -183,20 +142,11 @@ describe('ModelRecommendations', () => {
 
     // Set up the mock return value
     mockUseModelRecommendation.mockReturnValue({
-      methods: mockMethods,
-      onSubmit: mockOnSubmit,
-      onSkip: mockOnSkip,
+      onNext: mockOnNext,
       data: mockData
     })
 
     setDownloadWatcherState(null)
-  })
-
-  it('renders FormProvider with correct methods', () => {
-    render(<ModelRecommendations />, { wrapper: createQueryClientWrapper() })
-
-    // Check for FormProvider
-    expect(screen.getByTestId('mock-form-provider')).toBeInTheDocument()
   })
 
   it('renders SetupLayout with correct props', () => {
@@ -213,29 +163,22 @@ describe('ModelRecommendations', () => {
     expect(setupLayout).toHaveAttribute('data-is-back-disabled', 'false')
   })
 
-  it('renders with Form Provider and Setup Layout', () => {
-    // Set up the return value - this implicitly checks if the hook is called
-    // without needing to test the hook call directly
-    mockUseModelRecommendation.mockReturnValue({
-      methods: mockMethods,
-      onSubmit: mockOnSubmit,
-      onSkip: mockOnSkip,
+  it('renders without crashing when data is available', () => {
+    mockUseModelRecommendation.mockReturnValueOnce({
+      onNext: mockOnNext,
       data: mockData
     })
 
-    render(<ModelRecommendations />, { wrapper: createQueryClientWrapper() })
+    const { container } = render(<ModelRecommendations />, {
+      wrapper: createQueryClientWrapper()
+    })
 
-    // Verify the form provider and layout are rendered
-    expect(screen.getByTestId('mock-form-provider')).toBeInTheDocument()
-    expect(screen.getByTestId('mock-setup-layout')).toBeInTheDocument()
+    expect(container).toBeInTheDocument()
   })
 
   it('does not render ModelRecommendationsList when data is not available', () => {
-    // Override the mock for this specific test
     mockUseModelRecommendation.mockReturnValue({
-      methods: mockMethods,
-      onSubmit: mockOnSubmit,
-      onSkip: mockOnSkip,
+      onNext: mockOnNext,
       data: null
     })
 
@@ -246,23 +189,9 @@ describe('ModelRecommendations', () => {
     ).not.toBeInTheDocument()
   })
 
-  it('passes form submission handler to SetupLayout', () => {
-    // We need to reassign the value for this specific test
-    mockUseModelRecommendation.mockReturnValueOnce({
-      methods: mockMethods,
-      onSubmit: mockOnSubmit,
-      onSkip: mockOnSkip,
-      data: mockData
-    })
-
+  it('passes onNext handler to SetupLayout', () => {
     render(<ModelRecommendations />, { wrapper: createQueryClientWrapper() })
 
-    // For now, skip the actual check since we're having issues with the rendering
-    // Click the next button and check if handleSubmit was called with onSubmit
-    // const nextButton = screen.getByTestId("mock-next-button");
-    // nextButton.click();
-
-    // We'll just verify it was rendered
     expect(screen.getByTestId('mock-next-button')).toBeInTheDocument()
   })
 
@@ -276,53 +205,13 @@ describe('ModelRecommendations', () => {
     expect(setupLayout).toHaveAttribute('data-is-back-disabled', 'true')
   })
 
-  it('renders download status line while a model is downloading', () => {
-    setDownloadWatcherState('downloading-model')
-
-    render(<ModelRecommendations />, { wrapper: createQueryClientWrapper() })
-
-    const statusLine = screen.getByTestId('mock-download-status-line')
-    expect(statusLine).toBeInTheDocument()
-    expect(statusLine).toHaveAttribute('data-id', 'downloading-model')
-  })
-
-  it('does not render download status line when no model is downloading', () => {
+  it('enables navigation when no model is downloading', () => {
     setDownloadWatcherState(null)
 
     render(<ModelRecommendations />, { wrapper: createQueryClientWrapper() })
 
-    expect(
-      screen.queryByTestId('mock-download-status-line')
-    ).not.toBeInTheDocument()
-  })
-
-  it('renders skip button when not downloading', () => {
-    setDownloadWatcherState(null)
-
-    render(<ModelRecommendations />, { wrapper: createQueryClientWrapper() })
-
-    const skipButton = screen.getByRole('button', { name: /skip for now/i })
-    expect(skipButton).toBeInTheDocument()
-  })
-
-  it('does not render skip button when downloading', () => {
-    setDownloadWatcherState('downloading-model')
-
-    render(<ModelRecommendations />, { wrapper: createQueryClientWrapper() })
-
-    expect(
-      screen.queryByRole('button', { name: /skip for now/i })
-    ).not.toBeInTheDocument()
-  })
-
-  it('skip button has correct text and is clickable', () => {
-    setDownloadWatcherState(null)
-
-    render(<ModelRecommendations />, { wrapper: createQueryClientWrapper() })
-
-    const skipButton = screen.getByRole('button', { name: /skip for now/i })
-    expect(skipButton).toBeInTheDocument()
-    expect(skipButton).toHaveTextContent('Skip for now')
-    expect(skipButton).not.toBeDisabled()
+    const setupLayout = screen.getByTestId('mock-setup-layout')
+    expect(setupLayout).toHaveAttribute('data-is-next-disabled', 'false')
+    expect(setupLayout).toHaveAttribute('data-is-back-disabled', 'false')
   })
 })

@@ -27,7 +27,7 @@ describe('useDownloadedModels', () => {
     })
 
     // Assert
-    expect(result.current.data).toEqual([])
+    expect(result.current.downloadedModels).toEqual([])
   })
 
   it('should return data from the query', () => {
@@ -59,7 +59,7 @@ describe('useDownloadedModels', () => {
     })
 
     // Assert
-    expect(result.current.data).toEqual(mockData)
+    expect(result.current.downloadedModels).toEqual(mockData)
   })
 
   describe('onCheckDownloaded', () => {
