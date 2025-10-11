@@ -1,11 +1,11 @@
-import * as path from 'path'
+import {
+  BackendStatusCommand,
+  BackendStatusEmitter,
+  BackendStatusLevel
+} from '@types'
+import * as path from 'node:path'
 import { $ } from 'zx'
 import { BACKEND_DIRNAME } from './constants'
-import {
-  BackendStatusEmitter,
-  BackendStatusLevel,
-  BackendStatusCommand
-} from '@types'
 import { normalizeError, pathExists } from './utils'
 
 export interface SetupVenvOptions {

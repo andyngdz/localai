@@ -1,5 +1,5 @@
 import { BackendStatusEmitter, BackendStatusLevel } from '@types'
-import * as path from 'path'
+import * as path from 'node:path'
 import { $ } from 'zx'
 import { normalizeError, pathExists } from './utils'
 

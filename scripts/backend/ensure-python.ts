@@ -1,9 +1,9 @@
-import { $ } from 'zx'
 import {
+  BackendStatusCommand,
   BackendStatusEmitter,
-  BackendStatusLevel,
-  BackendStatusCommand
+  BackendStatusLevel
 } from '@types'
+import { $ } from 'zx'
 import { isMac, isWindows } from './utils'
 
 interface PythonCandidate {
@@ -52,7 +52,7 @@ const pythonCandidates = (): PythonCandidate[] => {
 }
 
 const parseVersion = (output: string) => {
-  const match = output.match(versionRegex)
+  const match = versionRegex.exec(output)
 
   if (!match) {
     return
