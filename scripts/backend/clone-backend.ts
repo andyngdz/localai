@@ -1,7 +1,7 @@
-import * as path from 'path'
+import { BackendStatusEmitter, BackendStatusLevel } from '@types'
+import * as path from 'node:path'
 import { BACKEND_BRANCH, BACKEND_DIRNAME, BACKEND_REPO_URL } from './constants'
 import { cloneRepository, isGitAvailable, updateRepository } from './git'
-import { BackendStatusEmitter, BackendStatusLevel } from '@types'
 import { pathExists } from './utils'
 
 export interface SetupBackendOptions {
@@ -73,4 +73,4 @@ const cloneBackend = async ({ userDataPath, emit }: SetupBackendOptions) => {
   return { backendPath }
 }
 
-export { ensureGitRepository, cloneBackend }
+export { cloneBackend, ensureGitRepository }

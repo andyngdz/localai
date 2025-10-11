@@ -1,5 +1,5 @@
-import { dirname, join } from 'path'
-import { fileURLToPath } from 'url'
+import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { $ } from 'zx'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -24,4 +24,4 @@ const setupLog = (shell: $) => {
   shell.stdio = 'inherit'
 }
 
-export { runAsScript, setupLog, projectRoot, __dirname, __filename }
+export { __dirname, __filename, projectRoot, runAsScript, setupLog }

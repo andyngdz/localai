@@ -1,5 +1,5 @@
-import * as fs from 'fs/promises'
 import { BackendStatusEmitter, BackendStatusLevel } from '@types'
+import * as fs from 'node:fs/promises'
 
 const isWindows = process.platform === 'win32'
 const isMac = process.platform === 'darwin'

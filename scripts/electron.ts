@@ -1,5 +1,5 @@
-import { cp, mkdir, readFile, rename, rm, writeFile } from 'fs/promises'
-import { join } from 'path'
+import { cp, mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises'
+import { join } from 'node:path'
 import { $ } from 'zx'
 import { projectRoot, setupLog } from './utils'
 
