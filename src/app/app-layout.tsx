@@ -1,24 +1,13 @@
 'use client'
 
-import { BackendLog } from '@/features/backend-logs'
-import { SettingsButton } from '@/features/settings'
+import { AppFooter } from '@/features/app-footer'
 import { FC, PropsWithChildren } from 'react'
 
 export const AppLayout: FC<PropsWithChildren> = ({ children }) => {
   return (
     <div className="flex flex-col h-screen">
       <main className="flex justify-center flex-1">{children}</main>
-      <footer className="sticky bottom-0 z-10 backdrop-blur-md bg-content1">
-        <div className="px-4 flex justify-between items-center">
-          <div className="text-sm text-default-500">
-            © {new Date().getFullYear()} LocalAI
-          </div>
-          <div className="flex gap-2">
-            <BackendLog />
-            <SettingsButton />
-          </div>
-        </div>
-      </footer>
+      <AppFooter />
     </div>
   )
 }
