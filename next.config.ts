@@ -1,8 +1,10 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+  typedRoutes: true,
   trailingSlash: true,
   experimental: {
+    typedEnv: true,
     viewTransition: true
   },
   images: {
