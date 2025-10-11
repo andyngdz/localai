@@ -67,6 +67,7 @@
     "axios": "^1.12.2",
     "clsx": "^2.1.1",
     "concurrently": "^9.2.1",
+    "conventional-changelog-conventionalcommits": "^9.1.0",
     "core-js": "^3.45.1",
     "electron": "^38.1.2",
     "electron-builder": "^26.0.12",
