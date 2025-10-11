@@ -1,6 +1,6 @@
 import { Skeleton } from '@heroui/react'
 
-const SKELETON_TIEMS = Array.from({ length: 10 }).map(
+const SKELETON_ITEMS = Array.from({ length: 10 }).map(
   (_, idx) => `skeleton-item-${idx}`
 )
 
@@ -9,7 +9,7 @@ export const HistoryLoader = () => {
     <div className="flex flex-col" data-testid="history-loader">
       <div className="scrollable">
         <div className="flex flex-col gap-3 p-2">
-          {SKELETON_TIEMS.map((id) => (
+          {SKELETON_ITEMS.map((id) => (
             <div
               key={id}
               data-testid="history-loader-item"
