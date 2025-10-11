@@ -1,5 +1,5 @@
-import { $ } from 'zx'
 import { BackendStatusEmitter, BackendStatusLevel } from '@types'
+import { $ } from 'zx'
 import { isWindows, normalizeError } from './utils'
 
 export interface SwitchToVenvOptions {
@@ -21,8 +21,7 @@ const switchToVenv = async ({ backendPath, emit }: SwitchToVenvOptions) => {
     message: `Switching to virtual environment`
   })
 
-  const windowsCommand =
-    'powershell -NoProfile -ExecutionPolicy ByPass -Command ". .venv\\Scripts\\Activate.ps1"'
+  const windowsCommand = String.raw`powershell -NoProfile -ExecutionPolicy ByPass -Command ". .venv\Scripts\Activate.ps1"`
   const unixCommand = 'source .venv/bin/activate'
   const switchCommand = isWindows ? windowsCommand : unixCommand
 
