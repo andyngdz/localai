@@ -33,7 +33,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
 
-      # Step 7: Run semantic-release
+      # Step 3: Run semantic-release
       - name: Semantic Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -43,7 +43,7 @@ jobs:
           GIT_COMMITTER_EMAIL: semantic-release-bot@users.noreply.github.com
         run: npx semantic-release
 
-      # Step 8: Report release status
+      # Step 4: Report release status
       - name: Report Release Status
         if: always()
         uses: actions/github-script@v7
