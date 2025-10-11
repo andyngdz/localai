@@ -156,7 +156,7 @@ describe('ModelRecommendationsList', () => {
     )
 
     const mainDiv = container.firstChild
-    expect(mainDiv).toHaveClass('max-w-2xl')
+    expect(mainDiv).toHaveClass('max-w-3xl')
   })
 
   it('applies correct classes to slides', () => {

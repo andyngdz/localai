@@ -1,14 +1,11 @@
-import { api, useModelRecommendationsQuery } from '@/services'
+import { useModelRecommendationsQuery } from '@/services'
 import { socket, SocketEvents } from '@/sockets'
 import { act, renderHook } from '@testing-library/react'
 import { setupRouterMock } from '@/cores/test-utils'
-import { useForm, UseFormReturn } from 'react-hook-form'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import type { ModelRecommendationFormProps } from '../../types'
 import { useModelRecommendation } from '../useModelRecommendation'
 import { Socket } from 'socket.io-client'
 
-vi.mock('@/services/api')
 vi.mock('@/services/queries')
 vi.mock('@/sockets', async (originalImport: () => Promise<Socket>) => {
   const actual = await originalImport()
@@ -24,53 +21,22 @@ vi.mock('@/sockets', async (originalImport: () => Promise<Socket>) => {
   }
 })
 vi.mock('next/navigation', () => ({ useRouter: vi.fn() }))
-// Simple direct mock for react-hook-form
-vi.mock('react-hook-form', () => ({
-  useForm: vi.fn()
-}))
 
 describe('useModelRecommendation', () => {
-  const setValue =
-    vi.fn() as UseFormReturn<ModelRecommendationFormProps>['setValue']
-  const mockForm: Partial<UseFormReturn<ModelRecommendationFormProps>> = {
-    setValue
-  }
-
   beforeEach(async () => {
     vi.clearAllMocks()
-
-    // Setup router mock with proper replace function
     await setupRouterMock()
-
-    vi.mocked(useForm).mockReturnValue(
-      mockForm as UseFormReturn<ModelRecommendationFormProps>
-    )
   })
 
-  it('should set default id from data', () => {
+  it('should return data from query', () => {
+    const mockData = { default_selected_id: 'test-id' }
     vi.mocked(useModelRecommendationsQuery).mockReturnValue({
-      data: { default_selected_id: 'test-id' }
+      data: mockData
     } as ReturnType<typeof useModelRecommendationsQuery>)
-
-    renderHook(() => useModelRecommendation())
-
-    expect(setValue).toHaveBeenCalledWith('id', 'test-id')
-  })
-
-  it('should call api.downloadModel on submit', async () => {
-    vi.mocked(useModelRecommendationsQuery).mockReturnValue({
-      data: {}
-    } as ReturnType<typeof useModelRecommendationsQuery>)
-
-    vi.mocked(api.downloadModel).mockResolvedValue()
 
     const { result } = renderHook(() => useModelRecommendation())
 
-    await act(async () => {
-      await result.current.onSubmit({ id: 'model-123' })
-    })
-
-    expect(api.downloadModel).toHaveBeenCalledWith('model-123')
+    expect(result.current.data).toEqual(mockData)
   })
 
   it('should navigate to editor on DOWNLOAD_COMPLETED and clean up on unmount', async () => {
@@ -110,18 +76,17 @@ describe('useModelRecommendation', () => {
     )
   })
 
-  it('should navigate to editor when onSkip is called', async () => {
+  it('should navigate to editor when onNext is called', async () => {
     vi.mocked(useModelRecommendationsQuery).mockReturnValue({
       data: {}
     } as ReturnType<typeof useModelRecommendationsQuery>)
 
-    // Set up router mock
     const { mockReplace } = await setupRouterMock()
 
     const { result } = renderHook(() => useModelRecommendation())
 
     await act(async () => {
-      result.current.onSkip()
+      result.current.onNext()
     })
 
     expect(mockReplace).toHaveBeenCalledWith('/editor')

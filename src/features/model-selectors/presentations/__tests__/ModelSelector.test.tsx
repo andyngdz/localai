@@ -38,7 +38,7 @@ describe('ModelSelector', () => {
     vi.resetAllMocks()
 
     vi.mocked(useModelSelectors).mockReturnValue({
-      data: mockModels
+      downloadedModels: mockModels
     })
 
     vi.mocked(useModelSelectorStore).mockReturnValue({
@@ -54,16 +54,16 @@ describe('ModelSelector', () => {
     expect(screen.getByRole('button', { name: /model-1/i })).toBeInTheDocument()
   })
 
-  it('should render nothing when no data is available', () => {
-    // Set data to null to match the component's check condition
+  it('should render dropdown even when no data is available', () => {
+    // Set data to empty array
     vi.mocked(useModelSelectors).mockReturnValue({
-      data: null as unknown as ModelDownloaded[]
+      downloadedModels: []
     })
 
-    const { container } = render(<ModelSelector />)
+    render(<ModelSelector />)
 
-    // Should be empty when no data
-    expect(container.firstChild).toBeNull()
+    // Should still render the dropdown button, even with no items
+    expect(screen.getByRole('button')).toBeInTheDocument()
   })
 
   it('should display all model options in the dropdown', async () => {

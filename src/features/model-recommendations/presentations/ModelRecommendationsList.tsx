@@ -22,7 +22,7 @@ export const ModelRecommendationsList: FC<ModelRecommendationsListProps> = ({
   const initialSlide = findIndex(sections, (s) => s.id === defaultSection)
 
   return (
-    <div className="max-w-2xl">
+    <div className="max-w-3xl">
       <Swiper
         spaceBetween={16}
         slidesPerView="auto"

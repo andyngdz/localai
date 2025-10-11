@@ -5,7 +5,7 @@ import { useCallback, useEffect } from 'react'
 import { useModelSelectorStore } from './useModelSelectorStores'
 
 export const useModelSelectors = () => {
-  const { data = [] } = useDownloadedModels()
+  const { downloadedModels } = useDownloadedModels()
   const { selected_model_id, setSelectedModelId } = useModelSelectorStore()
 
   const onLoadModel = useCallback(async (id: string) => {
@@ -15,16 +15,16 @@ export const useModelSelectors = () => {
   }, [])
 
   useEffect(() => {
-    if (data && isEmpty(selected_model_id)) {
-      const firstModel = first(data)
+    if (downloadedModels && isEmpty(selected_model_id)) {
+      const firstModel = first(downloadedModels)
 
       if (firstModel) setSelectedModelId(firstModel.model_id)
     }
-  }, [data, selected_model_id, setSelectedModelId])
+  }, [downloadedModels, selected_model_id, setSelectedModelId])
 
   useEffect(() => {
     onLoadModel(selected_model_id)
   }, [onLoadModel, selected_model_id])
 
-  return { data }
+  return { downloadedModels }
 }

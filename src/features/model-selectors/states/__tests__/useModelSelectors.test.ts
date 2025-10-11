@@ -69,10 +69,10 @@ describe('useModelSelectors', () => {
     })
   })
 
-  it('should return data from useDownloadedModelsQuery', () => {
+  it('should return downloadedModels from useDownloadedModels', () => {
     const { result } = renderHook(() => useModelSelectors())
 
-    expect(result.current.data).toEqual(mockModels)
+    expect(result.current.downloadedModels).toEqual(mockModels)
   })
 
   it('should set id to first model when id is empty and data exists', async () => {
@@ -117,7 +117,7 @@ describe('useModelSelectors', () => {
 
     const { result } = renderHook(() => useModelSelectors())
 
-    expect(result.current.data).toEqual([])
+    expect(result.current.downloadedModels).toEqual([])
     expect(mockSetId).not.toHaveBeenCalled()
   })
 
