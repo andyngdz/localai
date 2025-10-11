@@ -32,9 +32,6 @@ jobs:
       # Step 2: Setup Node.js environment
       - name: Setup Node.js
         uses: actions/setup-node@v4
-        with:
-          node-version: 'latest'
-          cache: 'npm'
 
       # Step 7: Run semantic-release
       - name: Semantic Release
