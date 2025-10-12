@@ -1,36 +1,227 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LocalAI
 
-## Getting Started
+> A desktop application for generating AI images locally using Stable Diffusion models from HuggingFace
 
-First, run the development server:
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+<!-- Add your screenshot here -->
+<!-- ![LocalAI Dashboard](path/to/screenshot.png) -->
+
+## About
+
+LocalAI is a privacy-focused desktop application that lets you generate AI images completely offline on your own machine. Download models from HuggingFace, configure generation parameters, and create stunning images without sending your data to the cloud.
+
+**Why LocalAI?**
+
+- 🔒 **100% Private** - Everything runs locally, your prompts and images never leave your computer
+- 💰 **Free Forever** - No API costs, no subscriptions, completely free and open-source
+- 🚀 **Powerful** - Support for various Stable Diffusion models from HuggingFace
+- ⚡ **Fast** - GPU acceleration support for lightning-fast generation
+- 🎨 **Flexible** - Advanced controls for fine-tuning your generations
+
+## Features
+
+- 🎨 **AI Image Generation** - Create images from text prompts using Stable Diffusion models
+- 🤖 **Smart Model Recommendations** - Get model suggestions based on your hardware capabilities
+- 🔍 **HuggingFace Integration** - Browse and download models directly from HuggingFace
+- ⚙️ **Advanced Configuration**
+  - Sampling methods (Euler, DPM++, etc.)
+  - Custom styles and presets
+  - Output format control (PNG, JPEG, WebP)
+  - Seed control for reproducible results
+  - Batch generation support
+- 📊 **Automatic GPU Detection** - Detects your GPU and optimizes settings automatically
+- 💾 **Memory Management** - Smart memory allocation based on available VRAM
+- 📜 **Generation History** - View past generations and reuse successful configurations
+- 🖥️ **Fully Offline** - Works completely offline after initial model download
+- 🔒 **Privacy-Focused** - All processing happens locally on your machine
+
+## Tech Stack
+
+- **Frontend**: Next.js 15, React 19, TypeScript, TailwindCSS 4
+- **Desktop**: Electron 38
+- **Backend**: Python FastAPI
+- **State Management**: Zustand, TanStack Query
+- **UI Components**: HeroUI, Framer Motion
+- **Real-time Communication**: Socket.io
+- **Testing**: Vitest, React Testing Library
+
+## Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+- **Node.js** (LTS version recommended)
+- **Python 3.11** (Required - other Python versions may not work)
+- **npm** or **yarn**
+- **Git**
+
+### System Requirements
+
+- **RAM**: 8GB minimum (16GB recommended for larger models)
+- **GPU**: Recommended for faster generation (CPU mode available but slower)
+- **Storage**: 30GB+ free disk space for models
+- **OS**: Windows, macOS, or Linux
+
+## Installation
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Clone the repository
+git clone https://github.com/andyngdz/localai.git
+cd localai
+
+# Install dependencies
+npm install
+
+# Run the desktop application
+npm run desktop
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The application will:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Set up the Python backend automatically
+2. Install required Python dependencies
+3. Launch the Electron desktop app
+4. Open the application window
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Development
 
-## Learn More
+### Available Scripts
 
-To learn more about Next.js, take a look at the following resources:
+- **`npm run dev`** - Start Next.js development server with Turbopack
+- **`npm run desktop`** - Run full desktop app (Next.js + Electron + Python backend)
+- **`npm run desktop:local`** - Run frontend only (for Python backend development)
+- **`npm test`** - Run test suite
+- **`npm run type-check`** - Run TypeScript type checking
+- **`npm run lint`** - Run ESLint
+- **`npm run format`** - Format code with Prettier
+- **`npm run build`** - Build for production distribution
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Development Workflow
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+# Start development with hot reload
+npm run desktop
 
-## Deploy on Vercel
+# Run tests
+npm test
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Run tests in watch mode
+npm test -- --watch
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Run tests with coverage
+npm run test:coverage
+
+# Check code quality
+npm run type-check
+npm run lint
+npm run format
+```
+
+## Building for Production
+
+```bash
+# Build the application
+npm run build
+```
+
+The build output will be in the `dist/` directory:
+
+- Windows: `.exe` installer
+- macOS: `.dmg` installer
+- Linux: `.AppImage`, `.deb`, `.rpm` packages
+
+## Project Structure
+
+```
+localai/
+├── src/
+│   ├── features/       # Feature modules (feature-first architecture)
+│   │   ├── generators/     # Image generation
+│   │   ├── model-search/   # Model browsing
+│   │   ├── histories/      # Generation history
+│   │   └── settings/       # App settings
+│   ├── app/           # Next.js app router pages
+│   ├── types/         # TypeScript type definitions
+│   ├── sockets/       # Socket.io real-time communication
+│   └── services/      # API services
+├── electron/          # Electron main process & preload scripts
+├── scripts/           # Build & backend management scripts
+│   └── backend/       # Python backend setup scripts
+├── .github/           # GitHub Actions CI/CD workflows
+└── types/             # Global TypeScript types
+```
+
+### Architecture
+
+LocalAI follows a **feature-first architecture**:
+
+- Each feature is self-contained in `src/features/`
+- Features contain `presentations/` (React components) and `states/` (state management)
+- Shared utilities live in `src/cores/`
+- Electron IPC bridges frontend and backend via `window.electronAPI`
+- Real-time updates via Socket.io for download progress and generation status
+
+## Testing
+
+LocalAI uses **Vitest** and **React Testing Library** for comprehensive testing.
+
+```bash
+# Run all tests
+npm test
+
+# Run tests in watch mode
+npm test -- --watch
+
+# Run tests with coverage report
+npm run test:coverage
+
+# Run specific test file
+npm test -- path/to/test.tsx
+```
+
+Tests are co-located with source files in `__tests__/` directories.
+
+## Contributing
+
+We welcome contributions! Here's how you can help:
+
+1. **Fork the repository**
+2. **Create a feature branch** (`git checkout -b feat/amazing-feature`)
+3. **Commit your changes** using [Conventional Commits](https://www.conventionalcommits.org/)
+   - `feat:` for new features
+   - `fix:` for bug fixes
+   - `docs:` for documentation changes
+4. **Push to your branch** (`git push origin feat/amazing-feature`)
+5. **Open a Pull Request**
+
+### Commit Message Format
+
+```bash
+feat(generators): add new sampling method
+fix(model-search): resolve download timeout issue
+docs: update installation instructions
+```
+
+### Release Process
+
+This project uses **semantic-release** for automated versioning and releases. See [RELEASE.md](RELEASE.md) for details.
+
+## Acknowledgments
+
+- Built with [Next.js](https://nextjs.org/)
+- Desktop powered by [Electron](https://www.electronjs.org/)
+- Models from [HuggingFace](https://huggingface.co/)
+- UI components from [HeroUI](https://www.heroui.com/)
+- Animations by [Framer Motion](https://www.framer.com/motion/)
+
+## Support
+
+If you encounter any issues or have questions:
+
+1. Check the [Issues](https://github.com/andyngdz/localai/issues) page
+2. Read the [RELEASE.md](RELEASE.md) for release information
+3. Open a new issue with detailed information
+
+---
+
+⭐ **Star this repository** if you find it helpful!
