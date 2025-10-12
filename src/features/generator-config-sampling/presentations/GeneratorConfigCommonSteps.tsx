@@ -12,7 +12,7 @@ export const GeneratorConfigCommonSteps = () => {
         <Button
           key={step}
           variant="light"
-          className="text-default-500"
+          className="text-default-700"
           onPress={() => {
             setValue('steps', step)
           }}

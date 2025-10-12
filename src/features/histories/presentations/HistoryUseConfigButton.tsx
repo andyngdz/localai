@@ -16,7 +16,7 @@ export const HistoryUseConfigButton: FC<HistoryUseConfigButtonProps> = ({
   return (
     <Tooltip content="Use this config">
       <Button isIconOnly variant="light" size="sm" onPress={onUseConfig}>
-        <Bolt className="text-default-500" size={16} />
+        <Bolt className="text-default-700" size={16} />
       </Button>
     </Tooltip>
   )

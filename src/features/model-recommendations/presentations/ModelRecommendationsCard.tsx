@@ -32,7 +32,7 @@ export const ModelRecommendationsCard: FC<ModelRecommendationsCardProps> = ({
               />
             </section>
             <section className="flex justify-between">
-              <span className="text-default-500">{model.description}</span>
+              <span className="text-default-700">{model.description}</span>
               <ModelRecommendationMemoryBox
                 icon={<Gpu size={16} />}
                 content={`${model.memory_requirement_gb} GB`}

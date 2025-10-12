@@ -61,6 +61,6 @@ describe('ModelSearchViewHeader', () => {
     expect(link).toBeInTheDocument()
     expect(link).toHaveAttribute('href', href)
     expect(link).toHaveAttribute('target', '_blank')
-    expect(link).toHaveClass('text-default-500')
+    expect(link).toHaveClass('text-default-700')
   })
 })

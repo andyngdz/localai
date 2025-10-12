@@ -1,7 +1,7 @@
+import { useDownloadedModels } from '@/cores/hooks'
 import { Info } from 'lucide-react'
 import { FC, useMemo } from 'react'
 import { ModelSearchViewDownloadButton } from './ModelSearchViewDownloadButton'
-import { useDownloadedModels } from '@/cores/hooks'
 import { ModelSearchViewDownloadedButton } from './ModelSearchViewDownloadedButton'
 
 export interface ModelSearchViewFooterProps {
@@ -23,7 +23,7 @@ export const ModelSearchViewFooter: FC<ModelSearchViewFooterProps> = ({
   return (
     <div className="p-4">
       <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-2 text-default-500">
+        <div className="flex items-center gap-2 text-default-700">
           <Info size={16} />
           <span className="text-xs">
             Optimized download: Only essential files are downloaded, saving

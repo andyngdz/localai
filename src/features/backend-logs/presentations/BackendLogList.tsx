@@ -22,7 +22,7 @@ export const BackendLogList = () => {
           }}
         >
           <div className="flex gap-1 text-sm">
-            <span className="flex-shrink-0 min-w-10 text-default-500">
+            <span className="flex-shrink-0 min-w-10 text-default-700">
               {dateFormatter.time(timestamp.toString())}
             </span>
             <span className={`break-words ${onGetLogColor(level)}`}>
