@@ -1,6 +1,6 @@
 import { Button } from '@heroui/react'
-import { Settings } from 'lucide-react'
 import { useDisclosure } from '@heroui/use-disclosure'
+import { Settings } from 'lucide-react'
 import { SettingsModal } from './SettingsModal'
 
 export const SettingsButton = () => {
@@ -13,7 +13,7 @@ export const SettingsButton = () => {
         variant="light"
         aria-label="Settings"
         onPress={onOpen}
-        className="text-default-500 hover:text-foreground"
+        className="text-default-700 hover:text-foreground"
       >
         <Settings size={16} />
       </Button>

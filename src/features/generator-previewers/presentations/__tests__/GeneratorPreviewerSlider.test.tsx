@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useGeneratorPreviewer } from '../../states'
 import { GeneratorPreviewerSlider } from '../GeneratorPreviewerSlider'
@@ -106,7 +106,7 @@ describe('GeneratorPreviewerSlider', () => {
         'flex',
         'justify-center',
         'items-center',
-        'text-default-500'
+        'text-default-700'
       )
     })
   })

@@ -106,7 +106,7 @@ describe('GeneratorConfigCommonSteps', () => {
     buttons.forEach((button) => {
       expect(button).toHaveAttribute(
         'class',
-        expect.stringContaining('text-default-500')
+        expect.stringContaining('text-default-700')
       )
     })
   })

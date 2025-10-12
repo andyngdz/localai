@@ -31,7 +31,7 @@ export const GpuDetectionItem: FC<GpuDetectionItemProps> = ({
     >
       <div className="ml-2 flex items-center justify-between gap-2 w-full">
         <span className="font-bold">{name}</span>
-        <span className="text-sm text-default-500 font-medium">
+        <span className="text-sm text-default-700 font-medium">
           {formatter.bytes(memory)}
         </span>
       </div>

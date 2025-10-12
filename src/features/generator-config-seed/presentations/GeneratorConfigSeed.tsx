@@ -17,7 +17,7 @@ export const GeneratorConfigSeed = () => {
           control={control}
           controlName="seed"
           minValue={-1}
-          startContent={<span className="text-sm text-default-500">Value</span>}
+          startContent={<span className="text-sm text-default-700">Value</span>}
         />
         <Button
           variant="light"

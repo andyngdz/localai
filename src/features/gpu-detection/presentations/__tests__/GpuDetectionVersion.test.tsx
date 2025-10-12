@@ -50,9 +50,9 @@ describe('GpuDetectionVersion', () => {
 
     // Check for labels styling
     const cudaLabel = screen.getByText('Cuda version')
-    expect(cudaLabel).toHaveClass('text-default-500')
+    expect(cudaLabel).toHaveClass('text-default-700')
 
     const driverLabel = screen.getByText('Driver version')
-    expect(driverLabel).toHaveClass('text-default-500')
+    expect(driverLabel).toHaveClass('text-default-700')
   })
 })

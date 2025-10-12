@@ -11,7 +11,7 @@ export const HistoryEmpty = () => {
         height={96}
       />
       <div className="font-semibold">No histories found</div>
-      <div className="text-default-500 text-sm text-center">
+      <div className="text-default-700 text-sm text-center">
         Generate new images and your history will appear here
       </div>
     </div>

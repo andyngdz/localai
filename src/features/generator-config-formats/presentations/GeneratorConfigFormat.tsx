@@ -15,14 +15,14 @@ export const GeneratorConfigFormat = () => {
           control={control}
           controlName="width"
           minValue={64}
-          startContent={<span className="text-sm text-default-500">W</span>}
+          startContent={<span className="text-sm text-default-700">W</span>}
         />
         <NumberInputController
           aria-label="Height"
           control={control}
           controlName="height"
           minValue={64}
-          startContent={<span className="text-sm text-default-500">H</span>}
+          startContent={<span className="text-sm text-default-700">H</span>}
         />
       </div>
       <Checkbox

@@ -14,13 +14,13 @@ export const HistoryItemContainer: FC<HistoryItemProps> = ({ history }) => {
     <Card className="flex flex-col gap-2 p-2">
       <div className="flex flex-col gap-2 text-sm">
         <div className="flex items-center justify-between gap-2">
-          <span className="text-default-500 font-bold">
+          <span className="text-default-700 font-bold">
             {dateFormatter.time(`${history.created_at}Z`)}
           </span>
           <HistoryUseConfigButton history={history} />
         </div>
         <div className="flex flex-col gap-1">
-          <span className="text-default-500 font-semibold truncate">
+          <span className="text-default-700 font-semibold truncate">
             {history.model}
           </span>
           <span className="truncate">{history.prompt}</span>

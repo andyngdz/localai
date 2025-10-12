@@ -29,7 +29,7 @@ export const ModelSearchViewCard: FC<ModelSearchViewCardProps> = ({
       />
       <div className="flex flex-col gap-4">
         <ModelWithAvatar author={author} id={id} />
-        <div className="flex items-center gap-4 text-default-500">
+        <div className="flex items-center gap-4 text-default-700">
           <div className="flex items-center gap-2">
             <CircleDashed size={16} />
             <span className="text-xs">Text to Image</span>

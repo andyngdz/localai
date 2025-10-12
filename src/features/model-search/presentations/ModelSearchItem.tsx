@@ -20,7 +20,7 @@ export const ModelSearchItem: FC<ModelSearchItemProps> = ({
         <ModelWithAvatar author={author} id={id} />
       </CardHeader>
       <CardBody>
-        <div className="flex gap-4 text-default-500">
+        <div className="flex gap-4 text-default-700">
           <div className="flex items-center gap-2">
             <CircleArrowDown size={16} />
             <span className="text-xs">{formatter.number(downloads)}</span>
