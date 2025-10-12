@@ -9,10 +9,7 @@ When you push commits to the `main` branch, semantic-release automatically:
 1. **Analyzes commits** since the last release using [Conventional Commits](https://www.conventionalcommits.org/)
 2. **Determines the version bump** (major, minor, patch) based on commit types
 3. **Generates release notes** from commit messages
-4. **Updates CHANGELOG.md** with new release information
-5. **Updates package.json** version
-6. **Creates a GitHub release** with release notes
-7. **Commits the changes** back to the repository
+4. **Creates a GitHub release** with release notes
 
 ## Commit Message Format
 
@@ -114,9 +111,22 @@ npm run semantic-release
 The release workflow (`.github/workflows/release.yml`) runs automatically when:
 
 1. Code is pushed to `main` or `develop` branches
-2. All tests pass
-3. Code quality checks pass
-4. The commit message doesn't contain `[skip ci]`
+
+**Note:** This workflow does NOT run tests or quality checks automatically. Make sure to run tests, linting, and type-checking before pushing to release branches, or use the Code Quality workflow for PRs.
+
+## Workflow Steps
+
+The release workflow performs these steps:
+
+1. **Checkout**: Fetches full git history for semantic-release analysis
+2. **Setup Node.js**: Installs Node.js (latest version) with npm cache
+3. **Install Dependencies**: Runs `npm ci --prefer-offline --no-audit --no-fund`
+4. **Run Semantic Release**: Executes `npx semantic-release` to:
+   - Analyze commits since last release
+   - Determine version bump (major/minor/patch)
+   - Generate changelog
+   - Create GitHub release
+   - Commit updated files back to repository
 
 ## Viewing Releases
 
@@ -132,6 +142,8 @@ Semantic-release is configured in `.releaserc.json`. Key settings:
 - **Branches**: `main` for stable releases, `develop` for beta releases
 - **Plugins**: Changelog generation, GitHub releases, Git commits
 - **Release Assets**: Desktop application binaries (`.exe`, `.dmg`, `.AppImage`)
+
+**Quality Checks**: Run separately via the Code Quality workflow (`.github/workflows/build.yml`) which executes on pull requests to ensure code quality before merging.
 
 ## Troubleshooting
 
