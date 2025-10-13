@@ -3,23 +3,28 @@ import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ModelRecommendationsDownloadButton } from '../ModelRecommendationsDownloadButton'
 
-// Mock the download watcher store
+// Mock the download watcher hooks
 const mockUseDownloadWatcherStore = vi.fn()
+const mockUseDownloadWatcher = vi.fn()
 vi.mock('@/features/download-watcher', () => ({
-  useDownloadWatcherStore: (selector: (state: unknown) => unknown) =>
-    mockUseDownloadWatcherStore(selector)
+  useDownloadWatcherStore: () => mockUseDownloadWatcherStore(),
+  useDownloadWatcher: (modelId: string) => mockUseDownloadWatcher(modelId)
 }))
 
-// Mock the API
+// Mock the services
 vi.mock('@/services', () => ({
   api: {
     downloadModel: vi.fn()
+  },
+  formatter: {
+    bytes: vi.fn()
   }
 }))
 
-// Import the mocked api to access the mock function
-import { api } from '@/services'
+// Import the mocked services to access the mock functions
+import { api, formatter } from '@/services'
 const mockDownloadModel = vi.mocked(api.downloadModel)
+const mockFormatBytes = vi.mocked(formatter.bytes)
 
 // Mock HeroUI Button
 vi.mock('@heroui/react', () => ({
@@ -70,21 +75,27 @@ describe('ModelRecommendationsDownloadButton', () => {
   beforeEach(() => {
     vi.clearAllMocks()
 
-    // Default mock implementation
-    mockUseDownloadWatcherStore.mockImplementation((selector) => {
-      const state = {
-        id: null,
-        percent: 0
-      }
-      return selector(state)
+    // Default mock implementations
+    mockUseDownloadWatcherStore.mockReturnValue({
+      id: undefined,
+      onSetId: vi.fn()
     })
+
+    mockUseDownloadWatcher.mockReturnValue({
+      percent: 0,
+      isDownloading: false,
+      downloadSized: 0,
+      downloadTotalSized: 0
+    })
+
+    mockFormatBytes.mockImplementation((bytes: number) => `${bytes} bytes`)
   })
 
   describe('Idle State (Not Downloading)', () => {
     it('renders download button with correct text', () => {
       render(<ModelRecommendationsDownloadButton modelId="test-model" />)
 
-      expect(screen.getByText('Download')).toBeInTheDocument()
+      expect(screen.getByText('Download Model')).toBeInTheDocument()
     })
 
     it('shows download icon when not downloading', () => {
@@ -134,19 +145,29 @@ describe('ModelRecommendationsDownloadButton', () => {
 
   describe('This Model Downloading', () => {
     beforeEach(() => {
-      mockUseDownloadWatcherStore.mockImplementation((selector) => {
-        const state = {
-          id: 'test-model',
-          percent: 0.45
-        }
-        return selector(state)
+      mockUseDownloadWatcherStore.mockReturnValue({
+        id: 'test-model',
+        onSetId: vi.fn()
+      })
+
+      mockUseDownloadWatcher.mockReturnValue({
+        percent: 0.45,
+        isDownloading: true,
+        downloadSized: 4608, // 4.5 MB
+        downloadTotalSized: 10240 // 10 MB
+      })
+
+      mockFormatBytes.mockImplementation((bytes: number) => {
+        if (bytes === 4608) return '4.5 MB'
+        if (bytes === 10240) return '10 MB'
+        return `${bytes} bytes`
       })
     })
 
-    it('shows downloading text with percentage', () => {
+    it('shows downloading text with bytes', () => {
       render(<ModelRecommendationsDownloadButton modelId="test-model" />)
 
-      expect(screen.getByText('Downloading... 45%')).toBeInTheDocument()
+      expect(screen.getByText('4.5 MB / 10 MB')).toBeInTheDocument()
     })
 
     it('does not show download icon when downloading', () => {
@@ -203,19 +224,23 @@ describe('ModelRecommendationsDownloadButton', () => {
 
   describe('Another Model Downloading', () => {
     beforeEach(() => {
-      mockUseDownloadWatcherStore.mockImplementation((selector) => {
-        const state = {
-          id: 'other-model',
-          percent: 0.6
-        }
-        return selector(state)
+      mockUseDownloadWatcherStore.mockReturnValue({
+        id: 'other-model',
+        onSetId: vi.fn()
+      })
+
+      mockUseDownloadWatcher.mockReturnValue({
+        percent: 0,
+        isDownloading: false,
+        downloadSized: 0,
+        downloadTotalSized: 0
       })
     })
 
-    it('shows Download text (not downloading)', () => {
+    it('shows Download Model text (not downloading)', () => {
       render(<ModelRecommendationsDownloadButton modelId="test-model" />)
 
-      expect(screen.getByText('Download')).toBeInTheDocument()
+      expect(screen.getByText('Download Model')).toBeInTheDocument()
     })
 
     it('is disabled when another model is downloading', () => {
@@ -242,10 +267,16 @@ describe('ModelRecommendationsDownloadButton', () => {
   })
 
   describe('Progress Bar Widths', () => {
-    it('shows 0% width at start', () => {
-      mockUseDownloadWatcherStore.mockImplementation((selector) => {
-        const state = { id: 'test-model', percent: 0.01 }
-        return selector(state)
+    it('shows 1% width at start', () => {
+      mockUseDownloadWatcherStore.mockReturnValue({
+        id: 'test-model',
+        onSetId: vi.fn()
+      })
+      mockUseDownloadWatcher.mockReturnValue({
+        percent: 0.01,
+        isDownloading: true,
+        downloadSized: 102,
+        downloadTotalSized: 10240
       })
 
       const { container } = render(
@@ -259,9 +290,15 @@ describe('ModelRecommendationsDownloadButton', () => {
     })
 
     it('shows 50% width at halfway', () => {
-      mockUseDownloadWatcherStore.mockImplementation((selector) => {
-        const state = { id: 'test-model', percent: 0.5 }
-        return selector(state)
+      mockUseDownloadWatcherStore.mockReturnValue({
+        id: 'test-model',
+        onSetId: vi.fn()
+      })
+      mockUseDownloadWatcher.mockReturnValue({
+        percent: 0.5,
+        isDownloading: true,
+        downloadSized: 5120,
+        downloadTotalSized: 10240
       })
 
       const { container } = render(
@@ -275,9 +312,15 @@ describe('ModelRecommendationsDownloadButton', () => {
     })
 
     it('shows 100% width when complete', () => {
-      mockUseDownloadWatcherStore.mockImplementation((selector) => {
-        const state = { id: 'test-model', percent: 1 }
-        return selector(state)
+      mockUseDownloadWatcherStore.mockReturnValue({
+        id: 'test-model',
+        onSetId: vi.fn()
+      })
+      mockUseDownloadWatcher.mockReturnValue({
+        percent: 1,
+        isDownloading: true,
+        downloadSized: 10240,
+        downloadTotalSized: 10240
       })
 
       const { container } = render(
@@ -291,38 +334,67 @@ describe('ModelRecommendationsDownloadButton', () => {
     })
   })
 
-  describe('Percentage Display', () => {
-    it('rounds percentage to nearest integer', () => {
-      mockUseDownloadWatcherStore.mockImplementation((selector) => {
-        const state = { id: 'test-model', percent: 0.456 }
-        return selector(state)
+  describe('Bytes Display', () => {
+    it('displays formatted bytes correctly', () => {
+      mockUseDownloadWatcherStore.mockReturnValue({
+        id: 'test-model',
+        onSetId: vi.fn()
+      })
+      mockUseDownloadWatcher.mockReturnValue({
+        percent: 0.456,
+        isDownloading: true,
+        downloadSized: 4669,
+        downloadTotalSized: 10240
+      })
+      mockFormatBytes.mockImplementation((bytes: number) => {
+        if (bytes === 4669) return '4.6 MB'
+        if (bytes === 10240) return '10 MB'
+        return `${bytes} bytes`
       })
 
       render(<ModelRecommendationsDownloadButton modelId="test-model" />)
 
-      expect(screen.getByText('Downloading... 46%')).toBeInTheDocument()
+      expect(screen.getByText('4.6 MB / 10 MB')).toBeInTheDocument()
     })
 
-    it('shows 0% at start', () => {
-      mockUseDownloadWatcherStore.mockImplementation((selector) => {
-        const state = { id: 'test-model', percent: 0.001 }
-        return selector(state)
+    it('shows 0 bytes at start', () => {
+      mockUseDownloadWatcherStore.mockReturnValue({
+        id: 'test-model',
+        onSetId: vi.fn()
+      })
+      mockUseDownloadWatcher.mockReturnValue({
+        percent: 0.001,
+        isDownloading: true,
+        downloadSized: 10,
+        downloadTotalSized: 10240
+      })
+      mockFormatBytes.mockImplementation((bytes: number) => {
+        if (bytes === 10) return '10 B'
+        if (bytes === 10240) return '10 MB'
+        return `${bytes} bytes`
       })
 
       render(<ModelRecommendationsDownloadButton modelId="test-model" />)
 
-      expect(screen.getByText('Downloading... 0%')).toBeInTheDocument()
+      expect(screen.getByText('10 B / 10 MB')).toBeInTheDocument()
     })
 
-    it('shows 100% when complete', () => {
-      mockUseDownloadWatcherStore.mockImplementation((selector) => {
-        const state = { id: 'test-model', percent: 1 }
-        return selector(state)
+    it('shows equal bytes when complete', () => {
+      mockUseDownloadWatcherStore.mockReturnValue({
+        id: 'test-model',
+        onSetId: vi.fn()
       })
+      mockUseDownloadWatcher.mockReturnValue({
+        percent: 1,
+        isDownloading: true,
+        downloadSized: 10240,
+        downloadTotalSized: 10240
+      })
+      mockFormatBytes.mockImplementation(() => '10 MB')
 
       render(<ModelRecommendationsDownloadButton modelId="test-model" />)
 
-      expect(screen.getByText('Downloading... 100%')).toBeInTheDocument()
+      expect(screen.getByText('10 MB / 10 MB')).toBeInTheDocument()
     })
   })
 
@@ -351,9 +423,15 @@ describe('ModelRecommendationsDownloadButton', () => {
     })
 
     it('applies transition classes to progress bar', () => {
-      mockUseDownloadWatcherStore.mockImplementation((selector) => {
-        const state = { id: 'test-model', percent: 0.5 }
-        return selector(state)
+      mockUseDownloadWatcherStore.mockReturnValue({
+        id: 'test-model',
+        onSetId: vi.fn()
+      })
+      mockUseDownloadWatcher.mockReturnValue({
+        percent: 0.5,
+        isDownloading: true,
+        downloadSized: 5120,
+        downloadTotalSized: 10240
       })
 
       const { container } = render(

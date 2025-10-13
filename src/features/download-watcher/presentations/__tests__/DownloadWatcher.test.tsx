@@ -37,16 +37,20 @@ vi.mock('@tanstack/react-query', async () => {
 
 describe('DownloadWatcher', () => {
   let useDownloadWatcherStoreSpy: MockInstance
-  let mockOnUpdatePercent: MockInstance
+  let mockOnUpdateStep: MockInstance
   let mockOnSetId: MockInstance
+  let mockOnResetStep: MockInstance
+  let mockOnResetId: MockInstance
   let mockQueryClient: Partial<QueryClient>
 
   const QueryClientWrapper = createQueryClientWrapper()
 
   beforeEach(() => {
     // Create mock functions
-    mockOnUpdatePercent = vi.fn()
+    mockOnUpdateStep = vi.fn()
     mockOnSetId = vi.fn()
+    mockOnResetStep = vi.fn()
+    mockOnResetId = vi.fn()
     mockQueryClient = {
       invalidateQueries: vi.fn()
     }
@@ -57,10 +61,12 @@ describe('DownloadWatcher', () => {
       'useDownloadWatcherStore'
     )
     useDownloadWatcherStoreSpy.mockReturnValue({
-      id: '',
-      percent: 0.0,
-      onUpdatePercent: mockOnUpdatePercent,
-      onSetId: mockOnSetId
+      id: undefined,
+      step: undefined,
+      onUpdateStep: mockOnUpdateStep,
+      onSetId: mockOnSetId,
+      onResetStep: mockOnResetStep,
+      onResetId: mockOnResetId
     })
 
     // Setup useQueryClient mock
@@ -140,7 +146,10 @@ describe('DownloadWatcher', () => {
     const progressData: DownloadStepProgressResponse = {
       id: 'model-456',
       step: 3,
-      total: 10
+      total: 10,
+      downloaded_size: 1024,
+      total_downloaded_size: 10240,
+      phase: 'downloading'
     }
 
     // Mock socket.on to immediately call the callback with test data
@@ -164,8 +173,7 @@ describe('DownloadWatcher', () => {
       </QueryClientWrapper>
     )
 
-    expect(mockOnUpdatePercent).toHaveBeenCalledWith(0.3) // 3/10 = 0.3
-    expect(mockOnSetId).toHaveBeenCalledWith('model-456')
+    expect(mockOnUpdateStep).toHaveBeenCalledWith(progressData)
   })
 
   it('handles DOWNLOAD_COMPLETED event correctly', () => {
@@ -187,8 +195,8 @@ describe('DownloadWatcher', () => {
       </QueryClientWrapper>
     )
 
-    expect(mockOnUpdatePercent).toHaveBeenCalledWith(0.0)
-    expect(mockOnSetId).toHaveBeenCalledWith('')
+    expect(mockOnResetStep).toHaveBeenCalled()
+    expect(mockOnResetId).toHaveBeenCalled()
     expect(mockQueryClient.invalidateQueries).toHaveBeenCalledWith({
       queryKey: ['getDownloadedModels']
     })
@@ -211,10 +219,31 @@ describe('DownloadWatcher', () => {
   })
 
   it('handles multiple progress updates correctly', () => {
-    const progressUpdates = [
-      { id: 'model-1', step: 1, total: 5 },
-      { id: 'model-1', step: 2, total: 5 },
-      { id: 'model-1', step: 3, total: 5 }
+    const progressUpdates: DownloadStepProgressResponse[] = [
+      {
+        id: 'model-1',
+        step: 1,
+        total: 5,
+        downloaded_size: 512,
+        total_downloaded_size: 2560,
+        phase: 'downloading'
+      },
+      {
+        id: 'model-1',
+        step: 2,
+        total: 5,
+        downloaded_size: 1024,
+        total_downloaded_size: 2560,
+        phase: 'downloading'
+      },
+      {
+        id: 'model-1',
+        step: 3,
+        total: 5,
+        downloaded_size: 1536,
+        total_downloaded_size: 2560,
+        phase: 'downloading'
+      }
     ]
 
     vi.mocked(socket.on).mockImplementation(
@@ -238,18 +267,20 @@ describe('DownloadWatcher', () => {
       </QueryClientWrapper>
     )
 
-    expect(mockOnUpdatePercent).toHaveBeenCalledTimes(3)
-    expect(mockOnUpdatePercent).toHaveBeenNthCalledWith(1, 0.2) // 1/5
-    expect(mockOnUpdatePercent).toHaveBeenNthCalledWith(2, 0.4) // 2/5
-    expect(mockOnUpdatePercent).toHaveBeenNthCalledWith(3, 0.6) // 3/5
-    expect(mockOnSetId).toHaveBeenCalledWith('model-1')
+    expect(mockOnUpdateStep).toHaveBeenCalledTimes(3)
+    expect(mockOnUpdateStep).toHaveBeenNthCalledWith(1, progressUpdates[0])
+    expect(mockOnUpdateStep).toHaveBeenNthCalledWith(2, progressUpdates[1])
+    expect(mockOnUpdateStep).toHaveBeenNthCalledWith(3, progressUpdates[2])
   })
 
   it('handles edge case with zero total in progress event', () => {
     const progressData: DownloadStepProgressResponse = {
       id: 'model-edge',
       step: 1,
-      total: 0
+      total: 0,
+      downloaded_size: 0,
+      total_downloaded_size: 0,
+      phase: 'downloading'
     }
 
     vi.mocked(socket.on).mockImplementation(
@@ -272,8 +303,7 @@ describe('DownloadWatcher', () => {
       </QueryClientWrapper>
     )
 
-    expect(mockOnUpdatePercent).toHaveBeenCalledWith(Infinity) // 1/0 = Infinity
-    expect(mockOnSetId).toHaveBeenCalledWith('model-edge')
+    expect(mockOnUpdateStep).toHaveBeenCalledWith(progressData)
   })
 
   it('maintains proper dependency array for useEffect', () => {
