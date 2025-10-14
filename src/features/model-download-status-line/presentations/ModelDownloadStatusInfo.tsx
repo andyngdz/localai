@@ -12,7 +12,7 @@ export const ModelDownloadStatusInfo: FC<ModelDownloadStatusInfoProps> = ({
   const { downloadSized, downloadTotalSized, currentFile } =
     useDownloadWatcher(id)
 
-  if (downloadTotalSized <= 0) return
+  if (downloadTotalSized <= 0) return null
 
   return (
     <div className="flex justify-between items-center px-4">

@@ -11,7 +11,7 @@ export const ModelDownloadStatusLineIndicator: FC<
 > = ({ id }) => {
   const { percent } = useDownloadWatcher(id)
 
-  if (percent <= 0) return
+  if (percent <= 0) return null
 
   return (
     <div className="ml-0.5 mr-0.5 absolute flex flex-col h-1 inset-0">

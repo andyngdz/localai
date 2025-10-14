@@ -6,7 +6,7 @@ export const useDownloadWatcher = (watchId: string) => {
   const isDownloading = id === watchId
 
   const percent = useMemo(() => {
-    if (step) {
+    if (step && step.total_downloaded_size > 0) {
       return step.downloaded_size / step.total_downloaded_size
     }
 
