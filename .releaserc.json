@@ -1,6 +1,6 @@
 {
   "branches": [
-    "main",
+    "release",
     {
       "name": "main",
       "prerelease": true
@@ -91,6 +91,13 @@
             }
           ]
         }
+      }
+    ],
+    [
+      "@semantic-release/exec",
+      {
+        "verifyReleaseCmd": "echo ${nextRelease.version} > .VERSION",
+        "prepareCmd": "sed -i 's/version = \".*\"/version = \"${nextRelease.version}\"/' pyproject.toml"
       }
     ],
     "@semantic-release/github"
