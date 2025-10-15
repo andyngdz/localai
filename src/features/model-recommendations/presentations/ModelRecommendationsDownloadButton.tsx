@@ -20,7 +20,7 @@ export const ModelRecommendationsDownloadButton: FC<
   const { id } = useDownloadWatcherStore()
   const { percent, isDownloading, downloadSized, downloadTotalSized } =
     useDownloadWatcher(modelId)
-  const isDisabled = !!id && modelId !== id
+  const isDisabled = isDownloading || (!!id && modelId !== id)
 
   const onDownload = async () => {
     await api.downloadModel(modelId)
