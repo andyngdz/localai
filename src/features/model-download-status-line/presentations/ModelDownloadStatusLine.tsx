@@ -1,6 +1,7 @@
-import { useDownloadWatcher } from '@/features/download-watcher'
-import { Divider, Skeleton } from '@heroui/react'
-import { FC, useMemo } from 'react'
+import { Divider } from '@heroui/react'
+import { FC } from 'react'
+import { ModelDownloadStatusInfo } from './ModelDownloadStatusInfo'
+import { ModelDownloadStatusLineIndicator } from './ModelDownloadStatusLineIndicator'
 
 export interface ModelDownloadStatusLineProps {
   id: string
@@ -9,28 +10,13 @@ export interface ModelDownloadStatusLineProps {
 export const ModelDownloadStatusLine: FC<ModelDownloadStatusLineProps> = ({
   id
 }) => {
-  const { percent } = useDownloadWatcher(id)
-
-  const Indicator = useMemo(() => {
-    if (percent <= 0) return
-
-    return (
-      <div className="ml-0.5 mr-0.5 absolute flex flex-col h-1 inset-0">
-        <Skeleton className="h-full w-full absolute" />
-        <div
-          className={
-            'h-full absolute bg-primary transition-all duration-500 ease-in-out'
-          }
-          style={{ width: `${percent * 100}%` }}
-        />
-      </div>
-    )
-  }, [percent])
-
   return (
-    <div className="relative w-full">
-      <Divider className="h-1" />
-      {Indicator}
+    <div className="flex flex-col gap-2">
+      <ModelDownloadStatusInfo id={id} />
+      <div className="relative w-full">
+        <Divider className="h-1" />
+        <ModelDownloadStatusLineIndicator id={id} />
+      </div>
     </div>
   )
 }

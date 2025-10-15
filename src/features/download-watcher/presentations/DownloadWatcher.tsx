@@ -12,7 +12,8 @@ import { useDownloadWatcherStore } from '../states'
 
 export const DownloadWatcher: FC<PropsWithChildren> = ({ children }) => {
   const queryClient = useQueryClient()
-  const { onUpdatePercent, onSetId } = useDownloadWatcherStore()
+  const { onUpdateStep, onSetId, onResetStep, onResetId } =
+    useDownloadWatcherStore()
 
   useEffect(() => {
     socket.on(
@@ -24,17 +25,14 @@ export const DownloadWatcher: FC<PropsWithChildren> = ({ children }) => {
 
     socket.on(
       SocketEvents.DOWNLOAD_STEP_PROGRESS,
-      (data: DownloadStepProgressResponse) => {
-        const { id, step, total } = data
-
-        onUpdatePercent(step / total)
-        onSetId(id)
+      (step: DownloadStepProgressResponse) => {
+        onUpdateStep(step)
       }
     )
 
     socket.on(SocketEvents.DOWNLOAD_COMPLETED, () => {
-      onUpdatePercent(0.0)
-      onSetId('')
+      onResetStep()
+      onResetId()
       queryClient.invalidateQueries({
         queryKey: ['getDownloadedModels']
       })
@@ -45,7 +43,7 @@ export const DownloadWatcher: FC<PropsWithChildren> = ({ children }) => {
       socket.off(SocketEvents.DOWNLOAD_STEP_PROGRESS)
       socket.off(SocketEvents.DOWNLOAD_COMPLETED)
     }
-  }, [queryClient, onUpdatePercent, onSetId])
+  }, [queryClient, onSetId, onUpdateStep, onResetStep, onResetId])
 
   return children
 }

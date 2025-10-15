@@ -1,19 +1,21 @@
+import { DownloadStepProgressResponse } from '@/sockets'
 import { create } from 'zustand'
 
 export interface UseDownloadWatcherStore {
-  id: string
-  percent: number
+  id?: string
+  step?: DownloadStepProgressResponse
 
-  onUpdatePercent: (percent: number) => void
+  onUpdateStep: (step: DownloadStepProgressResponse) => void
   onSetId: (id: string) => void
+  onResetStep: VoidFunction
+  onResetId: VoidFunction
 }
 
 export const useDownloadWatcherStore = create<UseDownloadWatcherStore>(
   (set) => ({
-    id: '',
-    percent: 0.0,
-
-    onUpdatePercent: (percent: number) => set({ percent }),
-    onSetId: (id: string) => set({ id })
+    onUpdateStep: (step) => set({ step }),
+    onSetId: (id: string) => set({ id }),
+    onResetStep: () => set({ step: undefined }),
+    onResetId: () => set({ id: undefined })
   })
 )

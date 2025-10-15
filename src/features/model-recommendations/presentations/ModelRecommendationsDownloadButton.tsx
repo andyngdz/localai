@@ -1,7 +1,10 @@
 'use client'
 
-import { useDownloadWatcherStore } from '@/features/download-watcher'
-import { api } from '@/services'
+import {
+  useDownloadWatcher,
+  useDownloadWatcherStore
+} from '@/features/download-watcher'
+import { api, formatter } from '@/services'
 import { Button } from '@heroui/react'
 import clsx from 'clsx'
 import { Download } from 'lucide-react'
@@ -14,10 +17,10 @@ interface ModelRecommendationsDownloadButtonProps {
 export const ModelRecommendationsDownloadButton: FC<
   ModelRecommendationsDownloadButtonProps
 > = ({ modelId }) => {
-  const downloadingId = useDownloadWatcherStore((state) => state.id)
-  const downloadPercent = useDownloadWatcherStore((state) => state.percent)
-  const isDownloading = downloadingId === modelId
-  const isDisabled = !!downloadingId && !isDownloading
+  const { id } = useDownloadWatcherStore()
+  const { percent, isDownloading, downloadSized, downloadTotalSized } =
+    useDownloadWatcher(modelId)
+  const isDisabled = isDownloading || (!!id && modelId !== id)
 
   const onDownload = async () => {
     await api.downloadModel(modelId)
@@ -28,7 +31,7 @@ export const ModelRecommendationsDownloadButton: FC<
       {isDownloading && (
         <div
           className="absolute inset-0 bg-primary/30 transition-all duration-300"
-          style={{ width: `${downloadPercent * 100}%` }}
+          style={{ width: `${percent * 100}%` }}
         />
       )}
       <Button
@@ -47,8 +50,10 @@ export const ModelRecommendationsDownloadButton: FC<
           })}
         >
           {isDownloading
-            ? `Downloading... ${Math.round(downloadPercent * 100)}%`
-            : 'Download'}
+            ? `${formatter.bytes(downloadSized)} / ${formatter.bytes(
+                downloadTotalSized
+              )}`
+            : 'Download Model'}
         </span>
       </Button>
     </div>
