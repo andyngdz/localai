@@ -184,11 +184,11 @@ describe('ModelRecommendationsDownloadButton', () => {
       expect(button).toHaveAttribute('data-variant', 'bordered')
     })
 
-    it('is not disabled when this model is downloading', () => {
+    it('is disabled when this model is downloading', () => {
       render(<ModelRecommendationsDownloadButton modelId="test-model" />)
 
       const button = screen.getByTestId('download-button')
-      expect(button).not.toBeDisabled()
+      expect(button).toBeDisabled()
     })
 
     it('shows progress bar with correct width', () => {
