@@ -51,6 +51,13 @@ const createElectronAPIMock = (): ElectronAPI => ({
     stopLogStream: vi.fn().mockResolvedValue(undefined),
     isLogStreaming: vi.fn().mockResolvedValue(false),
     onLog: vi.fn().mockReturnValue(noop)
+  },
+  updater: {
+    checkForUpdates: vi.fn().mockResolvedValue(undefined),
+    downloadUpdate: vi.fn().mockResolvedValue(undefined),
+    installUpdate: vi.fn().mockResolvedValue(undefined),
+    getUpdateInfo: vi.fn().mockResolvedValue({ updateAvailable: false }),
+    onUpdateStatus: vi.fn().mockReturnValue(() => {})
   }
 })
 

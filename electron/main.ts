@@ -7,6 +7,13 @@ import {
   startLogStreaming,
   stopLogStreaming
 } from './log-streamer'
+import {
+  checkForUpdates,
+  downloadUpdate,
+  getUpdateInfo,
+  installUpdate,
+  setMainWindow
+} from './updater'
 
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true'
 process.env.IBUS_USE_PORTAL = '1'
@@ -47,7 +54,16 @@ const onCreateWindow = async () => {
     return { action: 'deny' }
   })
 
-  win.once('ready-to-show', () => win.show())
+  win.once('ready-to-show', () => {
+    win.show()
+
+    // Set main window for updater and check for updates
+    if (IS_PRODUCTION) {
+      setMainWindow(win)
+      // Check for updates 5 seconds after window is ready
+      setTimeout(() => checkForUpdates(), 5000)
+    }
+  })
 
   if (IS_PRODUCTION && appServe) {
     await appServe(win)
@@ -87,6 +103,24 @@ const onLogStreaming = () => {
   })
 }
 
+const onAutoUpdate = () => {
+  ipcMain.handle('updater:check', () => {
+    checkForUpdates()
+  })
+
+  ipcMain.handle('updater:download', () => {
+    downloadUpdate()
+  })
+
+  ipcMain.handle('updater:install', () => {
+    installUpdate()
+  })
+
+  ipcMain.handle('updater:get-info', () => {
+    return getUpdateInfo()
+  })
+}
+
 const gotLock = app.requestSingleInstanceLock()
 
 if (!gotLock) {
@@ -107,6 +141,7 @@ if (!gotLock) {
     await onCreateWindow()
     onDownloadImage()
     onLogStreaming()
+    onAutoUpdate()
 
     if (process.env.SKIP_BACKEND !== 'true') {
       startBackend({ userDataPath: app.getPath('userData') })

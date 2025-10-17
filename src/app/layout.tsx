@@ -4,7 +4,7 @@ import { StreamingMessage } from '@/features/streaming-messages/presentations/St
 import clsx from 'clsx'
 import type { Metadata } from 'next'
 import { Inter, JetBrains_Mono } from 'next/font/google'
-import { unstable_ViewTransition as ViewTransition } from 'react'
+import { ViewTransition } from 'react'
 import { AppLayout } from './app-layout'
 import { Providers } from './providers'
 

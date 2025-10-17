@@ -5,6 +5,17 @@ import RootLayout, { metadata } from '../layout'
 // Mock the CSS import
 vi.mock('../globals.css', () => ({}))
 
+// Mock ViewTransition component
+vi.mock('react', async () => {
+  const actual = await vi.importActual<typeof import('react')>('react')
+  return {
+    ...actual,
+    ViewTransition: ({ children }: { children: React.ReactNode }) => (
+      <div data-testid="view-transition">{children}</div>
+    )
+  }
+})
+
 // Mock the components and providers
 vi.mock('../providers', () => ({
   Providers: ({ children }: { children: React.ReactNode }) => (
@@ -15,16 +26,6 @@ vi.mock('../providers', () => ({
 vi.mock('@/features/streaming-messages/presentations/StreamingMessage', () => ({
   StreamingMessage: () => <div data-testid="streaming-message" />
 }))
-
-vi.mock('react', async () => {
-  const actual = await vi.importActual('react')
-  return {
-    ...actual,
-    unstable_ViewTransition: ({ children }: { children: React.ReactNode }) => (
-      <div data-testid="view-transition">{children}</div>
-    )
-  }
-})
 
 vi.mock('next/font/google', () => ({
   Inter: () => ({
