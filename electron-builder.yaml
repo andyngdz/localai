@@ -2,7 +2,7 @@ appId: 'dev.andyng.localai'
 productName: 'LocalAI'
 copyright: 'Copyright (c) 2025 Andy Ng'
 asar: true
-compression: 'maximum'
+compression: 'normal'
 electronLanguages:
   - 'en-US'
 files:
