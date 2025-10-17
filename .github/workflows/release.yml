@@ -4,10 +4,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    types:
-      - closed
-    branches:
       - release
 
 permissions:
@@ -21,7 +17,7 @@ env:
 jobs:
   build:
     name: Build for ${{ matrix.os }}
-    if: github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'release'
+    if: github.ref == 'refs/heads/release'
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -106,21 +102,21 @@ jobs:
         run: npm ci --prefer-offline --no-audit --no-fund
 
       - name: Download Windows Artifacts
-        if: github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'release'
+        if: github.ref == 'refs/heads/release'
         uses: actions/download-artifact@v4
         with:
           name: windows-build
           path: ./release-artifacts/windows
 
       - name: Download macOS Artifacts
-        if: github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'release'
+        if: github.ref == 'refs/heads/release'
         uses: actions/download-artifact@v4
         with:
           name: macos-build
           path: ./release-artifacts/macos
 
       - name: Download Linux Artifacts
-        if: github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'release'
+        if: github.ref == 'refs/heads/release'
         uses: actions/download-artifact@v4
         with:
           name: linux-build
