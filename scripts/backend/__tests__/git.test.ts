@@ -85,11 +85,11 @@ describe('git helpers', () => {
       await cloneRepository(
         'https://example.com/repo.git',
         '/tmp/repo',
-        'stable'
+        'release'
       )
 
       expect(recordedCommands).toStrictEqual([
-        'git clone --branch stable --single-branch https://example.com/repo.git /tmp/repo'
+        'git clone --branch release --single-branch https://example.com/repo.git /tmp/repo'
       ])
     })
   })
