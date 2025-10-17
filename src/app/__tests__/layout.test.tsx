@@ -5,16 +5,12 @@ import RootLayout, { metadata } from '../layout'
 // Mock the CSS import
 vi.mock('../globals.css', () => ({}))
 
-// Mock ViewTransition component
-vi.mock('react', async () => {
-  const actual = await vi.importActual<typeof import('react')>('react')
-  return {
-    ...actual,
-    ViewTransition: ({ children }: { children: React.ReactNode }) => (
-      <div data-testid="view-transition">{children}</div>
-    )
-  }
-})
+// Mock ViewTransitionBoundary component
+vi.mock('../view-transition-boundary', () => ({
+  ViewTransitionBoundary: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="view-transition">{children}</div>
+  )
+}))
 
 // Mock the components and providers
 vi.mock('../providers', () => ({

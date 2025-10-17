@@ -1,6 +1,6 @@
 'use client'
 
-import { DownloadWatcher } from '@/features/download-watcher/presentations/DownloadWatcher'
+import { DownloadWatcher } from '@/features/download-watcher'
 import { HeroUIProvider, ToastProvider } from '@heroui/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
