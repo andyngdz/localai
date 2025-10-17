@@ -1,5 +1,5 @@
 import { GeneratorConfigFormValues } from '@/features/generator-configs/types/generator-config'
-import { Textarea } from '@heroui/input'
+import { Textarea } from '@heroui/react'
 import { useFormContext } from 'react-hook-form'
 
 export const GeneratorPrompt = () => {

@@ -1,7 +1,7 @@
 'use client'
 
 import { useDownloadWatcherStore } from '@/features/download-watcher'
-import { SetupLayout } from '@/features/setup-layout/presentations/SetupLayout'
+import { SetupLayout } from '@/features/setup-layout'
 import { useRouter } from 'next/navigation'
 import { useModelRecommendation } from '../states/useModelRecommendation'
 import { ModelRecommendationsList } from './ModelRecommendationsList'

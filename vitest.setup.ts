@@ -2,6 +2,7 @@ import '@testing-library/jest-dom/vitest'
 import 'core-js/actual'
 import type React from 'react'
 import { afterEach, beforeEach, vi } from 'vitest'
+import 'vitest-localstorage-mock'
 
 /**
  * Global Mocks
@@ -51,6 +52,13 @@ const createElectronAPIMock = (): ElectronAPI => ({
     stopLogStream: vi.fn().mockResolvedValue(undefined),
     isLogStreaming: vi.fn().mockResolvedValue(false),
     onLog: vi.fn().mockReturnValue(noop)
+  },
+  updater: {
+    checkForUpdates: vi.fn().mockResolvedValue(undefined),
+    downloadUpdate: vi.fn().mockResolvedValue(undefined),
+    installUpdate: vi.fn().mockResolvedValue(undefined),
+    getUpdateInfo: vi.fn().mockResolvedValue({ updateAvailable: false }),
+    onUpdateStatus: vi.fn().mockReturnValue(() => {})
   }
 })
 

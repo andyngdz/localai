@@ -18,6 +18,7 @@ const cleanElectronOutputs = async () => {
     rm(join(electronDir, 'main.js'), { force: true }),
     rm(join(electronDir, 'preload.cjs'), { force: true }),
     rm(join(electronDir, 'preload.js'), { force: true }),
+    rm(join(electronDir, 'updater.js'), { force: true }),
     rm(join(electronDir, 'scripts'), { recursive: true, force: true }),
     rm(join(electronDir, 'types'), { recursive: true, force: true })
   ])
@@ -41,14 +42,14 @@ const patchMainImport = async () => {
 }
 
 const relocateCompiledArtifacts = async () => {
-  await rename(join(electronBuildDir, 'main.js'), join(electronDir, 'main.js'))
-  await rename(
-    join(electronBuildDir, 'preload.js'),
-    join(electronDir, 'preload.js')
-  )
-  await rename(
-    join(electronBuildDir, 'log-streamer.js'),
-    join(electronDir, 'log-streamer.js')
+  const artifacts = ['main.js', 'preload.js', 'log-streamer.js', 'updater.js']
+
+  await Promise.all(
+    artifacts.map(async (file) => {
+      const source = join(electronBuildDir, file)
+      const destination = join(electronDir, file)
+      await rename(source, destination)
+    })
   )
 }
 
