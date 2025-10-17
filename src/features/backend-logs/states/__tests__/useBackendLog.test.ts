@@ -50,6 +50,13 @@ describe('useBackendLog', () => {
         stopLogStream: mockStopLogStream.mockResolvedValue(undefined),
         isLogStreaming: mockIsLogStreaming.mockResolvedValue(false),
         onLog: mockOnLog.mockReturnValue(() => {})
+      },
+      updater: {
+        checkForUpdates: vi.fn().mockResolvedValue(undefined),
+        downloadUpdate: vi.fn().mockResolvedValue(undefined),
+        installUpdate: vi.fn().mockResolvedValue(undefined),
+        getUpdateInfo: vi.fn().mockResolvedValue({ updateAvailable: false }),
+        onUpdateStatus: vi.fn().mockReturnValue(() => {})
       }
     } as ElectronAPI
   })

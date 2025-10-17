@@ -1,6 +1,6 @@
 'use client'
 
-import { Generator } from '@/features/generators/presentations/Generator'
+import { Generator } from '@/features/generators'
 import { EditorNavbar } from './EditorNavbar'
 
 export const Editor = () => {

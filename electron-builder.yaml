@@ -14,13 +14,22 @@ files:
   - '!src/**'
   - '!scripts/**'
   - '!**/*.md'
+publish:
+  provider: 'github'
+  owner: 'andyngdz'
+  repo: 'localai'
+  releaseType: 'release'
 win:
-  target: ['dir', 'portable', 'zip']
+  target: ['nsis', 'portable', 'zip']
   icon: 'src/assets/logo.png'
 linux:
-  target: ['dir', 'appimage', 'deb', 'zip']
+  target: ['appimage', 'deb', 'zip']
   icon: 'src/assets/logo.png'
   category: 'Graphics'
 mac:
-  target: ['dir', 'dmg', 'zip']
+  target: ['dmg', 'zip']
   icon: 'src/assets/logo.png'
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  entitlements: 'build/entitlements.mac.plist'
+  entitlementsInherit: 'build/entitlements.mac.plist'

@@ -1,9 +1,10 @@
-import { contextBridge, ipcRenderer } from 'electron'
 import type {
   BackendStatusEmitter,
   BackendStatusPayload,
-  LogEntry
+  LogEntry,
+  UpdateInfo
 } from '@types'
+import { contextBridge, ipcRenderer } from 'electron'
 
 contextBridge.exposeInMainWorld('electronAPI', {
   downloadImage: (url: string) => ipcRenderer.invoke('download-image', url),
@@ -38,6 +39,23 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
       return () => {
         ipcRenderer.removeListener('backend:log', subscription)
+      }
+    }
+  },
+  updater: {
+    checkForUpdates: () => ipcRenderer.invoke('updater:check'),
+    downloadUpdate: () => ipcRenderer.invoke('updater:download'),
+    installUpdate: () => ipcRenderer.invoke('updater:install'),
+    getUpdateInfo: () => ipcRenderer.invoke('updater:get-info'),
+    onUpdateStatus: (listener: (info: UpdateInfo) => void) => {
+      const subscription = (_: Electron.IpcRendererEvent, info: UpdateInfo) => {
+        listener(info)
+      }
+
+      ipcRenderer.on('update-status', subscription)
+
+      return () => {
+        ipcRenderer.removeListener('update-status', subscription)
       }
     }
   }

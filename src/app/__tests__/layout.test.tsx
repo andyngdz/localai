@@ -5,6 +5,12 @@ import RootLayout, { metadata } from '../layout'
 // Mock the CSS import
 vi.mock('../globals.css', () => ({}))
 
+vi.mock('../app-layout', () => ({
+  AppLayout: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="app-layout">{children}</div>
+  )
+}))
+
 // Mock the components and providers
 vi.mock('../providers', () => ({
   Providers: ({ children }: { children: React.ReactNode }) => (
@@ -15,16 +21,6 @@ vi.mock('../providers', () => ({
 vi.mock('@/features/streaming-messages/presentations/StreamingMessage', () => ({
   StreamingMessage: () => <div data-testid="streaming-message" />
 }))
-
-vi.mock('react', async () => {
-  const actual = await vi.importActual('react')
-  return {
-    ...actual,
-    unstable_ViewTransition: ({ children }: { children: React.ReactNode }) => (
-      <div data-testid="view-transition">{children}</div>
-    )
-  }
-})
 
 vi.mock('next/font/google', () => ({
   Inter: () => ({
@@ -45,7 +41,7 @@ describe('RootLayout', () => {
 
     // Check basic structure
     expect(screen.getByTestId('providers')).toBeInTheDocument()
-    expect(screen.getByTestId('view-transition')).toBeInTheDocument()
+    expect(screen.getByTestId('app-layout')).toBeInTheDocument()
     expect(screen.getByTestId('streaming-message')).toBeInTheDocument()
     expect(screen.getByTestId('test-children')).toBeInTheDocument()
   })
@@ -82,16 +78,6 @@ describe('RootLayout', () => {
 
     expect(screen.getByTestId('providers')).toBeInTheDocument()
     expect(screen.getByTestId('child-content')).toBeInTheDocument()
-  })
-
-  it('applies ViewTransition wrapper', () => {
-    render(
-      <RootLayout>
-        <div>Test</div>
-      </RootLayout>
-    )
-
-    expect(screen.getByTestId('view-transition')).toBeInTheDocument()
   })
 })
 

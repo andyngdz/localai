@@ -20,8 +20,8 @@ vi.mock('react-hook-form', () => ({
   })
 }))
 
-// Mock @heroui/input
-vi.mock('@heroui/input', () => ({
+// Mock @heroui/react
+vi.mock('@heroui/react', () => ({
   Textarea: ({
     label,
     className,
