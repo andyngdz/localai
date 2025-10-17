@@ -1,7 +1,7 @@
 // Electron API types shared between main process, preload, and frontend
 
-import type { BackendStatusEmitter } from './backend'
-import type { LogEntry } from './logging'
+import { BackendStatusEmitter } from './backend'
+import { LogEntry } from './logging'
 import { UpdateInfo } from './update'
 
 export interface ElectronAPI {

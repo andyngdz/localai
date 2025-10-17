@@ -1,9 +1,9 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { join } from 'path'
 import * as fs from 'fs/promises'
-import { compileElectron, startElectron } from '../electron'
+import { join } from 'path'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { startDesktopDev } from '../desktop'
 import { concurrentlyArgs, startFullDev } from '../devall'
+import { compileElectron, startElectron } from '../electron'
 
 const { mock$, recordedCommands } = vi.hoisted(() => {
   return {
@@ -87,6 +87,9 @@ describe('electron toolchain', () => {
       expect(mockRm).toHaveBeenCalledWith(join(electronDir, 'preload.js'), {
         force: true
       })
+      expect(mockRm).toHaveBeenCalledWith(join(electronDir, 'updater.js'), {
+        force: true
+      })
       expect(mockRm).toHaveBeenCalledWith(join(electronDir, 'scripts'), {
         recursive: true,
         force: true
@@ -114,6 +117,10 @@ describe('electron toolchain', () => {
       expect(mockRename).toHaveBeenCalledWith(
         join(electronBuildDir, 'log-streamer.js'),
         join(electronDir, 'log-streamer.js')
+      )
+      expect(mockRename).toHaveBeenCalledWith(
+        join(electronBuildDir, 'updater.js'),
+        join(electronDir, 'updater.js')
       )
 
       expect(mockRm).toHaveBeenCalledWith(runtimeTypesDir, {
@@ -209,7 +216,7 @@ describe('electron toolchain', () => {
       await compileElectron()
 
       expect(cleanupObserved).toBe(true)
-      expect(mockRm).toHaveBeenCalledTimes(8)
+      expect(mockRm).toHaveBeenCalledTimes(9)
     })
   })
 

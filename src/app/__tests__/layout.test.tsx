@@ -5,10 +5,9 @@ import RootLayout, { metadata } from '../layout'
 // Mock the CSS import
 vi.mock('../globals.css', () => ({}))
 
-// Mock ViewTransitionBoundary component
-vi.mock('../view-transition-boundary', () => ({
-  ViewTransitionBoundary: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="view-transition">{children}</div>
+vi.mock('../app-layout', () => ({
+  AppLayout: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="app-layout">{children}</div>
   )
 }))
 
@@ -42,7 +41,7 @@ describe('RootLayout', () => {
 
     // Check basic structure
     expect(screen.getByTestId('providers')).toBeInTheDocument()
-    expect(screen.getByTestId('view-transition')).toBeInTheDocument()
+    expect(screen.getByTestId('app-layout')).toBeInTheDocument()
     expect(screen.getByTestId('streaming-message')).toBeInTheDocument()
     expect(screen.getByTestId('test-children')).toBeInTheDocument()
   })
@@ -79,16 +78,6 @@ describe('RootLayout', () => {
 
     expect(screen.getByTestId('providers')).toBeInTheDocument()
     expect(screen.getByTestId('child-content')).toBeInTheDocument()
-  })
-
-  it('applies ViewTransition wrapper', () => {
-    render(
-      <RootLayout>
-        <div>Test</div>
-      </RootLayout>
-    )
-
-    expect(screen.getByTestId('view-transition')).toBeInTheDocument()
   })
 })
 
