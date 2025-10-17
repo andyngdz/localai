@@ -97,6 +97,7 @@
     "typescript": "^5.9.3",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.2.4",
+    "vitest-localstorage-mock": "^0.1.2",
     "vitest-sonar-reporter": "^2.0.4",
     "wait-on": "^9.0.1"
   }

@@ -2,6 +2,7 @@ import '@testing-library/jest-dom/vitest'
 import 'core-js/actual'
 import type React from 'react'
 import { afterEach, beforeEach, vi } from 'vitest'
+import 'vitest-localstorage-mock'
 
 /**
  * Global Mocks
