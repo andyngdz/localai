@@ -96,12 +96,12 @@ describe('git helpers', () => {
 
   describe('updateRepository', () => {
     it('fetches, checks out, and resets the target branch inside repo path', async () => {
-      await updateRepository('/tmp/repo', 'stable')
+      await updateRepository('/tmp/repo', 'release')
 
       expect(recordedCommands).toStrictEqual([
-        'git fetch origin stable',
-        'git checkout stable',
-        'git reset --hard origin/stable'
+        'git fetch origin release',
+        'git checkout release',
+        'git reset --hard origin/release'
       ])
       expect(cwdSnapshots).toStrictEqual([
         '/tmp/repo',
