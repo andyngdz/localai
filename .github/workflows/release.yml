@@ -48,6 +48,8 @@ jobs:
 
       - name: Build Electron App
         run: npm run build
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Windows Artifacts
         if: matrix.platform == 'windows'
