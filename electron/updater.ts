@@ -7,7 +7,7 @@ import { autoUpdater } from 'electron-updater'
 autoUpdater.logger = log
 log.transports.file.level = 'info'
 
-let mainWindow: BrowserWindow | null = null
+let mainWindow: BrowserWindow
 let updateInfo: UpdateInfo = { updateAvailable: false }
 
 export function setMainWindow(win: BrowserWindow) {
@@ -87,7 +87,7 @@ autoUpdater.on('update-downloaded', (info) => {
 })
 
 function sendUpdateStatus() {
-  if (mainWindow && !mainWindow.isDestroyed()) {
+  if (!mainWindow.isDestroyed()) {
     mainWindow.webContents.send('update-status', updateInfo)
   }
 }
