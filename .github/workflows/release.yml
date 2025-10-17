@@ -125,4 +125,5 @@ jobs:
       - name: Run semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ARTIFACTS_EXIST: ${{ github.ref == 'refs/heads/release' }}
         run: npx semantic-release
