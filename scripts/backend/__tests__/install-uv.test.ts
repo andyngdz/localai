@@ -1,5 +1,6 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { BackendStatusLevel } from '@types'
+import * as path from 'node:path'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 const { mock$ } = vi.hoisted(() => ({
   mock$: vi.fn()
@@ -13,6 +14,10 @@ const { mockNormalizeError } = vi.hoisted(() => ({
   mockNormalizeError: vi.fn<(error: unknown, defaultMessage: string) => Error>()
 }))
 
+const { mockEnsurePathIncludes } = vi.hoisted(() => ({
+  mockEnsurePathIncludes: vi.fn<(directories: string[]) => void>()
+}))
+
 let mockIsWindows = false
 
 vi.mock('../utils', async () => {
@@ -22,6 +27,7 @@ vi.mock('../utils', async () => {
     get isWindows() {
       return mockIsWindows
     },
+    ensurePathIncludes: mockEnsurePathIncludes,
     normalizeError: mockNormalizeError
   }
 })
@@ -47,12 +53,20 @@ describe('installUv', () => {
   beforeEach(() => {
     mock$.mockReset()
     mockNormalizeError.mockReset()
+    mockEnsurePathIncludes.mockReset()
 
     mockIsWindows = false
     mockNormalizeError.mockImplementation(
       (error: unknown, defaultMessage: string) =>
         error instanceof Error ? error : new Error(defaultMessage)
     )
+
+    vi.unstubAllEnvs()
+    vi.stubEnv('HOME', '/home/tester')
+  })
+
+  afterEach(() => {
+    vi.unstubAllEnvs()
   })
 
   it('returns the detected uv version when already installed', async () => {
@@ -71,6 +85,9 @@ describe('installUv', () => {
     })
     expect(mock$).toHaveBeenCalledTimes(1)
     expect(mockNormalizeError).not.toHaveBeenCalled()
+    expect(mockEnsurePathIncludes).toHaveBeenCalledWith([
+      path.join('/home/tester', '.local', 'bin')
+    ])
   })
 
   it('installs uv on Unix-like systems when missing', async () => {
@@ -105,6 +122,9 @@ describe('installUv', () => {
       message: 'uv 0.9.0 installed successfully.'
     })
     expect(mock$).toHaveBeenCalledTimes(3)
+    expect(mockEnsurePathIncludes).toHaveBeenCalledWith([
+      path.join('/home/tester', '.local', 'bin')
+    ])
   })
 
   it('uses the Windows installation command when running on Windows', async () => {
@@ -138,6 +158,9 @@ describe('installUv', () => {
       level: BackendStatusLevel.Info,
       message: 'uv 1.1.0 installed successfully.'
     })
+    expect(mockEnsurePathIncludes).toHaveBeenCalledWith([
+      path.join('/home/tester', '.local', 'bin')
+    ])
   })
 
   it('emits an error with manual commands when installation fails', async () => {
@@ -174,6 +197,9 @@ describe('installUv', () => {
       installError,
       'Failed to install uv via provided command.'
     )
+    expect(mockEnsurePathIncludes).toHaveBeenCalledWith([
+      path.join('/home/tester', '.local', 'bin')
+    ])
   })
 
   it('throws when version cannot be detected after installation', async () => {
@@ -200,5 +226,8 @@ describe('installUv', () => {
       level: BackendStatusLevel.Error,
       message: 'uv installation finished but version could not be detected.'
     })
+    expect(mockEnsurePathIncludes).toHaveBeenCalledWith([
+      path.join('/home/tester', '.local', 'bin')
+    ])
   })
 })
