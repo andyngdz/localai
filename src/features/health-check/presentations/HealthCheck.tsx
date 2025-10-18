@@ -1,16 +1,18 @@
 'use client'
 
 import { DeviceSelection } from '@/cores/constants'
+import { SetupLayout } from '@/features/setup-layout/presentations'
 import { api, useHealthQuery } from '@/services'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect } from 'react'
+import { useBackendSetupStatus } from '../states/useBackendSetupStatus'
 import { HealthCheckContent } from './HealthCheckContent'
-import { SetupLayout } from '@/features/setup-layout/presentations'
 
 export const HealthCheck = () => {
   const router = useRouter()
   const { data } = useHealthQuery()
   const isHealthy = !!data
+  const { entries } = useBackendSetupStatus()
 
   const onNext = () => {
     if (isHealthy) {
@@ -39,7 +41,7 @@ export const HealthCheck = () => {
       onNext={onNext}
       isNextDisabled={!isHealthy}
     >
-      <HealthCheckContent isHealthy={isHealthy} />
+      <HealthCheckContent isHealthy={isHealthy} statuses={entries} />
     </SetupLayout>
   )
 }

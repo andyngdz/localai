@@ -1,20 +1,24 @@
-import React from 'react'
 import { DeviceSelection } from '@/cores/constants'
 import {
   createMockQuery,
   renderWithAct,
   setupRouterMock
 } from '@/cores/test-utils'
-import { api } from '@/services'
 import * as queries from '@/services'
+import { api } from '@/services'
 import { HealthResponse } from '@/types/api'
 import { screen } from '@testing-library/react'
-import { describe, expect, it, vi, beforeEach } from 'vitest'
+import React from 'react'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { HealthCheck } from '../HealthCheck'
 
 // Mock the modules
 vi.mock('next/navigation', () => ({
   useRouter: vi.fn()
+}))
+
+vi.mock('../states/useBackendSetupStatus', () => ({
+  useBackendSetupStatus: () => ({ entries: [] })
 }))
 
 vi.mock('@/features/setup-layout/presentations/SetupLayout', () => ({
@@ -47,9 +51,16 @@ vi.mock('@/features/setup-layout/presentations/SetupLayout', () => ({
 }))
 
 vi.mock('../HealthCheckContent', () => ({
-  HealthCheckContent: ({ isHealthy }: { isHealthy: boolean }) => (
+  HealthCheckContent: ({
+    isHealthy,
+    statuses
+  }: {
+    isHealthy: boolean
+    statuses: unknown[]
+  }) => (
     <div data-testid="mock-health-check-content">
       {isHealthy ? 'Healthy' : 'Not Healthy'}
+      <span data-testid="status-count">{statuses.length}</span>
     </div>
   )
 }))
