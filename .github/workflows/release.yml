@@ -168,4 +168,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          git init
+          git remote add origin https://github.com/${{ github.repository }}.git
           gh release upload ${{ needs.prepare-build.outputs.release_tag }} artifacts/**/* --clobber
