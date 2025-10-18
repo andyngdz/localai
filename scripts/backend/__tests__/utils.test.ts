@@ -1,13 +1,20 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
-import * as fs from 'fs/promises'
-import {
-  pathExists,
-  normalizeError,
-  createDefaultStatusEmitter
-} from '../utils'
 import { BackendStatusLevel } from '@types'
+import { mkdtempSync, rmSync } from 'node:fs'
+import * as fs from 'node:fs/promises'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import {
+  createDefaultStatusEmitter,
+  ensurePathIncludes,
+  isLinux,
+  isMac,
+  isWindows,
+  normalizeError,
+  pathExists
+} from '../utils'
 
-vi.mock('fs/promises')
+vi.mock('node:fs/promises')
 
 const mockAccess = vi.mocked(fs.access)
 
@@ -102,6 +109,85 @@ describe('utils', () => {
       expect(consoleSpy).toHaveBeenCalledWith(
         '[Backend Setup][Error] Test error message'
       )
+    })
+  })
+
+  describe('ensurePathIncludes', () => {
+    const separator = isWindows ? ';' : ':'
+    const pathKey = (() => {
+      if (!isWindows) {
+        return 'PATH'
+      }
+
+      const match = Object.keys(process.env).find(
+        (key) => key.toLowerCase() === 'path'
+      )
+
+      return match ?? 'PATH'
+    })()
+    const baseEntries = isWindows
+      ? ['C:\\Loop\\bin', 'C:\\Loop']
+      : ['/usr/bin', '/bin']
+    let originalPath: string | undefined
+    let tempDirectory: string
+
+    beforeEach(() => {
+      originalPath = process.env[pathKey]
+      tempDirectory = mkdtempSync(join(tmpdir(), 'ensure-path-'))
+    })
+
+    afterEach(() => {
+      if (originalPath === undefined) {
+        delete process.env[pathKey]
+      } else {
+        process.env[pathKey] = originalPath
+      }
+
+      rmSync(tempDirectory, { recursive: true, force: true })
+    })
+
+    it('should do nothing when no directories are provided', () => {
+      ensurePathIncludes([])
+
+      expect(process.env[pathKey]).toBe(originalPath)
+    })
+
+    it('should prepend existing directories that are not already present', () => {
+      process.env[pathKey] = baseEntries.join(separator)
+      const missingDirectory = join(tempDirectory, 'missing')
+
+      ensurePathIncludes([tempDirectory, missingDirectory, ''])
+
+      const updated = process.env[pathKey]?.split(separator)
+
+      expect(updated?.[0]).toBe(tempDirectory)
+      expect(updated).toEqual(expect.arrayContaining(baseEntries))
+      expect(updated).not.toContain(missingDirectory)
+    })
+
+    it('should skip directories that already exist', () => {
+      const initial = [tempDirectory, ...baseEntries].join(separator)
+      process.env[pathKey] = initial
+
+      ensurePathIncludes([tempDirectory])
+
+      expect(process.env[pathKey]).toBe(initial)
+    })
+
+    it('should initialize PATH when it was undefined', () => {
+      delete process.env[pathKey]
+
+      ensurePathIncludes([tempDirectory])
+
+      expect(process.env[pathKey]).toBe(tempDirectory)
+    })
+  })
+
+  describe('platform flags', () => {
+    it('should reflect the current process platform', () => {
+      expect(isWindows).toBe(process.platform === 'win32')
+      expect(isMac).toBe(process.platform === 'darwin')
+      expect(isLinux).toBe(process.platform === 'linux')
     })
   })
 })

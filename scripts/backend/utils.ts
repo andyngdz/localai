@@ -1,9 +1,46 @@
 import { BackendStatusEmitter, BackendStatusLevel } from '@types'
+import { existsSync } from 'node:fs'
 import * as fs from 'node:fs/promises'
 
 const isWindows = process.platform === 'win32'
 const isMac = process.platform === 'darwin'
 const isLinux = process.platform === 'linux'
+
+const pathKeyName = () => {
+  if (!isWindows) {
+    return 'PATH'
+  }
+
+  const entries = Object.keys(process.env)
+  const match = entries.find((key) => key.toLowerCase() === 'path')
+
+  return match ?? 'PATH'
+}
+
+const ensurePathIncludes = (directories: string[]) => {
+  if (!directories.length) {
+    return
+  }
+
+  const separator = process.platform === 'win32' ? ';' : ':'
+  const key = pathKeyName()
+  const currentValue = process.env[key]
+  const current = currentValue
+    ? currentValue.split(separator).filter(Boolean)
+    : []
+
+  const additions = directories
+    .filter(Boolean)
+    .filter((directory) => existsSync(directory))
+    .filter((directory) => !current.includes(directory))
+
+  if (!additions.length) {
+    return
+  }
+
+  const updated = [...additions, ...current]
+  process.env[key] = updated.join(separator)
+}
 
 /**
  * Checks if a file or directory exists at the given path
@@ -48,6 +85,7 @@ const createDefaultStatusEmitter = (): BackendStatusEmitter => (payload) => {
 
 export {
   createDefaultStatusEmitter,
+  ensurePathIncludes,
   isLinux,
   isMac,
   isWindows,

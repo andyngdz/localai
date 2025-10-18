@@ -1,10 +1,11 @@
-import { $ } from 'zx'
 import {
+  BackendStatusCommand,
   BackendStatusEmitter,
-  BackendStatusLevel,
-  BackendStatusCommand
+  BackendStatusLevel
 } from '@types'
-import { isWindows, normalizeError } from './utils'
+import * as path from 'node:path'
+import { $ } from 'zx'
+import { ensurePathIncludes, isWindows, normalizeError } from './utils'
 
 interface InstallUvOptions {
   emit: BackendStatusEmitter
@@ -75,6 +76,18 @@ const installationCommandsByPlatform = (): BackendStatusCommand[] => {
 }
 
 const installUv = async ({ emit }: InstallUvOptions) => {
+  const candidatePaths: string[] = []
+
+  if (process.env.HOME) {
+    candidatePaths.push(path.join(process.env.HOME, '.local', 'bin'))
+  }
+
+  if (process.platform === 'win32' && process.env.LOCALAPPDATA) {
+    candidatePaths.push(path.join(process.env.LOCALAPPDATA, 'uv', 'bin'))
+  }
+
+  ensurePathIncludes(candidatePaths)
+
   const existing = await detectUv()
 
   if (existing) {

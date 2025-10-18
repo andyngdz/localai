@@ -1,9 +1,9 @@
+import { BackendStatusLevel } from '@types'
 import path from 'path'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { cloneBackend } from '../clone-backend'
 import { BACKEND_BRANCH, BACKEND_DIRNAME, BACKEND_REPO_URL } from '../constants'
 import * as gitModule from '../git'
-import { BackendStatusLevel } from '@types'
 import * as utilsModule from '../utils'
 
 // Mock dependencies
@@ -104,7 +104,7 @@ describe('cloneBackend', () => {
 
       expect(mockEmit).toHaveBeenCalledWith({
         level: BackendStatusLevel.Info,
-        message: 'Fetching the latest stable backend changes…'
+        message: 'Fetching the latest backend changes…'
       })
 
       expect(mockUpdateRepository).toHaveBeenCalledWith(
@@ -269,7 +269,7 @@ describe('cloneBackend', () => {
 
       expect(mockEmit).toHaveBeenNthCalledWith(2, {
         level: BackendStatusLevel.Info,
-        message: 'Fetching the latest stable backend changes…'
+        message: 'Fetching the latest backend changes…'
       })
 
       expect(mockEmit).toHaveBeenNthCalledWith(3, {

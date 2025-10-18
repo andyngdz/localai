@@ -62,7 +62,7 @@ const cloneBackend = async ({ userDataPath, emit }: SetupBackendOptions) => {
 
   emit({
     level: BackendStatusLevel.Info,
-    message: 'Fetching the latest stable backend changes…'
+    message: 'Fetching the latest backend changes…'
   })
   await updateRepository(backendPath, BACKEND_BRANCH)
   emit({
