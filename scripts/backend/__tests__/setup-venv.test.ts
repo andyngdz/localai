@@ -1,6 +1,6 @@
 import { BackendStatusLevel } from '@types'
 import * as path from 'path'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { BACKEND_DIRNAME } from '../constants'
 import { setupVenv } from '../setup-venv'
 import * as utilsModule from '../utils'
@@ -14,6 +14,26 @@ vi.mock('../utils')
 
 const mockPathExists = vi.mocked(utilsModule.pathExists)
 const mockNormalizeError = vi.mocked(utilsModule.normalizeError)
+const mockEnsurePathIncludes = vi.mocked(utilsModule.ensurePathIncludes)
+
+const expectedCandidatePaths = () => {
+  const candidates: string[] = []
+  const home = process.env.HOME
+
+  if (home) {
+    candidates.push(path.join(home, '.local', 'bin'))
+  }
+
+  if (process.platform === 'win32') {
+    const localAppData = process.env.LOCALAPPDATA
+
+    if (localAppData) {
+      candidates.push(path.join(localAppData, 'uv', 'bin'))
+    }
+  }
+
+  return candidates
+}
 
 describe('setupVenv', () => {
   const mockUserDataPath = '/test/user/data'
@@ -44,6 +64,11 @@ describe('setupVenv', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mock$.mockReset()
+    mockEnsurePathIncludes.mockReset()
+
+    vi.unstubAllEnvs()
+    vi.stubEnv('HOME', '/home/tester')
+    vi.stubEnv('LOCALAPPDATA', 'C:\\Users\\tester\\AppData\\Local')
 
     // Setup default successful mocks
     mockPathExists.mockImplementation((targetPath) => {
@@ -55,6 +80,10 @@ describe('setupVenv', () => {
     mockNormalizeError.mockImplementation((error, defaultMessage) =>
       error instanceof Error ? error : new Error(defaultMessage)
     )
+  })
+
+  afterEach(() => {
+    vi.unstubAllEnvs()
   })
 
   describe('successful venv creation', () => {
@@ -81,6 +110,11 @@ describe('setupVenv', () => {
 
       // Verify uv detection and venv creation commands executed
       expect(mock$).toHaveBeenCalledTimes(2)
+
+      expect(mockEnsurePathIncludes).toHaveBeenCalledTimes(1)
+      expect(mockEnsurePathIncludes).toHaveBeenCalledWith(
+        expectedCandidatePaths()
+      )
 
       expect(mockEmit).toHaveBeenCalledWith({
         level: BackendStatusLevel.Info,
@@ -121,6 +155,7 @@ describe('setupVenv', () => {
 
       // Should not attempt to create venv
       expect(mock$).not.toHaveBeenCalled()
+      expect(mockEnsurePathIncludes).not.toHaveBeenCalled()
 
       // Verify return value
       expect(result).toEqual({
@@ -156,6 +191,7 @@ describe('setupVenv', () => {
       expect(mockPathExists).toHaveBeenCalledWith(expectedBackendPath)
       expect(mockPathExists).not.toHaveBeenCalledWith(expectedVenvPath)
       expect(mock$).not.toHaveBeenCalled()
+      expect(mockEnsurePathIncludes).not.toHaveBeenCalled()
     })
 
     it('should handle uv venv command failure', async () => {
@@ -192,6 +228,11 @@ describe('setupVenv', () => {
         venvError,
         'Failed to create virtual environment with uv'
       )
+
+      expect(mockEnsurePathIncludes).toHaveBeenCalledTimes(1)
+      expect(mockEnsurePathIncludes).toHaveBeenCalledWith(
+        expectedCandidatePaths()
+      )
     })
 
     it('should handle pathExists errors for backend directory', async () => {
@@ -211,6 +252,7 @@ describe('setupVenv', () => {
       // Should not emit any status messages
       expect(mockEmit).not.toHaveBeenCalled()
       expect(mock$).not.toHaveBeenCalled()
+      expect(mockEnsurePathIncludes).not.toHaveBeenCalled()
     })
 
     it('should handle pathExists errors for venv directory', async () => {
@@ -232,6 +274,7 @@ describe('setupVenv', () => {
       expect(mockPathExists).toHaveBeenCalledWith(expectedVenvPath)
       expect(mockEmit).not.toHaveBeenCalled()
       expect(mock$).not.toHaveBeenCalled()
+      expect(mockEnsurePathIncludes).not.toHaveBeenCalled()
     })
 
     it('should normalize non-Error objects thrown by uv command', async () => {
@@ -251,6 +294,11 @@ describe('setupVenv', () => {
       expect(mockNormalizeError).toHaveBeenCalledWith(
         stringError,
         'Failed to create virtual environment with uv'
+      )
+
+      expect(mockEnsurePathIncludes).toHaveBeenCalledTimes(1)
+      expect(mockEnsurePathIncludes).toHaveBeenCalledWith(
+        expectedCandidatePaths()
       )
     })
   })
@@ -282,6 +330,11 @@ describe('setupVenv', () => {
         venvPath: customVenvPath,
         backendPath: customBackendPath
       })
+
+      expect(mockEnsurePathIncludes).toHaveBeenCalledTimes(1)
+      expect(mockEnsurePathIncludes).toHaveBeenCalledWith(
+        expectedCandidatePaths()
+      )
     })
 
     it('should handle relative paths correctly', async () => {
@@ -307,6 +360,11 @@ describe('setupVenv', () => {
         venvPath: relativeVenvPath,
         backendPath: relativeBackendPath
       })
+
+      expect(mockEnsurePathIncludes).toHaveBeenCalledTimes(1)
+      expect(mockEnsurePathIncludes).toHaveBeenCalledWith(
+        expectedCandidatePaths()
+      )
     })
 
     it('should handle Windows-style paths', async () => {
@@ -332,6 +390,11 @@ describe('setupVenv', () => {
         venvPath: windowsVenvPath,
         backendPath: windowsBackendPath
       })
+
+      expect(mockEnsurePathIncludes).toHaveBeenCalledTimes(1)
+      expect(mockEnsurePathIncludes).toHaveBeenCalledWith(
+        expectedCandidatePaths()
+      )
     })
   })
 
@@ -359,6 +422,11 @@ describe('setupVenv', () => {
         venvPath: emptyVenvPath,
         backendPath: emptyBackendPath
       })
+
+      expect(mockEnsurePathIncludes).toHaveBeenCalledTimes(1)
+      expect(mockEnsurePathIncludes).toHaveBeenCalledWith(
+        expectedCandidatePaths()
+      )
     })
 
     it('should handle paths with spaces and special characters', async () => {
@@ -384,6 +452,11 @@ describe('setupVenv', () => {
         venvPath: specialVenvPath,
         backendPath: specialBackendPath
       })
+
+      expect(mockEnsurePathIncludes).toHaveBeenCalledTimes(1)
+      expect(mockEnsurePathIncludes).toHaveBeenCalledWith(
+        expectedCandidatePaths()
+      )
     })
   })
 
@@ -420,6 +493,11 @@ describe('setupVenv', () => {
           }
         ]
       })
+
+      expect(mockEnsurePathIncludes).toHaveBeenCalledTimes(1)
+      expect(mockEnsurePathIncludes).toHaveBeenCalledWith(
+        expectedCandidatePaths()
+      )
     })
 
     it('falls back to python -m venv when uv is unavailable', async () => {
@@ -453,6 +531,10 @@ describe('setupVenv', () => {
 
       expect(mock$).toHaveBeenCalledTimes(2)
       expect(mockEmit).toHaveBeenCalledTimes(3)
+      expect(mockEnsurePathIncludes).toHaveBeenCalledTimes(1)
+      expect(mockEnsurePathIncludes).toHaveBeenCalledWith(
+        expectedCandidatePaths()
+      )
     })
 
     it('should verify uv venv command execution', async () => {
@@ -470,6 +552,10 @@ describe('setupVenv', () => {
 
       expect(commandExecuted).toBe(true)
       expect(mock$).toHaveBeenCalledTimes(2)
+      expect(mockEnsurePathIncludes).toHaveBeenCalledTimes(1)
+      expect(mockEnsurePathIncludes).toHaveBeenCalledWith(
+        expectedCandidatePaths()
+      )
     })
   })
 
@@ -494,6 +580,10 @@ describe('setupVenv', () => {
       })
 
       expect(mockEmit).toHaveBeenCalledTimes(2)
+      expect(mockEnsurePathIncludes).toHaveBeenCalledTimes(1)
+      expect(mockEnsurePathIncludes).toHaveBeenCalledWith(
+        expectedCandidatePaths()
+      )
     })
 
     it('should emit correct sequence for existing venv', async () => {
@@ -512,6 +602,8 @@ describe('setupVenv', () => {
         level: BackendStatusLevel.Info,
         message: 'Virtual environment already exists'
       })
+
+      expect(mockEnsurePathIncludes).not.toHaveBeenCalled()
     })
 
     it('should emit correct sequence for backend not found error', async () => {
@@ -532,6 +624,8 @@ describe('setupVenv', () => {
         level: BackendStatusLevel.Error,
         message: 'Backend directory not found. Clone the backend first.'
       })
+
+      expect(mockEnsurePathIncludes).not.toHaveBeenCalled()
     })
 
     it('should emit correct sequence for venv creation failure', async () => {
@@ -563,6 +657,10 @@ describe('setupVenv', () => {
       })
 
       expect(mockEmit).toHaveBeenCalledTimes(2)
+      expect(mockEnsurePathIncludes).toHaveBeenCalledTimes(1)
+      expect(mockEnsurePathIncludes).toHaveBeenCalledWith(
+        expectedCandidatePaths()
+      )
     })
   })
 
@@ -600,6 +698,11 @@ describe('setupVenv', () => {
       expect(mock$).toHaveBeenCalledTimes(6)
       // Each call should emit 2 status messages (creating + success)
       expect(mockEmit).toHaveBeenCalledTimes(6)
+
+      expect(mockEnsurePathIncludes).toHaveBeenCalledTimes(3)
+      mockEnsurePathIncludes.mock.calls.forEach(([directories]) => {
+        expect(directories).toEqual(expectedCandidatePaths())
+      })
     })
   })
 })
