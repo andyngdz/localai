@@ -15,14 +15,10 @@ env:
   NODE_VERSION: 'latest'
 
 jobs:
-  version:
+  release:
     name: Create Release
-    if: github.ref == 'refs/heads/release'
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    outputs:
-      new_release_published: ${{ steps.semantic.outputs.new_release_published }}
-      new_release_version: ${{ steps.semantic.outputs.new_release_version }}
-      new_release_git_tag: ${{ steps.semantic.outputs.new_release_git_tag }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -46,10 +42,41 @@ jobs:
           ARTIFACTS_EXIST: 'false'
         run: npx semantic-release
 
+  prepare-build:
+    name: Prepare Release Build
+    if: github.ref == 'refs/heads/release'
+    runs-on: ubuntu-latest
+    outputs:
+      release_version: ${{ steps.version.outputs.release_version }}
+      release_tag: ${{ steps.version.outputs.release_tag }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Determine Release Version
+        id: version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "release_version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "release_tag=v$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Ensure Release Exists
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release view ${{ steps.version.outputs.release_tag }}
+
   build:
     name: Build for ${{ matrix.os }}
-    needs: [version]
-    if: needs.version.outputs.new_release_published == 'true'
+    needs: [prepare-build]
+    if: needs.prepare-build.result == 'success'
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -65,7 +92,8 @@ jobs:
       - name: Checkout Code at Tag
         uses: actions/checkout@v4
         with:
-          ref: ${{ needs.version.outputs.new_release_git_tag }}
+          fetch-depth: 0
+          ref: ${{ needs.prepare-build.outputs.release_tag }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -115,8 +143,8 @@ jobs:
   upload:
     name: Upload Release Artifacts
     runs-on: ubuntu-latest
-    needs: [version, build]
-    if: needs.version.outputs.new_release_published == 'true'
+    needs: [prepare-build, build]
+    if: needs.prepare-build.result == 'success'
     steps:
       - name: Download Windows Artifacts
         uses: actions/download-artifact@v4
@@ -140,4 +168,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release upload ${{ needs.version.outputs.new_release_git_tag }} artifacts/**/* --clobber
+          gh release upload ${{ needs.prepare-build.outputs.release_tag }} artifacts/**/* --clobber
