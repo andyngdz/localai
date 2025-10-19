@@ -13,7 +13,6 @@ const useSettingsStore = create<UseSettingsStore>()(
     persist(
       (set, _get, state) => ({
         values: {
-          baseUrl: 'http://localhost:8000',
           safetyCheck: true
         },
         setValues: (values) => set({ values }),

@@ -35,12 +35,10 @@ describe('useGeneralSettings', () => {
   const mockSetValues = vi.fn()
 
   const mockValues: SettingFormValues = {
-    baseUrl: 'http://localhost:8000',
     safetyCheck: true
   }
 
   const mockFormValues: SettingFormValues = {
-    baseUrl: 'http://test.com',
     safetyCheck: false
   }
 
@@ -142,7 +140,6 @@ describe('useGeneralSettings', () => {
 
     it('should work with different initial values from store', () => {
       const differentValues: SettingFormValues = {
-        baseUrl: 'https://api.example.com',
         safetyCheck: false
       }
 
@@ -164,7 +161,6 @@ describe('useGeneralSettings', () => {
   describe('store synchronization', () => {
     it('should update store when form values change', () => {
       const updatedFormValues: SettingFormValues = {
-        baseUrl: 'https://new-api.com',
         safetyCheck: true
       }
 
@@ -217,7 +213,6 @@ describe('useGeneralSettings', () => {
 
     it('should update dependencies when form values change', () => {
       const newFormValues: SettingFormValues = {
-        baseUrl: 'http://updated.com',
         safetyCheck: false
       }
 
@@ -246,9 +241,9 @@ describe('useGeneralSettings', () => {
     it('should allow register function to be called', () => {
       const { result } = renderHook(() => useGeneralSettings())
 
-      result.current.register('baseUrl')
+      result.current.register('safetyCheck')
 
-      expect(mockRegister).toHaveBeenCalledWith('baseUrl')
+      expect(mockRegister).toHaveBeenCalledWith('safetyCheck')
     })
 
     it('should support register function with options', () => {
@@ -276,7 +271,6 @@ describe('useGeneralSettings', () => {
       const { rerender } = renderHook(() => useGeneralSettings())
 
       const newValues: SettingFormValues = {
-        baseUrl: 'http://changed.com',
         safetyCheck: false
       }
 
@@ -335,12 +329,10 @@ describe('useGeneralSettings', () => {
   describe('integration scenarios', () => {
     it('should work with realistic form data flow', () => {
       const initialValues: SettingFormValues = {
-        baseUrl: 'http://localhost:3000',
         safetyCheck: false
       }
 
       const updatedValues: SettingFormValues = {
-        baseUrl: 'http://production.com',
         safetyCheck: true
       }
 
@@ -375,8 +367,8 @@ describe('useGeneralSettings', () => {
         effect()
       })
 
-      const values1: SettingFormValues = { baseUrl: 'url1', safetyCheck: true }
-      const values2: SettingFormValues = { baseUrl: 'url2', safetyCheck: false }
+      const values1: SettingFormValues = { safetyCheck: true }
+      const values2: SettingFormValues = { safetyCheck: false }
 
       mockWatch.mockReturnValueOnce(values1).mockReturnValueOnce(values2)
 
