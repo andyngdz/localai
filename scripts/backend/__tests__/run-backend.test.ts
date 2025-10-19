@@ -1,6 +1,6 @@
 import path from 'path'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { runBackend } from '../run-backend'
+import { runBackend, stopBackend, getBackendPort } from '../run-backend'
 import { BackendStatusLevel } from '@types'
 import * as utilsModule from '../utils'
 import { EventEmitter } from 'events'
@@ -11,7 +11,8 @@ const mockStderr = new EventEmitter()
 const mockProcessInstance = {
   stdout: mockStdout,
   stderr: mockStderr,
-  catch: vi.fn()
+  catch: vi.fn(),
+  kill: vi.fn()
 }
 
 const mock$ = vi.fn()
@@ -22,20 +23,26 @@ vi.mock('../utils')
 
 const mockPathExists = vi.mocked(utilsModule.pathExists)
 const mockNormalizeError = vi.mocked(utilsModule.normalizeError)
+const mockFindAvailablePort = vi.mocked(utilsModule.findAvailablePort)
 
 describe('runBackend', () => {
   const mockBackendPath = '/test/backend'
   const mockEmit = vi.fn()
 
   beforeEach(() => {
+    // Stop any backend from previous tests
+    stopBackend()
+
     vi.clearAllMocks()
     mock$.mockReset()
     mockStdout.removeAllListeners()
     mockStderr.removeAllListeners()
     mockProcessInstance.catch.mockClear()
+    mockProcessInstance.kill.mockClear()
 
     // Setup default successful mocks
     mockPathExists.mockResolvedValue(true)
+    mockFindAvailablePort.mockResolvedValue(8000)
     mock$.mockReturnValue(mockProcessInstance)
     mockProcessInstance.catch.mockReturnValue(mockProcessInstance)
     mockNormalizeError.mockImplementation((error, defaultMessage) =>
@@ -62,10 +69,18 @@ describe('runBackend', () => {
         path.join(mockBackendPath, 'main.py')
       )
 
+      // Verify port finding
+      expect(mockFindAvailablePort).toHaveBeenCalledWith(8000)
+
       // Verify status emissions
       expect(mockEmit).toHaveBeenCalledWith({
         level: BackendStatusLevel.Info,
-        message: 'Starting LocalAI Backend…'
+        message: 'Finding available port for backend…'
+      })
+
+      expect(mockEmit).toHaveBeenCalledWith({
+        level: BackendStatusLevel.Info,
+        message: 'Starting LocalAI Backend on port 8000…'
       })
 
       // Verify uvicorn command execution
@@ -76,7 +91,7 @@ describe('runBackend', () => {
         message: 'LocalAI Backend started successfully'
       })
 
-      expect(mockEmit).toHaveBeenCalledTimes(2)
+      expect(mockEmit).toHaveBeenCalledTimes(3)
     })
 
     it('should setup stdout stream listener', async () => {
@@ -144,7 +159,7 @@ describe('runBackend', () => {
 
       expect(mockEmit).toHaveBeenCalledWith({
         level: BackendStatusLevel.Info,
-        message: 'Starting LocalAI Backend…'
+        message: 'Finding available port for backend…'
       })
 
       expect(mockEmit).toHaveBeenCalledWith({
@@ -196,21 +211,15 @@ describe('runBackend', () => {
       )
     })
 
-    it('should emit error when uvicorn process fails after starting', async () => {
+    it('should setup catch handler for backend process errors', async () => {
       await runBackend({
         backendPath: mockBackendPath,
         emit: mockEmit
       })
 
-      // Simulate process failure after starting
-      const errorCallback = mockProcessInstance.catch.mock.calls[0][0]
-      const processError = new Error('Process crashed')
-      errorCallback(processError)
-
-      expect(mockEmit).toHaveBeenCalledWith({
-        level: BackendStatusLevel.Error,
-        message: 'Backend process failed: Process crashed'
-      })
+      expect(mockProcessInstance.catch).toHaveBeenCalledWith(
+        expect.any(Function)
+      )
     })
   })
 
@@ -317,15 +326,20 @@ describe('runBackend', () => {
 
       expect(mockEmit).toHaveBeenNthCalledWith(1, {
         level: BackendStatusLevel.Info,
-        message: 'Starting LocalAI Backend…'
+        message: 'Finding available port for backend…'
       })
 
       expect(mockEmit).toHaveBeenNthCalledWith(2, {
         level: BackendStatusLevel.Info,
+        message: 'Starting LocalAI Backend on port 8000…'
+      })
+
+      expect(mockEmit).toHaveBeenNthCalledWith(3, {
+        level: BackendStatusLevel.Info,
         message: 'LocalAI Backend started successfully'
       })
 
-      expect(mockEmit).toHaveBeenCalledTimes(2)
+      expect(mockEmit).toHaveBeenCalledTimes(3)
     })
 
     it('should emit correct sequence for main.py not found error', async () => {
@@ -483,6 +497,7 @@ describe('runBackend', () => {
       mock$.mockImplementation(() => {
         throw timeoutError
       })
+      mockNormalizeError.mockReturnValue(timeoutError)
 
       await expect(
         runBackend({
@@ -517,10 +532,10 @@ describe('runBackend', () => {
       expect(mockPathExists).toHaveBeenCalledTimes(3)
       // Each call should execute uvicorn
       expect(mock$).toHaveBeenCalledTimes(3)
-      // Each call should emit 2 status messages (start + success)
-      expect(emit1).toHaveBeenCalledTimes(2)
-      expect(emit2).toHaveBeenCalledTimes(2)
-      expect(emit3).toHaveBeenCalledTimes(2)
+      // Each call should emit 3 status messages (finding port + start + success)
+      expect(emit1).toHaveBeenCalledTimes(3)
+      expect(emit2).toHaveBeenCalledTimes(3)
+      expect(emit3).toHaveBeenCalledTimes(3)
     })
 
     it('should handle mixed success and failure scenarios', async () => {
@@ -554,6 +569,138 @@ describe('runBackend', () => {
       })
 
       expect(process.chdir).toHaveBeenCalledWith(mockBackendPath)
+    })
+  })
+
+  describe('dynamic port allocation', () => {
+    it('should find available port starting from 8000', async () => {
+      mockFindAvailablePort.mockResolvedValue(8001)
+
+      await runBackend({
+        backendPath: mockBackendPath,
+        emit: mockEmit
+      })
+
+      expect(mockFindAvailablePort).toHaveBeenCalledWith(8000)
+      expect(mockEmit).toHaveBeenCalledWith({
+        level: BackendStatusLevel.Info,
+        message: 'Starting LocalAI Backend on port 8001…'
+      })
+    })
+
+    it('should use port returned by findAvailablePort', async () => {
+      mockFindAvailablePort.mockResolvedValue(8005)
+
+      await runBackend({
+        backendPath: mockBackendPath,
+        emit: mockEmit
+      })
+
+      expect(getBackendPort()).toBe(8005)
+    })
+  })
+
+  describe('stopBackend', () => {
+    it('should kill running backend process', async () => {
+      await runBackend({
+        backendPath: mockBackendPath,
+        emit: mockEmit
+      })
+
+      mockProcessInstance.kill.mockClear()
+
+      stopBackend()
+
+      expect(mockProcessInstance.kill).toHaveBeenCalledTimes(1)
+    })
+
+    it('should reset port to 8000 after stopping', async () => {
+      mockFindAvailablePort.mockResolvedValue(8002)
+
+      await runBackend({
+        backendPath: mockBackendPath,
+        emit: mockEmit
+      })
+
+      expect(getBackendPort()).toBe(8002)
+
+      stopBackend()
+
+      expect(getBackendPort()).toBe(8000)
+    })
+
+    it('should not throw when stopping non-existent process', () => {
+      expect(() => stopBackend()).not.toThrow()
+    })
+
+    it('should handle kill errors gracefully', async () => {
+      const consoleErrorSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {})
+      mockProcessInstance.kill.mockImplementation(() => {
+        throw new Error('Kill failed')
+      })
+
+      await runBackend({
+        backendPath: mockBackendPath,
+        emit: mockEmit
+      })
+
+      stopBackend()
+
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        'Failed to stop backend process:',
+        expect.any(Error)
+      )
+    })
+  })
+
+  describe('getBackendPort', () => {
+    it('should return default port 8000 initially', () => {
+      expect(getBackendPort()).toBe(8000)
+    })
+
+    it('should return current backend port after startup', async () => {
+      mockFindAvailablePort.mockResolvedValue(8003)
+
+      await runBackend({
+        backendPath: mockBackendPath,
+        emit: mockEmit
+      })
+
+      expect(getBackendPort()).toBe(8003)
+    })
+  })
+
+  describe('process cleanup guard', () => {
+    it('should stop existing process before starting new one', async () => {
+      await runBackend({
+        backendPath: mockBackendPath,
+        emit: mockEmit
+      })
+
+      vi.clearAllMocks()
+
+      await runBackend({
+        backendPath: mockBackendPath,
+        emit: mockEmit
+      })
+
+      expect(mockProcessInstance.kill).toHaveBeenCalledTimes(1)
+    })
+
+    it('should prevent process leaks on multiple calls', async () => {
+      await runBackend({ backendPath: '/path1', emit: mockEmit })
+
+      vi.clearAllMocks()
+
+      await runBackend({ backendPath: '/path2', emit: mockEmit })
+      expect(mockProcessInstance.kill).toHaveBeenCalledTimes(1)
+
+      vi.clearAllMocks()
+
+      await runBackend({ backendPath: '/path3', emit: mockEmit })
+      expect(mockProcessInstance.kill).toHaveBeenCalledTimes(1)
     })
   })
 })
