@@ -1,4 +1,5 @@
 export * from './backend'
+export * from './base'
 export * from './electron'
 export * from './logging'
 export * from './update'

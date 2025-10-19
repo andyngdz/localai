@@ -2,7 +2,7 @@ import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import serve from 'electron-serve'
 import fixPath from 'fix-path'
 import path from 'path'
-import { startBackend, stopBackend } from '../scripts/backend'
+import { getBackendPort, startBackend, stopBackend } from '../scripts/backend'
 import {
   isLogStreaming,
   startLogStreaming,
@@ -115,6 +115,10 @@ const onBackendStatusHistory = () => {
   ipcMain.handle('backend-setup:get-history', () => getBackendStatusHistory())
 }
 
+const onBackendPort = () => {
+  ipcMain.handle('backend:get-port', () => getBackendPort())
+}
+
 const onAutoUpdate = () => {
   ipcMain.handle('updater:check', () => {
     checkForUpdates()
@@ -154,6 +158,7 @@ if (!gotLock) {
     onDownloadImage()
     onLogStreaming()
     onBackendStatusHistory()
+    onBackendPort()
     onAutoUpdate()
 
     if (process.env.SKIP_BACKEND !== 'true') {

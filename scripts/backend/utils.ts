@@ -1,6 +1,7 @@
 import { BackendStatusEmitter, BackendStatusLevel } from '@types'
 import { existsSync } from 'node:fs'
 import * as fs from 'node:fs/promises'
+import { createServer } from 'node:net'
 
 const isWindows = process.platform === 'win32'
 const isMac = process.platform === 'darwin'
@@ -83,11 +84,57 @@ const createDefaultStatusEmitter = (): BackendStatusEmitter => (payload) => {
   console.log(`${prefix} ${payload.message}`)
 }
 
+/**
+ * Checks if a port is available
+ * @param port - The port number to check
+ * @returns Promise<boolean> - true if port is available, false if occupied
+ */
+const isPortAvailable = (port: number) => {
+  return new Promise<boolean>((resolve) => {
+    const server = createServer()
+
+    server.once('error', () => {
+      resolve(false)
+    })
+
+    server.once('listening', () => {
+      server.close()
+      resolve(true)
+    })
+
+    server.listen(port, '127.0.0.1')
+  })
+}
+
+/**
+ * Finds an available port, starting from the preferred port
+ * @param preferredPort - The port to try first (default: 8000)
+ * @param maxAttempts - Maximum number of ports to try (default: 100)
+ * @returns Promise<number> - The first available port found
+ * @throws Error if no available port is found within maxAttempts
+ */
+const findAvailablePort = async (preferredPort = 8000, maxAttempts = 100) => {
+  for (let i = 0; i < maxAttempts; i++) {
+    const port = preferredPort + i
+    const available = await isPortAvailable(port)
+
+    if (available) {
+      return port
+    }
+  }
+
+  throw new Error(
+    `Could not find an available port after trying ${maxAttempts} ports starting from ${preferredPort}`
+  )
+}
+
 export {
   createDefaultStatusEmitter,
   ensurePathIncludes,
+  findAvailablePort,
   isLinux,
   isMac,
+  isPortAvailable,
   isWindows,
   normalizeError,
   pathExists
