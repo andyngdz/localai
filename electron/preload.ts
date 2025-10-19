@@ -10,6 +10,15 @@ contextBridge.exposeInMainWorld('electronAPI', {
   downloadImage: (url: string) => ipcRenderer.invoke('download-image', url),
   onBackendSetupStatus: (listener: BackendStatusEmitter) => {
     const channel = 'backend-setup:status'
+    ipcRenderer
+      .invoke('backend-setup:get-history')
+      .then((history: BackendStatusPayload[]) => {
+        history.forEach((payload) => listener(payload))
+      })
+      .catch(() => {
+        // ignore history fetch errors
+      })
+
     const subscription = (
       _event: Electron.IpcRendererEvent,
       payload: BackendStatusPayload

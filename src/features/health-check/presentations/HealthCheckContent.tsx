@@ -1,30 +1,19 @@
-'use client'
-
-import { Chip } from '@heroui/react'
-import { FC, useMemo } from 'react'
+import { FC } from 'react'
+import type { BackendSetupStatusEntry } from '../states/useBackendSetupStatusStore'
+import { BackendStatusList } from './BackendStatusList'
+import { HealthStatusChip } from './HealthStatusChip'
 
 export interface HealthCheckContentProps {
   isHealthy: boolean
+  statuses: BackendSetupStatusEntry[]
 }
 
 export const HealthCheckContent: FC<HealthCheckContentProps> = ({
-  isHealthy
-}) => {
-  const children = useMemo(() => {
-    if (isHealthy) {
-      return (
-        <Chip color="success">
-          <span>LocalAI backend is running and ready to use</span>
-        </Chip>
-      )
-    }
-
-    return (
-      <Chip color="danger">
-        <span>LocalAI backend is not running</span>
-      </Chip>
-    )
-  }, [isHealthy])
-
-  return <div className="flex justify-center">{children}</div>
-}
+  isHealthy,
+  statuses
+}) => (
+  <div className="flex flex-col gap-20">
+    <HealthStatusChip isHealthy={isHealthy} latestStatus={statuses.at(-1)} />
+    <BackendStatusList statuses={statuses} />
+  </div>
+)
