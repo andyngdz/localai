@@ -73,13 +73,17 @@ vi.mock('@/services/api', () => ({
 }))
 
 describe('HealthCheck', () => {
-  beforeEach(() => {
+  let routerMocks: Awaited<ReturnType<typeof setupRouterMock>>
+
+  beforeEach(async () => {
     vi.clearAllMocks()
 
     // Default mock implementations
     vi.mocked(api.getDeviceIndex).mockResolvedValue({
       device_index: DeviceSelection.NOT_FOUND
     })
+
+    routerMocks = await setupRouterMock()
   })
 
   // Helper to setup health query mock
@@ -165,7 +169,7 @@ describe('HealthCheck', () => {
     vi.mocked(api.getDeviceIndex).mockResolvedValue({ device_index: 0 })
 
     // Mock router
-    const { mockPush } = await setupRouterMock()
+    const { mockPush } = routerMocks
 
     // Mock the useHealthQuery hook
     setupHealthQueryMock({
