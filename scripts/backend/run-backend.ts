@@ -1,12 +1,15 @@
 import { BackendStatusEmitter, BackendStatusLevel } from '@types'
 import * as path from 'node:path'
-import { $ } from 'zx'
+import { $, type ProcessPromise } from 'zx'
 import { normalizeError, pathExists } from './utils'
 
 export interface RunBackendOptions {
   backendPath: string
   emit: BackendStatusEmitter
 }
+
+// Store the backend process reference for cleanup
+let backendProcess: ProcessPromise | null = null
 
 const onLogOutput = (data: Buffer | string) => {
   const output = data.toString().trim()
@@ -54,15 +57,15 @@ const runBackend = async ({
     process.chdir(backendPath)
 
     // Run uvicorn in a way that streams output to console
-    const uvicornCommand = $`uvicorn main:app`
+    backendProcess = $`uvicorn main:app`
 
     // Stream the output to console so it gets picked up by log streaming
-    uvicornCommand.stdout.on('data', onLogOutput)
+    backendProcess.stdout.on('data', onLogOutput)
 
-    uvicornCommand.stderr.on('data', onLogOutput)
+    backendProcess.stderr.on('data', onLogOutput)
 
     // Don't await - let it run in background
-    uvicornCommand.catch((error) => {
+    backendProcess.catch((error) => {
       emit({
         level: BackendStatusLevel.Error,
         message: `Backend process failed: ${error.message}`
@@ -79,4 +82,15 @@ const runBackend = async ({
   }
 }
 
-export { runBackend }
+const stopBackend = () => {
+  if (backendProcess) {
+    try {
+      backendProcess.kill()
+      backendProcess = null
+    } catch (error) {
+      console.error('Failed to stop backend process:', error)
+    }
+  }
+}
+
+export { runBackend, stopBackend }
