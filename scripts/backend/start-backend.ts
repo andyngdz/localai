@@ -1,3 +1,4 @@
+import { BackendStatusEmitter, BackendStatusLevel } from '@types'
 import { cloneBackend } from './clone-backend'
 import { ensurePython311 } from './ensure-python'
 import { installDependencies } from './install-dependencies'
@@ -5,15 +6,18 @@ import { installUv } from './install-uv'
 import { runBackend } from './run-backend'
 import { setupVenv } from './setup-venv'
 import { switchToVenv } from './switch-to-venv'
-import { BackendStatusLevel } from '@types'
 import { createDefaultStatusEmitter, normalizeError } from './utils'
 
 export interface StartBackendOptions {
   userDataPath: string
+  externalEmit?: BackendStatusEmitter
 }
 
-const startBackend = async ({ userDataPath }: StartBackendOptions) => {
-  const emit = createDefaultStatusEmitter()
+const startBackend = async ({
+  userDataPath,
+  externalEmit
+}: StartBackendOptions) => {
+  const emit = externalEmit ?? createDefaultStatusEmitter()
 
   try {
     // Step 1: Ensure Python 3.11 is installed

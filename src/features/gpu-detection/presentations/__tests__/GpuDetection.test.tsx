@@ -1,14 +1,13 @@
-import React from 'react'
-import { screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { describe, expect, it, vi, beforeEach } from 'vitest'
-import { GpuDetection } from '../GpuDetection'
 import {
   createMockQuery,
   renderWithAct,
   setupRouterMock
 } from '@/cores/test-utils'
 import { HardwareResponse } from '@/types'
+import { screen } from '@testing-library/react'
+import React from 'react'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { GpuDetection } from '../GpuDetection'
 
 // Mock the modules
 vi.mock('next/navigation', () => ({
@@ -162,19 +161,6 @@ describe('GpuDetection', () => {
 
     const nextButton = screen.getByTestId('next-button')
     expect(nextButton).toBeDisabled()
-  })
-
-  it('calls router.back when back button is clicked', async () => {
-    const user = userEvent.setup()
-    await setupHardwareQueryMock(mockHardwareData)
-    const { mockBack } = await setupRouterMock()
-
-    await renderWithAct(<GpuDetection />)
-
-    const backButton = screen.getByTestId('back-button')
-    await user.click(backButton)
-
-    expect(mockBack).toHaveBeenCalledTimes(1)
   })
 
   it('handles form submission correctly', async () => {

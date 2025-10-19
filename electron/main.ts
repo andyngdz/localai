@@ -8,6 +8,10 @@ import {
   stopLogStreaming
 } from './log-streamer'
 import {
+  broadcastBackendStatus,
+  getBackendStatusHistory
+} from './status-broadcaster'
+import {
   checkForUpdates,
   downloadUpdate,
   getUpdateInfo,
@@ -103,6 +107,10 @@ const onLogStreaming = () => {
   })
 }
 
+const onBackendStatusHistory = () => {
+  ipcMain.handle('backend-setup:get-history', () => getBackendStatusHistory())
+}
+
 const onAutoUpdate = () => {
   ipcMain.handle('updater:check', () => {
     checkForUpdates()
@@ -141,10 +149,14 @@ if (!gotLock) {
     await onCreateWindow()
     onDownloadImage()
     onLogStreaming()
+    onBackendStatusHistory()
     onAutoUpdate()
 
     if (process.env.SKIP_BACKEND !== 'true') {
-      startBackend({ userDataPath: app.getPath('userData') })
+      startBackend({
+        userDataPath: app.getPath('userData'),
+        externalEmit: broadcastBackendStatus
+      })
     }
   })
 

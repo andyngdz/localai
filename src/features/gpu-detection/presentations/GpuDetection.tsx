@@ -28,7 +28,6 @@ export const GpuDetection = () => {
           title="GPU & Hardware Detection"
           description="Detecting your GPU and CUDA capabilities for optimal performance"
           onNext={methods.handleSubmit(onSubmit)}
-          onBack={router.back}
           isNextDisabled={!isValid}
         >
           <GpuDetectionContent hardwareData={data} onCheckAgain={refetch} />
