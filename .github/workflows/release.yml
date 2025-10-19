@@ -84,10 +84,10 @@ jobs:
           - os: ubuntu-latest
             platform: linux
     steps:
-      - name: Checkout Code at Tag
+      - name: Checkout Code
         uses: actions/checkout@v4
         with:
-          ref: ${{ needs.release.outputs.release_tag }}
+          ref: release
           fetch-depth: 0
 
       - name: Setup Node.js
@@ -98,11 +98,6 @@ jobs:
 
       - name: Install dependencies
         run: npm ci --prefer-offline --no-audit --no-fund
-
-      - name: Patch package.json version
-        run: |
-          VERSION=$(echo ${{ needs.release.outputs.release_tag }} | sed 's/^v//')
-          npm version --no-git-tag-version --allow-same-version $VERSION
 
       - name: Build Electron App
         run: npm run build
