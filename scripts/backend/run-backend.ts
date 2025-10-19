@@ -25,10 +25,12 @@ const onLogOutput = (data: Buffer | string) => {
   }
 }
 
-const runBackend = async ({
-  backendPath,
-  emit
-}: RunBackendOptions): Promise<void> => {
+const runBackend = async ({ backendPath, emit }: RunBackendOptions) => {
+  // Stop any existing backend process before starting a new one
+  if (backendProcess) {
+    stopBackend()
+  }
+
   // Check if main.py exists
   const mainPyPath = path.join(backendPath, 'main.py')
   const mainExists = await pathExists(mainPyPath)
@@ -79,8 +81,10 @@ const runBackend = async ({
     backendProcess.catch((error) => {
       emit({
         level: BackendStatusLevel.Error,
-        message: `Backend process failed: ${error.message}`
+        message: 'Backend process failed. Please restart the application.'
       })
+
+      throw normalizeError(error, 'Backend process failed')
     })
   } catch (error) {
     emit({
