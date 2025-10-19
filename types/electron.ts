@@ -8,6 +8,7 @@ export interface ElectronAPI {
   downloadImage: (url: string) => Promise<void>
   onBackendSetupStatus: (listener: BackendStatusEmitter) => () => void
   backend: {
+    getPort: () => Promise<number>
     startLogStream: () => Promise<void>
     stopLogStream: () => Promise<void>
     isLogStreaming: () => Promise<boolean>
