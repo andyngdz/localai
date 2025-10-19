@@ -1,8 +1,3 @@
-import {
-  BackendStatusEmitter,
-  BackendStatusLevel,
-  BackendStatusPayload
-} from '@types'
 import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import serve from 'electron-serve'
 import path from 'path'
@@ -12,6 +7,10 @@ import {
   startLogStreaming,
   stopLogStreaming
 } from './log-streamer'
+import {
+  broadcastBackendStatus,
+  getBackendStatusHistory
+} from './status-broadcaster'
 import {
   checkForUpdates,
   downloadUpdate,
@@ -28,42 +27,6 @@ const IS_PRODUCTION = app.isPackaged
 const DEV_URL = 'http://localhost:3000'
 const appServe =
   IS_PRODUCTION && serve({ directory: path.join(appDir, 'dist/renderer') })
-
-const backendStatusHistory: BackendStatusPayload[] = []
-const MAX_BACKEND_STATUS_HISTORY = 100
-
-const addBackendStatusToHistory = (payload: BackendStatusPayload) => {
-  const clonedPayload: BackendStatusPayload = {
-    ...payload,
-    commands: payload.commands?.map((command) => ({ ...command }))
-  }
-
-  backendStatusHistory.push(clonedPayload)
-
-  if (backendStatusHistory.length > MAX_BACKEND_STATUS_HISTORY) {
-    backendStatusHistory.splice(
-      0,
-      backendStatusHistory.length - MAX_BACKEND_STATUS_HISTORY
-    )
-  }
-}
-
-const broadcastBackendStatus: BackendStatusEmitter = (payload) => {
-  addBackendStatusToHistory(payload)
-
-  const prefix =
-    payload.level === BackendStatusLevel.Error
-      ? '[Backend Setup][Error]'
-      : '[Backend Setup][Info]'
-
-  console.log(`${prefix} ${payload.message}`)
-
-  BrowserWindow.getAllWindows().forEach((window) => {
-    if (!window.isDestroyed()) {
-      window.webContents.send('backend-setup:status', payload)
-    }
-  })
-}
 
 const onSetLinuxGpuFlags = () => {
   if (process.platform !== 'linux') return
@@ -145,7 +108,7 @@ const onLogStreaming = () => {
 }
 
 const onBackendStatusHistory = () => {
-  ipcMain.handle('backend-setup:get-history', () => backendStatusHistory)
+  ipcMain.handle('backend-setup:get-history', () => getBackendStatusHistory())
 }
 
 const onAutoUpdate = () => {
@@ -192,7 +155,7 @@ if (!gotLock) {
     if (process.env.SKIP_BACKEND !== 'true') {
       startBackend({
         userDataPath: app.getPath('userData'),
-        emit: broadcastBackendStatus
+        externalEmit: broadcastBackendStatus
       })
     }
   })

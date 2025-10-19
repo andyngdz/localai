@@ -42,7 +42,13 @@ const patchMainImport = async () => {
 }
 
 const relocateCompiledArtifacts = async () => {
-  const artifacts = ['main.js', 'preload.js', 'log-streamer.js', 'updater.js']
+  const artifacts = [
+    'main.js',
+    'preload.js',
+    'log-streamer.js',
+    'updater.js',
+    'status-broadcaster.js'
+  ]
 
   await Promise.all(
     artifacts.map(async (file) => {

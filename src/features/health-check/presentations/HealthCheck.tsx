@@ -14,18 +14,14 @@ export const HealthCheck = () => {
   const isHealthy = !!data
   const { entries } = useBackendSetupStatus()
 
-  const onNext = () => {
-    if (isHealthy) {
-      router.push('/gpu-detection')
-    }
-  }
-
   const onCheckDeviceIndex = useCallback(async () => {
     if (isHealthy) {
       const { device_index } = await api.getDeviceIndex()
 
       if (device_index !== DeviceSelection.NOT_FOUND) {
         router.push('/editor')
+      } else {
+        router.push('/gpu-detection')
       }
     }
   }, [isHealthy, router])
@@ -38,7 +34,6 @@ export const HealthCheck = () => {
     <SetupLayout
       title="Health Check"
       description="Checking the connection to your LocalAI backend server"
-      onNext={onNext}
       isNextDisabled={!isHealthy}
     >
       <HealthCheckContent isHealthy={isHealthy} statuses={entries} />

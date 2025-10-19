@@ -18,7 +18,7 @@ export const HealthStatusChip: FC<HealthStatusChipProps> = ({
     if (isHealthy) {
       return (
         <Chip color="success">
-          <span>LocalAI backend is running and ready to use</span>
+          <span>Backend is running</span>
         </Chip>
       )
     }
@@ -37,8 +37,8 @@ export const HealthStatusChip: FC<HealthStatusChipProps> = ({
     }
 
     return (
-      <Chip color="danger">
-        <span>LocalAI backend is not running</span>
+      <Chip color="warning">
+        <span>Waiting for backend</span>
       </Chip>
     )
   }, [isHealthy, latestStatus])

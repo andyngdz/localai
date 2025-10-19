@@ -18,19 +18,6 @@ export const useBackendSetupStatusStore = create<BackendSetupStatusStore>(
     entries: [],
     addEntry: (payload) => {
       set((state) => {
-        const lastEntry = state.entries.at(-1)
-        if (!lastEntry) return state
-
-        const isDuplicate =
-          lastEntry.level === payload.level &&
-          lastEntry.message === payload.message &&
-          JSON.stringify(lastEntry.commands) ===
-            JSON.stringify(payload.commands)
-
-        if (isDuplicate) {
-          return state
-        }
-
         const nextEntries = [
           ...state.entries,
           {
@@ -40,9 +27,10 @@ export const useBackendSetupStatusStore = create<BackendSetupStatusStore>(
         ]
 
         if (nextEntries.length > MAX_BACKEND_STATUS_MESSAGES) {
-          return {
-            entries: nextEntries.slice(-MAX_BACKEND_STATUS_MESSAGES)
-          }
+          nextEntries.splice(
+            0,
+            nextEntries.length - MAX_BACKEND_STATUS_MESSAGES
+          )
         }
 
         return { entries: nextEntries }

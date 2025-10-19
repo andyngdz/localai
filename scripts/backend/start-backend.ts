@@ -10,12 +10,12 @@ import { createDefaultStatusEmitter, normalizeError } from './utils'
 
 export interface StartBackendOptions {
   userDataPath: string
-  emit?: BackendStatusEmitter
+  externalEmit?: BackendStatusEmitter
 }
 
 const startBackend = async ({
   userDataPath,
-  emit: externalEmit
+  externalEmit
 }: StartBackendOptions) => {
   const emit = externalEmit ?? createDefaultStatusEmitter()
 

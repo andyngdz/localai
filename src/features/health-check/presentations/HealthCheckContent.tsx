@@ -12,7 +12,7 @@ export const HealthCheckContent: FC<HealthCheckContentProps> = ({
   isHealthy,
   statuses
 }) => (
-  <div className="flex flex-col gap-8">
+  <div className="flex flex-col gap-20">
     <HealthStatusChip isHealthy={isHealthy} latestStatus={statuses.at(-1)} />
     <BackendStatusList statuses={statuses} />
   </div>

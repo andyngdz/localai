@@ -25,13 +25,9 @@ describe('HealthCheckContent', () => {
       />
     )
 
-    expect(
-      screen.getByText('LocalAI backend is running and ready to use')
-    ).toBeInTheDocument()
+    expect(screen.getByText('Backend is running')).toBeInTheDocument()
 
-    const chip = screen
-      .getByText('LocalAI backend is running and ready to use')
-      .closest('div')
+    const chip = screen.getByText('Backend is running').closest('div')
     expect(chip).toHaveClass('bg-success')
   })
 
