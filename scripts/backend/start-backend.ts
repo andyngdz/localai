@@ -3,7 +3,7 @@ import { cloneBackend } from './clone-backend'
 import { ensurePython311 } from './ensure-python'
 import { installDependencies } from './install-dependencies'
 import { installUv } from './install-uv'
-import { runBackend } from './run-backend'
+import { runBackend, stopBackend } from './run-backend'
 import { setupVenv } from './setup-venv'
 import { switchToVenv } from './switch-to-venv'
 import { createDefaultStatusEmitter, normalizeError } from './utils'
@@ -50,4 +50,4 @@ const startBackend = async ({
   }
 }
 
-export { startBackend }
+export { startBackend, stopBackend }

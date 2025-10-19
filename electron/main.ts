@@ -2,7 +2,7 @@ import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import serve from 'electron-serve'
 import fixPath from 'fix-path'
 import path from 'path'
-import { startBackend } from '../scripts/backend'
+import { startBackend, stopBackend } from '../scripts/backend'
 import {
   isLogStreaming,
   startLogStreaming,
@@ -168,5 +168,9 @@ if (!gotLock) {
     if (process.platform !== 'darwin') {
       app.quit()
     }
+  })
+
+  app.on('before-quit', () => {
+    stopBackend()
   })
 }
