@@ -17,8 +17,9 @@ export const HealthCheck = () => {
   const onCheckDeviceIndex = useCallback(async () => {
     if (isHealthy) {
       const { device_index } = await api.getDeviceIndex()
+      const isHasDevice = device_index !== DeviceSelection.NOT_FOUND
 
-      if (device_index !== DeviceSelection.NOT_FOUND) {
+      if (isHasDevice) {
         router.push('/editor')
       } else {
         router.push('/gpu-detection')
