@@ -1,5 +1,6 @@
 import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import serve from 'electron-serve'
+import fixPath from 'fix-path'
 import path from 'path'
 import { startBackend } from '../scripts/backend'
 import {
@@ -18,6 +19,9 @@ import {
   installUpdate,
   setMainWindow
 } from './updater'
+
+// This is required to get the correct path in the packaged app
+fixPath()
 
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true'
 process.env.IBUS_USE_PORTAL = '1'
