@@ -114,7 +114,7 @@ jobs:
             dist/*.dmg
             dist/*.AppImage
             dist/*.deb
-          retention-days: 7
+          retention-days: 1
 
   upload:
     name: Upload Release Artifacts
