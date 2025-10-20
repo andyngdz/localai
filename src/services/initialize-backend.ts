@@ -6,8 +6,8 @@ const DEFAULT_PORT = 8000
 export const initializeBackend = async () => {
   let port = DEFAULT_PORT
 
-  if (window.electronAPI) {
-    port = await window.electronAPI.backend.getPort()
+  if (globalThis.window.electronAPI) {
+    port = await globalThis.window.electronAPI.backend.getPort()
   }
 
   const baseURL = `http://localhost:${port}`
