@@ -2,7 +2,8 @@ import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import serve from 'electron-serve'
 import fixPath from 'fix-path'
 import path from 'path'
-import { startBackend } from '../scripts/backend'
+import { startBackend, stopBackend } from '../scripts/backend'
+import { setupBackendPortHandler } from './backend-port'
 import {
   isLogStreaming,
   startLogStreaming,
@@ -154,6 +155,7 @@ if (!gotLock) {
     onDownloadImage()
     onLogStreaming()
     onBackendStatusHistory()
+    setupBackendPortHandler()
     onAutoUpdate()
 
     if (process.env.SKIP_BACKEND !== 'true') {
@@ -168,5 +170,9 @@ if (!gotLock) {
     if (process.platform !== 'darwin') {
       app.quit()
     }
+  })
+
+  app.on('before-quit', () => {
+    stopBackend()
   })
 }

@@ -46,6 +46,7 @@ describe('useBackendLog', () => {
       downloadImage: vi.fn(),
       onBackendSetupStatus: vi.fn(),
       backend: {
+        getPort: vi.fn().mockResolvedValue(8000),
         startLogStream: mockStartLogStream.mockResolvedValue(undefined),
         stopLogStream: mockStopLogStream.mockResolvedValue(undefined),
         isLogStreaming: mockIsLogStreaming.mockResolvedValue(false),

@@ -33,6 +33,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     }
   },
   backend: {
+    getPort: () => ipcRenderer.invoke('backend:get-port'),
     startLogStream: () => ipcRenderer.invoke('backend:start-log-stream'),
     stopLogStream: () => ipcRenderer.invoke('backend:stop-log-stream'),
     isLogStreaming: () => ipcRenderer.invoke('backend:log-stream-status'),

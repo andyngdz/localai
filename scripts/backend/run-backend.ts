@@ -1,12 +1,17 @@
-import { BackendStatusEmitter, BackendStatusLevel } from '@types'
+import { BackendStatusEmitter, BackendStatusLevel, Nullable } from '@types'
 import * as path from 'node:path'
-import { $ } from 'zx'
-import { normalizeError, pathExists } from './utils'
+import { $, type ProcessPromise } from 'zx'
+import { findAvailablePort, normalizeError, pathExists } from './utils'
 
 export interface RunBackendOptions {
   backendPath: string
   emit: BackendStatusEmitter
 }
+
+// Store the backend process reference for cleanup
+let backendProcess: Nullable<ProcessPromise>
+// Store the actual port being used (defaults to 8000)
+let backendPort = 8000
 
 const onLogOutput = (data: Buffer | string) => {
   const output = data.toString().trim()
@@ -20,10 +25,12 @@ const onLogOutput = (data: Buffer | string) => {
   }
 }
 
-const runBackend = async ({
-  backendPath,
-  emit
-}: RunBackendOptions): Promise<void> => {
+const runBackend = async ({ backendPath, emit }: RunBackendOptions) => {
+  // Stop any existing backend process before starting a new one
+  if (backendProcess) {
+    stopBackend()
+  }
+
   // Check if main.py exists
   const mainPyPath = path.join(backendPath, 'main.py')
   const mainExists = await pathExists(mainPyPath)
@@ -39,10 +46,19 @@ const runBackend = async ({
 
   emit({
     level: BackendStatusLevel.Info,
-    message: 'Starting LocalAI Backend…'
+    message: 'Finding available port for backend…'
   })
 
   try {
+    // Find an available port (tries 8000 first, then increments)
+    const port = await findAvailablePort(8000)
+    backendPort = port
+
+    emit({
+      level: BackendStatusLevel.Info,
+      message: `Starting LocalAI Backend on port ${port}…`
+    })
+
     emit({
       level: BackendStatusLevel.Info,
       message: 'LocalAI Backend started successfully'
@@ -53,20 +69,22 @@ const runBackend = async ({
     // which will then be captured by the log streamer
     process.chdir(backendPath)
 
-    // Run uvicorn in a way that streams output to console
-    const uvicornCommand = $`uvicorn main:app`
+    // Run uvicorn with the dynamically allocated port
+    backendProcess = $`uvicorn main:app --host 127.0.0.1 --port ${port}`
 
     // Stream the output to console so it gets picked up by log streaming
-    uvicornCommand.stdout.on('data', onLogOutput)
+    backendProcess.stdout.on('data', onLogOutput)
 
-    uvicornCommand.stderr.on('data', onLogOutput)
+    backendProcess.stderr.on('data', onLogOutput)
 
     // Don't await - let it run in background
-    uvicornCommand.catch((error) => {
+    backendProcess.catch((error) => {
       emit({
         level: BackendStatusLevel.Error,
-        message: `Backend process failed: ${error.message}`
+        message: 'Backend process failed. Please restart the application.'
       })
+
+      throw normalizeError(error, 'Backend process failed')
     })
   } catch (error) {
     emit({
@@ -79,4 +97,17 @@ const runBackend = async ({
   }
 }
 
-export { runBackend }
+const stopBackend = () => {
+  if (backendProcess) {
+    try {
+      backendProcess.kill()
+      backendPort = 8000
+    } catch (error) {
+      console.error('Failed to stop backend process:', error)
+    }
+  }
+}
+
+const getBackendPort = () => backendPort
+
+export { getBackendPort, runBackend, stopBackend }

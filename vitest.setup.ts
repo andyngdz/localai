@@ -48,6 +48,7 @@ const createElectronAPIMock = (): ElectronAPI => ({
   downloadImage: vi.fn().mockReturnThis(),
   onBackendSetupStatus: vi.fn().mockReturnValue(noop),
   backend: {
+    getPort: vi.fn().mockResolvedValue(8000),
     startLogStream: vi.fn().mockResolvedValue(undefined),
     stopLogStream: vi.fn().mockResolvedValue(undefined),
     isLogStreaming: vi.fn().mockResolvedValue(false),
