@@ -7,8 +7,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   createDefaultStatusEmitter,
   ensurePathIncludes,
+  findAvailablePort,
   isLinux,
   isMac,
+  isPortAvailable,
   isWindows,
   normalizeError,
   pathExists
@@ -188,6 +190,70 @@ describe('utils', () => {
       expect(isWindows).toBe(process.platform === 'win32')
       expect(isMac).toBe(process.platform === 'darwin')
       expect(isLinux).toBe(process.platform === 'linux')
+    })
+  })
+
+  describe('isPortAvailable', () => {
+    it('should return true for available port', async () => {
+      const result = await isPortAvailable(0)
+
+      expect(result).toBe(true)
+    })
+
+    it('should return false for occupied port', async () => {
+      const { createServer } = await import('node:net')
+      const server = createServer()
+
+      await new Promise<void>((resolve) => {
+        server.listen(0, '127.0.0.1', () => resolve())
+      })
+
+      const address = server.address()
+      const port = typeof address === 'object' && address ? address.port : 0
+
+      const result = await isPortAvailable(port)
+
+      server.close()
+
+      expect(result).toBe(false)
+    })
+  })
+
+  describe('findAvailablePort', () => {
+    it('should return preferred port when available', async () => {
+      const port = await findAvailablePort(9000)
+
+      expect(port).toBeGreaterThanOrEqual(9000)
+    })
+
+    it('should find next available port when preferred is occupied', async () => {
+      const { createServer } = await import('node:net')
+      const server = createServer()
+
+      const preferredPort = 9100
+
+      await new Promise<void>((resolve) => {
+        server.listen(preferredPort, '127.0.0.1', () => resolve())
+      })
+
+      const port = await findAvailablePort(preferredPort)
+
+      server.close()
+
+      expect(port).toBeGreaterThan(preferredPort)
+    })
+
+    it('should use default preferred port 8000', async () => {
+      const port = await findAvailablePort()
+
+      expect(port).toBeGreaterThanOrEqual(8000)
+    })
+
+    it('should respect maxAttempts parameter', async () => {
+      const port = await findAvailablePort(8000, 10)
+
+      expect(port).toBeGreaterThanOrEqual(8000)
+      expect(port).toBeLessThan(8010)
     })
   })
 })
