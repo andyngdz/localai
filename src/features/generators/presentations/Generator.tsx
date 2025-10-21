@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react'
 import { FormProvider } from 'react-hook-form'
 import { useGenerator, useGeneratorForm } from '../states'
 
+import { Progress } from '@heroui/react'
 import 'allotment/dist/style.css'
 
 export const Generator = () => {
@@ -22,7 +23,8 @@ export const Generator = () => {
     setMounted(true)
   }, [])
 
-  if (!mounted) return
+  if (!mounted)
+    return <Progress isIndeterminate aria-label="Loading..." size="sm" />
 
   return (
     <FormProvider {...methods}>
