@@ -1,10 +1,21 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { initializeBackend } from '../initialize-backend'
-import { client } from '../api'
+import { client } from '@/services/api'
 import { updateSocketUrl } from '@/sockets'
 
 vi.mock('@/sockets', () => ({
-  updateSocketUrl: vi.fn()
+  updateSocketUrl: vi.fn(),
+  socket: {
+    connect: vi.fn()
+  }
+}))
+
+vi.mock('../states/useBackendInitStore', () => ({
+  useBackendInitStore: {
+    getState: vi.fn(() => ({
+      setInitialized: vi.fn()
+    }))
+  }
 }))
 
 describe('initializeBackend', () => {

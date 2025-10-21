@@ -1,5 +1,5 @@
 import { createMockQueryResult } from '@/cores/test-utils'
-import { useDownloadedModelsQuery } from '@/services'
+import { useDownloadedModelsQuery } from '@/cores/api-queries'
 import { ModelDownloaded } from '@/types/api'
 import { renderHook, waitFor } from '@testing-library/react'
 import * as esToolkit from 'es-toolkit/compat'
@@ -14,7 +14,7 @@ vi.mock('@/services/api', () => ({
   }
 }))
 
-vi.mock('@/services/queries', () => ({
+vi.mock('@/cores/api-queries', () => ({
   useDownloadedModelsQuery: vi.fn()
 }))
 

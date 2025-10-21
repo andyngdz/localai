@@ -6,7 +6,7 @@ vi.mock('@/features/app-footer', () => ({
   AppFooter: () => <div data-testid="app-footer" />
 }))
 
-vi.mock('@/services', () => ({
+vi.mock('@/cores/backend-initialization', () => ({
   initializeBackend: vi.fn()
 }))
 
@@ -27,7 +27,7 @@ describe('AppLayout', () => {
   })
 
   it('calls initializeBackend on mount', async () => {
-    const { initializeBackend } = await import('@/services')
+    const { initializeBackend } = await import('@/cores/backend-initialization')
 
     render(
       <AppLayout>

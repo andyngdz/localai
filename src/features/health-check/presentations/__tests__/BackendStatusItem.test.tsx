@@ -8,6 +8,7 @@ describe('BackendStatusItem', () => {
   const makeEntry = (
     overrides: Partial<BackendSetupStatusEntry> = {}
   ): BackendSetupStatusEntry => ({
+    id: overrides.id ?? 'test-id',
     level: overrides.level ?? BackendStatusLevel.Info,
     message: overrides.message ?? 'backend ready',
     timestamp: overrides.timestamp ?? Date.now(),

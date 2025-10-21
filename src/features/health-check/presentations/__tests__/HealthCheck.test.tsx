@@ -1,10 +1,10 @@
 import { DeviceSelection } from '@/cores/constants'
+import * as queries from '@/cores/api-queries'
 import {
   createMockQuery,
   renderWithAct,
   setupRouterMock
 } from '@/cores/test-utils'
-import * as queries from '@/services'
 import { api } from '@/services'
 import { HealthResponse } from '@/types/api'
 import { screen } from '@testing-library/react'

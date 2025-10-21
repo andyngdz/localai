@@ -1,9 +1,11 @@
 import type { BackendStatusPayload } from '@types'
+import { uniqueId } from 'es-toolkit/compat'
 import { create } from 'zustand'
 
 export const MAX_BACKEND_STATUS_MESSAGES = 100
 
 export interface BackendSetupStatusEntry extends BackendStatusPayload {
+  id: string
   timestamp: number
 }
 
@@ -22,6 +24,7 @@ export const useBackendSetupStatusStore = create<BackendSetupStatusStore>(
           ...state.entries,
           {
             ...payload,
+            id: uniqueId(),
             timestamp: Date.now()
           }
         ]

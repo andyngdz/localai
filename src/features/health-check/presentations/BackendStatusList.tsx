@@ -23,7 +23,7 @@ export const BackendStatusList: FC<BackendStatusListProps> = ({ statuses }) => {
     <ScrollShadow hideScrollBar className="max-h-40 pr-2 pb-6 text-sm">
       <div className="flex flex-col gap-1">
         {statuses.map((status) => (
-          <BackendStatusItem key={status.timestamp} status={status} />
+          <BackendStatusItem key={status.id} status={status} />
         ))}
       </div>
     </ScrollShadow>

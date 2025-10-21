@@ -8,14 +8,15 @@ import {
   ModelDownloaded,
   ModelRecommendationResponse,
   StyleSection
-} from '../types/api'
-import { api } from './api'
+} from '@/types'
+import { api } from '@/services/api'
 
-const useHealthQuery = () => {
+const useHealthQuery = (enabled = true) => {
   return useQuery<HealthResponse, ApiError>({
     queryKey: ['health'],
     queryFn: () => api.health(),
-    refetchInterval: 3000
+    refetchInterval: 3000,
+    enabled
   })
 }
 

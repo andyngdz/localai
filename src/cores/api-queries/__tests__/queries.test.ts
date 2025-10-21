@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { renderHook, waitFor } from '@testing-library/react'
 import React from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { api } from '../api'
+import { api } from '@/services/api'
 import {
   useDownloadedModelsQuery,
   useHardwareQuery,
@@ -15,7 +15,7 @@ import {
 } from '../queries'
 
 // Mock the API service
-vi.mock('../api', () => ({
+vi.mock('@/services/api', () => ({
   api: {
     health: vi.fn(),
     getHardwareStatus: vi.fn(),

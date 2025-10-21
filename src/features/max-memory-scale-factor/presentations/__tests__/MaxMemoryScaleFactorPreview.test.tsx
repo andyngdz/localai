@@ -1,4 +1,5 @@
-import { formatter, useMemoryQuery } from '@/services'
+import { useMemoryQuery } from '@/cores/api-queries'
+import { formatter } from '@/services'
 import { ApiError, MemoryResponse } from '@/types/api'
 import { UseQueryResult } from '@tanstack/react-query'
 import { render, screen } from '@testing-library/react'
@@ -8,7 +9,7 @@ import { MaxMemoryFormProps } from '../../types'
 import { MaxMemoryScaleFactorPreview } from '../MaxMemoryScaleFactorPreview'
 
 // Mock the services
-vi.mock('@/services/queries', () => ({
+vi.mock('@/cores/api-queries', () => ({
   useMemoryQuery: vi.fn()
 }))
 
