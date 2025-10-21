@@ -1,15 +1,15 @@
-import { HistoryItem } from '@/types'
-import { useQuery } from '@tanstack/react-query'
+import { api } from '@/services/api'
 import {
   ApiError,
   HardwareResponse,
   HealthResponse,
+  HistoryItem,
   MemoryResponse,
   ModelDownloaded,
   ModelRecommendationResponse,
   StyleSection
 } from '@/types'
-import { api } from '@/services/api'
+import { useQuery } from '@tanstack/react-query'
 
 const useHealthQuery = (enabled = true) => {
   return useQuery<HealthResponse, ApiError>({
