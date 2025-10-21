@@ -1,22 +1,31 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "./electron",
+    "outDir": "./electron/.build",
+    "declarationDir": "./electron/types",
     "module": "commonjs",
     "moduleResolution": "node",
     "target": "ES2020",
     "noEmit": false,
-    "declaration": false,
+    "declaration": true,
     "sourceMap": false,
     "removeComments": false,
-    "incremental": false
+    "incremental": false,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@types": ["./types"],
+      "@types/*": ["./types/*"],
+      "./scripts/*": ["../scripts/*"]
+    }
   },
-  "include": ["electron/**/*.ts", "scripts/backend/**/*.ts", "types/**/*.ts"],
+  "include": ["electron/**/*.ts", "scripts/backend/**/*.ts"],
   "exclude": [
     "node_modules",
     "src",
     ".next",
     "dist",
+    "types",
     "scripts/backend/__tests__/**/*",
     "**/*.test.ts",
     "**/*.test.tsx"

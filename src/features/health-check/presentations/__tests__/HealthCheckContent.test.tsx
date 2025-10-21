@@ -5,11 +5,13 @@ import { HealthCheckContent } from '../HealthCheckContent'
 
 const makeStatus = (
   overrides: Partial<{
+    id: string
     level: BackendStatusLevel
     message: string
     timestamp: number
   }> = {}
 ) => ({
+  id: 'test-id',
   level: BackendStatusLevel.Info,
   message: 'Default status message',
   timestamp: 1,

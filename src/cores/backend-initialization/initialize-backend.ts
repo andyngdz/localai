@@ -1,5 +1,6 @@
-import { updateSocketUrl } from '@/sockets'
-import { client } from './api'
+import { client } from '@/services/api'
+import { socket, updateSocketUrl } from '@/sockets'
+import { useBackendInitStore } from './states/useBackendInitStore'
 
 const DEFAULT_PORT = 8000
 
@@ -14,7 +15,12 @@ export const initializeBackend = async () => {
 
   client.defaults.baseURL = baseURL
 
-  if (port !== DEFAULT_PORT) {
+  if (port === DEFAULT_PORT) {
+    socket.connect()
+  } else {
     updateSocketUrl(baseURL)
   }
+
+  // Signal that backend initialization is complete
+  useBackendInitStore.getState().setInitialized(true)
 }
