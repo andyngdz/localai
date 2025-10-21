@@ -12,6 +12,7 @@ import { Allotment } from 'allotment'
 import clsx from 'clsx'
 import { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
+import { useDeepCompareEffect } from 'react-use'
 import { useFormValuesStore, useGenerator } from '../states'
 
 import 'allotment/dist/style.css'
@@ -26,15 +27,12 @@ export const Generator = () => {
   })
   const [mounted, setMounted] = useState(false)
   const { onGenerate } = useGenerator()
+  const formValues = methods.watch()
 
   // Update Zustand store when form values change
-  useEffect(() => {
-    const subscription = methods.watch((formValues) => {
-      onSetValues(formValues as GeneratorConfigFormValues)
-    })
-
-    return () => subscription.unsubscribe()
-  }, [methods, onSetValues])
+  useDeepCompareEffect(() => {
+    onSetValues(formValues)
+  }, [formValues, onSetValues])
 
   useEffect(() => {
     setMounted(true)
