@@ -1,4 +1,4 @@
-import { useHistoriesQuery } from '@/services'
+import { useHistoriesQuery } from '@/cores/api-queries'
 import { useHistoryGroups } from './useHistoryGroups'
 
 export const useHistories = () => {

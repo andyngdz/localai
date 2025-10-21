@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { renderHook, waitFor } from '@testing-library/react'
 import React from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { api } from '../api'
+import { api } from '@/services/api'
 import {
   useDownloadedModelsQuery,
   useHardwareQuery,
@@ -15,7 +15,7 @@ import {
 } from '../queries'
 
 // Mock the API service
-vi.mock('../api', () => ({
+vi.mock('@/services/api', () => ({
   api: {
     health: vi.fn(),
     getHardwareStatus: vi.fn(),
@@ -123,6 +123,21 @@ describe('React Query Hooks', () => {
       expect(api.getHardwareStatus).toHaveBeenCalled()
       expect(result.current.data).toEqual(mockResponse)
     })
+
+    it('handles error', async () => {
+      const mockError = new Error('Network error')
+      vi.mocked(api.getHardwareStatus).mockRejectedValue(mockError)
+
+      const { result } = renderHook(() => useHardwareQuery(), {
+        wrapper: testEnv.wrapper
+      })
+
+      await waitFor(() => {
+        expect(result.current.isError).toBe(true)
+      })
+
+      expect(api.getHardwareStatus).toHaveBeenCalled()
+    })
   })
 
   describe('useMemoryQuery', () => {
@@ -140,6 +155,21 @@ describe('React Query Hooks', () => {
 
       expect(api.getMemory).toHaveBeenCalled()
       expect(result.current.data).toEqual(mockResponse)
+    })
+
+    it('handles error', async () => {
+      const mockError = new Error('Network error')
+      vi.mocked(api.getMemory).mockRejectedValue(mockError)
+
+      const { result } = renderHook(() => useMemoryQuery(), {
+        wrapper: testEnv.wrapper
+      })
+
+      await waitFor(() => {
+        expect(result.current.isError).toBe(true)
+      })
+
+      expect(api.getMemory).toHaveBeenCalled()
     })
   })
 
@@ -181,6 +211,21 @@ describe('React Query Hooks', () => {
       expect(api.getModelRecommendations).toHaveBeenCalled()
       expect(result.current.data).toEqual(mockResponse)
     })
+
+    it('handles error', async () => {
+      const mockError = new Error('Network error')
+      vi.mocked(api.getModelRecommendations).mockRejectedValue(mockError)
+
+      const { result } = renderHook(() => useModelRecommendationsQuery(), {
+        wrapper: testEnv.wrapper
+      })
+
+      await waitFor(() => {
+        expect(result.current.isError).toBe(true)
+      })
+
+      expect(api.getModelRecommendations).toHaveBeenCalled()
+    })
   })
 
   describe('useDownloadedModelsQuery', () => {
@@ -214,6 +259,21 @@ describe('React Query Hooks', () => {
       expect(api.getDownloadedModels).toHaveBeenCalled()
       expect(result.current.data).toEqual(mockResponse)
     })
+
+    it('handles error', async () => {
+      const mockError = new Error('Network error')
+      vi.mocked(api.getDownloadedModels).mockRejectedValue(mockError)
+
+      const { result } = renderHook(() => useDownloadedModelsQuery(), {
+        wrapper: testEnv.wrapper
+      })
+
+      await waitFor(() => {
+        expect(result.current.isError).toBe(true)
+      })
+
+      expect(api.getDownloadedModels).toHaveBeenCalled()
+    })
   })
 
   describe('useStyleSectionsQuery', () => {
@@ -246,6 +306,21 @@ describe('React Query Hooks', () => {
 
       expect(api.styles).toHaveBeenCalled()
       expect(result.current.data).toEqual(mockResponse)
+    })
+
+    it('handles error', async () => {
+      const mockError = new Error('Network error')
+      vi.mocked(api.styles).mockRejectedValue(mockError)
+
+      const { result } = renderHook(() => useStyleSectionsQuery(), {
+        wrapper: testEnv.wrapper
+      })
+
+      await waitFor(() => {
+        expect(result.current.isError).toBe(true)
+      })
+
+      expect(api.styles).toHaveBeenCalled()
     })
   })
 

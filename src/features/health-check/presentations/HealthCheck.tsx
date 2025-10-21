@@ -1,8 +1,10 @@
 'use client'
 
 import { DeviceSelection } from '@/cores/constants'
+import { useBackendInitStore } from '@/cores/backend-initialization'
+import { useHealthQuery } from '@/cores/api-queries'
 import { SetupLayout } from '@/features/setup-layout/presentations'
-import { api, useHealthQuery } from '@/services'
+import { api } from '@/services'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect } from 'react'
 import { useBackendSetupStatus } from '../states/useBackendSetupStatus'
@@ -10,7 +12,8 @@ import { HealthCheckContent } from './HealthCheckContent'
 
 export const HealthCheck = () => {
   const router = useRouter()
-  const { data } = useHealthQuery()
+  const isInitialized = useBackendInitStore((state) => state.isInitialized)
+  const { data } = useHealthQuery(isInitialized)
   const isHealthy = !!data
   const { entries } = useBackendSetupStatus()
 

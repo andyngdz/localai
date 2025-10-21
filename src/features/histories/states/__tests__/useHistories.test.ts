@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useHistories } from '../useHistories'
-import { useHistoriesQuery } from '@/services'
+import { useHistoriesQuery } from '@/cores/api-queries'
 import { useHistoryGroups } from '../useHistoryGroups'
 import type { HistoryGroup } from '../useHistoryGroups'
 import { createQueryClientWrapper } from '@/cores/test-utils/query-client'
@@ -9,7 +9,7 @@ import { createMockQueryResult } from '@/cores/test-utils/query-result-mock'
 import type { HistoryItem } from '@/types'
 import type { ApiError } from '@/types/api'
 
-vi.mock('@/services', () => ({
+vi.mock('@/cores/api-queries', () => ({
   useHistoriesQuery: vi.fn()
 }))
 
