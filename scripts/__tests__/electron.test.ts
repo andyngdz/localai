@@ -1,4 +1,5 @@
 import * as fs from 'fs/promises'
+import type { PathLike } from 'fs'
 import { join } from 'path'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { startDesktopDev } from '../desktop'
@@ -229,6 +230,22 @@ describe('electron toolchain', () => {
       mockCp.mockRejectedValue(syncError)
 
       await expect(compileElectron()).rejects.toThrow('Type sync failed')
+    })
+
+    it('handles rm failure during type sync', async () => {
+      const syncError = new Error('Sync rm failed')
+      mockRm.mockImplementation(async (path: PathLike) => {
+        if (path.toString().endsWith('@types')) {
+          throw syncError
+        }
+      })
+      await expect(compileElectron()).rejects.toThrow(syncError)
+    })
+
+    it('handles mkdir failure during type sync', async () => {
+      const syncError = new Error('Sync mkdir failed')
+      mockMkdir.mockRejectedValue(syncError)
+      await expect(compileElectron()).rejects.toThrow(syncError)
     })
 
     it('processes cleanup operations in parallel', async () => {

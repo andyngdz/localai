@@ -222,6 +222,24 @@ describe('runBackend', () => {
       )
     })
 
+    it('should handle findAvailablePort errors', async () => {
+      const portError = new Error('Port finding failed')
+      mockFindAvailablePort.mockRejectedValue(portError)
+
+      await expect(
+        runBackend({
+          backendPath: mockBackendPath,
+          emit: mockEmit
+        })
+      ).rejects.toThrow('Port finding failed')
+
+      expect(mockEmit).toHaveBeenCalledWith({
+        level: BackendStatusLevel.Error,
+        message:
+          'Failed to start LocalAI Backend. Please restart the application.'
+      })
+    })
+
     it('should setup catch handler for backend process errors', async () => {
       await runBackend({
         backendPath: mockBackendPath,
@@ -231,6 +249,23 @@ describe('runBackend', () => {
       expect(mockProcessInstance.catch).toHaveBeenCalledWith(
         expect.any(Function)
       )
+    })
+
+    it('should emit error when backend process fails', async () => {
+      const processError = new Error('Process failed')
+      mockProcessInstance.catch.mockImplementation(async (callback) => {
+        await callback(processError)
+      })
+
+      await runBackend({
+        backendPath: mockBackendPath,
+        emit: mockEmit
+      })
+
+      expect(mockEmit).toHaveBeenCalledWith({
+        level: BackendStatusLevel.Error,
+        message: 'Backend process failed. Please restart the application.'
+      })
     })
   })
 
@@ -483,6 +518,23 @@ describe('runBackend', () => {
       expect(consoleInfoSpy).toHaveBeenNthCalledWith(1, 'Line 1')
       expect(consoleInfoSpy).toHaveBeenNthCalledWith(2, 'Line 2')
       expect(consoleInfoSpy).toHaveBeenNthCalledWith(3, 'Line 3')
+    })
+
+    it('should log error messages to console.error', async () => {
+      const consoleErrorSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {})
+
+      await runBackend({
+        backendPath: mockBackendPath,
+        emit: mockEmit
+      })
+
+      mockStdout.emit('data', Buffer.from('ERROR: Something went wrong'))
+
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        'ERROR: Something went wrong'
+      )
     })
   })
 
