@@ -81,6 +81,15 @@ jobs:
           GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
         run: npx semantic-release
 
+      - name: Sync release branch back to main
+        env:
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
+        run: |
+          git fetch origin main
+          git checkout main
+          git merge --no-edit release
+          git push origin main
+
       - name: Get release info
         id: get_info
         run: echo "release_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo '')" >> "$GITHUB_OUTPUT"
