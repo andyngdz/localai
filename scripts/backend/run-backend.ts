@@ -100,7 +100,23 @@ const runBackend = async ({ backendPath, emit }: RunBackendOptions) => {
 const stopBackend = () => {
   if (backendProcess) {
     try {
-      backendProcess.kill()
+      const childProcess = backendProcess.child
+
+      if (childProcess && childProcess.pid) {
+        const pid = childProcess.pid
+
+        if (process.platform === 'win32') {
+          childProcess.kill('SIGTERM')
+        } else {
+          try {
+            process.kill(-pid, 'SIGTERM')
+          } catch {
+            childProcess.kill('SIGTERM')
+          }
+        }
+      }
+
+      backendProcess = null
       backendPort = 8000
     } catch (error) {
       console.error('Failed to stop backend process:', error)

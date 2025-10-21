@@ -1,7 +1,8 @@
 'use client'
 
+import { useHardwareQuery } from '@/cores/api-queries'
 import { SetupLayout } from '@/features/setup-layout'
-import { api, useHardwareQuery } from '@/services'
+import { api } from '@/services'
 import { useRouter } from 'next/navigation'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { GpuDetectionFormProps } from '../types/gpu-detection'

@@ -1,5 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import { useForm } from 'react-hook-form'
+import { useDeepCompareEffect } from 'react-use'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { FORM_DEFAULT_VALUES } from '../../constants'
 import { useFormValuesStore, useGenerator } from '../../states'
@@ -101,6 +102,11 @@ vi.mock('react-hook-form', () => ({
   )
 }))
 
+// Mock react-use
+vi.mock('react-use', () => ({
+  useDeepCompareEffect: vi.fn()
+}))
+
 describe('Generator', () => {
   const mockWatch = vi.fn()
   const mockHandleSubmit = vi.fn()
@@ -116,8 +122,8 @@ describe('Generator', () => {
       onGenerate: mockOnGenerate
     })
 
-    const mockSubscription = { unsubscribe: vi.fn() }
-    mockWatch.mockReturnValue(mockSubscription)
+    // Mock watch to return form values (not a subscription)
+    mockWatch.mockReturnValue(FORM_DEFAULT_VALUES)
     mockHandleSubmit.mockReturnValue(vi.fn())
 
     // Mock useForm from react-hook-form
@@ -140,6 +146,11 @@ describe('Generator', () => {
       register: vi.fn(),
       subscribe: vi.fn()
     } as ReturnType<typeof useForm>)
+
+    // Mock useDeepCompareEffect to execute the effect immediately
+    vi.mocked(useDeepCompareEffect).mockImplementation((effect) => {
+      effect()
+    })
   })
 
   afterEach(() => {
@@ -171,13 +182,10 @@ describe('Generator', () => {
     render(<Generator />)
 
     expect(mockWatch).toHaveBeenCalled()
+    expect(useDeepCompareEffect).toHaveBeenCalled()
 
-    // Simulate form value change
-    const watchCallback = mockWatch.mock.calls[0][0]
-    const testFormValues = { ...FORM_DEFAULT_VALUES, prompt: 'test prompt' }
-    watchCallback(testFormValues)
-
-    expect(mockOnSetValues).toHaveBeenCalledWith(testFormValues)
+    // Verify onSetValues was called with form values from watch()
+    expect(mockOnSetValues).toHaveBeenCalledWith(FORM_DEFAULT_VALUES)
   })
 
   it('renders form with correct attributes', () => {
@@ -236,15 +244,5 @@ describe('Generator', () => {
 
     const form = screen.getByRole('form')
     expect(form).toHaveClass('w-full', 'h-full', 'transition-opacity')
-  })
-
-  it('cleans up form watcher subscription on unmount', () => {
-    const mockUnsubscribe = vi.fn()
-    mockWatch.mockReturnValue({ unsubscribe: mockUnsubscribe })
-
-    const { unmount } = render(<Generator />)
-    unmount()
-
-    expect(mockUnsubscribe).toHaveBeenCalled()
   })
 })

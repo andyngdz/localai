@@ -1,21 +1,22 @@
-import { HistoryItem } from '@/types'
-import { useQuery } from '@tanstack/react-query'
+import { api } from '@/services/api'
 import {
   ApiError,
   HardwareResponse,
   HealthResponse,
+  HistoryItem,
   MemoryResponse,
   ModelDownloaded,
   ModelRecommendationResponse,
   StyleSection
-} from '../types/api'
-import { api } from './api'
+} from '@/types'
+import { useQuery } from '@tanstack/react-query'
 
-const useHealthQuery = () => {
+const useHealthQuery = (enabled = true) => {
   return useQuery<HealthResponse, ApiError>({
     queryKey: ['health'],
     queryFn: () => api.health(),
-    refetchInterval: 3000
+    refetchInterval: 3000,
+    enabled
   })
 }
 

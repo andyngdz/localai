@@ -66,7 +66,7 @@ vi.mock('@/services/api', () => ({
   }
 }))
 
-vi.mock('@/services/queries', () => ({
+vi.mock('@/cores/api-queries', () => ({
   useHardwareQuery: vi.fn()
 }))
 
@@ -92,7 +92,7 @@ describe('GpuDetection', () => {
 
   // Reusable helper to set up hardware query mock
   const setupHardwareQueryMock = async (data: HardwareResponse | null) => {
-    const { useHardwareQuery } = await import('@/services/queries')
+    const { useHardwareQuery } = await import('@/cores/api-queries')
     vi.mocked(useHardwareQuery).mockReturnValue(createMockQuery(data))
     return { useHardwareQuery }
   }
@@ -136,7 +136,7 @@ describe('GpuDetection', () => {
 
   // This test has a specific implementation due to form state initialization timing
   it('disables next button when form is invalid', async () => {
-    const { useHardwareQuery } = await import('@/services/queries')
+    const { useHardwareQuery } = await import('@/cores/api-queries')
     const { useRouter } = await import('next/navigation')
 
     const mockPush = vi.fn()
