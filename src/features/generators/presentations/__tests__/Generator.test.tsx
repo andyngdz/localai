@@ -1,9 +1,8 @@
 import { render, screen, waitFor } from '@testing-library/react'
-import { useForm } from 'react-hook-form'
-import { useDeepCompareEffect } from 'react-use'
+import { UseFormReturn } from 'react-hook-form'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { FORM_DEFAULT_VALUES } from '../../constants'
-import { useFormValuesStore, useGenerator } from '../../states'
+import { GeneratorConfigFormValues } from '@/features/generator-configs'
+import { useGeneratorForm, useGenerator } from '../../states'
 import { Generator } from '../Generator'
 
 // Mock all the feature components
@@ -86,70 +85,71 @@ vi.mock('allotment', () => {
 })
 
 // Mock the state hooks
-const mockOnSetValues = vi.fn()
 const mockOnGenerate = vi.fn()
+const mockMethods: Partial<UseFormReturn<GeneratorConfigFormValues>> = {
+  watch: vi.fn(),
+  handleSubmit: vi.fn(),
+  getValues: vi.fn(),
+  getFieldState: vi.fn(),
+  setError: vi.fn(),
+  clearErrors: vi.fn(),
+  setValue: vi.fn(),
+  trigger: vi.fn(),
+  formState: {} as UseFormReturn<GeneratorConfigFormValues>['formState'],
+  resetField: vi.fn(),
+  reset: vi.fn(),
+  setFocus: vi.fn(),
+  unregister: vi.fn(),
+  control: {} as UseFormReturn<GeneratorConfigFormValues>['control'],
+  register: vi.fn(),
+  subscribe: vi.fn()
+}
 
 vi.mock('../../states', () => ({
-  useFormValuesStore: vi.fn(),
+  useGeneratorForm: vi.fn(),
   useGenerator: vi.fn()
 }))
 
 // Mock react-hook-form
 vi.mock('react-hook-form', () => ({
-  useForm: vi.fn(),
   FormProvider: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="form-provider">{children}</div>
   )
 }))
 
-// Mock react-use
-vi.mock('react-use', () => ({
-  useDeepCompareEffect: vi.fn()
+// Mock HeroUI Progress component
+vi.mock('@heroui/react', () => ({
+  Progress: ({
+    isIndeterminate,
+    size,
+    'aria-label': ariaLabel
+  }: {
+    isIndeterminate?: boolean
+    size?: string
+    'aria-label'?: string
+  }) => (
+    <div
+      data-testid="progress-indicator"
+      data-indeterminate={isIndeterminate}
+      data-size={size}
+      aria-label={ariaLabel}
+    />
+  )
 }))
 
 describe('Generator', () => {
-  const mockWatch = vi.fn()
-  const mockHandleSubmit = vi.fn()
-
   beforeEach(() => {
     // Setup default mocks
-    vi.mocked(useFormValuesStore).mockReturnValue({
-      values: FORM_DEFAULT_VALUES,
-      onSetValues: mockOnSetValues
+    ;(mockMethods.handleSubmit as ReturnType<typeof vi.fn>).mockReturnValue(
+      vi.fn()
+    )
+
+    vi.mocked(useGeneratorForm).mockReturnValue({
+      methods: mockMethods as UseFormReturn<GeneratorConfigFormValues>
     })
 
     vi.mocked(useGenerator).mockReturnValue({
       onGenerate: mockOnGenerate
-    })
-
-    // Mock watch to return form values (not a subscription)
-    mockWatch.mockReturnValue(FORM_DEFAULT_VALUES)
-    mockHandleSubmit.mockReturnValue(vi.fn())
-
-    // Mock useForm from react-hook-form
-    vi.mocked(useForm).mockReturnValue({
-      watch: mockWatch,
-      handleSubmit: mockHandleSubmit,
-      // Add other required properties as empty functions/objects
-      getValues: vi.fn(),
-      getFieldState: vi.fn(),
-      setError: vi.fn(),
-      clearErrors: vi.fn(),
-      setValue: vi.fn(),
-      trigger: vi.fn(),
-      formState: {} as ReturnType<typeof useForm>['formState'],
-      resetField: vi.fn(),
-      reset: vi.fn(),
-      setFocus: vi.fn(),
-      unregister: vi.fn(),
-      control: {} as ReturnType<typeof useForm>['control'],
-      register: vi.fn(),
-      subscribe: vi.fn()
-    } as ReturnType<typeof useForm>)
-
-    // Mock useDeepCompareEffect to execute the effect immediately
-    vi.mocked(useDeepCompareEffect).mockImplementation((effect) => {
-      effect()
     })
   })
 
@@ -167,25 +167,16 @@ describe('Generator', () => {
     expect(screen.getByTestId('histories')).toBeInTheDocument()
   })
 
-  it('initializes form with values from store', () => {
+  it('uses useGeneratorForm hook', () => {
     render(<Generator />)
 
-    expect(useForm).toHaveBeenCalledWith({
-      mode: 'all',
-      reValidateMode: 'onChange',
-      defaultValues: FORM_DEFAULT_VALUES,
-      values: FORM_DEFAULT_VALUES
-    })
+    expect(useGeneratorForm).toHaveBeenCalled()
   })
 
-  it('sets up form watcher to update store on value changes', () => {
+  it('uses useGenerator hook', () => {
     render(<Generator />)
 
-    expect(mockWatch).toHaveBeenCalled()
-    expect(useDeepCompareEffect).toHaveBeenCalled()
-
-    // Verify onSetValues was called with form values from watch()
-    expect(mockOnSetValues).toHaveBeenCalledWith(FORM_DEFAULT_VALUES)
+    expect(useGenerator).toHaveBeenCalled()
   })
 
   it('renders form with correct attributes', () => {
@@ -198,7 +189,7 @@ describe('Generator', () => {
   it('configures form submit handler', () => {
     render(<Generator />)
 
-    expect(mockHandleSubmit).toHaveBeenCalledWith(mockOnGenerate)
+    expect(mockMethods.handleSubmit).toHaveBeenCalledWith(mockOnGenerate)
   })
 
   it('renders Allotment with correct default sizes', () => {
@@ -244,5 +235,40 @@ describe('Generator', () => {
 
     const form = screen.getByRole('form')
     expect(form).toHaveClass('w-full', 'h-full', 'transition-opacity')
+  })
+
+  it('renders with proper layout structure', () => {
+    render(<Generator />)
+
+    // Should have the main form container
+    const form = screen.getByRole('form')
+    expect(form).toBeInTheDocument()
+
+    // Should have all the required panes
+    const panes = screen.getAllByTestId('allotment-pane')
+    expect(panes).toHaveLength(3)
+  })
+
+  it('transitions from loading to mounted state', async () => {
+    render(<Generator />)
+
+    // Initially might show progress (before useEffect completes)
+    // Then should show the form
+    await waitFor(() => {
+      const form = screen.getByRole('form')
+      expect(form).toBeInTheDocument()
+      expect(form).toHaveClass('opacity-100')
+    })
+  })
+
+  it('hides Progress indicator after component mounts', async () => {
+    render(<Generator />)
+
+    await waitFor(() => {
+      // After mount, progress should not be visible
+      expect(screen.queryByTestId('progress-indicator')).not.toBeInTheDocument()
+      // Form should be visible instead
+      expect(screen.getByRole('form')).toBeInTheDocument()
+    })
   })
 })

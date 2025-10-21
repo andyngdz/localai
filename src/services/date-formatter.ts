@@ -5,6 +5,10 @@ class DateFormatter {
     return dayjs(value).format('HH:mm')
   }
 
+  timeFromTimestamp(value: number) {
+    return dayjs(new Date(value).toISOString()).format('HH:mm')
+  }
+
   date(value: string) {
     return dayjs(value).format('MMM D, YYYY')
   }

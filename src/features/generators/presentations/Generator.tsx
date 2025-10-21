@@ -1,42 +1,30 @@
 'use client'
 
 import { GeneratorAction } from '@/features/generator-actions'
-import {
-  GeneratorConfig,
-  GeneratorConfigFormValues
-} from '@/features/generator-configs'
+import { GeneratorConfig } from '@/features/generator-configs'
 import { GeneratorPreviewer } from '@/features/generator-previewers'
 import { GeneratorPrompt } from '@/features/generator-prompts'
 import { Histories } from '@/features/histories'
 import { Allotment } from 'allotment'
 import clsx from 'clsx'
 import { useEffect, useState } from 'react'
-import { FormProvider, useForm } from 'react-hook-form'
-import { useDeepCompareEffect } from 'react-use'
-import { useFormValuesStore, useGenerator } from '../states'
+import { FormProvider } from 'react-hook-form'
+import { useGenerator, useGeneratorForm } from '../states'
 
+import { Progress } from '@heroui/react'
 import 'allotment/dist/style.css'
 
 export const Generator = () => {
-  const { values, onSetValues } = useFormValuesStore()
-  const methods = useForm<GeneratorConfigFormValues>({
-    mode: 'all',
-    reValidateMode: 'onChange',
-    defaultValues: values,
-    values
-  })
-  const [mounted, setMounted] = useState(false)
+  const { methods } = useGeneratorForm()
   const { onGenerate } = useGenerator()
-  const formValues = methods.watch()
-
-  // Update Zustand store when form values change
-  useDeepCompareEffect(() => {
-    onSetValues(formValues)
-  }, [formValues, onSetValues])
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  if (!mounted)
+    return <Progress isIndeterminate aria-label="Loading..." size="sm" />
 
   return (
     <FormProvider {...methods}>

@@ -10,7 +10,7 @@ vi.mock('../../states', () => ({
 
 vi.mock('@/services', () => ({
   dateFormatter: {
-    time: vi.fn((timestamp) => `${timestamp}`)
+    timeFromTimestamp: vi.fn((timestamp) => `${timestamp}`)
   }
 }))
 

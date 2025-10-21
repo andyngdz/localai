@@ -1,0 +1,103 @@
+import { describe, expect, it, vi, beforeEach } from 'vitest'
+import { FORM_DEFAULT_VALUES } from '../../constants'
+import type { GeneratorConfigFormValues } from '@/features/generator-configs'
+
+// Mocks
+const mockUseEffect = vi.fn((cb: () => void) => cb())
+const mockUseForm = vi.fn()
+const mockUseDeepCompareEffect = vi.fn((cb: () => void) => cb())
+const mockUseLocalStorage = vi.fn()
+const mockUseFormValuesStore = vi.fn()
+
+vi.mock('react', async () => {
+  const actual = await vi.importActual<object>('react')
+  return {
+    ...actual,
+    useEffect: (...args: unknown[]) => mockUseEffect(...(args as [() => void]))
+  }
+})
+
+vi.mock('react-hook-form', () => ({
+  useForm: (...args: unknown[]) => mockUseForm(...args)
+}))
+
+vi.mock('react-use', () => ({
+  useDeepCompareEffect: (...args: unknown[]) =>
+    mockUseDeepCompareEffect(...(args as [() => void])),
+  useLocalStorage: (...args: unknown[]) => mockUseLocalStorage(...args)
+}))
+
+vi.mock('../useFormValuesStore', () => ({
+  useFormValuesStore: (...args: unknown[]) => mockUseFormValuesStore(...args)
+}))
+
+// Import the hook under test AFTER mocks are set up
+import { useGeneratorForm } from '../useGeneratorForm'
+
+describe('useGeneratorForm', () => {
+  const localStorageValues: GeneratorConfigFormValues = {
+    ...FORM_DEFAULT_VALUES,
+    prompt: 'from-local'
+  }
+  const watchedFormValues: GeneratorConfigFormValues = {
+    ...FORM_DEFAULT_VALUES,
+    prompt: 'watched'
+  }
+  const storeValues: GeneratorConfigFormValues = {
+    ...FORM_DEFAULT_VALUES,
+    prompt: 'from-store'
+  }
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+
+    // react-use: useLocalStorage returns tuple [value, setter]
+    const setLocalStorage = vi.fn()
+    mockUseLocalStorage.mockReturnValue([localStorageValues, setLocalStorage])
+
+    // zustand store selector returns state.values
+    mockUseFormValuesStore.mockImplementation(
+      (selector: (s: { values?: GeneratorConfigFormValues }) => unknown) =>
+        selector({ values: storeValues })
+    )
+
+    // react-hook-form: useForm methods
+    mockUseForm.mockReturnValue({
+      watch: vi.fn(() => watchedFormValues),
+      reset: vi.fn()
+    })
+  })
+
+  it('initializes react-hook-form with localStorage default values and returns methods', () => {
+    const { methods } = useGeneratorForm()
+
+    expect(mockUseLocalStorage).toHaveBeenCalledWith(
+      'generator-form-values',
+      FORM_DEFAULT_VALUES
+    )
+    expect(mockUseForm).toHaveBeenCalledWith(
+      expect.objectContaining({
+        mode: 'all',
+        reValidateMode: 'onChange',
+        defaultValues: localStorageValues
+      })
+    )
+    expect(methods).toHaveProperty('watch')
+    expect(methods).toHaveProperty('reset')
+  })
+
+  it('persists watched form values to localStorage via useDeepCompareEffect', () => {
+    const { methods } = useGeneratorForm()
+
+    // useDeepCompareEffect should have run and setLocalStorage called with watched values
+    const setLocalStorage = mockUseLocalStorage.mock.results[0].value[1]
+    expect(methods.watch()).toEqual(watchedFormValues)
+    expect(setLocalStorage).toHaveBeenCalledWith(watchedFormValues)
+  })
+
+  it('resets form when store values change (useEffect)', () => {
+    const { methods } = useGeneratorForm()
+
+    expect(methods.reset).toHaveBeenCalledWith(storeValues)
+  })
+})
