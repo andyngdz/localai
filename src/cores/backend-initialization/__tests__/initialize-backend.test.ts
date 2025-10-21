@@ -1,15 +1,30 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { initializeBackend } from '../initialize-backend'
-import { client } from '../api'
+import { client } from '@/services/api'
 import { updateSocketUrl } from '@/sockets'
+import { useBackendInitStore } from '../states/useBackendInitStore'
 
 vi.mock('@/sockets', () => ({
-  updateSocketUrl: vi.fn()
+  updateSocketUrl: vi.fn(),
+  socket: {
+    connect: vi.fn()
+  }
+}))
+
+const setInitializedMock = vi.fn()
+
+vi.mock('../states/useBackendInitStore', () => ({
+  useBackendInitStore: {
+    getState: () => ({
+      setInitialized: setInitializedMock
+    })
+  }
 }))
 
 describe('initializeBackend', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    setInitializedMock.mockClear()
     delete (global.window as { electronAPI?: unknown }).electronAPI
   })
 
@@ -67,5 +82,21 @@ describe('initializeBackend', () => {
     await initializeBackend()
 
     expect(updateSocketUrl).not.toHaveBeenCalled()
+  })
+
+  it('connects socket when port is default', async () => {
+    const { socket } = await import('@/sockets')
+
+    await initializeBackend()
+
+    expect(socket.connect).toHaveBeenCalledTimes(1)
+  })
+
+  it('signals initialization complete', async () => {
+    await initializeBackend()
+
+    expect(useBackendInitStore.getState().setInitialized).toHaveBeenCalledWith(
+      true
+    )
   })
 })

@@ -1,4 +1,4 @@
-import { useModelRecommendationsQuery } from '@/services'
+import { useModelRecommendationsQuery } from '@/cores/api-queries'
 import { socket, SocketEvents } from '@/sockets'
 import { act, renderHook } from '@testing-library/react'
 import { setupRouterMock } from '@/cores/test-utils'
@@ -6,7 +6,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useModelRecommendation } from '../useModelRecommendation'
 import { Socket } from 'socket.io-client'
 
-vi.mock('@/services/queries')
+vi.mock('@/cores/api-queries')
 vi.mock('@/sockets', async (originalImport: () => Promise<Socket>) => {
   const actual = await originalImport()
   return {

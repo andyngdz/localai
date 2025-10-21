@@ -1,10 +1,10 @@
 import { DeviceSelection } from '@/cores/constants'
+import * as queries from '@/cores/api-queries'
 import {
   createMockQuery,
   renderWithAct,
   setupRouterMock
 } from '@/cores/test-utils'
-import * as queries from '@/services'
 import { api } from '@/services'
 import { HealthResponse } from '@/types/api'
 import { screen } from '@testing-library/react'
@@ -182,6 +182,42 @@ describe('HealthCheck', () => {
     // Use flush promises to wait for the async operation
     await vi.waitFor(() => {
       expect(mockPush).toHaveBeenCalledWith('/editor')
+    })
+  })
+
+  it('does not check device index or redirect when backend is not healthy', async () => {
+    // Mock the useHealthQuery hook to return null data (not healthy)
+    setupHealthQueryMock(null)
+
+    const { mockPush } = routerMocks
+
+    await renderWithAct(<HealthCheck />)
+
+    await vi.waitFor(() => {
+      expect(api.getDeviceIndex).not.toHaveBeenCalled()
+      expect(mockPush).not.toHaveBeenCalled()
+    })
+  })
+
+  it('redirects to gpu-detection if device index is not set', async () => {
+    // Mock getDeviceIndex to return NOT_FOUND
+    vi.mocked(api.getDeviceIndex).mockResolvedValue({
+      device_index: DeviceSelection.NOT_FOUND
+    })
+
+    // Mock router
+    const { mockPush } = routerMocks
+
+    // Mock the useHealthQuery hook
+    setupHealthQueryMock({
+      status: 'ok',
+      message: 'Server is running'
+    })
+
+    await renderWithAct(<HealthCheck />)
+
+    await vi.waitFor(() => {
+      expect(mockPush).toHaveBeenCalledWith('/gpu-detection')
     })
   })
 })

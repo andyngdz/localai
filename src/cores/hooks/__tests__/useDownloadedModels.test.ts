@@ -1,12 +1,12 @@
 import { renderHook } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useDownloadedModels } from '../useDownloadedModels'
-import { useDownloadedModelsQuery } from '@/services'
+import { useDownloadedModelsQuery } from '@/cores/api-queries'
 import { createQueryClientWrapper } from '@/cores/test-utils/query-client'
 import { createMockQueryResult } from '@/cores/test-utils/query-result-mock'
 import { ModelDownloaded } from '@/types'
 
-vi.mock('@/services', () => ({
+vi.mock('@/cores/api-queries', () => ({
   useDownloadedModelsQuery: vi.fn()
 }))
 

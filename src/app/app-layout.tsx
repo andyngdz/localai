@@ -1,7 +1,7 @@
 'use client'
 
 import { AppFooter } from '@/features/app-footer'
-import { initializeBackend } from '@/services'
+import { initializeBackend } from '@/cores/backend-initialization'
 import { FC, PropsWithChildren, useEffect } from 'react'
 
 export const AppLayout: FC<PropsWithChildren> = ({ children }) => {

@@ -1,12 +1,12 @@
 import { createQueryClientWrapper } from '@/cores/test-utils/query-client'
 import { createMockQueryResult } from '@/cores/test-utils/query-result-mock'
-import { useStyleSectionsQuery } from '@/services'
+import { useStyleSectionsQuery } from '@/cores/api-queries'
 import { ApiError, StyleItem, StyleSection } from '@/types'
 import { renderHook } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useStyleSections } from '../useStyleSections'
 
-vi.mock('@/services', () => ({
+vi.mock('@/cores/api-queries', () => ({
   useStyleSectionsQuery: vi.fn()
 }))
 
