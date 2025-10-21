@@ -21,7 +21,7 @@ export const BackendStatusItem: FC<BackendStatusItemProps> = ({ status }) => {
           {status.message}
         </Badge>
         <span className="text-tiny text-default-500">
-          {dateFormatter.time(new Date(status.timestamp).toISOString())}
+          {dateFormatter.timeFromTimestamp(status.timestamp)}
         </span>
       </div>
       {status.commands && <SuggestedCommands commands={status.commands} />}
