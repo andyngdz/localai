@@ -117,6 +117,26 @@ vi.mock('react-hook-form', () => ({
   )
 }))
 
+// Mock HeroUI Progress component
+vi.mock('@heroui/react', () => ({
+  Progress: ({
+    isIndeterminate,
+    size,
+    'aria-label': ariaLabel
+  }: {
+    isIndeterminate?: boolean
+    size?: string
+    'aria-label'?: string
+  }) => (
+    <div
+      data-testid="progress-indicator"
+      data-indeterminate={isIndeterminate}
+      data-size={size}
+      aria-label={ariaLabel}
+    />
+  )
+}))
+
 describe('Generator', () => {
   beforeEach(() => {
     // Setup default mocks
@@ -215,5 +235,40 @@ describe('Generator', () => {
 
     const form = screen.getByRole('form')
     expect(form).toHaveClass('w-full', 'h-full', 'transition-opacity')
+  })
+
+  it('renders with proper layout structure', () => {
+    render(<Generator />)
+
+    // Should have the main form container
+    const form = screen.getByRole('form')
+    expect(form).toBeInTheDocument()
+
+    // Should have all the required panes
+    const panes = screen.getAllByTestId('allotment-pane')
+    expect(panes).toHaveLength(3)
+  })
+
+  it('transitions from loading to mounted state', async () => {
+    render(<Generator />)
+
+    // Initially might show progress (before useEffect completes)
+    // Then should show the form
+    await waitFor(() => {
+      const form = screen.getByRole('form')
+      expect(form).toBeInTheDocument()
+      expect(form).toHaveClass('opacity-100')
+    })
+  })
+
+  it('hides Progress indicator after component mounts', async () => {
+    render(<Generator />)
+
+    await waitFor(() => {
+      // After mount, progress should not be visible
+      expect(screen.queryByTestId('progress-indicator')).not.toBeInTheDocument()
+      // Form should be visible instead
+      expect(screen.getByRole('form')).toBeInTheDocument()
+    })
   })
 })

@@ -78,6 +78,86 @@ describe('DateFormatter', () => {
     })
   })
 
+  describe('timeFromTimestamp', () => {
+    it('formats Unix timestamp to HH:mm format in local timezone', () => {
+      const timestamp = new Date('2024-01-15T14:30:45Z').getTime()
+      const expected = dayjs(new Date(timestamp).toISOString()).format('HH:mm')
+      const result = dateFormatter.timeFromTimestamp(timestamp)
+      expect(result).toBe(expected)
+    })
+
+    it('formats midnight timestamp correctly', () => {
+      const timestamp = new Date('2024-01-15T00:00:00Z').getTime()
+      const expected = dayjs(new Date(timestamp).toISOString()).format('HH:mm')
+      const result = dateFormatter.timeFromTimestamp(timestamp)
+      expect(result).toBe(expected)
+    })
+
+    it('formats noon timestamp correctly', () => {
+      const timestamp = new Date('2024-01-15T12:00:00Z').getTime()
+      const expected = dayjs(new Date(timestamp).toISOString()).format('HH:mm')
+      const result = dateFormatter.timeFromTimestamp(timestamp)
+      expect(result).toBe(expected)
+    })
+
+    it('formats timestamp with milliseconds correctly', () => {
+      const timestamp = 1705327530123 // 2024-01-15T14:25:30.123Z
+      const expected = dayjs(new Date(timestamp).toISOString()).format('HH:mm')
+      const result = dateFormatter.timeFromTimestamp(timestamp)
+      expect(result).toBe(expected)
+    })
+
+    it('handles epoch timestamp (0) correctly', () => {
+      const timestamp = 0 // 1970-01-01T00:00:00.000Z
+      const expected = dayjs(new Date(timestamp).toISOString()).format('HH:mm')
+      const result = dateFormatter.timeFromTimestamp(timestamp)
+      expect(result).toBe(expected)
+    })
+
+    it('handles current timestamp correctly', () => {
+      const timestamp = Date.now()
+      const expected = dayjs(new Date(timestamp).toISOString()).format('HH:mm')
+      const result = dateFormatter.timeFromTimestamp(timestamp)
+      expect(result).toBe(expected)
+    })
+
+    it('handles timestamp for date in the past', () => {
+      const timestamp = new Date('1990-06-15T08:30:00Z').getTime()
+      const expected = dayjs(new Date(timestamp).toISOString()).format('HH:mm')
+      const result = dateFormatter.timeFromTimestamp(timestamp)
+      expect(result).toBe(expected)
+    })
+
+    it('handles timestamp for date in the future', () => {
+      const timestamp = new Date('2030-12-31T23:59:59Z').getTime()
+      const expected = dayjs(new Date(timestamp).toISOString()).format('HH:mm')
+      const result = dateFormatter.timeFromTimestamp(timestamp)
+      expect(result).toBe(expected)
+    })
+
+    it('handles negative timestamp correctly', () => {
+      const timestamp = -86400000 // One day before epoch
+      const expected = dayjs(new Date(timestamp).toISOString()).format('HH:mm')
+      const result = dateFormatter.timeFromTimestamp(timestamp)
+      expect(result).toBe(expected)
+    })
+
+    it('handles invalid timestamp (NaN) by throwing error', () => {
+      // new Date(NaN).toISOString() throws RangeError
+      expect(() => dateFormatter.timeFromTimestamp(NaN)).toThrow(RangeError)
+      expect(() => dateFormatter.timeFromTimestamp(NaN)).toThrow(
+        'Invalid time value'
+      )
+    })
+
+    it('handles extremely large timestamp', () => {
+      const timestamp = 8640000000000000 // Max timestamp
+      const expected = dayjs(new Date(timestamp).toISOString()).format('HH:mm')
+      const result = dateFormatter.timeFromTimestamp(timestamp)
+      expect(result).toBe(expected)
+    })
+  })
+
   describe('date', () => {
     it('formats valid ISO date string to MMM D, YYYY format', () => {
       const isoString = '2024-01-15T14:30:45Z'
@@ -187,17 +267,24 @@ describe('DateFormatter', () => {
   describe('DateFormatter class integration', () => {
     it('maintains consistent behavior across multiple calls', () => {
       const isoString = '2024-01-15T14:30:45Z'
+      const timestamp = new Date(isoString).getTime()
 
       const time1 = dateFormatter.time(isoString)
       const time2 = dateFormatter.time(isoString)
       const date1 = dateFormatter.date(isoString)
       const date2 = dateFormatter.date(isoString)
+      const timeFromTs1 = dateFormatter.timeFromTimestamp(timestamp)
+      const timeFromTs2 = dateFormatter.timeFromTimestamp(timestamp)
 
       expect(time1).toBe(time2)
       expect(date1).toBe(date2)
+      expect(timeFromTs1).toBe(timeFromTs2)
       // Use dayjs to get expected values based on local timezone
       expect(time1).toBe(dayjs(isoString).format('HH:mm'))
       expect(date1).toBe(dayjs(isoString).format('MMM D, YYYY'))
+      expect(timeFromTs1).toBe(
+        dayjs(new Date(timestamp).toISOString()).format('HH:mm')
+      )
     })
 
     it('handles same date string for both time and date formatting', () => {
@@ -210,10 +297,21 @@ describe('DateFormatter', () => {
       expect(dateResult).toBe(dayjs(isoString).format('MMM D, YYYY'))
     })
 
+    it('produces same result for time() and timeFromTimestamp() with equivalent inputs', () => {
+      const isoString = '2024-01-15T14:30:00Z'
+      const timestamp = new Date(isoString).getTime()
+
+      const timeFromIso = dateFormatter.time(isoString)
+      const timeFromTs = dateFormatter.timeFromTimestamp(timestamp)
+
+      expect(timeFromIso).toBe(timeFromTs)
+    })
+
     it('is exported as a singleton instance', () => {
       // Test that we get the same instance
       expect(dateFormatter).toBeDefined()
       expect(typeof dateFormatter.time).toBe('function')
+      expect(typeof dateFormatter.timeFromTimestamp).toBe('function')
       expect(typeof dateFormatter.date).toBe('function')
     })
   })
