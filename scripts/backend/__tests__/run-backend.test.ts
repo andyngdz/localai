@@ -8,11 +8,20 @@ import { EventEmitter } from 'events'
 // Mock dependencies
 const mockStdout = new EventEmitter()
 const mockStderr = new EventEmitter()
-const mockProcessInstance = {
+const mockChildProcess: { pid?: number; kill: ReturnType<typeof vi.fn> } = {
+  pid: 12345,
+  kill: vi.fn()
+}
+const mockProcessInstance: {
+  stdout: EventEmitter
+  stderr: EventEmitter
+  catch: ReturnType<typeof vi.fn>
+  child?: { pid?: number; kill: ReturnType<typeof vi.fn> }
+} = {
   stdout: mockStdout,
   stderr: mockStderr,
   catch: vi.fn(),
-  kill: vi.fn()
+  child: mockChildProcess
 }
 
 const mock$ = vi.fn()
@@ -38,7 +47,9 @@ describe('runBackend', () => {
     mockStdout.removeAllListeners()
     mockStderr.removeAllListeners()
     mockProcessInstance.catch.mockClear()
-    mockProcessInstance.kill.mockClear()
+    mockChildProcess.kill.mockClear()
+    mockChildProcess.pid = 12345
+    mockProcessInstance.child = mockChildProcess
 
     // Setup default successful mocks
     mockPathExists.mockResolvedValue(true)
@@ -601,17 +612,91 @@ describe('runBackend', () => {
   })
 
   describe('stopBackend', () => {
-    it('should kill running backend process', async () => {
+    it('should kill process group on Unix/Linux systems', async () => {
+      const originalPlatform = process.platform
+      Object.defineProperty(process, 'platform', {
+        value: 'linux',
+        writable: true
+      })
+      const processKillSpy = vi
+        .spyOn(process, 'kill')
+        .mockImplementation(() => true)
+
       await runBackend({
         backendPath: mockBackendPath,
         emit: mockEmit
       })
 
-      mockProcessInstance.kill.mockClear()
+      mockChildProcess.kill.mockClear()
 
       stopBackend()
 
-      expect(mockProcessInstance.kill).toHaveBeenCalledTimes(1)
+      // Should use negative PID to kill process group
+      expect(processKillSpy).toHaveBeenCalledWith(-12345, 'SIGTERM')
+      expect(mockChildProcess.kill).not.toHaveBeenCalled()
+
+      Object.defineProperty(process, 'platform', {
+        value: originalPlatform,
+        writable: true
+      })
+      processKillSpy.mockRestore()
+    })
+
+    it('should use childProcess.kill on Windows', async () => {
+      const originalPlatform = process.platform
+      Object.defineProperty(process, 'platform', {
+        value: 'win32',
+        writable: true
+      })
+
+      await runBackend({
+        backendPath: mockBackendPath,
+        emit: mockEmit
+      })
+
+      mockChildProcess.kill.mockClear()
+
+      stopBackend()
+
+      expect(mockChildProcess.kill).toHaveBeenCalledWith('SIGTERM')
+
+      Object.defineProperty(process, 'platform', {
+        value: originalPlatform,
+        writable: true
+      })
+    })
+
+    it('should fallback to childProcess.kill if process.kill fails', async () => {
+      const originalPlatform = process.platform
+      Object.defineProperty(process, 'platform', {
+        value: 'linux',
+        writable: true
+      })
+      const processKillSpy = vi
+        .spyOn(process, 'kill')
+        .mockImplementation(() => {
+          throw new Error('Process kill failed')
+        })
+
+      await runBackend({
+        backendPath: mockBackendPath,
+        emit: mockEmit
+      })
+
+      mockChildProcess.kill.mockClear()
+
+      stopBackend()
+
+      // Should attempt process group kill first
+      expect(processKillSpy).toHaveBeenCalledWith(-12345, 'SIGTERM')
+      // Then fallback to child process kill
+      expect(mockChildProcess.kill).toHaveBeenCalledWith('SIGTERM')
+
+      Object.defineProperty(process, 'platform', {
+        value: originalPlatform,
+        writable: true
+      })
+      processKillSpy.mockRestore()
     })
 
     it('should reset port to 8000 after stopping', async () => {
@@ -634,10 +719,15 @@ describe('runBackend', () => {
     })
 
     it('should handle kill errors gracefully', async () => {
+      const originalPlatform = process.platform
+      Object.defineProperty(process, 'platform', {
+        value: 'win32',
+        writable: true
+      })
       const consoleErrorSpy = vi
         .spyOn(console, 'error')
         .mockImplementation(() => {})
-      mockProcessInstance.kill.mockImplementation(() => {
+      mockChildProcess.kill.mockImplementation(() => {
         throw new Error('Kill failed')
       })
 
@@ -652,6 +742,35 @@ describe('runBackend', () => {
         'Failed to stop backend process:',
         expect.any(Error)
       )
+
+      Object.defineProperty(process, 'platform', {
+        value: originalPlatform,
+        writable: true
+      })
+    })
+
+    it('should handle missing child process gracefully', async () => {
+      await runBackend({
+        backendPath: mockBackendPath,
+        emit: mockEmit
+      })
+
+      // Remove child process
+      delete mockProcessInstance.child
+
+      expect(() => stopBackend()).not.toThrow()
+    })
+
+    it('should handle missing PID gracefully', async () => {
+      await runBackend({
+        backendPath: mockBackendPath,
+        emit: mockEmit
+      })
+
+      // Remove PID
+      delete mockChildProcess.pid
+
+      expect(() => stopBackend()).not.toThrow()
     })
   })
 
@@ -674,33 +793,55 @@ describe('runBackend', () => {
 
   describe('process cleanup guard', () => {
     it('should stop existing process before starting new one', async () => {
+      const originalPlatform = process.platform
+      Object.defineProperty(process, 'platform', {
+        value: 'win32',
+        writable: true
+      })
+
       await runBackend({
         backendPath: mockBackendPath,
         emit: mockEmit
       })
 
-      vi.clearAllMocks()
+      mockChildProcess.kill.mockClear()
 
       await runBackend({
         backendPath: mockBackendPath,
         emit: mockEmit
       })
 
-      expect(mockProcessInstance.kill).toHaveBeenCalledTimes(1)
+      expect(mockChildProcess.kill).toHaveBeenCalledTimes(1)
+
+      Object.defineProperty(process, 'platform', {
+        value: originalPlatform,
+        writable: true
+      })
     })
 
     it('should prevent process leaks on multiple calls', async () => {
+      const originalPlatform = process.platform
+      Object.defineProperty(process, 'platform', {
+        value: 'win32',
+        writable: true
+      })
+
       await runBackend({ backendPath: '/path1', emit: mockEmit })
 
-      vi.clearAllMocks()
+      mockChildProcess.kill.mockClear()
 
       await runBackend({ backendPath: '/path2', emit: mockEmit })
-      expect(mockProcessInstance.kill).toHaveBeenCalledTimes(1)
+      expect(mockChildProcess.kill).toHaveBeenCalledTimes(1)
 
-      vi.clearAllMocks()
+      mockChildProcess.kill.mockClear()
 
       await runBackend({ backendPath: '/path3', emit: mockEmit })
-      expect(mockProcessInstance.kill).toHaveBeenCalledTimes(1)
+      expect(mockChildProcess.kill).toHaveBeenCalledTimes(1)
+
+      Object.defineProperty(process, 'platform', {
+        value: originalPlatform,
+        writable: true
+      })
     })
   })
 })

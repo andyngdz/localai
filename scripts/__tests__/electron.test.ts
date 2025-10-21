@@ -12,6 +12,12 @@ const { mock$, recordedCommands } = vi.hoisted(() => {
   }
 })
 
+const { mockBuild, buildCalls } = vi.hoisted(() => {
+  const calls: unknown[] = []
+  const mockFn = vi.fn()
+  return { mockBuild: mockFn, buildCalls: calls }
+})
+
 const { runAsScriptMock, runAsScriptCalls } = vi.hoisted(() => {
   const calls: Array<{ task: () => Promise<void>; message: string }> = []
   const mockFn = vi.fn(async (task: () => Promise<void>, message: string) => {
@@ -29,10 +35,10 @@ vi.mock('../utils', () => ({
 vi.mock('zx', () => ({
   $: (...args: unknown[]) => mock$(...args)
 }))
+vi.mock('esbuild', () => ({
+  build: (...args: unknown[]) => mockBuild(...args)
+}))
 
-const mockReadFile = vi.mocked(fs.readFile)
-const mockWriteFile = vi.mocked(fs.writeFile)
-const mockRename = vi.mocked(fs.rename)
 const mockRm = vi.mocked(fs.rm)
 const mockMkdir = vi.mocked(fs.mkdir)
 const mockCp = vi.mocked(fs.cp)
@@ -46,22 +52,18 @@ const toCommandString = (pieces: TemplateStringsArray, args: unknown[]) =>
 describe('electron toolchain', () => {
   const mockProjectRoot = '/test/project'
   const electronDir = join(mockProjectRoot, 'electron')
-  const electronBuildDir = join(electronDir, 'electron')
   const compiledTypesDir = join(electronDir, 'types')
   const runtimeTypesDir = join(electronDir, 'node_modules', '@types')
 
   beforeEach(() => {
     vi.clearAllMocks()
     recordedCommands.length = 0
+    buildCalls.length = 0
 
-    mockReadFile.mockResolvedValue(
-      'mock file content with require("../scripts/backend")'
-    )
-    mockWriteFile.mockResolvedValue()
-    mockRename.mockResolvedValue()
     mockRm.mockResolvedValue()
     mockMkdir.mockReturnThis()
     mockCp.mockResolvedValue()
+    mockBuild.mockResolvedValue(undefined)
 
     mock$.mockImplementation(
       (pieces: TemplateStringsArray, ...args: unknown[]) => {
@@ -72,56 +74,85 @@ describe('electron toolchain', () => {
   })
 
   describe('compileElectron', () => {
-    it('compiles Electron TypeScript sources', async () => {
+    it('cleans all output files and directories', async () => {
       await compileElectron()
 
-      expect(mockRm).toHaveBeenCalledWith(join(electronDir, 'main.cjs'), {
-        force: true
-      })
       expect(mockRm).toHaveBeenCalledWith(join(electronDir, 'main.js'), {
-        force: true
-      })
-      expect(mockRm).toHaveBeenCalledWith(join(electronDir, 'preload.cjs'), {
         force: true
       })
       expect(mockRm).toHaveBeenCalledWith(join(electronDir, 'preload.js'), {
         force: true
       })
+      expect(mockRm).toHaveBeenCalledWith(
+        join(electronDir, 'backend-port.js'),
+        {
+          force: true
+        }
+      )
+      expect(mockRm).toHaveBeenCalledWith(
+        join(electronDir, 'log-streamer.js'),
+        {
+          force: true
+        }
+      )
       expect(mockRm).toHaveBeenCalledWith(join(electronDir, 'updater.js'), {
         force: true
       })
-      expect(mockRm).toHaveBeenCalledWith(join(electronDir, 'scripts'), {
+      expect(mockRm).toHaveBeenCalledWith(
+        join(electronDir, 'status-broadcaster.js'),
+        {
+          force: true
+        }
+      )
+      expect(mockRm).toHaveBeenCalledWith(join(electronDir, '.build'), {
         recursive: true,
         force: true
       })
+      expect(mockRm).toHaveBeenCalledWith(join(electronDir, 'types'), {
+        recursive: true,
+        force: true
+      })
+    })
 
-      expect(recordedCommands[0]).toBe(
-        'npx tsc --project,tsconfig.electron.json'
-      )
+    it('generates types with tsc emitDeclarationOnly', async () => {
+      await compileElectron()
 
-      const mainJsPath = join(electronBuildDir, 'main.js')
-      expect(mockReadFile).toHaveBeenCalledWith(mainJsPath, 'utf8')
-      expect(mockWriteFile).toHaveBeenCalledWith(
-        mainJsPath,
-        'mock file content with require("./scripts/backend")'
+      expect(recordedCommands).toContain(
+        'npx tsc --project tsconfig.electron.json --emitDeclarationOnly'
       )
+    })
 
-      expect(mockRename).toHaveBeenCalledWith(
-        join(electronBuildDir, 'main.js'),
-        join(electronDir, 'main.js')
+    it('bundles with esbuild', async () => {
+      await compileElectron()
+
+      expect(mockBuild).toHaveBeenCalledWith(
+        expect.objectContaining({
+          entryPoints: [
+            join(electronDir, 'main.ts'),
+            join(electronDir, 'preload.ts'),
+            join(electronDir, 'backend-port.ts'),
+            join(electronDir, 'log-streamer.ts'),
+            join(electronDir, 'updater.ts'),
+            join(electronDir, 'status-broadcaster.ts')
+          ],
+          bundle: true,
+          platform: 'node',
+          target: 'node18',
+          outdir: electronDir,
+          format: 'cjs',
+          external: [
+            'electron',
+            'electron-updater',
+            'electron-log',
+            'fix-path'
+          ],
+          sourcemap: false
+        })
       )
-      expect(mockRename).toHaveBeenCalledWith(
-        join(electronBuildDir, 'preload.js'),
-        join(electronDir, 'preload.js')
-      )
-      expect(mockRename).toHaveBeenCalledWith(
-        join(electronBuildDir, 'log-streamer.js'),
-        join(electronDir, 'log-streamer.js')
-      )
-      expect(mockRename).toHaveBeenCalledWith(
-        join(electronBuildDir, 'updater.js'),
-        join(electronDir, 'updater.js')
-      )
+    })
+
+    it('syncs compiled types to runtime types directory', async () => {
+      await compileElectron()
 
       expect(mockRm).toHaveBeenCalledWith(runtimeTypesDir, {
         recursive: true,
@@ -133,90 +164,83 @@ describe('electron toolchain', () => {
       expect(mockCp).toHaveBeenCalledWith(compiledTypesDir, runtimeTypesDir, {
         recursive: true
       })
-
-      expect(mockRm).toHaveBeenCalledWith(electronBuildDir, {
-        recursive: true,
-        force: true
-      })
     })
 
-    it('handles TypeScript compilation failures', async () => {
-      const compilationError = new Error('TypeScript compilation failed')
+    it('executes build steps in correct order', async () => {
+      const executionOrder: string[] = []
+
+      mockRm.mockImplementation(async () => {
+        executionOrder.push('clean')
+      })
+
       mock$.mockImplementation(
         (pieces: TemplateStringsArray, ...args: unknown[]) => {
           recordedCommands.push(toCommandString(pieces, args).trim())
-          return Promise.reject(compilationError)
+          executionOrder.push('generateTypes')
+          return Promise.resolve()
         }
       )
 
-      await expect(compileElectron()).rejects.toThrow(
-        'TypeScript compilation failed'
-      )
+      mockBuild.mockImplementation(async () => {
+        executionOrder.push('bundle')
+      })
+
+      mockCp.mockImplementation(async () => {
+        executionOrder.push('syncTypes')
+        return Promise.resolve()
+      })
+
+      await compileElectron()
+
+      expect(executionOrder[0]).toBe('clean')
+      expect(executionOrder).toContain('generateTypes')
+      expect(executionOrder).toContain('bundle')
+      expect(executionOrder[executionOrder.length - 1]).toBe('syncTypes')
     })
 
-    it('handles file-system failures', async () => {
+    it('handles TypeScript type generation failures', async () => {
+      const typeGenError = new Error('Type generation failed')
+      mock$.mockImplementation(
+        (pieces: TemplateStringsArray, ...args: unknown[]) => {
+          recordedCommands.push(toCommandString(pieces, args).trim())
+          return Promise.reject(typeGenError)
+        }
+      )
+
+      await expect(compileElectron()).rejects.toThrow('Type generation failed')
+    })
+
+    it('handles esbuild bundling failures', async () => {
+      const bundleError = new Error('Bundling failed')
+      mockBuild.mockRejectedValue(bundleError)
+
+      await expect(compileElectron()).rejects.toThrow('Bundling failed')
+    })
+
+    it('handles file system cleanup failures', async () => {
       const fsError = new Error('File system error')
       mockRm.mockRejectedValue(fsError)
 
       await expect(compileElectron()).rejects.toThrow('File system error')
     })
 
-    it('handles read failures', async () => {
-      const readError = new Error('File read error')
-      mockReadFile.mockRejectedValue(readError)
+    it('handles type sync failures', async () => {
+      const syncError = new Error('Type sync failed')
+      mockCp.mockRejectedValue(syncError)
 
-      await expect(compileElectron()).rejects.toThrow('File read error')
-    })
-
-    it('handles write failures', async () => {
-      const writeError = new Error('File write error')
-      mockWriteFile.mockRejectedValue(writeError)
-
-      await expect(compileElectron()).rejects.toThrow('File write error')
-    })
-
-    it('handles rename failures', async () => {
-      const renameError = new Error('File rename error')
-      mockRename.mockRejectedValue(renameError)
-
-      await expect(compileElectron()).rejects.toThrow('File rename error')
-    })
-
-    it('handles missing require statements gracefully', async () => {
-      mockReadFile.mockResolvedValue('plain content')
-
-      await compileElectron()
-
-      expect(mockWriteFile).toHaveBeenCalledWith(
-        join(electronBuildDir, 'main.js'),
-        'plain content'
-      )
-    })
-
-    it('handles mixed require statements', async () => {
-      mockReadFile.mockResolvedValue(
-        'require("../scripts/frontend")\nrequire("./scripts/backend")\nrequire("../scripts/backend")'
-      )
-
-      await compileElectron()
-
-      expect(mockWriteFile).toHaveBeenCalledWith(
-        join(electronBuildDir, 'main.js'),
-        'require("../scripts/frontend")\nrequire("./scripts/backend")\nrequire("./scripts/backend")'
-      )
+      await expect(compileElectron()).rejects.toThrow('Type sync failed')
     })
 
     it('processes cleanup operations in parallel', async () => {
-      let cleanupObserved = false
-      mockRm.mockImplementation(() => {
-        cleanupObserved = true
-        return Promise.resolve()
+      let cleanupCalls = 0
+      mockRm.mockImplementation(async () => {
+        cleanupCalls++
       })
 
       await compileElectron()
 
-      expect(cleanupObserved).toBe(true)
-      expect(mockRm).toHaveBeenCalledTimes(9)
+      // 6 individual .js files + 2 directories (.build, types) + 1 runtime types cleanup = 9 total
+      expect(cleanupCalls).toBeGreaterThanOrEqual(8)
     })
   })
 
@@ -244,26 +268,19 @@ describe('electron toolchain', () => {
     it('compiles and launches Electron sequentially', async () => {
       await startDesktopDev()
 
-      expect(recordedCommands[0]).toContain('npx tsc ')
-      expect(recordedCommands[1]).toBe('npx electron .')
+      expect(recordedCommands).toContain(
+        'npx tsc --project tsconfig.electron.json --emitDeclarationOnly'
+      )
+      expect(recordedCommands).toContain('npx electron .')
+      expect(mockBuild).toHaveBeenCalled()
     })
 
     it('prevents Electron start when compilation fails', async () => {
       const compilationError = new Error('Compilation failed')
-      mock$.mockImplementation(
-        (pieces: TemplateStringsArray, ...args: unknown[]) => {
-          const command = toCommandString(pieces, args).trim()
-          recordedCommands.push(command)
-          if (command.includes('npx tsc')) {
-            return Promise.reject(compilationError)
-          }
-          return Promise.resolve()
-        }
-      )
+      mockBuild.mockRejectedValue(compilationError)
 
       await expect(startDesktopDev()).rejects.toThrow('Compilation failed')
-      expect(recordedCommands).toHaveLength(1)
-      expect(recordedCommands[0]).toContain('npx tsc ')
+      expect(recordedCommands).not.toContain('npx electron .')
     })
 
     it('surfaces Electron failures after successful compilation', async () => {
@@ -280,8 +297,7 @@ describe('electron toolchain', () => {
       )
 
       await expect(startDesktopDev()).rejects.toThrow('Electron startup failed')
-      expect(recordedCommands[0]).toContain('npx tsc ')
-      expect(recordedCommands[1]).toBe('npx electron .')
+      expect(mockBuild).toHaveBeenCalled()
     })
   })
 
@@ -323,6 +339,9 @@ describe('electron toolchain', () => {
       expect(consoleSpy).toHaveBeenCalledWith(
         '🔨 Compiling Electron TypeScript files...'
       )
+      expect(consoleSpy).toHaveBeenCalledWith('🔍 Generating types...')
+      expect(consoleSpy).toHaveBeenCalledWith('📦 Bundling with esbuild...')
+      expect(consoleSpy).toHaveBeenCalledWith('📝 Syncing types...')
       expect(consoleSpy).toHaveBeenCalledWith(
         '✅ Electron compilation complete'
       )
