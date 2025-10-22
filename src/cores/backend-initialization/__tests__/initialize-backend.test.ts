@@ -1,7 +1,8 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { initializeBackend } from '../initialize-backend'
+import { DEFAULT_BACKEND_PORT, DEFAULT_BACKEND_URL } from '@/cores/constants'
 import { client } from '@/services/api'
 import { updateSocketUrl } from '@/sockets'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { initializeBackend } from '../initialize-backend'
 import { useBackendInitStore } from '../states/useBackendInitStore'
 
 vi.mock('@/sockets', () => ({
@@ -12,11 +13,13 @@ vi.mock('@/sockets', () => ({
 }))
 
 const setInitializedMock = vi.fn()
+const setBaseURLMock = vi.fn()
 
 vi.mock('../states/useBackendInitStore', () => ({
   useBackendInitStore: {
     getState: () => ({
-      setInitialized: setInitializedMock
+      setInitialized: setInitializedMock,
+      setBaseURL: setBaseURLMock
     })
   }
 }))
@@ -25,13 +28,14 @@ describe('initializeBackend', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     setInitializedMock.mockClear()
+    setBaseURLMock.mockClear()
     delete (global.window as { electronAPI?: unknown }).electronAPI
   })
 
   it('sets default port 8000 when not in Electron', async () => {
     await initializeBackend()
 
-    expect(client.defaults.baseURL).toBe('http://localhost:8000')
+    expect(client.defaults.baseURL).toBe(DEFAULT_BACKEND_URL)
     expect(updateSocketUrl).not.toHaveBeenCalled()
   })
 
@@ -71,7 +75,7 @@ describe('initializeBackend', () => {
   it('does not update socket URL when port is default', async () => {
     global.window.electronAPI = {
       backend: {
-        getPort: vi.fn().mockResolvedValue(8000),
+        getPort: vi.fn().mockResolvedValue(DEFAULT_BACKEND_PORT),
         startLogStream: vi.fn(),
         stopLogStream: vi.fn(),
         isLogStreaming: vi.fn(),

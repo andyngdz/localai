@@ -1,8 +1,7 @@
+import { DEFAULT_BACKEND_URL } from '@/cores/constants'
 import { io } from 'socket.io-client'
 
-const DEFAULT_URL = 'http://localhost:8000'
-
-export const socket = io(DEFAULT_URL, {
+export const socket = io(DEFAULT_BACKEND_URL, {
   transports: ['websocket'],
   autoConnect: false
 })
