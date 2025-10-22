@@ -12,8 +12,6 @@ export interface ElectronAPI {
   }
   backend: {
     getPort: () => Promise<number>
-    startLogStream: () => Promise<void>
-    stopLogStream: () => Promise<void>
     isLogStreaming: () => Promise<boolean>
     onLog: (listener: (logEntry: LogEntry) => void) => () => void
   }

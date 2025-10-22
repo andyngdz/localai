@@ -1,7 +1,7 @@
 'use client'
 
 import { useVirtualizer } from '@tanstack/react-virtual'
-import { useCallback, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { useBackendLogStore } from './useBackendLogStore'
 
 export const useBackendLog = () => {
@@ -23,16 +23,6 @@ export const useBackendLog = () => {
     }
   }
 
-  const startStreaming = useCallback(async () => {
-    await globalThis.window.electronAPI.backend.startLogStream()
-    setIsStreaming(true)
-  }, [setIsStreaming])
-
-  const stopStreaming = useCallback(async () => {
-    await globalThis.window.electronAPI.backend.stopLogStream()
-    setIsStreaming(false)
-  }, [setIsStreaming])
-
   const rowVirtualizer = useVirtualizer({
     count: logs.length,
     getScrollElement: () => scrollRef.current,
@@ -52,10 +42,6 @@ export const useBackendLog = () => {
   }, [addLog, setIsStreaming])
 
   useEffect(() => {
-    startStreaming()
-  }, [startStreaming])
-
-  useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight
     }
@@ -64,8 +50,6 @@ export const useBackendLog = () => {
   return {
     logs,
     isStreaming,
-    startStreaming,
-    stopStreaming,
     clearLogs,
     onGetLogColor,
     scrollRef,

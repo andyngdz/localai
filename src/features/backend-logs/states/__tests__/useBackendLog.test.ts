@@ -22,8 +22,6 @@ describe('useBackendLog', () => {
   const mockAddLog = vi.fn()
   const mockClearLogs = vi.fn()
   const mockSetIsStreaming = vi.fn()
-  const mockStartLogStream = vi.fn()
-  const mockStopLogStream = vi.fn()
   const mockIsLogStreaming = vi.fn()
   const mockOnLog = vi.fn()
 
@@ -50,8 +48,6 @@ describe('useBackendLog', () => {
       },
       backend: {
         getPort: vi.fn().mockResolvedValue(8000),
-        startLogStream: mockStartLogStream.mockResolvedValue(undefined),
-        stopLogStream: mockStopLogStream.mockResolvedValue(undefined),
         isLogStreaming: mockIsLogStreaming.mockResolvedValue(false),
         onLog: mockOnLog.mockReturnValue(() => {})
       },
@@ -117,14 +113,6 @@ describe('useBackendLog', () => {
       expect(mockOnLog).toHaveBeenCalled()
     })
 
-    it('should start streaming on mount', async () => {
-      renderHook(() => useBackendLog())
-
-      await waitFor(() => {
-        expect(mockStartLogStream).toHaveBeenCalled()
-      })
-    })
-
     it('should unsubscribe from log events on unmount', () => {
       const mockUnsubscribe = vi.fn()
       mockOnLog.mockReturnValue(mockUnsubscribe)
@@ -165,42 +153,6 @@ describe('useBackendLog', () => {
       const { result } = renderHook(() => useBackendLog())
 
       expect(result.current.onGetLogColor('unknown')).toBe('text-default-700')
-    })
-  })
-
-  describe('startStreaming', () => {
-    it('should call electronAPI.backend.startLogStream', async () => {
-      const { result } = renderHook(() => useBackendLog())
-
-      await result.current.startStreaming()
-
-      expect(mockStartLogStream).toHaveBeenCalled()
-    })
-
-    it('should set isStreaming to true', async () => {
-      const { result } = renderHook(() => useBackendLog())
-
-      await result.current.startStreaming()
-
-      expect(mockSetIsStreaming).toHaveBeenCalledWith(true)
-    })
-  })
-
-  describe('stopStreaming', () => {
-    it('should call electronAPI.backend.stopLogStream', async () => {
-      const { result } = renderHook(() => useBackendLog())
-
-      await result.current.stopStreaming()
-
-      expect(mockStopLogStream).toHaveBeenCalled()
-    })
-
-    it('should set isStreaming to false', async () => {
-      const { result } = renderHook(() => useBackendLog())
-
-      await result.current.stopStreaming()
-
-      expect(mockSetIsStreaming).toHaveBeenCalledWith(false)
     })
   })
 

@@ -4,11 +4,7 @@ import fixPath from 'fix-path'
 import path from 'path'
 import { startBackend, stopBackend } from '../scripts/backend'
 import { setupBackendPortHandler } from './backend-port'
-import {
-  isLogStreaming,
-  startLogStreaming,
-  stopLogStreaming
-} from './log-streamer'
+import { isLogStreaming, startLogStreaming } from './log-streamer'
 import {
   broadcastBackendStatus,
   getBackendStatusHistory
@@ -93,14 +89,6 @@ const onDownloadImage = () => {
 }
 
 const onLogStreaming = () => {
-  ipcMain.handle('backend:start-log-stream', () => {
-    startLogStreaming()
-  })
-
-  ipcMain.handle('backend:stop-log-stream', () => {
-    stopLogStreaming()
-  })
-
   ipcMain.handle('backend:log-stream-status', () => {
     return isLogStreaming()
   })
@@ -138,6 +126,9 @@ if (!gotLock) {
 
   app.whenReady().then(async () => {
     onSetLinuxGpuFlags()
+
+    // Start log streaming early to capture backend initialization logs
+    startLogStreaming()
 
     await onCreateWindow()
     onDownloadImage()

@@ -40,13 +40,4 @@ export const startLogStreaming = () => {
   console.error = intercept('error', originalConsole.error)
 }
 
-export const stopLogStreaming = () => {
-  if (!isStreaming) return
-  isStreaming = false
-  console.log = originalConsole.log
-  console.info = originalConsole.info
-  console.warn = originalConsole.warn
-  console.error = originalConsole.error
-}
-
 export const isLogStreaming = () => isStreaming
