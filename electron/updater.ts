@@ -1,5 +1,5 @@
 import { UpdateCheckResult } from '@types'
-import { BrowserWindow, dialog } from 'electron'
+import { app, BrowserWindow, dialog } from 'electron'
 import log from 'electron-log'
 import { autoUpdater } from 'electron-updater'
 
@@ -105,6 +105,12 @@ class UpdateChecker {
 }
 
 export function checkForUpdates(): Promise<UpdateCheckResult> {
+  // Skip update check in development mode
+  if (!app.isPackaged) {
+    log.info('Skipping update check in development mode')
+    return Promise.resolve({ updateAvailable: false })
+  }
+
   return new Promise((resolve, reject) => {
     new UpdateChecker(resolve, reject).check()
   })
