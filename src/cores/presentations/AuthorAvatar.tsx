@@ -1,3 +1,4 @@
+import { useBackendUrl } from '@/cores/backend-initialization'
 import { Avatar, AvatarProps } from '@heroui/react'
 import { FC } from 'react'
 
@@ -6,7 +7,7 @@ export interface AuthorAvatarProps extends AvatarProps {
 }
 
 export const AuthorAvatar: FC<AuthorAvatarProps> = ({ id, ...props }) => {
-  return (
-    <Avatar src={`http://localhost:8000/users/avatar/${id}.png`} {...props} />
-  )
+  const baseURL = useBackendUrl()
+
+  return <Avatar src={`${baseURL}/users/avatar/${id}.png`} {...props} />
 }

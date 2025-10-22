@@ -1,3 +1,4 @@
+import { DEFAULT_BACKEND_URL } from '@/cores/constants'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { io, Socket } from 'socket.io-client'
 
@@ -18,7 +19,7 @@ describe('socket', () => {
   it('creates socket with default URL and websocket transport', async () => {
     await import('../socket')
 
-    expect(io).toHaveBeenCalledWith('http://localhost:8000', {
+    expect(io).toHaveBeenCalledWith(DEFAULT_BACKEND_URL, {
       transports: ['websocket'],
       autoConnect: false
     })
