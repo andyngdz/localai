@@ -48,8 +48,6 @@ describe('BackendLogList', () => {
       scrollRef: mockScrollRef,
       rowVirtualizer: mockVirtualizer as never,
       isStreaming: false,
-      startStreaming: vi.fn(),
-      stopStreaming: vi.fn(),
       clearLogs: vi.fn()
     })
   })
@@ -85,8 +83,6 @@ describe('BackendLogList', () => {
       scrollRef: mockScrollRef,
       rowVirtualizer: mockVirtualizer as never,
       isStreaming: false,
-      startStreaming: vi.fn(),
-      stopStreaming: vi.fn(),
       clearLogs: vi.fn()
     })
 
@@ -114,8 +110,6 @@ describe('BackendLogList', () => {
       scrollRef: mockScrollRef,
       rowVirtualizer: mockVirtualizer as never,
       isStreaming: false,
-      startStreaming: vi.fn(),
-      stopStreaming: vi.fn(),
       clearLogs: vi.fn()
     })
 
