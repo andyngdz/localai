@@ -1,4 +1,4 @@
-import { UpdateInfo } from '@types'
+import { UpdateInfo, UpdateStatus } from '@types'
 import { BrowserWindow, dialog } from 'electron'
 import log from 'electron-log'
 import { autoUpdater } from 'electron-updater'
@@ -21,7 +21,7 @@ export function getUpdateInfo(): UpdateInfo {
 // Auto-updater event handlers
 autoUpdater.on('checking-for-update', () => {
   log.info('Checking for update...')
-  updateInfo = { updateAvailable: false, status: 'checking' }
+  updateInfo = { updateAvailable: false, status: UpdateStatus.Checking }
   sendUpdateStatus()
 })
 
@@ -31,14 +31,17 @@ autoUpdater.on('update-available', (info) => {
     updateAvailable: true,
     version: info.version,
     downloading: false,
-    status: 'update-available'
+    status: UpdateStatus.UpdateAvailable
   }
   sendUpdateStatus()
 })
 
 autoUpdater.on('update-not-available', (info) => {
   log.info('Update not available:', info.version)
-  updateInfo = { updateAvailable: false, status: 'update-not-available' }
+  updateInfo = {
+    updateAvailable: false,
+    status: UpdateStatus.UpdateNotAvailable
+  }
   sendUpdateStatus()
 })
 
@@ -47,7 +50,7 @@ autoUpdater.on('error', (err) => {
   updateInfo = {
     updateAvailable: false,
     error: err.message,
-    status: 'error'
+    status: UpdateStatus.Error
   }
   sendUpdateStatus()
 })
@@ -59,7 +62,7 @@ autoUpdater.on('download-progress', (progressObj) => {
     ...updateInfo,
     downloading: true,
     progress: progressObj.percent,
-    status: 'downloading'
+    status: UpdateStatus.Downloading
   }
   sendUpdateStatus()
 })
@@ -71,7 +74,7 @@ autoUpdater.on('update-downloaded', (info) => {
     version: info.version,
     downloading: false,
     progress: 100,
-    status: 'downloaded'
+    status: UpdateStatus.Downloaded
   }
   sendUpdateStatus()
 
@@ -99,10 +102,7 @@ function sendUpdateStatus() {
 }
 
 export function checkForUpdates() {
-  // Only check for updates in production
-  if (process.env.NODE_ENV === 'production') {
-    autoUpdater.checkForUpdatesAndNotify()
-  }
+  autoUpdater.checkForUpdatesAndNotify()
 }
 
 export function downloadUpdate() {
