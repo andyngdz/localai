@@ -32,6 +32,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
       ipcRenderer.removeListener(channel, subscription)
     }
   },
+  app: {
+    getVersion: () => ipcRenderer.invoke('app:get-version')
+  },
   backend: {
     getPort: () => ipcRenderer.invoke('backend:get-port'),
     startLogStream: () => ipcRenderer.invoke('backend:start-log-stream'),

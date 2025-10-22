@@ -4,4 +4,11 @@ export interface UpdateInfo {
   downloading?: boolean
   progress?: number
   error?: string
+  status?:
+    | 'checking'
+    | 'update-available'
+    | 'update-not-available'
+    | 'downloading'
+    | 'downloaded'
+    | 'error'
 }

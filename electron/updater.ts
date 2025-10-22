@@ -21,7 +21,7 @@ export function getUpdateInfo(): UpdateInfo {
 // Auto-updater event handlers
 autoUpdater.on('checking-for-update', () => {
   log.info('Checking for update...')
-  updateInfo = { updateAvailable: false }
+  updateInfo = { updateAvailable: false, status: 'checking' }
   sendUpdateStatus()
 })
 
@@ -30,14 +30,15 @@ autoUpdater.on('update-available', (info) => {
   updateInfo = {
     updateAvailable: true,
     version: info.version,
-    downloading: false
+    downloading: false,
+    status: 'update-available'
   }
   sendUpdateStatus()
 })
 
 autoUpdater.on('update-not-available', (info) => {
   log.info('Update not available:', info.version)
-  updateInfo = { updateAvailable: false }
+  updateInfo = { updateAvailable: false, status: 'update-not-available' }
   sendUpdateStatus()
 })
 
@@ -45,7 +46,8 @@ autoUpdater.on('error', (err) => {
   log.error('Error in auto-updater:', err)
   updateInfo = {
     updateAvailable: false,
-    error: err.message
+    error: err.message,
+    status: 'error'
   }
   sendUpdateStatus()
 })
@@ -56,7 +58,8 @@ autoUpdater.on('download-progress', (progressObj) => {
   updateInfo = {
     ...updateInfo,
     downloading: true,
-    progress: progressObj.percent
+    progress: progressObj.percent,
+    status: 'downloading'
   }
   sendUpdateStatus()
 })
@@ -67,7 +70,8 @@ autoUpdater.on('update-downloaded', (info) => {
     updateAvailable: true,
     version: info.version,
     downloading: false,
-    progress: 100
+    progress: 100,
+    status: 'downloaded'
   }
   sendUpdateStatus()
 
@@ -87,9 +91,11 @@ autoUpdater.on('update-downloaded', (info) => {
 })
 
 function sendUpdateStatus() {
-  if (!mainWindow.isDestroyed()) {
-    mainWindow.webContents.send('update-status', updateInfo)
+  if (!mainWindow || mainWindow.isDestroyed()) {
+    return
   }
+
+  mainWindow.webContents.send('update-status', updateInfo)
 }
 
 export function checkForUpdates() {

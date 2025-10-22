@@ -45,6 +45,9 @@ describe('useBackendLog', () => {
     global.window.electronAPI = {
       downloadImage: vi.fn(),
       onBackendSetupStatus: vi.fn(),
+      app: {
+        getVersion: vi.fn().mockResolvedValue('0.0.0')
+      },
       backend: {
         getPort: vi.fn().mockResolvedValue(8000),
         startLogStream: mockStartLogStream.mockResolvedValue(undefined),

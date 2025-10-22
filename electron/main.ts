@@ -116,6 +116,10 @@ const onBackendStatusHistory = () => {
   ipcMain.handle('backend-setup:get-history', () => getBackendStatusHistory())
 }
 
+const onAppInfo = () => {
+  ipcMain.handle('app:get-version', () => app.getVersion())
+}
+
 const onAutoUpdate = () => {
   ipcMain.handle('updater:check', () => {
     checkForUpdates()
@@ -155,6 +159,7 @@ if (!gotLock) {
     onDownloadImage()
     onLogStreaming()
     onBackendStatusHistory()
+    onAppInfo()
     setupBackendPortHandler()
     onAutoUpdate()
 

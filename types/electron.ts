@@ -7,6 +7,9 @@ import { UpdateInfo } from './update'
 export interface ElectronAPI {
   downloadImage: (url: string) => Promise<void>
   onBackendSetupStatus: (listener: BackendStatusEmitter) => () => void
+  app: {
+    getVersion: () => Promise<string>
+  }
   backend: {
     getPort: () => Promise<number>
     startLogStream: () => Promise<void>
