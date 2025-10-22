@@ -47,6 +47,9 @@ const noop = (): void => {}
 const createElectronAPIMock = (): ElectronAPI => ({
   downloadImage: vi.fn().mockReturnThis(),
   onBackendSetupStatus: vi.fn().mockReturnValue(noop),
+  app: {
+    getVersion: vi.fn().mockResolvedValue('0.0.0')
+  },
   backend: {
     getPort: vi.fn().mockResolvedValue(8000),
     startLogStream: vi.fn().mockResolvedValue(undefined),
@@ -55,11 +58,10 @@ const createElectronAPIMock = (): ElectronAPI => ({
     onLog: vi.fn().mockReturnValue(noop)
   },
   updater: {
-    checkForUpdates: vi.fn().mockResolvedValue(undefined),
-    downloadUpdate: vi.fn().mockResolvedValue(undefined),
-    installUpdate: vi.fn().mockResolvedValue(undefined),
-    getUpdateInfo: vi.fn().mockResolvedValue({ updateAvailable: false }),
-    onUpdateStatus: vi.fn().mockReturnValue(() => {})
+    checkForUpdates: vi
+      .fn()
+      .mockResolvedValue({ updateAvailable: false, version: undefined }),
+    installUpdate: vi.fn().mockResolvedValue(undefined)
   }
 })
 

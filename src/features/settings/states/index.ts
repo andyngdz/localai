@@ -1,2 +1,5 @@
+export * from './useDeleteModel'
+export * from './useDownloadedModels'
 export * from './useGeneralSettings'
 export * from './useSettingsStore'
+export * from './useUpdaterSettings'

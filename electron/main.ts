@@ -13,13 +13,7 @@ import {
   broadcastBackendStatus,
   getBackendStatusHistory
 } from './status-broadcaster'
-import {
-  checkForUpdates,
-  downloadUpdate,
-  getUpdateInfo,
-  installUpdate,
-  setMainWindow
-} from './updater'
+import { checkForUpdates, installUpdate, setMainWindow } from './updater'
 
 // This is required to get the correct path in the packaged app
 fixPath()
@@ -116,21 +110,15 @@ const onBackendStatusHistory = () => {
   ipcMain.handle('backend-setup:get-history', () => getBackendStatusHistory())
 }
 
-const onAutoUpdate = () => {
-  ipcMain.handle('updater:check', () => {
-    checkForUpdates()
-  })
+const onAppInfo = () => {
+  ipcMain.handle('app:get-version', () => app.getVersion())
+}
 
-  ipcMain.handle('updater:download', () => {
-    downloadUpdate()
-  })
+const onAutoUpdate = () => {
+  ipcMain.handle('updater:check', () => checkForUpdates())
 
   ipcMain.handle('updater:install', () => {
     installUpdate()
-  })
-
-  ipcMain.handle('updater:get-info', () => {
-    return getUpdateInfo()
   })
 }
 
@@ -155,6 +143,7 @@ if (!gotLock) {
     onDownloadImage()
     onLogStreaming()
     onBackendStatusHistory()
+    onAppInfo()
     setupBackendPortHandler()
     onAutoUpdate()
 
