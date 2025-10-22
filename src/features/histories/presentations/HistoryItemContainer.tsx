@@ -1,3 +1,5 @@
+'use client'
+
 import { useBackendUrl } from '@/cores/backend-initialization'
 import { dateFormatter } from '@/services'
 import { HistoryItem } from '@/types'

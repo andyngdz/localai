@@ -1,3 +1,5 @@
+'use client'
+
 import { useBackendUrl } from '@/cores/backend-initialization'
 import { StyleItem } from '@/types'
 import { Avatar, Chip, Tooltip } from '@heroui/react'

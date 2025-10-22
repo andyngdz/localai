@@ -1,3 +1,5 @@
+'use client'
+
 import { useBackendUrl } from '@/cores/backend-initialization'
 import { GeneratorConfigFormValues } from '@/features/generator-configs'
 import { ImageGenerationStepEndResponse } from '@/types'

@@ -1,3 +1,5 @@
+'use client'
+
 import { useBackendUrl } from '@/cores/backend-initialization'
 import { Avatar, AvatarProps } from '@heroui/react'
 import { FC } from 'react'
