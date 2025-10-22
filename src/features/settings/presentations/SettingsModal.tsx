@@ -7,7 +7,7 @@ import {
   Tab,
   Divider
 } from '@heroui/react'
-import { GeneralSettings, ModelManagement } from './tabs'
+import { GeneralSettings, ModelManagement, UpdateSettings } from './tabs'
 import { FC } from 'react'
 
 interface SettingsModalProps {
@@ -38,6 +38,9 @@ export const SettingsModal: FC<SettingsModalProps> = ({ isOpen, onClose }) => {
             </Tab>
             <Tab key="models" title="Model Management">
               <ModelManagement />
+            </Tab>
+            <Tab key="updates" title="Updates">
+              <UpdateSettings />
             </Tab>
           </Tabs>
         </ModalBody>
