@@ -1,5 +1,5 @@
 import { Button } from '@heroui/react'
-import { useUpdaterSettings } from '../../states/useUpdaterSettings'
+import { useUpdaterSettings } from '../../states'
 
 export const UpdateSettings = () => {
   const { isChecking, onCheck, version } = useUpdaterSettings()

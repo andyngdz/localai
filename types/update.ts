@@ -15,3 +15,8 @@ export interface UpdateInfo {
   error?: string
   status?: UpdateStatus
 }
+
+export interface UpdateCheckResult {
+  updateAvailable: boolean
+  version?: string
+}

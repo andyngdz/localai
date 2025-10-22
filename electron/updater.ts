@@ -1,4 +1,4 @@
-import { UpdateInfo, UpdateStatus } from '@types'
+import { UpdateCheckResult } from '@types'
 import { BrowserWindow, dialog } from 'electron'
 import log from 'electron-log'
 import { autoUpdater } from 'electron-updater'
@@ -7,80 +7,47 @@ import { autoUpdater } from 'electron-updater'
 autoUpdater.logger = log
 log.transports.file.level = 'info'
 
+// Enable auto-download for stable releases only
+autoUpdater.autoDownload = true
+
 let mainWindow: BrowserWindow
-let updateInfo: UpdateInfo = { updateAvailable: false }
 
 export function setMainWindow(win: BrowserWindow) {
   mainWindow = win
 }
 
-export function getUpdateInfo(): UpdateInfo {
-  return updateInfo
-}
-
 // Auto-updater event handlers
 autoUpdater.on('checking-for-update', () => {
   log.info('Checking for update...')
-  updateInfo = { updateAvailable: false, status: UpdateStatus.Checking }
-  sendUpdateStatus()
 })
 
 autoUpdater.on('update-available', (info) => {
   log.info('Update available:', info.version)
-  updateInfo = {
-    updateAvailable: true,
-    version: info.version,
-    downloading: false,
-    status: UpdateStatus.UpdateAvailable
-  }
-  sendUpdateStatus()
 })
 
 autoUpdater.on('update-not-available', (info) => {
   log.info('Update not available:', info.version)
-  updateInfo = {
-    updateAvailable: false,
-    status: UpdateStatus.UpdateNotAvailable
-  }
-  sendUpdateStatus()
 })
 
 autoUpdater.on('error', (err) => {
   log.error('Error in auto-updater:', err)
-  updateInfo = {
-    updateAvailable: false,
-    error: err.message,
-    status: UpdateStatus.Error
-  }
-  sendUpdateStatus()
 })
 
 autoUpdater.on('download-progress', (progressObj) => {
   log.info(`Download speed: ${progressObj.bytesPerSecond}`)
   log.info(`Downloaded ${progressObj.percent}%`)
-  updateInfo = {
-    ...updateInfo,
-    downloading: true,
-    progress: progressObj.percent,
-    status: UpdateStatus.Downloading
-  }
-  sendUpdateStatus()
 })
 
 autoUpdater.on('update-downloaded', (info) => {
   log.info('Update downloaded:', info.version)
-  updateInfo = {
-    updateAvailable: true,
-    version: info.version,
-    downloading: false,
-    progress: 100,
-    status: UpdateStatus.Downloaded
-  }
-  sendUpdateStatus()
 
-  // Show dialog to install update
+  // Show native dialog to install update
+  if (!mainWindow || mainWindow.isDestroyed()) {
+    return
+  }
+
   dialog
-    .showMessageBox({
+    .showMessageBox(mainWindow, {
       type: 'info',
       title: 'Update Ready',
       message: `A new version (${info.version}) has been downloaded. Restart to apply the update?`,
@@ -93,20 +60,54 @@ autoUpdater.on('update-downloaded', (info) => {
     })
 })
 
-function sendUpdateStatus() {
-  if (!mainWindow || mainWindow.isDestroyed()) {
-    return
+class UpdateChecker {
+  private resolve: (result: UpdateCheckResult) => void
+  private reject: (error: Error) => void
+
+  constructor(
+    resolve: (result: UpdateCheckResult) => void,
+    reject: (error: Error) => void
+  ) {
+    this.resolve = resolve
+    this.reject = reject
   }
 
-  mainWindow.webContents.send('update-status', updateInfo)
+  private cleanup() {
+    autoUpdater.removeListener('update-available', this.onUpdateAvailable)
+    autoUpdater.removeListener(
+      'update-not-available',
+      this.onUpdateNotAvailable
+    )
+    autoUpdater.removeListener('error', this.onError)
+  }
+
+  private onUpdateAvailable = (info: { version: string }) => {
+    this.cleanup()
+    this.resolve({ updateAvailable: true, version: info.version })
+  }
+
+  private onUpdateNotAvailable = () => {
+    this.cleanup()
+    this.resolve({ updateAvailable: false })
+  }
+
+  private onError = (error: Error) => {
+    this.cleanup()
+    this.reject(error)
+  }
+
+  check() {
+    autoUpdater.once('update-available', this.onUpdateAvailable)
+    autoUpdater.once('update-not-available', this.onUpdateNotAvailable)
+    autoUpdater.once('error', this.onError)
+    autoUpdater.checkForUpdates()
+  }
 }
 
-export function checkForUpdates() {
-  autoUpdater.checkForUpdatesAndNotify()
-}
-
-export function downloadUpdate() {
-  autoUpdater.downloadUpdate()
+export function checkForUpdates(): Promise<UpdateCheckResult> {
+  return new Promise((resolve, reject) => {
+    new UpdateChecker(resolve, reject).check()
+  })
 }
 
 export function installUpdate() {
