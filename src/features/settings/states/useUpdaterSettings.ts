@@ -25,7 +25,8 @@ export const useUpdaterSettings = () => {
       if (!result.updateAvailable) {
         addToast({
           title: "You're already on the latest version",
-          description: `Current version: ${version}`
+          description: `Current version: ${version}`,
+          color: 'success'
         })
       }
       // If update is available, auto-download will handle it and native dialog will show
