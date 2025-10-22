@@ -18,7 +18,7 @@ export const BackendLog = () => {
     <section>
       <Button
         variant="light"
-        className="italic text-default-700"
+        className="text-default-700"
         onPress={onOpen}
         endContent={<SquareChevronRight size={16} />}
       >
