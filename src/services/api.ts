@@ -74,7 +74,7 @@ class API {
   }
 
   async unloadModel() {
-    const { data } = await client.get('/models/unload')
+    const { data } = await client.post('/models/unload')
 
     return data
   }
