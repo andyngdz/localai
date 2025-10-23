@@ -4,6 +4,7 @@ import type {
   DownloadStepProgressResponse
 } from '@/sockets'
 import { SocketEvents } from '@/sockets'
+import { ModelDownloaded } from '@/types'
 import { QueryClient } from '@tanstack/react-query'
 import * as matchers from '@testing-library/jest-dom/matchers'
 import { cleanup, render } from '@testing-library/react'
@@ -27,18 +28,44 @@ vi.mock('@/sockets', async () => {
   }
 })
 
+// Mock model selector store
+const mockSetSelectedModelId = vi.fn()
+const mockUseModelSelectorStore = vi.fn(() => ({
+  selected_model_id: '',
+  setSelectedModelId: mockSetSelectedModelId
+}))
+
+vi.mock('@/features/model-selectors/states', () => ({
+  useModelSelectorStore: () => mockUseModelSelectorStore()
+}))
+
+// Mock useQueryClient to return our controlled mockQueryClient
+let mockQueryClient: QueryClient
+vi.mock('@tanstack/react-query', async () => {
+  const actual = await vi.importActual('@tanstack/react-query')
+  return {
+    ...actual,
+    useQueryClient: () => mockQueryClient
+  }
+})
+
 describe('DownloadWatcher', () => {
   let mockOnUpdateStep: MockInstance
   let mockOnSetId: MockInstance
   let mockOnResetStep: MockInstance
   let mockOnResetId: MockInstance
-  let mockQueryClient: QueryClient
 
   const QueryClientWrapper = createQueryClientWrapper()
 
   beforeEach(() => {
     vi.clearAllMocks()
     capturedHandlers = {}
+
+    // Reset mock model selector store to default state
+    mockUseModelSelectorStore.mockReturnValue({
+      selected_model_id: '',
+      setSelectedModelId: mockSetSelectedModelId
+    })
 
     // Create mock functions
     mockOnUpdateStep = vi.fn()
@@ -316,5 +343,163 @@ describe('DownloadWatcher', () => {
     capturedHandlers[SocketEvents.DOWNLOAD_COMPLETED](undefined)
     expect(mockOnResetStep).toHaveBeenCalled()
     expect(mockOnResetId).toHaveBeenCalled()
+  })
+
+  describe('Auto-selection behavior', () => {
+    it('auto-selects first model when download completes and no model is selected', () => {
+      // Setup: empty selected_model_id
+      mockUseModelSelectorStore.mockReturnValue({
+        selected_model_id: '',
+        setSelectedModelId: mockSetSelectedModelId
+      })
+
+      // Setup QueryClient with first downloaded model
+      const firstModel: ModelDownloaded = {
+        id: 1,
+        model_id: 'first-model',
+        model_dir: '/models/first-model',
+        created_at: '2025-01-01T00:00:00Z',
+        updated_at: '2025-01-01T00:00:00Z'
+      }
+      mockQueryClient.setQueryData(['getDownloadedModels'], [firstModel])
+
+      render(
+        <QueryClientWrapper>
+          <DownloadWatcher>
+            <div>Child</div>
+          </DownloadWatcher>
+        </QueryClientWrapper>
+      )
+
+      // Simulate download completion
+      capturedHandlers[SocketEvents.DOWNLOAD_COMPLETED](undefined)
+
+      // Should auto-select the first model
+      expect(mockSetSelectedModelId).toHaveBeenCalledWith('first-model')
+      expect(mockSetSelectedModelId).toHaveBeenCalledTimes(1)
+    })
+
+    it('does NOT auto-select when a model is already selected', () => {
+      // Setup: model already selected
+      mockUseModelSelectorStore.mockReturnValue({
+        selected_model_id: 'existing-model',
+        setSelectedModelId: mockSetSelectedModelId
+      })
+
+      // Setup QueryClient with one model
+      const firstModel: ModelDownloaded = {
+        id: 2,
+        model_id: 'new-model',
+        model_dir: '/models/new-model',
+        created_at: '2025-01-01T00:00:00Z',
+        updated_at: '2025-01-01T00:00:00Z'
+      }
+      mockQueryClient.setQueryData(['getDownloadedModels'], [firstModel])
+
+      render(
+        <QueryClientWrapper>
+          <DownloadWatcher>
+            <div>Child</div>
+          </DownloadWatcher>
+        </QueryClientWrapper>
+      )
+
+      // Simulate download completion
+      capturedHandlers[SocketEvents.DOWNLOAD_COMPLETED](undefined)
+
+      // Should NOT change selection
+      expect(mockSetSelectedModelId).not.toHaveBeenCalled()
+    })
+
+    it('does NOT auto-select when multiple models exist', () => {
+      // Setup: empty selected_model_id
+      mockUseModelSelectorStore.mockReturnValue({
+        selected_model_id: '',
+        setSelectedModelId: mockSetSelectedModelId
+      })
+
+      // Setup QueryClient with multiple models
+      const multipleModels: ModelDownloaded[] = [
+        {
+          id: 3,
+          model_id: 'model-1',
+          model_dir: '/models/model-1',
+          created_at: '2025-01-01T00:00:00Z',
+          updated_at: '2025-01-01T00:00:00Z'
+        },
+        {
+          id: 4,
+          model_id: 'model-2',
+          model_dir: '/models/model-2',
+          created_at: '2025-01-01T00:00:00Z',
+          updated_at: '2025-01-01T00:00:00Z'
+        }
+      ]
+      mockQueryClient.setQueryData(['getDownloadedModels'], multipleModels)
+
+      render(
+        <QueryClientWrapper>
+          <DownloadWatcher>
+            <div>Child</div>
+          </DownloadWatcher>
+        </QueryClientWrapper>
+      )
+
+      // Simulate download completion
+      capturedHandlers[SocketEvents.DOWNLOAD_COMPLETED](undefined)
+
+      // Should NOT auto-select when multiple models exist
+      expect(mockSetSelectedModelId).not.toHaveBeenCalled()
+    })
+
+    it('does NOT auto-select when downloaded models list is empty', () => {
+      // Setup: empty selected_model_id
+      mockUseModelSelectorStore.mockReturnValue({
+        selected_model_id: '',
+        setSelectedModelId: mockSetSelectedModelId
+      })
+
+      // Setup QueryClient with empty models
+      mockQueryClient.setQueryData(['getDownloadedModels'], [])
+
+      render(
+        <QueryClientWrapper>
+          <DownloadWatcher>
+            <div>Child</div>
+          </DownloadWatcher>
+        </QueryClientWrapper>
+      )
+
+      // Simulate download completion
+      capturedHandlers[SocketEvents.DOWNLOAD_COMPLETED](undefined)
+
+      // Should NOT auto-select when no models exist
+      expect(mockSetSelectedModelId).not.toHaveBeenCalled()
+    })
+
+    it('handles undefined downloaded models gracefully', () => {
+      // Setup: empty selected_model_id
+      mockUseModelSelectorStore.mockReturnValue({
+        selected_model_id: '',
+        setSelectedModelId: mockSetSelectedModelId
+      })
+
+      // Setup QueryClient with undefined (no data)
+      mockQueryClient.setQueryData(['getDownloadedModels'], undefined)
+
+      render(
+        <QueryClientWrapper>
+          <DownloadWatcher>
+            <div>Child</div>
+          </DownloadWatcher>
+        </QueryClientWrapper>
+      )
+
+      // Simulate download completion
+      capturedHandlers[SocketEvents.DOWNLOAD_COMPLETED](undefined)
+
+      // Should NOT crash and NOT auto-select
+      expect(mockSetSelectedModelId).not.toHaveBeenCalled()
+    })
   })
 })
