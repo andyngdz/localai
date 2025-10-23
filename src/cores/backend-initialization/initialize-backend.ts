@@ -1,6 +1,6 @@
 import { DEFAULT_BACKEND_PORT } from '@/cores/constants'
 import { client } from '@/services/api'
-import { socket, updateSocketUrl } from '@/sockets'
+import { updateSocketUrl, useSocketStore } from '@/cores/sockets'
 import { useBackendInitStore } from './states/useBackendInitStore'
 
 export const initializeBackend = async () => {
@@ -16,7 +16,8 @@ export const initializeBackend = async () => {
   useBackendInitStore.getState().setBaseURL(baseURL)
 
   if (port === DEFAULT_BACKEND_PORT) {
-    socket.connect()
+    // Connect the Zustand socket directly
+    useSocketStore.getState().socket.connect()
   } else {
     updateSocketUrl(baseURL)
   }

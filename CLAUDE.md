@@ -37,12 +37,12 @@ Next.js 15 + Electron desktop app + Python FastAPI backend.
 **Directory Structure:**
 
 ```
-src/features/  # Feature modules
-src/sockets/   # Socket.io setup (reactive pattern with Zustand)
-src/cores/     # Shared utilities, hooks, components
-electron/      # Main process + preload
-scripts/       # Build scripts (Python backend, Electron compile)
-types/         # Shared TypeScript types
+src/features/       # Feature modules
+src/cores/sockets/  # Socket.io infrastructure (reactive pattern with Zustand)
+src/cores/          # Shared utilities, hooks, components
+electron/           # Main process + preload
+scripts/            # Build scripts (Python backend, Electron compile)
+types/              # Shared TypeScript types
 ```
 
 ### Socket Architecture
@@ -94,7 +94,7 @@ useSocketEvent(SocketEvents.DOWNLOAD_START, handleDownload, [handleDownload])
 ```typescript
 // Socket Events - Capture handlers
 let handlers: Record<string, Function> = {}
-vi.mock('@/sockets', () => ({
+vi.mock('@/cores/sockets', () => ({
   useSocketEvent: (event, handler) => (handlers[event] = handler)
 }))
 handlers[SocketEvents.DOWNLOAD_START]({ id: 'model-123' })

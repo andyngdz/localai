@@ -1,8 +1,7 @@
 import { renderHook, act } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { Socket } from 'socket.io-client'
-import { useSocketEvent } from '../useSocketEvent'
-import { useSocketStore } from '../useSocket'
+import { useSocketEvent, useSocketStore } from '@/cores/sockets'
 
 // Create mock socket
 const createMockSocket = () => ({

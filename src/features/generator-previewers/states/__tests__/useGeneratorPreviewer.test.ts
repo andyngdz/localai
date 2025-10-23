@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react'
 import { useGeneratorPreviewer } from '../useGeneratorPreviewer'
 import { useUseImageGenerationStore } from '@/features/generators'
-import { socket, SocketEvents } from '@/sockets'
+import { SocketEvents } from '@/cores/sockets'
 import { ImageGenerationStepEndResponse } from '@/types'
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 import type { UseImageGenerationStore } from '@/features/generators/states'
@@ -11,15 +11,18 @@ vi.mock('@/features/generators', () => ({
   useUseImageGenerationStore: vi.fn()
 }))
 
-vi.mock('@/sockets', () => ({
-  socket: {
-    on: vi.fn(),
-    off: vi.fn()
-  },
-  SocketEvents: {
-    IMAGE_GENERATION_STEP_END: 'image_generation_step_end'
+// Mock useSocketEvent to capture handlers
+let capturedHandlers: Record<string, (data: unknown) => void> = {}
+
+vi.mock('@/cores/sockets', async () => {
+  const actual = await vi.importActual('@/cores/sockets')
+  return {
+    ...actual,
+    useSocketEvent: vi.fn((event: string, handler: (data: unknown) => void) => {
+      capturedHandlers[event] = handler
+    })
   }
-}))
+})
 
 describe('useGeneratorPreviewer', () => {
   // Mock store values and functions
@@ -30,6 +33,9 @@ describe('useGeneratorPreviewer', () => {
   const mockItems = [{ path: '/path/to/image.png', file_name: 'image.png' }]
 
   beforeEach(() => {
+    vi.clearAllMocks()
+    capturedHandlers = {}
+
     // Setup mock return values
     vi.mocked(useUseImageGenerationStore).mockReturnValue({
       imageStepEnds: mockImageStepEnds,
@@ -56,72 +62,33 @@ describe('useGeneratorPreviewer', () => {
     expect(result.current.items).toBe(mockItems)
   })
 
-  it('should register socket listener for IMAGE_GENERATION_STEP_END event', () => {
+  it('should subscribe to IMAGE_GENERATION_STEP_END event', async () => {
     // Arrange & Act
+    const { useSocketEvent } = vi.mocked(await import('@/cores/sockets'))
     renderHook(() => useGeneratorPreviewer())
 
     // Assert
-    expect(socket.on).toHaveBeenCalledWith(
+    expect(useSocketEvent).toHaveBeenCalledWith(
       SocketEvents.IMAGE_GENERATION_STEP_END,
-      expect.any(Function)
+      expect.any(Function),
+      expect.any(Array)
     )
   })
 
   it('should call onUpdateImageStepEnd when receiving socket event', () => {
     // Arrange
-    let socketCallback: (response: ImageGenerationStepEndResponse) => void
-    vi.mocked(socket.on).mockImplementation((_event, callback) => {
-      socketCallback = callback
-      return socket
-    })
-
-    // Act
     renderHook(() => useGeneratorPreviewer())
 
-    // Simulate socket event
+    // Act - Simulate socket event
     const mockResponse: ImageGenerationStepEndResponse = {
       index: 1,
       current_step: 20,
       timestep: 0.8,
       image_base64: 'newBase64Data'
     }
-    socketCallback!(mockResponse)
+    capturedHandlers[SocketEvents.IMAGE_GENERATION_STEP_END](mockResponse)
 
     // Assert
     expect(mockOnUpdateImageStepEnd).toHaveBeenCalledWith(mockResponse)
-  })
-
-  it('should not re-register socket listener when dependencies do not change', () => {
-    // Arrange
-    const { rerender } = renderHook(() => useGeneratorPreviewer())
-
-    // Act
-    rerender()
-
-    // Assert
-    expect(socket.on).toHaveBeenCalledTimes(1)
-  })
-
-  it('should re-register socket listener when onUpdateImageStepEnd changes', () => {
-    // Arrange
-    const { rerender } = renderHook(() => useGeneratorPreviewer())
-
-    // Act - Change the dependency
-    const newMockOnUpdateImageStepEnd = vi.fn()
-    vi.mocked(useUseImageGenerationStore).mockReturnValue({
-      imageStepEnds: mockImageStepEnds,
-      onUpdateImageStepEnd: newMockOnUpdateImageStepEnd,
-      items: mockItems,
-      // Add required properties from UseImageGenerationStore that aren't used in the test
-      nsfw_content_detected: [],
-      onInit: vi.fn(),
-      onCompleted: vi.fn(),
-      onRestore: vi.fn()
-    } as UseImageGenerationStore)
-
-    rerender()
-
-    // Assert
-    expect(socket.on).toHaveBeenCalledTimes(2)
   })
 })

@@ -6,7 +6,7 @@ import {
   DownloadStepProgressResponse,
   SocketEvents,
   useSocketEvent
-} from '@/sockets'
+} from '@/cores/sockets'
 import { ModelDownloaded } from '@/types'
 import { useQueryClient } from '@tanstack/react-query'
 import { isEmpty } from 'es-toolkit/compat'

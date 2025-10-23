@@ -1,14 +1,20 @@
 import { DEFAULT_BACKEND_PORT, DEFAULT_BACKEND_URL } from '@/cores/constants'
 import { client } from '@/services/api'
-import { updateSocketUrl } from '@/sockets'
+import { updateSocketUrl } from '@/cores/sockets'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { initializeBackend } from '../initialize-backend'
 import { useBackendInitStore } from '../states/useBackendInitStore'
 
-vi.mock('@/sockets', () => ({
+const mockSocketConnect = vi.fn()
+
+vi.mock('@/cores/sockets', () => ({
   updateSocketUrl: vi.fn(),
-  socket: {
-    connect: vi.fn()
+  useSocketStore: {
+    getState: () => ({
+      socket: {
+        connect: mockSocketConnect
+      }
+    })
   }
 }))
 
@@ -89,11 +95,9 @@ describe('initializeBackend', () => {
   })
 
   it('connects socket when port is default', async () => {
-    const { socket } = await import('@/sockets')
-
     await initializeBackend()
 
-    expect(socket.connect).toHaveBeenCalledTimes(1)
+    expect(mockSocketConnect).toHaveBeenCalledTimes(1)
   })
 
   it('signals initialization complete', async () => {

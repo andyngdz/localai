@@ -2,8 +2,8 @@ import { createQueryClientWrapper } from '@/cores/test-utils'
 import type {
   DownloadModelStartResponse,
   DownloadStepProgressResponse
-} from '@/sockets'
-import { SocketEvents } from '@/sockets'
+} from '@/cores/sockets'
+import { SocketEvents } from '@/cores/sockets'
 import { ModelDownloaded } from '@/types'
 import { QueryClient } from '@tanstack/react-query'
 import * as matchers from '@testing-library/jest-dom/matchers'
@@ -18,8 +18,8 @@ expect.extend(matchers)
 // Mock useSocketEvent to capture event handlers
 let capturedHandlers: Record<string, (data: unknown) => void> = {}
 
-vi.mock('@/sockets', async () => {
-  const actual = await vi.importActual('@/sockets')
+vi.mock('@/cores/sockets', async () => {
+  const actual = await vi.importActual('@/cores/sockets')
   return {
     ...actual,
     useSocketEvent: vi.fn((event: string, handler: (data: unknown) => void) => {
@@ -113,7 +113,7 @@ describe('DownloadWatcher', () => {
   })
 
   it('subscribes to download start, progress, and completed events', async () => {
-    const { useSocketEvent } = vi.mocked(await import('@/sockets'))
+    const { useSocketEvent } = vi.mocked(await import('@/cores/sockets'))
 
     render(
       <QueryClientWrapper>
@@ -273,7 +273,7 @@ describe('DownloadWatcher', () => {
   })
 
   it('maintains callback stability with useCallback', async () => {
-    const { useSocketEvent } = vi.mocked(await import('@/sockets'))
+    const { useSocketEvent } = vi.mocked(await import('@/cores/sockets'))
 
     render(
       <QueryClientWrapper>

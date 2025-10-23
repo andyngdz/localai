@@ -1,5 +1,5 @@
 import { io } from 'socket.io-client'
-import { useSocketStore } from './useSocket'
+import { useSocketStore } from '../states/useSocket'
 
 export const updateSocketUrl = (url: string) => {
   // Create new socket with updated URL
