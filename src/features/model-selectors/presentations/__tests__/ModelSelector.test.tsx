@@ -1,3 +1,4 @@
+import { useDownloadedModels } from '@/cores/hooks'
 import { ModelDownloaded } from '@/types/api'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -13,6 +14,10 @@ vi.mock('../../states/useModelSelectors', () => ({
 
 vi.mock('../../states/useModelSelectorStores', () => ({
   useModelSelectorStore: vi.fn()
+}))
+
+vi.mock('@/cores/hooks', () => ({
+  useDownloadedModels: vi.fn()
 }))
 
 describe('ModelSelector', () => {
@@ -37,8 +42,11 @@ describe('ModelSelector', () => {
   beforeEach(() => {
     vi.resetAllMocks()
 
-    vi.mocked(useModelSelectors).mockReturnValue({
-      downloadedModels: mockModels
+    vi.mocked(useModelSelectors).mockReturnValue(undefined)
+
+    vi.mocked(useDownloadedModels).mockReturnValue({
+      downloadedModels: mockModels,
+      onCheckDownloaded: vi.fn()
     })
 
     vi.mocked(useModelSelectorStore).mockReturnValue({
@@ -56,8 +64,9 @@ describe('ModelSelector', () => {
 
   it('should render dropdown even when no data is available', () => {
     // Set data to empty array
-    vi.mocked(useModelSelectors).mockReturnValue({
-      downloadedModels: []
+    vi.mocked(useDownloadedModels).mockReturnValue({
+      downloadedModels: [],
+      onCheckDownloaded: vi.fn()
     })
 
     render(<ModelSelector />)

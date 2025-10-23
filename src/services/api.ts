@@ -73,6 +73,12 @@ class API {
     return data
   }
 
+  async unloadModel() {
+    const { data } = await client.get('/models/unload')
+
+    return data
+  }
+
   async searchModel(model_name: string) {
     const { data } = await client.get<ModelSearchResponse>(
       `/models/search?model_name=${model_name}`
