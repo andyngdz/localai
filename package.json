@@ -27,7 +27,8 @@
     "test": "vitest --run",
     "test:coverage": "vitest --coverage",
     "semantic-release": "semantic-release",
-    "prepare": "husky"
+    "prepare": "husky",
+    "fix:sandbox": "sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0"
   },
   "dependencies": {
     "@heroui/react": "^2.8.5",
