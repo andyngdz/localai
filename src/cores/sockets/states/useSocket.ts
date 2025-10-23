@@ -1,16 +1,14 @@
 import { DEFAULT_BACKEND_URL } from '@/cores/constants'
 import { io, Socket } from 'socket.io-client'
 import { create } from 'zustand'
+import { SOCKET_CONFIG } from '../constants/socket-config'
 
 interface SocketStore {
   socket: Socket
 }
 
 export const useSocketStore = create<SocketStore>(() => ({
-  socket: io(DEFAULT_BACKEND_URL, {
-    transports: ['websocket'],
-    autoConnect: false
-  })
+  socket: io(DEFAULT_BACKEND_URL, SOCKET_CONFIG)
 }))
 
 /**

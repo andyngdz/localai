@@ -28,13 +28,11 @@ describe('updateSocketUrl', () => {
 
     const { useSocketStore } = await import('../states/useSocket')
     const { updateSocketUrl } = await import('../services/update-socket-url')
+    const { SOCKET_CONFIG } = await import('../constants/socket-config')
 
     updateSocketUrl('http://localhost:8001')
 
-    expect(io).toHaveBeenCalledWith('http://localhost:8001', {
-      transports: ['websocket'],
-      autoConnect: false
-    })
+    expect(io).toHaveBeenCalledWith('http://localhost:8001', SOCKET_CONFIG)
     expect(newSocket.connect).toHaveBeenCalledTimes(1)
     expect(useSocketStore.getState().socket).toBe(newSocket)
   })

@@ -152,6 +152,11 @@ render(<Wrapper><MyComponent /></Wrapper>)
 - Simplify tests when implementation simplifies
 - Prefer editing existing files over creating new ones
 
+**Extract duplicated configuration:**
+
+- Identical configs/options in multiple files → Extract to constants
+- Example: Socket.io options duplicated → `SOCKET_CONFIG` constant in `src/cores/sockets/constants/`
+
 ## Updating This File
 
 Add to this file when you discover:
