@@ -2,6 +2,15 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Communication Guidelines
+
+**Ask clarifying questions before proposing solutions. Never make assumptions about user intent.**
+
+- Use `AskUserQuestion` tool for ambiguous requests ("optimize this", "fix the error", "improve performance")
+- Get full context before implementing complex features (authentication, APIs, new architectures)
+- **Don't ask** for trivial commands (running tests, formatting, reading files)
+- Present options as selectable choices when multiple approaches exist
+
 ## Development Commands
 
 - **Dev server**: `npm run dev` (Next.js with Turbopack)
@@ -21,17 +30,34 @@ Next.js 15 + Electron desktop app + Python FastAPI backend.
 - **State**: Zustand stores with `reset()` pattern
 - **Types**: Use `@types` for shared types, `@/*` for src
 - **Electron IPC**: Frontend calls `window.electronAPI.backend.method()`
-- **Sockets**: Real-time via Socket.io (`src/sockets/socket.ts`)
+- **Sockets**: Real-time via Socket.io - always use `useSocketEvent()` hook (never `socket.on()` directly)
 - **Client Components**: Add `'use client'` when using React hooks, Zustand stores, or browser APIs
-- **Data fetching**: React Query for server state management, Zustand for client state
+- **Data fetching**: React Query for server state, Zustand for client state
 
 **Directory Structure:**
 
 ```
 src/features/  # Feature modules
+src/sockets/   # Socket.io setup (reactive pattern with Zustand)
+src/cores/     # Shared utilities, hooks, components
 electron/      # Main process + preload
 scripts/       # Build scripts (Python backend, Electron compile)
 types/         # Shared TypeScript types
+```
+
+### Socket Architecture
+
+Uses **Zustand-based reactive pattern** for Socket.io connections:
+
+- Socket instance stored in Zustand store (`useSocket.ts`)
+- Components subscribe via `useSocketEvent()` hook
+- When socket URL changes, all subscribers automatically re-connect
+- **Rule:** Never use `socket.on()` directly - always use `useSocketEvent()` for automatic cleanup
+
+**Example:**
+
+```typescript
+useSocketEvent(SocketEvents.DOWNLOAD_START, handleDownload, [handleDownload])
 ```
 
 ## Coding Style
@@ -43,78 +69,99 @@ types/         # Shared TypeScript types
 
 ## Testing
 
-- **Framework**: Vitest + React Testing Library
-- **Location**: `__tests__/` folders next to source
-- **Mocking**: Reset Zustand stores in `beforeEach`, mock Electron API via `global.window.electronAPI`
-- **Keep tests simple and focused** - test behavior, not implementation details
-- Test user-facing functionality; avoid testing internal state
-- Mock external dependencies (API calls, React Query, Electron APIs)
-- Aim for 50-150 lines per test file; split if exceeding 200 lines
-- **Always verify**: Run `npm run type-check && npm run lint && npm run format && npm test -- path/to/test` before completing
+**Framework:** Vitest + React Testing Library
 
-### When to Update Tests
+**Core Principles:**
 
-- When refactoring changes component behavior, return values, or side effects
-- When component API contracts change (props, hooks)
-- Tests should reflect current implementation, not outdated behavior
-- If implementation simplifies (e.g., hook no longer returns data), simplify tests too
+- Test behavior, not implementation details (what it does, not how)
+- Mock external dependencies (APIs, React Query, Electron, sockets)
+- Keep tests focused and readable
+- **Verification:** Always run `npm run type-check && npm run lint && npm run format && npm test -- path/to/test` before completing
+
+**Setup:**
+
+- Location: `__tests__/` folders next to source
+- Mocking: Reset Zustand stores in `beforeEach`, mock Electron via `global.window.electronAPI`
+
+**Coverage Goals:**
+
+- Aim for 100% on critical paths (state management, data flow, business logic)
+- Command: `npm run test:coverage -- path/to/files`
+- Focus on behavior coverage, not just line coverage
+
+**Testing Patterns (Simplified):**
+
+```typescript
+// Socket Events - Capture handlers
+let handlers: Record<string, Function> = {}
+vi.mock('@/sockets', () => ({
+  useSocketEvent: (event, handler) => (handlers[event] = handler)
+}))
+handlers[SocketEvents.DOWNLOAD_START]({ id: 'model-123' })
+
+// Zustand Stores
+const { result } = renderHook(() => useMyStore())
+act(() => result.current.setValue('new'))
+
+// React Query
+const Wrapper = createQueryClientWrapper()
+render(<Wrapper><MyComponent /></Wrapper>)
+```
 
 ## Security
 
-- Renderer cannot access Node APIs directly—use IPC bridges in `electron/preload.ts`
+- Renderer cannot access Node APIs directly - use IPC bridges in `electron/preload.ts`
 - Use `window.electronAPI` for all Electron interactions
 
-## Important Reminders
+## Common Patterns & Mistakes
 
-- Do what's asked, nothing more
-- Prefer editing over creating new files
-- Keep tests simple and concise (not 500 lines!)
-- Never proactively create documentation files
+### Critical Rules
 
-## Common Mistakes to Avoid
+**1. Socket Event Handling:**
 
-**1. Question every code pattern before copying it**
+- ❌ `socket.on('event', callback)` - Breaks on socket reconnection
+- ✅ `useSocketEvent('event', callback, [callback])` - Reactive and safe
 
-- Don't cargo cult program (copy patterns without understanding why they exist)
-- Before adding code, ask:
-  - "What problem does this solve?"
-  - "Does this apply to my use case?"
-  - "What's the performance impact?"
-- Test with real workloads, not just unit tests
+**2. useEffect Cleanup:**
 
-**2. Test with real-world loads before claiming success**
+- Must be synchronous - don't use `async () => { await ... }`
+- Fire-and-forget for async: `api.cleanup().catch(console.error)`
+
+**3. Test Implementation vs Behavior:**
+
+- ❌ Testing that `socket.on` was called 3 times
+- ✅ Testing that component responds correctly to events
+
+### Best Practices
+
+**Validate before claiming success:**
 
 - Unit tests passing ≠ code is performant or correct
-- Check application logs for warnings and timing issues
-- Verify the solution doesn't introduce worse problems than it solves
+- Check application logs for warnings and timing
+- Test with real workloads when possible
 
-## Communication Guidelines
+**Question patterns before copying:**
 
-**ALWAYS ask clarifying questions before proposing solutions. NEVER make assumptions about user intent.**
+- What problem does this solve?
+- Does this apply to my use case?
+- What's the performance impact?
 
-- Use the `AskUserQuestion` tool to present questions as selectable options/checkboxes
-- Maximum 4 options per question (tool limitation)
-- Each option needs: `label` (short title), `description` (explanation)
-- Get full context before jumping into implementation
+**When refactoring:**
 
-**When to ask questions:**
+- Update tests when behavior/API contracts change
+- Simplify tests when implementation simplifies
+- Prefer editing existing files over creating new ones
 
-- Implementation tasks (new features, refactoring, bug fixes)
-- Ambiguous requests: "optimize this", "fix the error", "improve performance"
-- Complex requests: "add authentication", "integrate with API"
-- Continuation scenarios: "continue", "keep going" → Ask which specific task
-- Any request where multiple valid approaches exist
+## Updating This File
 
-**When NOT to ask (trivial commands):**
+Add to this file when you discover:
 
-- Simple test runs: "run tests", "pytest"
-- Code formatting: "format code", "ruff format"
-- Informational: "show me the logs", "what does this function do"
-- Explicit with clear intent: "run tests on file X", "read function Y at line Z"
+- New architectural patterns used across features
+- Common mistakes that caused bugs
+- Critical rules that prevented problems
 
-**Examples:**
+Don't add:
 
-- User: "optimize this" → Ask: speed, memory, readability, or code size?
-- User: "fix the bug" → Ask: which bug, where, what's expected behavior?
-- User: "continue" → Ask: continue which task (list recent incomplete tasks)?
-- User: "add auth" → Ask: method (JWT/OAuth), token storage, session duration?
+- Every coding preference or style choice
+- Obvious best practices covered by linters
+- Temporary workarounds or hacks
