@@ -1,7 +1,7 @@
 import { useModelRecommendationsQuery } from '@/cores/api-queries'
-import { socket, SocketEvents } from '@/sockets'
+import { SocketEvents, useSocketEvent } from '@/cores/sockets'
 import { useRouter } from 'next/navigation'
-import { useCallback, useEffect } from 'react'
+import { useCallback } from 'react'
 
 export const useModelRecommendation = () => {
   const router = useRouter()
@@ -15,13 +15,9 @@ export const useModelRecommendation = () => {
     router.replace('/editor')
   }, [router])
 
-  useEffect(() => {
-    socket.on(SocketEvents.DOWNLOAD_COMPLETED, onDownloadCompleted)
-
-    return () => {
-      socket.off(SocketEvents.DOWNLOAD_COMPLETED, onDownloadCompleted)
-    }
-  }, [onDownloadCompleted])
+  useSocketEvent(SocketEvents.DOWNLOAD_COMPLETED, onDownloadCompleted, [
+    onDownloadCompleted
+  ])
 
   return { onNext, data }
 }

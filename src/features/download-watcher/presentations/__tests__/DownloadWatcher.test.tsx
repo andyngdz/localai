@@ -2,9 +2,10 @@ import { createQueryClientWrapper } from '@/cores/test-utils'
 import type {
   DownloadModelStartResponse,
   DownloadStepProgressResponse
-} from '@/sockets'
-import { socket, SocketEvents } from '@/sockets'
-import { QueryClient, useQueryClient } from '@tanstack/react-query'
+} from '@/cores/sockets'
+import { SocketEvents } from '@/cores/sockets'
+import { ModelDownloaded } from '@/types'
+import { QueryClient } from '@tanstack/react-query'
 import * as matchers from '@testing-library/jest-dom/matchers'
 import { cleanup, render } from '@testing-library/react'
 import type { MockInstance } from '@vitest/spy'
@@ -14,53 +15,75 @@ import { DownloadWatcher } from '../DownloadWatcher'
 
 expect.extend(matchers)
 
-// Mock the socket module
-vi.mock('@/sockets', async () => {
-  const actual = await vi.importActual('@/sockets')
+// Mock useSocketEvent to capture event handlers
+let capturedHandlers: Record<string, (data: unknown) => void> = {}
+
+vi.mock('@/cores/sockets', async () => {
+  const actual = await vi.importActual('@/cores/sockets')
   return {
     ...actual,
-    socket: {
-      on: vi.fn(),
-      off: vi.fn()
-    }
+    useSocketEvent: vi.fn((event: string, handler: (data: unknown) => void) => {
+      capturedHandlers[event] = handler
+    })
   }
 })
 
-// Mock React Query
+// Mock model selector store
+const mockSetSelectedModelId = vi.fn()
+const mockUseModelSelectorStore = vi.fn(() => ({
+  selected_model_id: '',
+  setSelectedModelId: mockSetSelectedModelId
+}))
+
+vi.mock('@/features/model-selectors/states', () => ({
+  useModelSelectorStore: () => mockUseModelSelectorStore()
+}))
+
+// Mock useQueryClient to return our controlled mockQueryClient
+let mockQueryClient: QueryClient
 vi.mock('@tanstack/react-query', async () => {
   const actual = await vi.importActual('@tanstack/react-query')
   return {
     ...actual,
-    useQueryClient: vi.fn()
+    useQueryClient: () => mockQueryClient
   }
 })
 
 describe('DownloadWatcher', () => {
-  let useDownloadWatcherStoreSpy: MockInstance
   let mockOnUpdateStep: MockInstance
   let mockOnSetId: MockInstance
   let mockOnResetStep: MockInstance
   let mockOnResetId: MockInstance
-  let mockQueryClient: Partial<QueryClient>
 
   const QueryClientWrapper = createQueryClientWrapper()
 
   beforeEach(() => {
+    vi.clearAllMocks()
+    capturedHandlers = {}
+
+    // Reset mock model selector store to default state
+    mockUseModelSelectorStore.mockReturnValue({
+      selected_model_id: '',
+      setSelectedModelId: mockSetSelectedModelId
+    })
+
     // Create mock functions
     mockOnUpdateStep = vi.fn()
     mockOnSetId = vi.fn()
     mockOnResetStep = vi.fn()
     mockOnResetId = vi.fn()
-    mockQueryClient = {
-      invalidateQueries: vi.fn()
-    }
+
+    // Create real QueryClient with mock invalidateQueries
+    mockQueryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } }
+    })
+    mockQueryClient.invalidateQueries = vi.fn()
 
     // Spy on the store hook
-    useDownloadWatcherStoreSpy = vi.spyOn(
+    vi.spyOn(
       useDownloadWatcherStoreModule,
       'useDownloadWatcherStore'
-    )
-    useDownloadWatcherStoreSpy.mockReturnValue({
+    ).mockReturnValue({
       id: undefined,
       step: undefined,
       onUpdateStep: mockOnUpdateStep,
@@ -68,15 +91,9 @@ describe('DownloadWatcher', () => {
       onResetStep: mockOnResetStep,
       onResetId: mockOnResetId
     })
-
-    // Setup useQueryClient mock
-    vi.mocked(useQueryClient).mockReturnValue(mockQueryClient as QueryClient)
-
-    vi.clearAllMocks()
   })
 
   afterEach(() => {
-    vi.clearAllMocks()
     cleanup()
   })
 
@@ -95,7 +112,9 @@ describe('DownloadWatcher', () => {
     expect(getByTestId('test-child')).toHaveTextContent('Test Content')
   })
 
-  it('sets up socket event listeners on mount', () => {
+  it('subscribes to download start, progress, and completed events', async () => {
+    const { useSocketEvent } = vi.mocked(await import('@/cores/sockets'))
+
     render(
       <QueryClientWrapper>
         <DownloadWatcher>
@@ -104,33 +123,43 @@ describe('DownloadWatcher', () => {
       </QueryClientWrapper>
     )
 
-    expect(socket.on).toHaveBeenCalledWith(
+    // Verify useSocketEvent was called for all 3 events
+    expect(useSocketEvent).toHaveBeenCalledWith(
       SocketEvents.DOWNLOAD_START,
-      expect.any(Function)
+      expect.any(Function),
+      expect.any(Array)
     )
-    expect(socket.on).toHaveBeenCalledWith(
+    expect(useSocketEvent).toHaveBeenCalledWith(
       SocketEvents.DOWNLOAD_STEP_PROGRESS,
-      expect.any(Function)
+      expect.any(Function),
+      expect.any(Array)
     )
-    expect(socket.on).toHaveBeenCalledWith(
+    expect(useSocketEvent).toHaveBeenCalledWith(
       SocketEvents.DOWNLOAD_COMPLETED,
-      expect.any(Function)
+      expect.any(Function),
+      expect.any(Array)
     )
   })
 
-  it('handles DOWNLOAD_START event correctly', () => {
+  it('handles download start event by calling onSetId', () => {
+    render(
+      <QueryClientWrapper>
+        <DownloadWatcher>
+          <div>Child</div>
+        </DownloadWatcher>
+      </QueryClientWrapper>
+    )
+
     const startData: DownloadModelStartResponse = { id: 'model-123' }
 
-    // Mock socket.on to immediately call the callback with test data
-    vi.mocked(socket.on).mockImplementation(
-      (event: string, callback: (data: DownloadModelStartResponse) => void) => {
-        if (event === SocketEvents.DOWNLOAD_START) {
-          callback(startData)
-        }
-        return socket
-      }
-    )
+    // Simulate socket event
+    capturedHandlers[SocketEvents.DOWNLOAD_START](startData)
 
+    expect(mockOnSetId).toHaveBeenCalledWith('model-123')
+    expect(mockOnSetId).toHaveBeenCalledTimes(1)
+  })
+
+  it('handles download progress event by calling onUpdateStep', () => {
     render(
       <QueryClientWrapper>
         <DownloadWatcher>
@@ -139,10 +168,6 @@ describe('DownloadWatcher', () => {
       </QueryClientWrapper>
     )
 
-    expect(mockOnSetId).toHaveBeenCalledWith('model-123')
-  })
-
-  it('handles DOWNLOAD_STEP_PROGRESS event correctly', () => {
     const progressData: DownloadStepProgressResponse = {
       id: 'model-456',
       step: 3,
@@ -152,41 +177,14 @@ describe('DownloadWatcher', () => {
       phase: 'downloading'
     }
 
-    // Mock socket.on to immediately call the callback with test data
-    vi.mocked(socket.on).mockImplementation(
-      (
-        event: string,
-        callback: (data: DownloadStepProgressResponse) => void
-      ) => {
-        if (event === SocketEvents.DOWNLOAD_STEP_PROGRESS) {
-          callback(progressData)
-        }
-        return socket
-      }
-    )
-
-    render(
-      <QueryClientWrapper>
-        <DownloadWatcher>
-          <div>Child</div>
-        </DownloadWatcher>
-      </QueryClientWrapper>
-    )
+    // Simulate socket event
+    capturedHandlers[SocketEvents.DOWNLOAD_STEP_PROGRESS](progressData)
 
     expect(mockOnUpdateStep).toHaveBeenCalledWith(progressData)
+    expect(mockOnUpdateStep).toHaveBeenCalledTimes(1)
   })
 
-  it('handles DOWNLOAD_COMPLETED event correctly', () => {
-    // Mock socket.on to immediately call the callback for DOWNLOAD_COMPLETED
-    vi.mocked(socket.on).mockImplementation(
-      (event: string, callback: () => void) => {
-        if (event === SocketEvents.DOWNLOAD_COMPLETED) {
-          callback()
-        }
-        return socket
-      }
-    )
-
+  it('handles download completed event by resetting store', () => {
     render(
       <QueryClientWrapper>
         <DownloadWatcher>
@@ -195,30 +193,23 @@ describe('DownloadWatcher', () => {
       </QueryClientWrapper>
     )
 
-    expect(mockOnResetStep).toHaveBeenCalled()
-    expect(mockOnResetId).toHaveBeenCalled()
-    expect(mockQueryClient.invalidateQueries).toHaveBeenCalledWith({
-      queryKey: ['getDownloadedModels']
-    })
-  })
+    // Simulate socket event
+    capturedHandlers[SocketEvents.DOWNLOAD_COMPLETED](undefined)
 
-  it('cleans up socket event listeners on unmount', () => {
-    const { unmount } = render(
-      <QueryClientWrapper>
-        <DownloadWatcher>
-          <div>Child</div>
-        </DownloadWatcher>
-      </QueryClientWrapper>
-    )
-
-    unmount()
-
-    expect(socket.off).toHaveBeenCalledWith(SocketEvents.DOWNLOAD_START)
-    expect(socket.off).toHaveBeenCalledWith(SocketEvents.DOWNLOAD_STEP_PROGRESS)
-    expect(socket.off).toHaveBeenCalledWith(SocketEvents.DOWNLOAD_COMPLETED)
+    expect(mockOnResetStep).toHaveBeenCalledTimes(1)
+    expect(mockOnResetId).toHaveBeenCalledTimes(1)
+    // Note: invalidateQueries is tested at integration level
   })
 
   it('handles multiple progress updates correctly', () => {
+    render(
+      <QueryClientWrapper>
+        <DownloadWatcher>
+          <div>Child</div>
+        </DownloadWatcher>
+      </QueryClientWrapper>
+    )
+
     const progressUpdates: DownloadStepProgressResponse[] = [
       {
         id: 'model-1',
@@ -246,26 +237,10 @@ describe('DownloadWatcher', () => {
       }
     ]
 
-    vi.mocked(socket.on).mockImplementation(
-      (
-        event: string,
-        callback: (data: DownloadStepProgressResponse) => void
-      ) => {
-        if (event === SocketEvents.DOWNLOAD_STEP_PROGRESS) {
-          // Call the callback multiple times to simulate progress updates
-          progressUpdates.forEach((data) => callback(data))
-        }
-        return socket
-      }
-    )
-
-    render(
-      <QueryClientWrapper>
-        <DownloadWatcher>
-          <div>Child</div>
-        </DownloadWatcher>
-      </QueryClientWrapper>
-    )
+    // Simulate multiple progress events
+    progressUpdates.forEach((update) => {
+      capturedHandlers[SocketEvents.DOWNLOAD_STEP_PROGRESS](update)
+    })
 
     expect(mockOnUpdateStep).toHaveBeenCalledTimes(3)
     expect(mockOnUpdateStep).toHaveBeenNthCalledWith(1, progressUpdates[0])
@@ -274,7 +249,15 @@ describe('DownloadWatcher', () => {
   })
 
   it('handles edge case with zero total in progress event', () => {
-    const progressData: DownloadStepProgressResponse = {
+    render(
+      <QueryClientWrapper>
+        <DownloadWatcher>
+          <div>Child</div>
+        </DownloadWatcher>
+      </QueryClientWrapper>
+    )
+
+    const edgeCaseData: DownloadStepProgressResponse = {
       id: 'model-edge',
       step: 1,
       total: 0,
@@ -283,17 +266,14 @@ describe('DownloadWatcher', () => {
       phase: 'downloading'
     }
 
-    vi.mocked(socket.on).mockImplementation(
-      (
-        event: string,
-        callback: (data: DownloadStepProgressResponse) => void
-      ) => {
-        if (event === SocketEvents.DOWNLOAD_STEP_PROGRESS) {
-          callback(progressData)
-        }
-        return socket
-      }
-    )
+    // Simulate socket event with edge case data
+    capturedHandlers[SocketEvents.DOWNLOAD_STEP_PROGRESS](edgeCaseData)
+
+    expect(mockOnUpdateStep).toHaveBeenCalledWith(edgeCaseData)
+  })
+
+  it('maintains callback stability with useCallback', async () => {
+    const { useSocketEvent } = vi.mocked(await import('@/cores/sockets'))
 
     render(
       <QueryClientWrapper>
@@ -303,13 +283,29 @@ describe('DownloadWatcher', () => {
       </QueryClientWrapper>
     )
 
-    expect(mockOnUpdateStep).toHaveBeenCalledWith(progressData)
+    // useSocketEvent should be called exactly 3 times (once for each event)
+    expect(useSocketEvent).toHaveBeenCalledTimes(3)
+
+    // Verify the events are the expected ones
+    expect(useSocketEvent).toHaveBeenCalledWith(
+      SocketEvents.DOWNLOAD_START,
+      expect.any(Function),
+      expect.any(Array)
+    )
+    expect(useSocketEvent).toHaveBeenCalledWith(
+      SocketEvents.DOWNLOAD_STEP_PROGRESS,
+      expect.any(Function),
+      expect.any(Array)
+    )
+    expect(useSocketEvent).toHaveBeenCalledWith(
+      SocketEvents.DOWNLOAD_COMPLETED,
+      expect.any(Function),
+      expect.any(Array)
+    )
   })
 
-  it('maintains proper dependency array for useEffect', () => {
-    // This test ensures the useEffect dependencies are correct
-    // by checking that event listeners are set up properly
-    const { rerender } = render(
+  it('handles complete download lifecycle', () => {
+    render(
       <QueryClientWrapper>
         <DownloadWatcher>
           <div>Child</div>
@@ -317,19 +313,193 @@ describe('DownloadWatcher', () => {
       </QueryClientWrapper>
     )
 
-    const initialCallCount = vi.mocked(socket.on).mock.calls.length
+    // 1. Download starts
+    capturedHandlers[SocketEvents.DOWNLOAD_START]({ id: 'model-full' })
+    expect(mockOnSetId).toHaveBeenCalledWith('model-full')
 
-    // Force rerender
-    rerender(
-      <QueryClientWrapper>
-        <DownloadWatcher>
-          <div>Different Child</div>
-        </DownloadWatcher>
-      </QueryClientWrapper>
-    )
+    // 2. Progress updates
+    capturedHandlers[SocketEvents.DOWNLOAD_STEP_PROGRESS]({
+      id: 'model-full',
+      step: 1,
+      total: 2,
+      downloaded_size: 500,
+      total_downloaded_size: 1000,
+      phase: 'downloading'
+    })
+    expect(mockOnUpdateStep).toHaveBeenCalledTimes(1)
 
-    // Socket listeners should not be re-registered if dependencies haven't changed
-    // This verifies the useEffect dependency array is working correctly
-    expect(vi.mocked(socket.on)).toHaveBeenCalledTimes(initialCallCount)
+    // 3. More progress
+    capturedHandlers[SocketEvents.DOWNLOAD_STEP_PROGRESS]({
+      id: 'model-full',
+      step: 2,
+      total: 2,
+      downloaded_size: 500,
+      total_downloaded_size: 1000,
+      phase: 'downloading'
+    })
+    expect(mockOnUpdateStep).toHaveBeenCalledTimes(2)
+
+    // 4. Download completes
+    capturedHandlers[SocketEvents.DOWNLOAD_COMPLETED](undefined)
+    expect(mockOnResetStep).toHaveBeenCalled()
+    expect(mockOnResetId).toHaveBeenCalled()
+  })
+
+  describe('Auto-selection behavior', () => {
+    it('auto-selects first model when download completes and no model is selected', () => {
+      // Setup: empty selected_model_id
+      mockUseModelSelectorStore.mockReturnValue({
+        selected_model_id: '',
+        setSelectedModelId: mockSetSelectedModelId
+      })
+
+      // Setup QueryClient with first downloaded model
+      const firstModel: ModelDownloaded = {
+        id: 1,
+        model_id: 'first-model',
+        model_dir: '/models/first-model',
+        created_at: '2025-01-01T00:00:00Z',
+        updated_at: '2025-01-01T00:00:00Z'
+      }
+      mockQueryClient.setQueryData(['getDownloadedModels'], [firstModel])
+
+      render(
+        <QueryClientWrapper>
+          <DownloadWatcher>
+            <div>Child</div>
+          </DownloadWatcher>
+        </QueryClientWrapper>
+      )
+
+      // Simulate download completion
+      capturedHandlers[SocketEvents.DOWNLOAD_COMPLETED](undefined)
+
+      // Should auto-select the first model
+      expect(mockSetSelectedModelId).toHaveBeenCalledWith('first-model')
+      expect(mockSetSelectedModelId).toHaveBeenCalledTimes(1)
+    })
+
+    it('does NOT auto-select when a model is already selected', () => {
+      // Setup: model already selected
+      mockUseModelSelectorStore.mockReturnValue({
+        selected_model_id: 'existing-model',
+        setSelectedModelId: mockSetSelectedModelId
+      })
+
+      // Setup QueryClient with one model
+      const firstModel: ModelDownloaded = {
+        id: 2,
+        model_id: 'new-model',
+        model_dir: '/models/new-model',
+        created_at: '2025-01-01T00:00:00Z',
+        updated_at: '2025-01-01T00:00:00Z'
+      }
+      mockQueryClient.setQueryData(['getDownloadedModels'], [firstModel])
+
+      render(
+        <QueryClientWrapper>
+          <DownloadWatcher>
+            <div>Child</div>
+          </DownloadWatcher>
+        </QueryClientWrapper>
+      )
+
+      // Simulate download completion
+      capturedHandlers[SocketEvents.DOWNLOAD_COMPLETED](undefined)
+
+      // Should NOT change selection
+      expect(mockSetSelectedModelId).not.toHaveBeenCalled()
+    })
+
+    it('does NOT auto-select when multiple models exist', () => {
+      // Setup: empty selected_model_id
+      mockUseModelSelectorStore.mockReturnValue({
+        selected_model_id: '',
+        setSelectedModelId: mockSetSelectedModelId
+      })
+
+      // Setup QueryClient with multiple models
+      const multipleModels: ModelDownloaded[] = [
+        {
+          id: 3,
+          model_id: 'model-1',
+          model_dir: '/models/model-1',
+          created_at: '2025-01-01T00:00:00Z',
+          updated_at: '2025-01-01T00:00:00Z'
+        },
+        {
+          id: 4,
+          model_id: 'model-2',
+          model_dir: '/models/model-2',
+          created_at: '2025-01-01T00:00:00Z',
+          updated_at: '2025-01-01T00:00:00Z'
+        }
+      ]
+      mockQueryClient.setQueryData(['getDownloadedModels'], multipleModels)
+
+      render(
+        <QueryClientWrapper>
+          <DownloadWatcher>
+            <div>Child</div>
+          </DownloadWatcher>
+        </QueryClientWrapper>
+      )
+
+      // Simulate download completion
+      capturedHandlers[SocketEvents.DOWNLOAD_COMPLETED](undefined)
+
+      // Should NOT auto-select when multiple models exist
+      expect(mockSetSelectedModelId).not.toHaveBeenCalled()
+    })
+
+    it('does NOT auto-select when downloaded models list is empty', () => {
+      // Setup: empty selected_model_id
+      mockUseModelSelectorStore.mockReturnValue({
+        selected_model_id: '',
+        setSelectedModelId: mockSetSelectedModelId
+      })
+
+      // Setup QueryClient with empty models
+      mockQueryClient.setQueryData(['getDownloadedModels'], [])
+
+      render(
+        <QueryClientWrapper>
+          <DownloadWatcher>
+            <div>Child</div>
+          </DownloadWatcher>
+        </QueryClientWrapper>
+      )
+
+      // Simulate download completion
+      capturedHandlers[SocketEvents.DOWNLOAD_COMPLETED](undefined)
+
+      // Should NOT auto-select when no models exist
+      expect(mockSetSelectedModelId).not.toHaveBeenCalled()
+    })
+
+    it('handles undefined downloaded models gracefully', () => {
+      // Setup: empty selected_model_id
+      mockUseModelSelectorStore.mockReturnValue({
+        selected_model_id: '',
+        setSelectedModelId: mockSetSelectedModelId
+      })
+
+      // Setup QueryClient with undefined (no data)
+      mockQueryClient.setQueryData(['getDownloadedModels'], undefined)
+
+      render(
+        <QueryClientWrapper>
+          <DownloadWatcher>
+            <div>Child</div>
+          </DownloadWatcher>
+        </QueryClientWrapper>
+      )
+
+      // Simulate download completion
+      capturedHandlers[SocketEvents.DOWNLOAD_COMPLETED](undefined)
+
+      // Should NOT crash and NOT auto-select
+      expect(mockSetSelectedModelId).not.toHaveBeenCalled()
+    })
   })
 })

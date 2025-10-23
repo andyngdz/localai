@@ -1,5 +1,6 @@
 'use client'
 
+import { useDownloadedModels } from '@/cores/hooks'
 import {
   Button,
   Dropdown,
@@ -10,11 +11,11 @@ import {
 import { map } from 'es-toolkit/compat'
 import { ChevronDown } from 'lucide-react'
 import { useMemo } from 'react'
-import { useModelSelectors } from '../states/useModelSelectors'
-import { useModelSelectorStore } from '../states/useModelSelectorStores'
+import { useModelSelectors, useModelSelectorStore } from '../states'
 
 export const ModelSelector = () => {
-  const { downloadedModels } = useModelSelectors()
+  useModelSelectors()
+  const { downloadedModels } = useDownloadedModels()
   const { selected_model_id, setSelectedModelId } = useModelSelectorStore()
 
   const items = useMemo(() => {

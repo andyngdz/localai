@@ -1,21 +1,25 @@
-import { socket, SocketEvents } from '@/sockets'
-import { useEffect } from 'react'
+import { SocketEvents, useSocketEvent } from '@/cores/sockets'
+import { useCallback } from 'react'
 import { useMessageStore } from './useMessageStores'
 
 export const useStreamingMessage = () => {
-  const { message, setMessage, reset } = useMessageStore()
+  const { message, reset } = useMessageStore()
 
-  useEffect(() => {
-    socket.on(SocketEvents.MODEL_LOAD_COMPLETED, () => reset())
+  const handleModelLoadCompleted = useCallback(() => {
+    reset()
+  }, [reset])
 
-    socket.on(SocketEvents.DOWNLOAD_COMPLETED, () => reset())
+  const handleDownloadCompleted = useCallback(() => {
+    reset()
+  }, [reset])
 
-    return () => {
-      socket.off(SocketEvents.DOWNLOAD_START)
-      socket.off(SocketEvents.MODEL_LOAD_COMPLETED)
-      socket.off(SocketEvents.DOWNLOAD_COMPLETED)
-    }
-  }, [reset, setMessage])
+  useSocketEvent(SocketEvents.MODEL_LOAD_COMPLETED, handleModelLoadCompleted, [
+    handleModelLoadCompleted
+  ])
+
+  useSocketEvent(SocketEvents.DOWNLOAD_COMPLETED, handleDownloadCompleted, [
+    handleDownloadCompleted
+  ])
 
   return { message }
 }

@@ -1,5 +1,5 @@
 import { GeneratorConfigFormValues } from '@/features/generator-configs'
-import { api } from '@/services'
+import { api, standardizeErrorMessage } from '@/services'
 import { ImageGenerationRequest } from '@/types'
 import { addToast } from '@heroui/react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -39,10 +39,13 @@ export const useGenerator = () => {
         color: 'success'
       })
     },
-    onError: () => {
+    onError: (error) => {
       addToast({
         title: 'Something went wrong',
-        description: 'There was an error adding your generation to history.',
+        description: standardizeErrorMessage(
+          error,
+          'There was an error adding your generation to history.'
+        ),
         color: 'danger'
       })
     }
@@ -54,14 +57,14 @@ export const useGenerator = () => {
     try {
       onSetIsGenerating(true)
       const history_id = await addHistory.mutateAsync(config)
-      queryClient.refetchQueries({ queryKey: ['histories'] })
+      queryClient.refetchQueries({ queryKey: ['getHistories'] })
 
       onInit(config.number_of_images)
 
       await generator.mutateAsync({ history_id, config })
     } finally {
       onSetIsGenerating(false)
-      queryClient.refetchQueries({ queryKey: ['histories'] })
+      queryClient.refetchQueries({ queryKey: ['getHistories'] })
     }
   }
 

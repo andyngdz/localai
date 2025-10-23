@@ -1,49 +1,73 @@
 'use client'
 
+import { useModelSelectorStore } from '@/features/model-selectors/states'
 import {
   DownloadModelStartResponse,
   DownloadStepProgressResponse,
-  socket,
-  SocketEvents
-} from '@/sockets'
+  SocketEvents,
+  useSocketEvent
+} from '@/cores/sockets'
+import { ModelDownloaded } from '@/types'
 import { useQueryClient } from '@tanstack/react-query'
-import { FC, PropsWithChildren, useEffect } from 'react'
+import { isEmpty } from 'es-toolkit/compat'
+import { FC, PropsWithChildren, useCallback } from 'react'
 import { useDownloadWatcherStore } from '../states'
 
 export const DownloadWatcher: FC<PropsWithChildren> = ({ children }) => {
   const queryClient = useQueryClient()
   const { onUpdateStep, onSetId, onResetStep, onResetId } =
     useDownloadWatcherStore()
+  const { selected_model_id, setSelectedModelId } = useModelSelectorStore()
 
-  useEffect(() => {
-    socket.on(
-      SocketEvents.DOWNLOAD_START,
-      (data: DownloadModelStartResponse) => {
-        onSetId(data.id)
-      }
-    )
+  // Handle download start event
+  const handleDownloadStart = useCallback(
+    (data: DownloadModelStartResponse) => {
+      onSetId(data.id)
+    },
+    [onSetId]
+  )
 
-    socket.on(
-      SocketEvents.DOWNLOAD_STEP_PROGRESS,
-      (step: DownloadStepProgressResponse) => {
-        onUpdateStep(step)
-      }
-    )
+  // Handle download progress event
+  const handleDownloadProgress = useCallback(
+    (step: DownloadStepProgressResponse) => {
+      onUpdateStep(step)
+    },
+    [onUpdateStep]
+  )
 
-    socket.on(SocketEvents.DOWNLOAD_COMPLETED, () => {
-      onResetStep()
-      onResetId()
-      queryClient.invalidateQueries({
-        queryKey: ['getDownloadedModels']
-      })
+  // Handle download completed event
+  const handleDownloadCompleted = useCallback(() => {
+    onResetStep()
+    onResetId()
+    queryClient.invalidateQueries({
+      queryKey: ['getDownloadedModels']
     })
 
-    return () => {
-      socket.off(SocketEvents.DOWNLOAD_START)
-      socket.off(SocketEvents.DOWNLOAD_STEP_PROGRESS)
-      socket.off(SocketEvents.DOWNLOAD_COMPLETED)
+    // Auto-select first model if this is the user's first download
+    const downloadedModels =
+      queryClient.getQueryData<ModelDownloaded[]>(['getDownloadedModels']) || []
+
+    if (downloadedModels.length === 1 && isEmpty(selected_model_id)) {
+      setSelectedModelId(downloadedModels[0].model_id)
     }
-  }, [queryClient, onSetId, onUpdateStep, onResetStep, onResetId])
+  }, [
+    onResetStep,
+    onResetId,
+    queryClient,
+    selected_model_id,
+    setSelectedModelId
+  ])
+
+  // Subscribe to socket events using the new hook
+  useSocketEvent(SocketEvents.DOWNLOAD_START, handleDownloadStart, [
+    handleDownloadStart
+  ])
+  useSocketEvent(SocketEvents.DOWNLOAD_STEP_PROGRESS, handleDownloadProgress, [
+    handleDownloadProgress
+  ])
+  useSocketEvent(SocketEvents.DOWNLOAD_COMPLETED, handleDownloadCompleted, [
+    handleDownloadCompleted
+  ])
 
   return children
 }

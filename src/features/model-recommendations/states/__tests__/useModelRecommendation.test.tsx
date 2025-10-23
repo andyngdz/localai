@@ -1,30 +1,31 @@
 import { useModelRecommendationsQuery } from '@/cores/api-queries'
-import { socket, SocketEvents } from '@/sockets'
+import { SocketEvents } from '@/cores/sockets'
 import { act, renderHook } from '@testing-library/react'
 import { setupRouterMock } from '@/cores/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useModelRecommendation } from '../useModelRecommendation'
-import { Socket } from 'socket.io-client'
 
 vi.mock('@/cores/api-queries')
-vi.mock('@/sockets', async (originalImport: () => Promise<Socket>) => {
-  const actual = await originalImport()
+
+// Mock useSocketEvent to capture handlers
+let capturedHandlers: Record<string, (data: unknown) => void> = {}
+
+vi.mock('@/cores/sockets', async () => {
+  const actual = await vi.importActual('@/cores/sockets')
   return {
     ...actual,
-    socket: {
-      on: vi.fn(),
-      off: vi.fn()
-    },
-    SocketEvents: {
-      DOWNLOAD_COMPLETED: 'DOWNLOAD_COMPLETED'
-    }
+    useSocketEvent: vi.fn((event: string, handler: (data: unknown) => void) => {
+      capturedHandlers[event] = handler
+    })
   }
 })
+
 vi.mock('next/navigation', () => ({ useRouter: vi.fn() }))
 
 describe('useModelRecommendation', () => {
   beforeEach(async () => {
     vi.clearAllMocks()
+    capturedHandlers = {}
     await setupRouterMock()
   })
 
@@ -39,41 +40,36 @@ describe('useModelRecommendation', () => {
     expect(result.current.data).toEqual(mockData)
   })
 
-  it('should navigate to editor on DOWNLOAD_COMPLETED and clean up on unmount', async () => {
+  it('should subscribe to DOWNLOAD_COMPLETED event', async () => {
     vi.mocked(useModelRecommendationsQuery).mockReturnValue({
       data: {}
     } as ReturnType<typeof useModelRecommendationsQuery>)
 
-    // Set up router mock
+    const { useSocketEvent } = vi.mocked(await import('@/cores/sockets'))
+    renderHook(() => useModelRecommendation())
+
+    expect(useSocketEvent).toHaveBeenCalledWith(
+      SocketEvents.DOWNLOAD_COMPLETED,
+      expect.any(Function),
+      expect.any(Array)
+    )
+  })
+
+  it('should navigate to editor on DOWNLOAD_COMPLETED', async () => {
+    vi.mocked(useModelRecommendationsQuery).mockReturnValue({
+      data: {}
+    } as ReturnType<typeof useModelRecommendationsQuery>)
+
     const { mockReplace } = await setupRouterMock()
 
-    // Mock the socket.on and socket.off methods
-    vi.spyOn(socket, 'on').mockImplementation(
-      (event: string, cb: VoidFunction) => {
-        if (event === SocketEvents.DOWNLOAD_COMPLETED) {
-          cb() // Immediately call the callback to trigger navigation
-        }
-        return socket // Return the socket object as per socket.io API
-      }
-    )
+    renderHook(() => useModelRecommendation())
 
-    const { unmount } = renderHook(() => useModelRecommendation())
+    // Simulate DOWNLOAD_COMPLETED event
+    act(() => {
+      capturedHandlers[SocketEvents.DOWNLOAD_COMPLETED](undefined)
+    })
 
-    // Check that navigation happened
     expect(mockReplace).toHaveBeenCalledWith('/editor')
-    expect(socket.on).toHaveBeenCalledWith(
-      SocketEvents.DOWNLOAD_COMPLETED,
-      expect.any(Function)
-    )
-
-    // Unmount the hook to trigger cleanup
-    unmount()
-
-    // Verify that socket.off was called with the correct event
-    expect(socket.off).toHaveBeenCalledWith(
-      SocketEvents.DOWNLOAD_COMPLETED,
-      expect.any(Function)
-    )
   })
 
   it('should navigate to editor when onNext is called', async () => {
