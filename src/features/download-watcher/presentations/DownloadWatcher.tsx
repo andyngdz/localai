@@ -3,11 +3,11 @@
 import {
   DownloadModelStartResponse,
   DownloadStepProgressResponse,
-  socket,
-  SocketEvents
+  SocketEvents,
+  useSocketEvent
 } from '@/sockets'
 import { useQueryClient } from '@tanstack/react-query'
-import { FC, PropsWithChildren, useEffect } from 'react'
+import { FC, PropsWithChildren, useCallback } from 'react'
 import { useDownloadWatcherStore } from '../states'
 
 export const DownloadWatcher: FC<PropsWithChildren> = ({ children }) => {
@@ -15,35 +15,41 @@ export const DownloadWatcher: FC<PropsWithChildren> = ({ children }) => {
   const { onUpdateStep, onSetId, onResetStep, onResetId } =
     useDownloadWatcherStore()
 
-  useEffect(() => {
-    socket.on(
-      SocketEvents.DOWNLOAD_START,
-      (data: DownloadModelStartResponse) => {
-        onSetId(data.id)
-      }
-    )
+  // Handle download start event
+  const handleDownloadStart = useCallback(
+    (data: DownloadModelStartResponse) => {
+      onSetId(data.id)
+    },
+    [onSetId]
+  )
 
-    socket.on(
-      SocketEvents.DOWNLOAD_STEP_PROGRESS,
-      (step: DownloadStepProgressResponse) => {
-        onUpdateStep(step)
-      }
-    )
+  // Handle download progress event
+  const handleDownloadProgress = useCallback(
+    (step: DownloadStepProgressResponse) => {
+      onUpdateStep(step)
+    },
+    [onUpdateStep]
+  )
 
-    socket.on(SocketEvents.DOWNLOAD_COMPLETED, () => {
-      onResetStep()
-      onResetId()
-      queryClient.invalidateQueries({
-        queryKey: ['getDownloadedModels']
-      })
+  // Handle download completed event
+  const handleDownloadCompleted = useCallback(() => {
+    onResetStep()
+    onResetId()
+    queryClient.invalidateQueries({
+      queryKey: ['getDownloadedModels']
     })
+  }, [onResetStep, onResetId, queryClient])
 
-    return () => {
-      socket.off(SocketEvents.DOWNLOAD_START)
-      socket.off(SocketEvents.DOWNLOAD_STEP_PROGRESS)
-      socket.off(SocketEvents.DOWNLOAD_COMPLETED)
-    }
-  }, [queryClient, onSetId, onUpdateStep, onResetStep, onResetId])
+  // Subscribe to socket events using the new hook
+  useSocketEvent(SocketEvents.DOWNLOAD_START, handleDownloadStart, [
+    handleDownloadStart
+  ])
+  useSocketEvent(SocketEvents.DOWNLOAD_STEP_PROGRESS, handleDownloadProgress, [
+    handleDownloadProgress
+  ])
+  useSocketEvent(SocketEvents.DOWNLOAD_COMPLETED, handleDownloadCompleted, [
+    handleDownloadCompleted
+  ])
 
   return children
 }

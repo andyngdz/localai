@@ -7,6 +7,7 @@ vi.mock('socket.io-client', () => ({
     disconnect: vi.fn(),
     connect: vi.fn(),
     on: vi.fn(),
+    off: vi.fn(),
     emit: vi.fn()
   }))
 }))
@@ -31,27 +32,26 @@ describe('updateSocketUrl', () => {
     vi.clearAllMocks()
   })
 
-  it('disconnects and creates new socket with updated URL', async () => {
+  it('creates new socket with updated URL and updates Zustand store', async () => {
     const newSocket = {
       disconnect: vi.fn(),
       connect: vi.fn(),
       on: vi.fn(),
+      off: vi.fn(),
       emit: vi.fn()
     } as unknown as Socket
     vi.mocked(io).mockReturnValue(newSocket)
 
-    const { socket } = await import('../socket')
+    const { useSocketStore } = await import('../useSocket')
     const { updateSocketUrl } = await import('../update-socket-url')
-
-    const disconnectSpy = vi.spyOn(socket, 'disconnect')
 
     updateSocketUrl('http://localhost:8001')
 
-    expect(disconnectSpy).toHaveBeenCalledTimes(1)
     expect(io).toHaveBeenCalledWith('http://localhost:8001', {
       transports: ['websocket'],
       autoConnect: false
     })
     expect(newSocket.connect).toHaveBeenCalledTimes(1)
+    expect(useSocketStore.getState().socket).toBe(newSocket)
   })
 })

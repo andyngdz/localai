@@ -1,10 +1,13 @@
 import { io } from 'socket.io-client'
-import { socket } from './socket'
+import { useSocketStore } from './useSocket'
 
 export const updateSocketUrl = (url: string) => {
-  socket.disconnect()
-
+  // Create new socket with updated URL
   const newSocket = io(url, { transports: ['websocket'], autoConnect: false })
-  Object.assign(socket, newSocket)
-  socket.connect()
+
+  // Update socket in store (triggers reactive updates)
+  useSocketStore.setState({ socket: newSocket })
+
+  // Connect the new socket
+  newSocket.connect()
 }
