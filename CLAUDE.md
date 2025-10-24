@@ -2,6 +2,12 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Plan Mode
+
+When exiting plan mode to begin implementation, ALWAYS save the implementation plan first as a markdown file in docs/
+
+- Format: {serial-number}-{plan-name}.md
+
 ## Communication Guidelines
 
 **Ask clarifying questions before proposing solutions. Never make assumptions about user intent.**
