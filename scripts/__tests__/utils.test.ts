@@ -11,7 +11,9 @@ describe('projectRoot', () => {
 })
 
 describe('runAsScript', () => {
-  let exitSpy: MockInstance<(code?: string) => never>
+  let exitSpy: MockInstance<
+    (code?: string | number | null | undefined) => never
+  >
   let consoleErrorSpy: MockInstance<
     (message?: unknown, ...optionalParams: unknown[]) => void
   >

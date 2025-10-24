@@ -1,38 +1,39 @@
-import { FlatCompat } from "@eslint/eslintrc";
-import pluginQuery from "@tanstack/eslint-plugin-query";
-import { dirname } from "path";
-import { fileURLToPath } from "url";
+import pluginQuery from '@tanstack/eslint-plugin-query'
+import nextVitals from 'eslint-config-next/core-web-vitals'
+import nextTs from 'eslint-config-next/typescript'
+import prettier from 'eslint-config-prettier/flat'
+import { defineConfig, globalIgnores } from 'eslint/config'
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
-
-const eslintConfig = [
+const eslintConfig = defineConfig([
+  ...nextVitals,
+  ...nextTs,
+  prettier,
+  ...pluginQuery.configs['flat/recommended'],
   {
-    ignores: ["node_modules/**", ".next/**", "out/**", "build/**", "coverage/**", "next-env.d.ts"],
-  },
-  ...compat.config({
-    extends: ["next/core-web-vitals", "next/typescript"],
     rules: {
-      "@next/next/no-img-element": "off",
-      "@typescript-eslint/no-unused-vars": [
-        "error",
+      '@next/next/no-img-element': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
         {
-          args: "all",
-          argsIgnorePattern: "^_",
-          caughtErrors: "all",
-          caughtErrorsIgnorePattern: "^_",
-          destructuredArrayIgnorePattern: "^_",
-          varsIgnorePattern: "^_",
-          ignoreRestSiblings: true,
-        },
-      ],
-    },
-  }),
-  ...pluginQuery.configs["flat/recommended"],
-];
+          args: 'all',
+          argsIgnorePattern: '^_',
+          caughtErrors: 'all',
+          caughtErrorsIgnorePattern: '^_',
+          destructuredArrayIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          ignoreRestSiblings: true
+        }
+      ]
+    }
+  },
+  globalIgnores([
+    'node_modules/**',
+    '.next/**',
+    'out/**',
+    'build/**',
+    'coverage/**',
+    'next-env.d.ts'
+  ])
+])
 
-export default eslintConfig;
+export default eslintConfig

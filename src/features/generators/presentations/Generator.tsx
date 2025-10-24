@@ -6,8 +6,6 @@ import { GeneratorPreviewer } from '@/features/generator-previewers'
 import { GeneratorPrompt } from '@/features/generator-prompts'
 import { Histories } from '@/features/histories'
 import { Allotment } from 'allotment'
-import clsx from 'clsx'
-import { useEffect, useState } from 'react'
 import { FormProvider } from 'react-hook-form'
 import { useGenerator, useGeneratorForm } from '../states'
 
@@ -17,13 +15,8 @@ import 'allotment/dist/style.css'
 export const Generator = () => {
   const { methods } = useGeneratorForm()
   const { onGenerate } = useGenerator()
-  const [mounted, setMounted] = useState(false)
 
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  if (!mounted)
+  if (typeof window === 'undefined')
     return <Progress isIndeterminate aria-label="Loading..." size="sm" />
 
   return (
@@ -31,9 +24,7 @@ export const Generator = () => {
       <form
         name="generator"
         onSubmit={methods.handleSubmit(onGenerate)}
-        className={clsx('w-full h-full opacity-0 transition-opacity', {
-          'opacity-100': mounted
-        })}
+        className="w-full h-full"
       >
         <Allotment defaultSizes={[300, 0, 300]}>
           <Allotment.Pane maxSize={350} minSize={300} preferredSize={300}>
