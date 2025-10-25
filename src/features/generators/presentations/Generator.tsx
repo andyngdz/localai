@@ -11,12 +11,15 @@ import { useGenerator, useGeneratorForm } from '../states'
 
 import { Progress } from '@heroui/react'
 import 'allotment/dist/style.css'
+import { useMountedState } from 'react-use'
 
 export const Generator = () => {
+  const isMounted = useMountedState()
+  const mounted = isMounted()
   const { methods } = useGeneratorForm()
   const { onGenerate } = useGenerator()
 
-  if (typeof window === 'undefined')
+  if (!mounted)
     return <Progress isIndeterminate aria-label="Loading..." size="sm" />
 
   return (

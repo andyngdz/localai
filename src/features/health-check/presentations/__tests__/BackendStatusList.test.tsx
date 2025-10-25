@@ -25,8 +25,13 @@ describe('BackendStatusList', () => {
 
   it('renders entries as listbox items', () => {
     const statuses = [
-      makeEntry({ message: 'cloning repo', timestamp: Date.now() }),
       makeEntry({
+        id: 'entry-1',
+        message: 'cloning repo',
+        timestamp: Date.now()
+      }),
+      makeEntry({
+        id: 'entry-2',
         message: 'installing dependencies',
         timestamp: Date.now() + 1
       })

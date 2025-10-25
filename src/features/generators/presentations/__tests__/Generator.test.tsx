@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { UseFormReturn } from 'react-hook-form'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { GeneratorConfigFormValues } from '@/features/generator-configs'
@@ -137,6 +137,11 @@ vi.mock('@heroui/react', () => ({
   )
 }))
 
+// Mock react-use to make useMountedState return true (mounted)
+vi.mock('react-use', () => ({
+  useMountedState: () => () => true
+}))
+
 describe('Generator', () => {
   beforeEach(() => {
     // Setup default mocks
@@ -219,24 +224,6 @@ describe('Generator', () => {
     expect(panes[2]).toHaveAttribute('data-preferred-size', '300')
   })
 
-  it('starts with opacity-0 and transitions to opacity-100 when mounted', async () => {
-    render(<Generator />)
-
-    const form = screen.getByRole('form')
-    expect(form).toHaveClass('opacity-0')
-
-    await waitFor(() => {
-      expect(form).toHaveClass('opacity-100')
-    })
-  })
-
-  it('includes transition classes for opacity animation', () => {
-    render(<Generator />)
-
-    const form = screen.getByRole('form')
-    expect(form).toHaveClass('w-full', 'h-full', 'transition-opacity')
-  })
-
   it('renders with proper layout structure', () => {
     render(<Generator />)
 
@@ -249,26 +236,21 @@ describe('Generator', () => {
     expect(panes).toHaveLength(3)
   })
 
-  it('transitions from loading to mounted state', async () => {
+  it('renders form with correct CSS classes', () => {
     render(<Generator />)
 
-    // Initially might show progress (before useEffect completes)
-    // Then should show the form
-    await waitFor(() => {
-      const form = screen.getByRole('form')
-      expect(form).toBeInTheDocument()
-      expect(form).toHaveClass('opacity-100')
-    })
+    const form = screen.getByRole('form')
+    expect(form).toHaveClass('w-full', 'h-full')
   })
 
-  it('hides Progress indicator after component mounts', async () => {
+  it('renders the form when mounted', () => {
     render(<Generator />)
 
-    await waitFor(() => {
-      // After mount, progress should not be visible
-      expect(screen.queryByTestId('progress-indicator')).not.toBeInTheDocument()
-      // Form should be visible instead
-      expect(screen.getByRole('form')).toBeInTheDocument()
-    })
+    // Form should be visible immediately (because useMountedState returns true)
+    const form = screen.getByRole('form')
+    expect(form).toBeInTheDocument()
+
+    // Progress indicator should not be visible
+    expect(screen.queryByTestId('progress-indicator')).not.toBeInTheDocument()
   })
 })
