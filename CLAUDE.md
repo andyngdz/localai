@@ -2,6 +2,12 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Plan Mode
+
+When exiting plan mode to begin implementation, ALWAYS save the implementation plan first as a markdown file in docs/
+
+- Format: {serial-number}-{plan-name}.md
+
 ## Communication Guidelines
 
 **Ask clarifying questions before proposing solutions. Never make assumptions about user intent.**
@@ -93,7 +99,7 @@ useSocketEvent(SocketEvents.DOWNLOAD_START, handleDownload, [handleDownload])
 
 ```typescript
 // Socket Events - Capture handlers
-let handlers: Record<string, Function> = {}
+let handlers: Record<string, (data: unknown) => void> = {}
 vi.mock('@/cores/sockets', () => ({
   useSocketEvent: (event, handler) => (handlers[event] = handler)
 }))
@@ -117,17 +123,24 @@ render(<Wrapper><MyComponent /></Wrapper>)
 
 ### Critical Rules
 
-**1. Socket Event Handling:**
+**1. TypeScript Type Safety:**
+
+- ❌ **NEVER use `any` type** - no exceptions, including tests
+- ✅ Use proper types, `unknown`, or type assertions (`as Type`)
+- ✅ For complex scenarios: use `unknown` then narrow with type guards
+- ✅ For test mocks: use `as unknown as Type` for proper typing
+
+**2. Socket Event Handling:**
 
 - ❌ `socket.on('event', callback)` - Breaks on socket reconnection
 - ✅ `useSocketEvent('event', callback, [callback])` - Reactive and safe
 
-**2. useEffect Cleanup:**
+**3. useEffect Cleanup:**
 
 - Must be synchronous - don't use `async () => { await ... }`
 - Fire-and-forget for async: `api.cleanup().catch(console.error)`
 
-**3. Test Implementation vs Behavior:**
+**4. Test Implementation vs Behavior:**
 
 - ❌ Testing that `socket.on` was called 3 times
 - ✅ Testing that component responds correctly to events
@@ -156,6 +169,21 @@ render(<Wrapper><MyComponent /></Wrapper>)
 
 - Identical configs/options in multiple files → Extract to constants
 - Example: Socket.io options duplicated → `SOCKET_CONFIG` constant in `src/cores/sockets/constants/`
+
+**Verify API behavior before refactoring:**
+
+- Read official documentation for the new API
+- Understand return types and possible values
+- Don't add defensive code based on assumptions
+- Remove guards that are always true/false
+- Test cases should match real API behavior, not imagined edge cases
+
+**When replacing one API with another:**
+
+1. Check: What does the old API actually return?
+2. Check: What does the new API actually return?
+3. Only add guards/checks if behavior actually differs
+4. Update tests to match real behavior, not theoretical scenarios
 
 ## Updating This File
 

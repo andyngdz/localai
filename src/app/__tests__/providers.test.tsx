@@ -18,7 +18,7 @@ vi.mock('@heroui/react', () => ({
 }))
 
 vi.mock('@tanstack/react-query', () => ({
-  QueryClient: vi.fn().mockImplementation(() => ({})),
+  QueryClient: vi.fn().mockReturnThis(),
   QueryClientProvider: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="query-client-provider">{children}</div>
   )

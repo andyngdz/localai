@@ -102,10 +102,13 @@ describe('GeneratorConfigSeed', () => {
         }
       })
 
-      // Override setValue with mock function
-      methods.setValue = mockSetValue
+      // Create new methods object with mocked setValue
+      const mockedMethods = {
+        ...methods,
+        setValue: mockSetValue
+      }
 
-      return <FormProvider {...methods}>{children}</FormProvider>
+      return <FormProvider {...mockedMethods}>{children}</FormProvider>
     }
 
     render(

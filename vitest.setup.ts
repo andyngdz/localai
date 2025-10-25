@@ -10,14 +10,13 @@ import 'vitest-localstorage-mock'
  */
 
 // Mock ResizeObserver since jsdom doesn't provide it
-const createResizeObserverMock = () =>
-  vi.fn(() => ({
-    observe: vi.fn(),
-    unobserve: vi.fn(),
-    disconnect: vi.fn()
-  }))
+class ResizeObserverMock {
+  observe = vi.fn()
+  unobserve = vi.fn()
+  disconnect = vi.fn()
+}
 
-vi.stubGlobal('ResizeObserver', createResizeObserverMock())
+vi.stubGlobal('ResizeObserver', ResizeObserverMock)
 
 /**
  * Module Mocks

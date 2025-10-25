@@ -1,10 +1,6 @@
-import * as fs from 'fs/promises'
 import type { PathLike } from 'fs'
 import { join } from 'path'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { startDesktopDev } from '../desktop'
-import { concurrentlyArgs, startFullDev } from '../devall'
-import { compileElectron, startElectron } from '../electron'
 
 const { mock$, recordedCommands } = vi.hoisted(() => {
   return {
@@ -27,7 +23,22 @@ const { runAsScriptMock, runAsScriptCalls } = vi.hoisted(() => {
   return { runAsScriptMock: mockFn, runAsScriptCalls: calls }
 })
 
-vi.mock('fs/promises')
+vi.mock('node:fs/promises', () => {
+  const mockRm = vi.fn()
+  const mockMkdir = vi.fn()
+  const mockCp = vi.fn()
+
+  return {
+    rm: mockRm,
+    mkdir: mockMkdir,
+    cp: mockCp,
+    default: {
+      rm: mockRm,
+      mkdir: mockMkdir,
+      cp: mockCp
+    }
+  }
+})
 vi.mock('../utils', () => ({
   projectRoot: '/test/project',
   runAsScript: runAsScriptMock,
@@ -40,9 +51,14 @@ vi.mock('esbuild', () => ({
   build: (...args: unknown[]) => mockBuild(...args)
 }))
 
-const mockRm = vi.mocked(fs.rm)
-const mockMkdir = vi.mocked(fs.mkdir)
-const mockCp = vi.mocked(fs.cp)
+import { startDesktopDev } from '../desktop'
+import { concurrentlyArgs, startFullDev } from '../devall'
+import { compileElectron, startElectron } from '../electron'
+
+const fsPromises = await import('node:fs/promises')
+const mockRm = vi.mocked(fsPromises.rm)
+const mockMkdir = vi.mocked(fsPromises.mkdir)
+const mockCp = vi.mocked(fsPromises.cp)
 
 const toCommandString = (pieces: TemplateStringsArray, args: unknown[]) =>
   pieces.reduce((acc, part, index) => {
@@ -61,8 +77,8 @@ describe('electron toolchain', () => {
     recordedCommands.length = 0
     buildCalls.length = 0
 
-    mockRm.mockResolvedValue()
-    mockMkdir.mockReturnThis()
+    mockRm.mockResolvedValue(undefined)
+    mockMkdir.mockResolvedValue(undefined)
     mockCp.mockResolvedValue()
     mockBuild.mockResolvedValue(undefined)
 

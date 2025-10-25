@@ -5,6 +5,7 @@ import { useEffect, useRef } from 'react'
 import { useBackendLogStore } from './useBackendLogStore'
 
 export const useBackendLog = () => {
+  'use no memo'
   const scrollRef = useRef<HTMLDivElement>(null)
   const { logs, isStreaming, addLog, clearLogs, setIsStreaming } =
     useBackendLogStore()
@@ -23,6 +24,7 @@ export const useBackendLog = () => {
     }
   }
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const rowVirtualizer = useVirtualizer({
     count: logs.length,
     getScrollElement: () => scrollRef.current,
