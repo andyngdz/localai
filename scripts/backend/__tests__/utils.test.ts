@@ -1,6 +1,5 @@
 import { BackendStatusLevel } from '@types'
 import { mkdtempSync, rmSync } from 'node:fs'
-import * as fs from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -16,9 +15,12 @@ import {
   pathExists
 } from '../utils'
 
-vi.mock('node:fs/promises')
+vi.mock('node:fs/promises', () => ({
+  access: vi.fn()
+}))
 
-const mockAccess = vi.mocked(fs.access)
+const fsPromises = await import('node:fs/promises')
+const mockAccess = vi.mocked(fsPromises.access)
 
 describe('utils', () => {
   beforeEach(() => {
