@@ -1,5 +1,5 @@
 import { ModelLoadPhase, SocketEvents } from '@/cores/sockets'
-import { cleanup, render } from '@testing-library/react'
+import { act, cleanup, render } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { ModelLoadProgressBar } from '../ModelLoadProgressBar'
 
@@ -56,7 +56,9 @@ describe('ModelLoadProgressBar', () => {
   it('shows progress when MODEL_LOAD_STARTED event fires', () => {
     const { rerender, getByRole } = render(<ModelLoadProgressBar />)
 
-    capturedHandlers[SocketEvents.MODEL_LOAD_STARTED]({ id: 'model-123' })
+    act(() => {
+      capturedHandlers[SocketEvents.MODEL_LOAD_STARTED]({ id: 'model-123' })
+    })
     rerender(<ModelLoadProgressBar />)
 
     expect(getByRole('progressbar')).toBeTruthy()
@@ -65,13 +67,15 @@ describe('ModelLoadProgressBar', () => {
   it('updates progress on MODEL_LOAD_PROGRESS event', () => {
     const { rerender, getByRole } = render(<ModelLoadProgressBar />)
 
-    capturedHandlers[SocketEvents.MODEL_LOAD_STARTED]({ id: 'model-456' })
-    capturedHandlers[SocketEvents.MODEL_LOAD_PROGRESS]({
-      id: 'model-456',
-      step: 5,
-      total: 9,
-      phase: ModelLoadPhase.LOADING_MODEL,
-      message: 'Loading model weights...'
+    act(() => {
+      capturedHandlers[SocketEvents.MODEL_LOAD_STARTED]({ id: 'model-456' })
+      capturedHandlers[SocketEvents.MODEL_LOAD_PROGRESS]({
+        id: 'model-456',
+        step: 5,
+        total: 9,
+        phase: ModelLoadPhase.LOADING_MODEL,
+        message: 'Loading model weights...'
+      })
     })
     rerender(<ModelLoadProgressBar />)
 
@@ -85,11 +89,15 @@ describe('ModelLoadProgressBar', () => {
       <ModelLoadProgressBar />
     )
 
-    capturedHandlers[SocketEvents.MODEL_LOAD_STARTED]({ id: 'model-789' })
+    act(() => {
+      capturedHandlers[SocketEvents.MODEL_LOAD_STARTED]({ id: 'model-789' })
+    })
     rerender(<ModelLoadProgressBar />)
     expect(getByRole('progressbar')).toBeTruthy()
 
-    capturedHandlers[SocketEvents.MODEL_LOAD_COMPLETED]({ id: 'model-789' })
+    act(() => {
+      capturedHandlers[SocketEvents.MODEL_LOAD_COMPLETED]({ id: 'model-789' })
+    })
     rerender(<ModelLoadProgressBar />)
     expect(queryByRole('progressbar')).toBeNull()
   })
@@ -97,24 +105,27 @@ describe('ModelLoadProgressBar', () => {
   it('calculates percentage correctly', () => {
     const { rerender, getByRole } = render(<ModelLoadProgressBar />)
 
-    capturedHandlers[SocketEvents.MODEL_LOAD_STARTED]({ id: 'test' })
-
-    capturedHandlers[SocketEvents.MODEL_LOAD_PROGRESS]({
-      id: 'test',
-      step: 1,
-      total: 9,
-      phase: ModelLoadPhase.INITIALIZATION,
-      message: 'Initializing...'
+    act(() => {
+      capturedHandlers[SocketEvents.MODEL_LOAD_STARTED]({ id: 'test' })
+      capturedHandlers[SocketEvents.MODEL_LOAD_PROGRESS]({
+        id: 'test',
+        step: 1,
+        total: 9,
+        phase: ModelLoadPhase.INITIALIZATION,
+        message: 'Initializing...'
+      })
     })
     rerender(<ModelLoadProgressBar />)
     expect(getByRole('progressbar').getAttribute('aria-valuenow')).toBe('11')
 
-    capturedHandlers[SocketEvents.MODEL_LOAD_PROGRESS]({
-      id: 'test',
-      step: 9,
-      total: 9,
-      phase: ModelLoadPhase.OPTIMIZATION,
-      message: 'Complete'
+    act(() => {
+      capturedHandlers[SocketEvents.MODEL_LOAD_PROGRESS]({
+        id: 'test',
+        step: 9,
+        total: 9,
+        phase: ModelLoadPhase.OPTIMIZATION,
+        message: 'Complete'
+      })
     })
     rerender(<ModelLoadProgressBar />)
     expect(getByRole('progressbar').getAttribute('aria-valuenow')).toBe('100')

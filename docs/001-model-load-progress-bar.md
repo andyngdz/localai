@@ -34,7 +34,7 @@ Implement a progress bar below EditorNavbar that shows real-time model loading p
 
 ```typescript
 MODEL_LOAD_STARTED // When loading begins
-MODEL_LOAD_PROGRESS // Progress updates (9 checkpoints)
+MODEL_LOAD_PROGRESS // Progress updates with step/total information
 MODEL_LOAD_COMPLETED // When loading finishes
 ```
 
@@ -101,8 +101,8 @@ export enum ModelLoadPhase {
 
 export interface ModelLoadProgressResponse {
   id: string
-  step: number // 1-9
-  total: number // 9
+  step: number // Current step in loading process
+  total: number // Total steps (varies by model/backend)
   phase: ModelLoadPhase
   message: string
 }

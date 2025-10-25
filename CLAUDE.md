@@ -99,7 +99,7 @@ useSocketEvent(SocketEvents.DOWNLOAD_START, handleDownload, [handleDownload])
 
 ```typescript
 // Socket Events - Capture handlers
-let handlers: Record<string, Function> = {}
+let handlers: Record<string, (data: unknown) => void> = {}
 vi.mock('@/cores/sockets', () => ({
   useSocketEvent: (event, handler) => (handlers[event] = handler)
 }))
