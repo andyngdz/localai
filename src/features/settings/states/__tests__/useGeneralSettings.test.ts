@@ -1,10 +1,10 @@
 import { act, renderHook } from '@testing-library/react'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { useForm, useWatch } from 'react-hook-form'
 import { useShallowCompareEffect } from 'react-use'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { SettingFormValues } from '../../types/settings'
 import { useGeneralSettings } from '../useGeneralSettings'
 import { useSettingsStore } from '../useSettingsStore'
-import { SettingFormValues } from '../../types/settings'
 
 // Mock dependencies
 vi.mock('react-hook-form', () => ({
@@ -192,16 +192,6 @@ describe('useGeneralSettings', () => {
 
       expect(mockSetValues).toHaveBeenCalledWith(mockFormValues)
     })
-
-    it('should handle undefined form values gracefully', () => {
-      vi.mocked(useWatch).mockReturnValue(
-        undefined as unknown as SettingFormValues
-      )
-
-      renderHook(() => useGeneralSettings())
-
-      expect(mockSetValues).not.toHaveBeenCalled()
-    })
   })
 
   describe('dependency arrays', () => {
@@ -318,14 +308,6 @@ describe('useGeneralSettings', () => {
       const { result } = renderHook(() => useGeneralSettings())
 
       expect(result.current.register).toBeUndefined()
-    })
-
-    it('should handle useWatch returning null', () => {
-      vi.mocked(useWatch).mockReturnValue(null as unknown as SettingFormValues)
-
-      renderHook(() => useGeneralSettings())
-
-      expect(mockSetValues).not.toHaveBeenCalled()
     })
   })
 

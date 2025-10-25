@@ -170,6 +170,21 @@ render(<Wrapper><MyComponent /></Wrapper>)
 - Identical configs/options in multiple files → Extract to constants
 - Example: Socket.io options duplicated → `SOCKET_CONFIG` constant in `src/cores/sockets/constants/`
 
+**Verify API behavior before refactoring:**
+
+- Read official documentation for the new API
+- Understand return types and possible values
+- Don't add defensive code based on assumptions
+- Remove guards that are always true/false
+- Test cases should match real API behavior, not imagined edge cases
+
+**When replacing one API with another:**
+
+1. Check: What does the old API actually return?
+2. Check: What does the new API actually return?
+3. Only add guards/checks if behavior actually differs
+4. Update tests to match real behavior, not theoretical scenarios
+
 ## Updating This File
 
 Add to this file when you discover:

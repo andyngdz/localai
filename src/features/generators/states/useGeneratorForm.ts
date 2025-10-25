@@ -25,9 +25,7 @@ export const useGeneratorForm = () => {
   const formValues = useWatch({ control: methods.control })
 
   useDeepCompareEffect(() => {
-    if (formValues) {
-      setLocalStorage(formValues as GeneratorConfigFormValues)
-    }
+    setLocalStorage(formValues as GeneratorConfigFormValues)
   }, [formValues, setLocalStorage])
 
   // Reset form when Zustand updates externally (e.g., history restore)
