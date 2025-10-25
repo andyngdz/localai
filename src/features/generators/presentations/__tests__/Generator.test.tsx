@@ -240,7 +240,12 @@ describe('Generator', () => {
     render(<Generator />)
 
     const form = screen.getByRole('form')
-    expect(form).toHaveClass('w-full', 'h-full')
+    expect(form).toHaveClass(
+      'w-full',
+      'h-full',
+      'transition-opacity',
+      'opacity-100'
+    )
   })
 
   it('renders the form when mounted', () => {

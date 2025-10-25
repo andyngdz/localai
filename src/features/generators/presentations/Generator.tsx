@@ -5,13 +5,13 @@ import { GeneratorConfig } from '@/features/generator-configs'
 import { GeneratorPreviewer } from '@/features/generator-previewers'
 import { GeneratorPrompt } from '@/features/generator-prompts'
 import { Histories } from '@/features/histories'
-import { Allotment } from 'allotment'
-import { FormProvider } from 'react-hook-form'
-import { useGenerator, useGeneratorForm } from '../states'
-
 import { Progress } from '@heroui/react'
+import { Allotment } from 'allotment'
 import 'allotment/dist/style.css'
+import clsx from 'clsx'
+import { FormProvider } from 'react-hook-form'
 import { useMountedState } from 'react-use'
+import { useGenerator, useGeneratorForm } from '../states'
 
 export const Generator = () => {
   const isMounted = useMountedState()
@@ -27,7 +27,9 @@ export const Generator = () => {
       <form
         name="generator"
         onSubmit={methods.handleSubmit(onGenerate)}
-        className="w-full h-full"
+        className={clsx('w-full h-full opacity-0 transition-opacity', {
+          'opacity-100': mounted
+        })}
       >
         <Allotment defaultSizes={[300, 0, 300]}>
           <Allotment.Pane maxSize={350} minSize={300} preferredSize={300}>
