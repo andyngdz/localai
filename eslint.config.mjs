@@ -2,15 +2,20 @@ import pluginQuery from '@tanstack/eslint-plugin-query'
 import nextVitals from 'eslint-config-next/core-web-vitals'
 import nextTs from 'eslint-config-next/typescript'
 import prettier from 'eslint-config-prettier/flat'
+import reactHooks from 'eslint-plugin-react-hooks'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
-  prettier,
   ...pluginQuery.configs['flat/recommended'],
+  prettier,
+  reactHooks.configs.flat.recommended,
   {
     rules: {
+      // TODO: Revisit this rule later
+      'react-hooks/incompatible-library': 'off',
+      // END TODO
       '@next/next/no-img-element': 'off',
       '@typescript-eslint/no-unused-vars': [
         'error',

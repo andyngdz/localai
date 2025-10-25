@@ -8,6 +8,7 @@ import { useDeepCompareEffect, useLocalStorage } from 'react-use'
 import { useFormValuesStore } from './useFormValuesStore'
 
 export const useGeneratorForm = () => {
+  'use no memo'
   const storeValues = useFormValuesStore((state) => state.values)
 
   // Get values from localStorage (returns stored value + setter)

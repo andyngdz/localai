@@ -4,6 +4,7 @@ import { useSettingsStore } from './useSettingsStore'
 import { useShallowCompareEffect } from 'react-use'
 
 export const useGeneralSettings = () => {
+  'use no memo'
   const { values, setValues } = useSettingsStore()
   const { register, watch } = useForm<SettingFormValues>({
     defaultValues: values,

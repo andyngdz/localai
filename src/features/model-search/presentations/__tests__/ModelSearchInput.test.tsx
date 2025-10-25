@@ -239,6 +239,7 @@ describe('ModelSearchInput', () => {
       }: {
         children: React.ReactNode
       }) => {
+        'use no memo'
         const methods = useForm<ModelSearchFormValues>({
           defaultValues: { query: '' }
         })
@@ -426,6 +427,7 @@ describe('ModelSearchInput', () => {
       }: {
         children: React.ReactNode
       }) => {
+        'use no memo'
         const methods = useForm<ModelSearchFormValues>({
           defaultValues: { query: '' }
         })
