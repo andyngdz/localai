@@ -1,19 +1,20 @@
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { SettingFormValues } from '../types/settings'
 import { useSettingsStore } from './useSettingsStore'
 import { useShallowCompareEffect } from 'react-use'
 
 export const useGeneralSettings = () => {
-  'use no memo'
   const { values, setValues } = useSettingsStore()
-  const { register, watch } = useForm<SettingFormValues>({
+  const { register, control } = useForm<SettingFormValues>({
     defaultValues: values,
     values
   })
-  const formValues = watch()
+  const formValues = useWatch({ control })
 
   useShallowCompareEffect(() => {
-    setValues(formValues)
+    if (formValues) {
+      setValues(formValues as SettingFormValues)
+    }
   }, [formValues, setValues])
 
   return { register }

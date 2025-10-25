@@ -24,6 +24,7 @@ export const useBackendLog = () => {
     }
   }
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const rowVirtualizer = useVirtualizer({
     count: logs.length,
     getScrollElement: () => scrollRef.current,

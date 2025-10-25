@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { useShallowCompareEffect } from 'react-use'
 import { useGeneralSettings } from '../useGeneralSettings'
 import { useSettingsStore } from '../useSettingsStore'
@@ -8,7 +8,8 @@ import { SettingFormValues } from '../../types/settings'
 
 // Mock dependencies
 vi.mock('react-hook-form', () => ({
-  useForm: vi.fn()
+  useForm: vi.fn(),
+  useWatch: vi.fn()
 }))
 
 vi.mock('react-use', () => ({
@@ -31,7 +32,7 @@ vi.mock('zustand/middleware', async () => {
 
 describe('useGeneralSettings', () => {
   const mockRegister = vi.fn()
-  const mockWatch = vi.fn()
+  const mockControl = {}
   const mockSetValues = vi.fn()
 
   const mockValues: SettingFormValues = {
@@ -55,11 +56,11 @@ describe('useGeneralSettings', () => {
     // Mock useForm
     vi.mocked(useForm).mockReturnValue({
       register: mockRegister,
-      watch: mockWatch
+      control: mockControl
     } as unknown as ReturnType<typeof useForm>)
 
-    // Mock watch to return form values
-    mockWatch.mockReturnValue(mockFormValues)
+    // Mock useWatch to return form values
+    vi.mocked(useWatch).mockReturnValue(mockFormValues)
 
     // Mock useShallowCompareEffect to call the effect immediately
     vi.mocked(useShallowCompareEffect).mockImplementation((effect) => {
@@ -95,10 +96,10 @@ describe('useGeneralSettings', () => {
   })
 
   describe('form watching and synchronization', () => {
-    it('should call watch function to get current form values', () => {
+    it('should call useWatch hook to get current form values', () => {
       renderHook(() => useGeneralSettings())
 
-      expect(mockWatch).toHaveBeenCalled()
+      expect(useWatch).toHaveBeenCalledWith({ control: mockControl })
     })
 
     it('should use useShallowCompareEffect to sync form values with store', () => {
@@ -164,7 +165,7 @@ describe('useGeneralSettings', () => {
         safetyCheck: true
       }
 
-      mockWatch.mockReturnValue(updatedFormValues)
+      vi.mocked(useWatch).mockReturnValue(updatedFormValues)
 
       renderHook(() => useGeneralSettings())
 
@@ -193,11 +194,13 @@ describe('useGeneralSettings', () => {
     })
 
     it('should handle undefined form values gracefully', () => {
-      mockWatch.mockReturnValue(undefined as unknown as SettingFormValues)
+      vi.mocked(useWatch).mockReturnValue(
+        undefined as unknown as SettingFormValues
+      )
 
       renderHook(() => useGeneralSettings())
 
-      expect(mockSetValues).toHaveBeenCalledWith(undefined)
+      expect(mockSetValues).not.toHaveBeenCalled()
     })
   })
 
@@ -219,7 +222,7 @@ describe('useGeneralSettings', () => {
       const { rerender } = renderHook(() => useGeneralSettings())
 
       // Change mock return value
-      mockWatch.mockReturnValue(newFormValues)
+      vi.mocked(useWatch).mockReturnValue(newFormValues)
 
       rerender()
 
@@ -309,7 +312,7 @@ describe('useGeneralSettings', () => {
     it('should handle useForm returning undefined register', () => {
       vi.mocked(useForm).mockReturnValue({
         register: undefined,
-        watch: mockWatch
+        control: mockControl
       } as unknown as ReturnType<typeof useForm>)
 
       const { result } = renderHook(() => useGeneralSettings())
@@ -317,12 +320,12 @@ describe('useGeneralSettings', () => {
       expect(result.current.register).toBeUndefined()
     })
 
-    it('should handle watch function returning null', () => {
-      mockWatch.mockReturnValue(null)
+    it('should handle useWatch returning null', () => {
+      vi.mocked(useWatch).mockReturnValue(null as unknown as SettingFormValues)
 
       renderHook(() => useGeneralSettings())
 
-      expect(mockSetValues).toHaveBeenCalledWith(null)
+      expect(mockSetValues).not.toHaveBeenCalled()
     })
   })
 
@@ -343,7 +346,7 @@ describe('useGeneralSettings', () => {
         reset: vi.fn()
       })
 
-      mockWatch.mockReturnValue(updatedValues)
+      vi.mocked(useWatch).mockReturnValue(updatedValues)
 
       const { result } = renderHook(() => useGeneralSettings())
 
@@ -370,7 +373,9 @@ describe('useGeneralSettings', () => {
       const values1: SettingFormValues = { safetyCheck: true }
       const values2: SettingFormValues = { safetyCheck: false }
 
-      mockWatch.mockReturnValueOnce(values1).mockReturnValueOnce(values2)
+      vi.mocked(useWatch)
+        .mockReturnValueOnce(values1)
+        .mockReturnValueOnce(values2)
 
       const { rerender } = renderHook(() => useGeneralSettings())
 

@@ -13,9 +13,6 @@ const eslintConfig = defineConfig([
   reactHooks.configs.flat.recommended,
   {
     rules: {
-      // TODO: Revisit this rule later
-      'react-hooks/incompatible-library': 'off',
-      // END TODO
       '@next/next/no-img-element': 'off',
       '@typescript-eslint/no-unused-vars': [
         'error',
