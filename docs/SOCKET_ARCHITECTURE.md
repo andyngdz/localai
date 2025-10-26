@@ -1,3 +1,5 @@
+# Socket Architecture
+
 Uses **Zustand-based reactive pattern** for Socket.io connections:
 
 - Socket instance stored in Zustand store (`useSocket.ts`)

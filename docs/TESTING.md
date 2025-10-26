@@ -1,3 +1,5 @@
+# Testing Guide
+
 **Framework:** Vitest + React Testing Library
 
 **Core Principles:**

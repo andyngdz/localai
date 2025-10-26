@@ -1,3 +1,5 @@
+# Communication Guidelines
+
 **Ask clarifying questions before proposing solutions. Never make assumptions about user intent.**
 
 - Use `AskUserQuestion` tool for ambiguous requests ("optimize this", "fix the error", "improve performance")

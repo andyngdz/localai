@@ -1,3 +1,5 @@
+# Project Architecture
+
 Next.js 15 + Electron desktop app + Python FastAPI backend.
 
 **Key Patterns:**

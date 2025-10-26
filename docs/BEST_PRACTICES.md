@@ -1,3 +1,5 @@
+# Best Practices
+
 **Validate before claiming success:**
 
 - Unit tests passing ≠ code is performant or correct

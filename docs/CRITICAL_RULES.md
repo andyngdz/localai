@@ -1,3 +1,5 @@
+# Critical Rules
+
 **1. TypeScript Type Safety:**
 
 - ❌ **NEVER use `any` type** - no exceptions, including tests
