@@ -1,6 +1,8 @@
+'use client'
+
+import { useBackendUrl } from '@/cores/backend-initialization'
 import { dateFormatter } from '@/services'
 import { HistoryItem } from '@/types'
-import { Card } from '@heroui/react'
 import Image from 'next/image'
 import { FC } from 'react'
 import { HistoryUseConfigButton } from './HistoryUseConfigButton'
@@ -10,8 +12,10 @@ interface HistoryItemProps {
 }
 
 export const HistoryItemContainer: FC<HistoryItemProps> = ({ history }) => {
+  const baseURL = useBackendUrl()
+
   return (
-    <Card className="flex flex-col gap-2 p-2">
+    <div className="flex flex-col gap-2 py-6 px-2">
       <div className="flex flex-col gap-2 text-sm">
         <div className="flex items-center justify-between gap-2">
           <span className="text-default-700 font-bold">
@@ -34,7 +38,7 @@ export const HistoryItemContainer: FC<HistoryItemProps> = ({ history }) => {
               className="relative w-12 h-12 overflow-hidden rounded-md"
             >
               <Image
-                src={`http://localhost:8000/${image.path}`}
+                src={`${baseURL}/${image.path}`}
                 alt={`Generated image ${index + 1}`}
                 className="object-cover"
                 sizes="48px"
@@ -44,6 +48,6 @@ export const HistoryItemContainer: FC<HistoryItemProps> = ({ history }) => {
           ))}
         </div>
       )}
-    </Card>
+    </div>
   )
 }

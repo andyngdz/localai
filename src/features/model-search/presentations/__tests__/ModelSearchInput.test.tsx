@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { FormProvider, useForm } from 'react-hook-form'
+import { FormProvider, useForm, useWatch } from 'react-hook-form'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ModelSearchFormValues } from '../../types'
 import { ModelSearchInput } from '../ModelSearchInput'
@@ -242,14 +242,13 @@ describe('ModelSearchInput', () => {
         const methods = useForm<ModelSearchFormValues>({
           defaultValues: { query: '' }
         })
+        const formValues = useWatch({ control: methods.control })
 
         return (
           <FormProvider {...methods}>
             <form>
               {children}
-              <div data-testid="form-values">
-                {JSON.stringify(methods.watch())}
-              </div>
+              <div data-testid="form-values">{JSON.stringify(formValues)}</div>
             </form>
           </FormProvider>
         )
@@ -430,8 +429,10 @@ describe('ModelSearchInput', () => {
           defaultValues: { query: '' }
         })
 
-        // This should compile without TypeScript errors
-        const queryValue: string = methods.watch('query')
+        const queryValue: string = useWatch({
+          control: methods.control,
+          name: 'query'
+        })
 
         return (
           <FormProvider {...methods}>

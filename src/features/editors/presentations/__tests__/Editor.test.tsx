@@ -16,16 +16,26 @@ vi.mock('@/features/generators/presentations/Generator', () => ({
   Generator: () => <div data-testid="mock-generator">Generator</div>
 }))
 
-// Mock HeroUI Divider component
-vi.mock('@heroui/react', () => ({
-  Divider: () => <div data-testid="mock-divider" />
-}))
+// Mock the ModelLoadProgressBar component
+vi.mock(
+  '@/features/model-load-progress/presentations/ModelLoadProgressBar',
+  () => ({
+    ModelLoadProgressBar: () => (
+      <div data-testid="mock-model-load-progress-bar">
+        Model Load Progress Bar
+      </div>
+    )
+  })
+)
 
 describe('Editor', () => {
   it('renders all components', () => {
     render(<Editor />, { wrapper: createQueryClientWrapper() })
 
     expect(screen.getByTestId('mock-editor-navbar')).toBeInTheDocument()
+    expect(
+      screen.getByTestId('mock-model-load-progress-bar')
+    ).toBeInTheDocument()
     expect(screen.getByTestId('mock-generator')).toBeInTheDocument()
   })
 

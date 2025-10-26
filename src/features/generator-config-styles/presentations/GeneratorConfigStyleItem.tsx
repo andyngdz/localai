@@ -1,3 +1,6 @@
+'use client'
+
+import { useBackendUrl } from '@/cores/backend-initialization'
 import { StyleItem } from '@/types'
 import { Avatar, Chip, Tooltip } from '@heroui/react'
 import clsx from 'clsx'
@@ -12,6 +15,7 @@ export interface GeneratorConfigStyleItemProps {
 export const GeneratorConfigStyleItem: FC<GeneratorConfigStyleItemProps> = ({
   styleItem
 }) => {
+  const baseURL = useBackendUrl()
   const { isSelected, onClick } = useGeneratorConfigStyle(styleItem.id)
 
   return (
@@ -22,7 +26,7 @@ export const GeneratorConfigStyleItem: FC<GeneratorConfigStyleItemProps> = ({
       }}
       content={
         <NextImage
-          src={`http://localhost:8000/static/${styleItem.image}`}
+          src={`${baseURL}/static/${styleItem.image}`}
           width={196}
           height={196}
           alt={styleItem.name}
@@ -32,7 +36,7 @@ export const GeneratorConfigStyleItem: FC<GeneratorConfigStyleItemProps> = ({
       <Chip
         avatar={
           <Avatar
-            src={`http://localhost:8000/static/${styleItem.image}`}
+            src={`${baseURL}/static/${styleItem.image}`}
             alt={styleItem.name}
             size="sm"
           />

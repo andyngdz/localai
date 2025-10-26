@@ -5,6 +5,7 @@ import type { GeneratorConfigFormValues } from '@/features/generator-configs'
 // Mocks
 const mockUseEffect = vi.fn((cb: () => void) => cb())
 const mockUseForm = vi.fn()
+const mockUseWatch = vi.fn()
 const mockUseDeepCompareEffect = vi.fn((cb: () => void) => cb())
 const mockUseLocalStorage = vi.fn()
 const mockUseFormValuesStore = vi.fn()
@@ -18,7 +19,8 @@ vi.mock('react', async () => {
 })
 
 vi.mock('react-hook-form', () => ({
-  useForm: (...args: unknown[]) => mockUseForm(...args)
+  useForm: (...args: unknown[]) => mockUseForm(...args),
+  useWatch: (...args: unknown[]) => mockUseWatch(...args)
 }))
 
 vi.mock('react-use', () => ({
@@ -63,9 +65,12 @@ describe('useGeneratorForm', () => {
 
     // react-hook-form: useForm methods
     mockUseForm.mockReturnValue({
-      watch: vi.fn(() => watchedFormValues),
+      control: {},
       reset: vi.fn()
     })
+
+    // react-hook-form: useWatch returns watched form values
+    mockUseWatch.mockReturnValue(watchedFormValues)
   })
 
   it('initializes react-hook-form with localStorage default values and returns methods', () => {
@@ -82,16 +87,19 @@ describe('useGeneratorForm', () => {
         defaultValues: localStorageValues
       })
     )
-    expect(methods).toHaveProperty('watch')
+    expect(methods).toHaveProperty('control')
     expect(methods).toHaveProperty('reset')
   })
 
   it('persists watched form values to localStorage via useDeepCompareEffect', () => {
-    const { methods } = useGeneratorForm()
+    useGeneratorForm()
 
-    // useDeepCompareEffect should have run and setLocalStorage called with watched values
+    expect(mockUseWatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        control: expect.any(Object)
+      })
+    )
     const setLocalStorage = mockUseLocalStorage.mock.results[0].value[1]
-    expect(methods.watch()).toEqual(watchedFormValues)
     expect(setLocalStorage).toHaveBeenCalledWith(watchedFormValues)
   })
 

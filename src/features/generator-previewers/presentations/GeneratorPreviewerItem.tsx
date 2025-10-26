@@ -1,3 +1,6 @@
+'use client'
+
+import { useBackendUrl } from '@/cores/backend-initialization'
 import { GeneratorConfigFormValues } from '@/features/generator-configs'
 import { ImageGenerationStepEndResponse } from '@/types'
 import { Button, Skeleton } from '@heroui/react'
@@ -14,6 +17,7 @@ export interface GeneratorPreviewerItemProps {
 export const GeneratorPreviewerItem: FC<GeneratorPreviewerItemProps> = ({
   imageStepEnd
 }) => {
+  const baseURL = useBackendUrl()
   const { onDownloadImage } = useDownloadImages()
   const { watch } = useFormContext<GeneratorConfigFormValues>()
   const { items } = useGeneratorPreviewer()
@@ -23,10 +27,10 @@ export const GeneratorPreviewerItem: FC<GeneratorPreviewerItemProps> = ({
 
   const onHandleDownloadImage = useCallback(() => {
     const item = items[imageStepEnd.index]
-    const url = `http://localhost:8000/${item.path}`
+    const url = `${baseURL}/${item.path}`
 
     onDownloadImage(url)
-  }, [imageStepEnd, items, onDownloadImage])
+  }, [baseURL, imageStepEnd, items, onDownloadImage])
 
   const ImageComponent = useMemo(() => {
     const item = items[imageStepEnd.index]
@@ -34,7 +38,7 @@ export const GeneratorPreviewerItem: FC<GeneratorPreviewerItemProps> = ({
     if (item.path.length > 0) {
       return (
         <NextImage
-          src={`http://localhost:8000/${item.path}`}
+          src={`${baseURL}/${item.path}`}
           alt={`Image ${imageStepEnd.index}`}
           className="rounded-2xl object-cover"
           fill
@@ -56,7 +60,7 @@ export const GeneratorPreviewerItem: FC<GeneratorPreviewerItemProps> = ({
         fill
       />
     )
-  }, [imageStepEnd, items])
+  }, [baseURL, imageStepEnd, items])
 
   const hasImage =
     items[imageStepEnd.index]?.path.length > 0 ||

@@ -10,7 +10,7 @@ export const useModelSelectorStore = create(
   persist<ModelSelectorState>(
     (set) => ({
       selected_model_id: '',
-      setSelectedModelId: (id) => set({ selected_model_id: id })
+      setSelectedModelId: (selected_model_id) => set({ selected_model_id })
     }),
     {
       name: 'model-selector'

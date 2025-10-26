@@ -11,14 +11,15 @@ describe('projectRoot', () => {
 })
 
 describe('runAsScript', () => {
-  let exitSpy: MockInstance<(code?: string) => never>
+  let exitSpy: MockInstance<typeof process.exit>
   let consoleErrorSpy: MockInstance<
     (message?: unknown, ...optionalParams: unknown[]) => void
   >
 
   beforeEach(() => {
-    const noopExit = (() => undefined) as typeof process.exit
-    exitSpy = vi.spyOn(process, 'exit').mockImplementation(noopExit)
+    exitSpy = vi.spyOn(process, 'exit').mockImplementation((code) => {
+      throw new Error(`process.exit called with ${code}`)
+    })
     consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
   })
 
@@ -41,7 +42,9 @@ describe('runAsScript', () => {
     const failure = new Error('Boom')
     const task = vi.fn().mockRejectedValue(failure)
 
-    await runAsScript(task, 'Task failed:')
+    await expect(() => runAsScript(task, 'Task failed:')).rejects.toThrow(
+      'process.exit called with 1'
+    )
 
     expect(task).toHaveBeenCalledTimes(1)
     expect(consoleErrorSpy).toHaveBeenCalledWith('Task failed:', 'Boom')

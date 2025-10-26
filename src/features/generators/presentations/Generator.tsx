@@ -5,23 +5,19 @@ import { GeneratorConfig } from '@/features/generator-configs'
 import { GeneratorPreviewer } from '@/features/generator-previewers'
 import { GeneratorPrompt } from '@/features/generator-prompts'
 import { Histories } from '@/features/histories'
+import { Progress } from '@heroui/react'
 import { Allotment } from 'allotment'
+import 'allotment/dist/style.css'
 import clsx from 'clsx'
-import { useEffect, useState } from 'react'
 import { FormProvider } from 'react-hook-form'
+import { useMountedState } from 'react-use'
 import { useGenerator, useGeneratorForm } from '../states'
 
-import { Progress } from '@heroui/react'
-import 'allotment/dist/style.css'
-
 export const Generator = () => {
+  const isMounted = useMountedState()
+  const mounted = isMounted()
   const { methods } = useGeneratorForm()
   const { onGenerate } = useGenerator()
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
 
   if (!mounted)
     return <Progress isIndeterminate aria-label="Loading..." size="sm" />

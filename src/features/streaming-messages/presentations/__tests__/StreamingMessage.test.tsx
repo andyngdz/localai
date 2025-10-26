@@ -7,14 +7,11 @@ import { StreamingMessage } from '../StreamingMessage'
 
 expect.extend(matchers)
 
-// Mock the Lottie component
-vi.mock('react-lottie', () => ({
-  default: () => <div data-testid="lottie-animation">AI Animation</div>
-}))
-
-// Mock the AI animation data
-vi.mock('@/assets/ai.json', () => ({
-  default: { mockAnimationData: true }
+// Mock the FullScreenLoader component
+vi.mock('@/cores/presentations', () => ({
+  FullScreenLoader: ({ message }: { message: string }) => (
+    <div data-testid="full-screen-loader">{message}</div>
+  )
 }))
 
 describe('StreamingMessage', () => {
@@ -39,13 +36,13 @@ describe('StreamingMessage', () => {
     expect(container.firstChild).toBeNull()
   })
 
-  it('renders overlay with animation and message when message exists', () => {
+  it('renders FullScreenLoader with message when message exists', () => {
     useStreamingMessageSpy.mockReturnValue({ message: 'Downloading model' })
 
     render(<StreamingMessage />)
 
     expect(screen.getByText('Downloading model')).toBeTruthy()
-    expect(screen.getByTestId('lottie-animation')).toBeTruthy()
+    expect(screen.getByTestId('full-screen-loader')).toBeTruthy()
   })
 
   it('renders with different message content', () => {
@@ -54,7 +51,7 @@ describe('StreamingMessage', () => {
     render(<StreamingMessage />)
 
     expect(screen.getByText('Loading...')).toBeTruthy()
-    expect(screen.getByTestId('lottie-animation')).toBeTruthy()
+    expect(screen.getByTestId('full-screen-loader')).toBeTruthy()
   })
 
   it('component structure includes overlay when message exists', () => {

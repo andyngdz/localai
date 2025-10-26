@@ -1,4 +1,4 @@
-import { DownloadStepProgressResponse } from '@/sockets'
+import { DownloadStepProgressResponse } from '@/cores/sockets'
 import { create } from 'zustand'
 
 export interface UseDownloadWatcherStore {

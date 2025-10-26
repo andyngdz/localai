@@ -1,3 +1,4 @@
+import { DEFAULT_BACKEND_URL } from '@/cores/constants'
 import { GeneratorConfigFormValues } from '@/features/generator-configs'
 import axios from 'axios'
 import type {
@@ -19,7 +20,7 @@ import type {
 } from '../types'
 
 export const client = axios.create({
-  baseURL: 'http://localhost:8000',
+  baseURL: DEFAULT_BACKEND_URL,
   headers: {
     'Content-Type': 'application/json'
   }
@@ -68,6 +69,12 @@ class API {
 
   async loadModel(request: LoadModelRequest) {
     const { data } = await client.post('/models/load', request)
+
+    return data
+  }
+
+  async unloadModel() {
+    const { data } = await client.post('/models/unload')
 
     return data
   }
