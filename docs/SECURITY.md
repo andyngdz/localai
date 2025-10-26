@@ -1,0 +1,2 @@
+- Renderer cannot access Node APIs directly - use IPC bridges in `electron/preload.ts`
+- Use `window.electronAPI` for all Electron interactions
