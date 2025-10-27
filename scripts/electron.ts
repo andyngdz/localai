@@ -71,8 +71,14 @@ const compileElectron = async () => {
 }
 
 const startElectron = async () => {
-  console.log('🚀 Starting Electron...')
-  await $`npx electron .`
+  console.log('Starting Electron...')
+  try {
+    const result = await $`npx electron .`
+    console.log('Electron exited normally with code:', result.exitCode)
+  } catch (error) {
+    console.error('Electron process error:', error)
+    throw error
+  }
 }
 
 export { compileElectron, startElectron }

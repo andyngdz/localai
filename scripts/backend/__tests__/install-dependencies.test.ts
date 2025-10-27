@@ -59,7 +59,7 @@ describe('installDependencies', () => {
   })
 
   describe('error handling', () => {
-    it('should handle uv pip install command failure', async () => {
+    it('should handle uv sync command failure', async () => {
       const installError = new Error('pip install failed')
       mock$.mockRejectedValue(installError)
       mockNormalizeError.mockReturnValue(installError)
@@ -84,7 +84,7 @@ describe('installDependencies', () => {
         commands: [
           {
             label: 'Install dependencies manually',
-            command: 'uv pip install -r requirements.txt'
+            command: 'uv sync'
           }
         ]
       })
@@ -143,7 +143,7 @@ describe('installDependencies', () => {
         commands: [
           {
             label: 'Install dependencies manually',
-            command: 'uv pip install -r requirements.txt'
+            command: 'uv sync'
           }
         ]
       })
@@ -213,7 +213,7 @@ describe('installDependencies', () => {
         commands: [
           {
             label: 'Install dependencies manually',
-            command: 'uv pip install -r requirements.txt'
+            command: 'uv sync'
           }
         ]
       })
