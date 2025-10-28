@@ -67,12 +67,22 @@ const onCreateWindow = async () => {
   if (IS_PRODUCTION && appServe) {
     await appServe(win)
   } else {
+    console.log('Development mode: waiting for Next.js server at', DEV_URL)
     const { default: waitOn } = await import('wait-on')
-    await waitOn({ resources: [DEV_URL] })
 
+    try {
+      await waitOn({ resources: [DEV_URL] })
+      console.log('Next.js server is ready')
+    } catch (error) {
+      console.error('Failed to connect to Next.js server:', error)
+      throw error
+    }
+
+    console.log('Loading window with URL:', DEV_URL)
     win.loadURL(DEV_URL)
     win.webContents.openDevTools()
     win.webContents.on('did-fail-load', () => {
+      console.log('Window failed to load, reloading...')
       win.webContents.reloadIgnoringCache()
     })
   }
@@ -113,8 +123,10 @@ const onAutoUpdate = () => {
 const gotLock = app.requestSingleInstanceLock()
 
 if (!gotLock) {
+  console.log('Another instance is already running, exiting...')
   app.quit()
 } else {
+  console.log('Single instance lock acquired')
   app.on('second-instance', () => {
     const [win] = BrowserWindow.getAllWindows()
 
@@ -125,12 +137,16 @@ if (!gotLock) {
   })
 
   app.whenReady().then(async () => {
+    console.log('Electron app ready, initializing...')
     onSetLinuxGpuFlags()
 
     // Start log streaming early to capture backend initialization logs
     startLogStreaming()
 
+    console.log('Creating main window...')
     await onCreateWindow()
+    console.log('Main window created')
+
     onDownloadImage()
     onLogStreaming()
     onBackendStatusHistory()
@@ -139,20 +155,26 @@ if (!gotLock) {
     onAutoUpdate()
 
     if (process.env.SKIP_BACKEND !== 'true') {
+      console.log('Starting Python backend...')
       startBackend({
         userDataPath: app.getPath('userData'),
         externalEmit: broadcastBackendStatus
       })
+    } else {
+      console.log('Skipping backend startup (SKIP_BACKEND=true)')
     }
   })
 
   app.on('window-all-closed', () => {
+    console.log('All windows closed')
     if (process.platform !== 'darwin') {
+      console.log('Quitting app (not macOS)')
       app.quit()
     }
   })
 
   app.on('before-quit', () => {
+    console.log('App is quitting, stopping backend...')
     stopBackend()
   })
 }
