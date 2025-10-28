@@ -60,7 +60,7 @@ describe('installDependencies', () => {
 
   describe('error handling', () => {
     it('should handle uv sync command failure', async () => {
-      const installError = new Error('pip install failed')
+      const installError = new Error('uv sync failed')
       mock$.mockRejectedValue(installError)
       mockNormalizeError.mockReturnValue(installError)
 
@@ -69,7 +69,7 @@ describe('installDependencies', () => {
           backendPath: mockBackendPath,
           emit: mockEmit
         })
-      ).rejects.toThrow('pip install failed')
+      ).rejects.toThrow('uv sync failed')
 
       expect(zxWithCwd.cwd).toBe(mockBackendPath)
 

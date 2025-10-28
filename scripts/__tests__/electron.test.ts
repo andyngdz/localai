@@ -370,27 +370,25 @@ describe('electron toolchain', () => {
       await compileElectron()
 
       expect(consoleSpy).toHaveBeenCalledWith(
-        '🔨 Compiling Electron TypeScript files...'
+        'Compiling Electron TypeScript files...'
       )
-      expect(consoleSpy).toHaveBeenCalledWith('🔍 Generating types...')
-      expect(consoleSpy).toHaveBeenCalledWith('📦 Bundling with esbuild...')
-      expect(consoleSpy).toHaveBeenCalledWith('📝 Syncing types...')
-      expect(consoleSpy).toHaveBeenCalledWith(
-        '✅ Electron compilation complete'
-      )
+      expect(consoleSpy).toHaveBeenCalledWith('Generating types...')
+      expect(consoleSpy).toHaveBeenCalledWith('Bundling with esbuild...')
+      expect(consoleSpy).toHaveBeenCalledWith('Syncing types...')
+      expect(consoleSpy).toHaveBeenCalledWith('Electron compilation complete')
     })
 
     it('logs Electron startup', async () => {
       await startElectron()
 
-      expect(consoleSpy).toHaveBeenCalledWith('🚀 Starting Electron...')
+      expect(consoleSpy).toHaveBeenCalledWith('Starting Electron...')
     })
 
     it('logs full environment startup', async () => {
       await startFullDev()
 
       expect(consoleSpy).toHaveBeenCalledWith(
-        '🚀 Starting full development environment...'
+        'Starting full development environment...'
       )
     })
   })
@@ -398,8 +396,8 @@ describe('electron toolchain', () => {
   it('registers desktop and full dev scripts via runAsScript', () => {
     expect(runAsScriptCalls).toHaveLength(2)
     expect(runAsScriptCalls.map((call) => call.message)).toEqual([
-      '❌ Desktop development failed:',
-      '❌ Full development startup failed:'
+      'Desktop development failed:',
+      'Full development startup failed:'
     ])
   })
 })

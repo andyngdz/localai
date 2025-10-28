@@ -15,10 +15,10 @@ const concurrentlyArgs = [
 ]
 
 const startFullDev = async () => {
-  console.log('🚀 Starting full development environment...')
+  console.log('Starting full development environment...')
   await $`npx concurrently ${concurrentlyArgs}`
 }
 
-runAsScript(startFullDev, '❌ Full development startup failed:')
+runAsScript(startFullDev, 'Full development startup failed:')
 
 export { concurrentlyArgs, startFullDev }
