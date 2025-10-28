@@ -24,12 +24,12 @@ const cleanElectronOutputs = async () => {
 }
 
 const generateTypes = async () => {
-  console.log('🔍 Generating types...')
+  console.log('Generating types...')
   await $`npx tsc --project tsconfig.electron.json --emitDeclarationOnly`
 }
 
 const bundleElectronFiles = async () => {
-  console.log('📦 Bundling with esbuild...')
+  console.log('Bundling with esbuild...')
 
   const entryPoints = [
     join(electronDir, 'main.ts'),
@@ -53,26 +53,31 @@ const bundleElectronFiles = async () => {
 }
 
 const syncRuntimeTypes = async () => {
-  console.log('📝 Syncing types...')
+  console.log('Syncing types...')
   await rm(runtimeTypesDir, { recursive: true, force: true })
   await mkdir(runtimeTypesDir, { recursive: true })
   await cp(compiledTypesDir, runtimeTypesDir, { recursive: true })
 }
 
 const compileElectron = async () => {
-  console.log('🔨 Compiling Electron TypeScript files...')
+  console.log('Compiling Electron TypeScript files...')
 
   await cleanElectronOutputs()
   await generateTypes()
   await bundleElectronFiles()
   await syncRuntimeTypes()
 
-  console.log('✅ Electron compilation complete')
+  console.log('Electron compilation complete')
 }
 
 const startElectron = async () => {
-  console.log('🚀 Starting Electron...')
-  await $`npx electron .`
+  console.log('Starting Electron...')
+  try {
+    await $`npx electron .`
+  } catch (error) {
+    console.error('Electron process error:', error)
+    throw error
+  }
 }
 
 export { compileElectron, startElectron }

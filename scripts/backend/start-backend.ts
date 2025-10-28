@@ -5,7 +5,6 @@ import { installDependencies } from './install-dependencies'
 import { installUv } from './install-uv'
 import { runBackend } from './run-backend'
 import { setupVenv } from './setup-venv'
-import { switchToVenv } from './switch-to-venv'
 import { createDefaultStatusEmitter, normalizeError } from './utils'
 
 export interface StartBackendOptions {
@@ -32,13 +31,10 @@ const startBackend = async ({
     // Step 4: Create virtual environment with uv and Python 3.11
     await setupVenv({ userDataPath, emit })
 
-    // Step 4.1: Switch to the virtual environment
-    await switchToVenv({ backendPath, emit })
-
-    // Step 5: Install dependencies using uv
+    // Step 5: Install dependencies using uv sync
     await installDependencies({ backendPath, emit })
 
-    // Step 6: Run the LocalAI Backend with uvicorn
+    // Step 6: Run the LocalAI Backend with uv run uvicorn
     await runBackend({ backendPath, emit })
   } catch (error) {
     const normalizedError = normalizeError(error, 'Unknown error')
