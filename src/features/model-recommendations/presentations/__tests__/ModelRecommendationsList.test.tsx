@@ -159,7 +159,7 @@ describe('ModelRecommendationsList', () => {
     expect(mainDiv).toHaveClass('max-w-3xl')
   })
 
-  it('applies expanded container width with 1-2 sections', () => {
+  it('applies standard container width with 2 sections', () => {
     const twoSections = mockSections.slice(0, 2)
     const { container } = render(
       <ModelRecommendationsList
@@ -169,10 +169,10 @@ describe('ModelRecommendationsList', () => {
     )
 
     const mainDiv = container.firstChild
-    expect(mainDiv).toHaveClass('max-w-5xl')
+    expect(mainDiv).toHaveClass('max-w-3xl')
   })
 
-  it('applies expanded container width with 1 section', () => {
+  it('applies smaller container width with 1 section', () => {
     const oneSection = mockSections.slice(0, 1)
     const { container } = render(
       <ModelRecommendationsList
@@ -182,7 +182,7 @@ describe('ModelRecommendationsList', () => {
     )
 
     const mainDiv = container.firstChild
-    expect(mainDiv).toHaveClass('max-w-5xl')
+    expect(mainDiv).toHaveClass('max-w-2xl')
   })
 
   it('applies correct classes to slides', () => {

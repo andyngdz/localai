@@ -64,9 +64,9 @@ vi.mock('@heroui/react', () => ({
 
 // Mock Lucide icons
 vi.mock('lucide-react', () => ({
-  Download: ({ size }: { size: number }) => (
-    <div data-testid="download-icon" data-size={size}>
-      Download Icon
+  ChevronDown: ({ size }: { size: number }) => (
+    <div data-testid="chevron-down-icon" data-size={size}>
+      ChevronDown Icon
     </div>
   )
 }))
@@ -98,10 +98,10 @@ describe('ModelRecommendationsDownloadButton', () => {
       expect(screen.getByText('Download Model')).toBeInTheDocument()
     })
 
-    it('shows download icon when not downloading', () => {
+    it('shows chevron down icon when not downloading', () => {
       render(<ModelRecommendationsDownloadButton modelId="test-model" />)
 
-      expect(screen.getByTestId('download-icon')).toBeInTheDocument()
+      expect(screen.getByTestId('chevron-down-icon')).toBeInTheDocument()
     })
 
     it('applies default color and solid variant when not downloading', () => {
@@ -170,10 +170,10 @@ describe('ModelRecommendationsDownloadButton', () => {
       expect(screen.getByText('4.5 MB / 10 MB')).toBeInTheDocument()
     })
 
-    it('does not show download icon when downloading', () => {
+    it('does not show chevron down icon when downloading', () => {
       render(<ModelRecommendationsDownloadButton modelId="test-model" />)
 
-      expect(screen.queryByTestId('download-icon')).not.toBeInTheDocument()
+      expect(screen.queryByTestId('chevron-down-icon')).not.toBeInTheDocument()
     })
 
     it('applies primary color and bordered variant when downloading', () => {
@@ -259,10 +259,10 @@ describe('ModelRecommendationsDownloadButton', () => {
       expect(progressBar).not.toBeInTheDocument()
     })
 
-    it('shows download icon when another model is downloading', () => {
+    it('shows chevron down icon when another model is downloading', () => {
       render(<ModelRecommendationsDownloadButton modelId="test-model" />)
 
-      expect(screen.getByTestId('download-icon')).toBeInTheDocument()
+      expect(screen.getByTestId('chevron-down-icon')).toBeInTheDocument()
     })
   })
 
