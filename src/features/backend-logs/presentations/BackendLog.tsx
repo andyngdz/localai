@@ -2,10 +2,10 @@
 
 import {
   Button,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalHeader,
+  Drawer,
+  DrawerBody,
+  DrawerContent,
+  DrawerHeader,
   useDisclosure
 } from '@heroui/react'
 import { SquareChevronRight } from 'lucide-react'
@@ -24,23 +24,23 @@ export const BackendLog = () => {
       >
         Console
       </Button>
-      <Modal
+      <Drawer
         isOpen={isOpen}
         shouldBlockScroll={false}
-        isDismissable={false}
         onClose={onClose}
-        backdrop="transparent"
-        placement="bottom"
+        backdrop="opaque"
+        placement="right"
         scrollBehavior="inside"
-        className="max-w-full w-6xl h-[40vh]"
+        size="2xl"
+        className="h-full"
       >
-        <ModalContent>
-          <ModalHeader>Backend Logs</ModalHeader>
-          <ModalBody>
+        <DrawerContent>
+          <DrawerHeader>Backend Logs</DrawerHeader>
+          <DrawerBody>
             <BackendLogList />
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
     </section>
   )
 }
