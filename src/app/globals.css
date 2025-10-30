@@ -35,3 +35,13 @@
   @apply scrollbar-thin;
   @apply overflow-auto;
 }
+
+:root {
+  --swiper-pagination-color: hsl(var(--heroui-primary));
+  --swiper-pagination-bullet-inactive-color: hsl(var(--heroui-default-900));
+}
+
+.dark {
+  --swiper-pagination-color: hsl(var(--heroui-primary));
+  --swiper-pagination-bullet-inactive-color: hsl(var(--heroui-default-900));
+}
