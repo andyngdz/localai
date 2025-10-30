@@ -1,7 +1,7 @@
 {
   "name": "localai",
   "description": "LocalAI",
-  "version": "1.13.1-beta.2",
+  "version": "1.13.1-beta.3",
   "private": true,
   "author": {
     "name": "Andy D. Nguyen",
