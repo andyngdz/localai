@@ -20,22 +20,37 @@ export const ModelRecommendationsList: FC<ModelRecommendationsListProps> = ({
   defaultSection
 }) => {
   const initialSlide = findIndex(sections, (s) => s.id === defaultSection)
+  const sectionCount = sections.length
+
+  // Expand container width for 1-2 sections to make cards more prominent
+  const containerClass = sectionCount <= 2 ? 'max-w-5xl' : 'max-w-3xl'
 
   return (
-    <div className="max-w-3xl">
+    <div className={containerClass}>
       <Swiper
         spaceBetween={16}
-        slidesPerView="auto"
+        slidesPerView={1}
+        centeredSlides={true}
         modules={[Pagination]}
         pagination={{ clickable: true }}
         initialSlide={initialSlide}
-        loop
+        loop={sectionCount > 2}
+        breakpoints={{
+          640: {
+            slidesPerView: 1,
+            spaceBetween: 16
+          },
+          1024: {
+            slidesPerView: sectionCount <= 2 ? 1.2 : 1,
+            spaceBetween: 20
+          }
+        }}
       >
         {sections.map((section) => {
           const { id } = section
 
           return (
-            <SwiperSlide key={id} className="max-w-4/5 pb-8">
+            <SwiperSlide key={id} className="pb-8">
               <ModelRecommendationsSection
                 section={section}
                 isDefaultRecommended={id === defaultSection}

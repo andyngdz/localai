@@ -147,7 +147,7 @@ describe('ModelRecommendationsList', () => {
     expect(screen.getByText('Section 3')).toBeInTheDocument()
   })
 
-  it('applies correct styling to container', () => {
+  it('applies correct styling to container with 3+ sections', () => {
     const { container } = render(
       <ModelRecommendationsList
         sections={mockSections}
@@ -157,6 +157,32 @@ describe('ModelRecommendationsList', () => {
 
     const mainDiv = container.firstChild
     expect(mainDiv).toHaveClass('max-w-3xl')
+  })
+
+  it('applies expanded container width with 1-2 sections', () => {
+    const twoSections = mockSections.slice(0, 2)
+    const { container } = render(
+      <ModelRecommendationsList
+        sections={twoSections}
+        defaultSection="section1"
+      />
+    )
+
+    const mainDiv = container.firstChild
+    expect(mainDiv).toHaveClass('max-w-5xl')
+  })
+
+  it('applies expanded container width with 1 section', () => {
+    const oneSection = mockSections.slice(0, 1)
+    const { container } = render(
+      <ModelRecommendationsList
+        sections={oneSection}
+        defaultSection="section1"
+      />
+    )
+
+    const mainDiv = container.firstChild
+    expect(mainDiv).toHaveClass('max-w-5xl')
   })
 
   it('applies correct classes to slides', () => {
@@ -169,8 +195,8 @@ describe('ModelRecommendationsList', () => {
 
     const slides = screen.getAllByTestId('swiper-slide')
     slides.forEach((slide) => {
-      expect(slide).toHaveClass('max-w-4/5')
       expect(slide).toHaveClass('pb-8')
+      expect(slide).not.toHaveClass('max-w-4/5')
     })
   })
 })
