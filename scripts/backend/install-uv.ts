@@ -82,7 +82,7 @@ const installUv = async ({ emit }: InstallUvOptions) => {
     candidatePaths.push(path.join(process.env.HOME, '.local', 'bin'))
   }
 
-  if (process.platform === 'win32' && process.env.LOCALAPPDATA) {
+  if (isWindows && process.env.LOCALAPPDATA) {
     candidatePaths.push(path.join(process.env.LOCALAPPDATA, 'uv', 'bin'))
   }
 

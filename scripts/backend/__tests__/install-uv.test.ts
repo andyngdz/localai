@@ -7,7 +7,8 @@ const { mock$ } = vi.hoisted(() => ({
 }))
 
 vi.mock('zx', () => ({
-  $: (...args: unknown[]) => mock$(...args)
+  $: (...args: unknown[]) => mock$(...args),
+  usePowerShell: vi.fn()
 }))
 
 const { mockNormalizeError } = vi.hoisted(() => ({
@@ -158,9 +159,12 @@ describe('installUv', () => {
       level: BackendStatusLevel.Info,
       message: 'uv 1.1.0 installed successfully.'
     })
-    expect(mockEnsurePathIncludes).toHaveBeenCalledWith([
-      path.join('/home/tester', '.local', 'bin')
-    ])
+    // When running on Windows with both HOME and LOCALAPPDATA set, both paths are added
+    const expectedPaths = [path.join('/home/tester', '.local', 'bin')]
+    if (process.env.LOCALAPPDATA) {
+      expectedPaths.push(path.join(process.env.LOCALAPPDATA, 'uv', 'bin'))
+    }
+    expect(mockEnsurePathIncludes).toHaveBeenCalledWith(expectedPaths)
   })
 
   it('emits an error with manual commands when installation fails', async () => {
