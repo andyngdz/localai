@@ -13,7 +13,7 @@ export const FullScreenLoader: FC<FullScreenLoaderProps> = ({ message }) => {
   return (
     <div
       className={clsx(
-        'fixed inset-0 z-10',
+        'absolute inset-0 z-10',
         'backdrop-blur-md bg-background/90'
       )}
     >
@@ -28,7 +28,9 @@ export const FullScreenLoader: FC<FullScreenLoaderProps> = ({ message }) => {
           width={48}
           height={48}
         />
-        <span className="text-sm font-medium">{message}</span>
+        <span className="text-xs font-medium text-default-700 animate-pulse">
+          {message}
+        </span>
       </div>
     </div>
   )

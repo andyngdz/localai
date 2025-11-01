@@ -21,21 +21,21 @@ vi.mock('@heroui/react', () => ({
       {endContent}
     </button>
   ),
-  Modal: ({
+  Drawer: ({
     isOpen,
     children
   }: {
     isOpen: boolean
     children: React.ReactNode
-  }) => (isOpen ? <div data-testid="modal">{children}</div> : null),
-  ModalContent: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="modal-content">{children}</div>
+  }) => (isOpen ? <div data-testid="drawer">{children}</div> : null),
+  DrawerContent: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="drawer-content">{children}</div>
   ),
-  ModalHeader: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="modal-header">{children}</div>
+  DrawerHeader: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="drawer-header">{children}</div>
   ),
-  ModalBody: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="modal-body">{children}</div>
+  DrawerBody: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="drawer-body">{children}</div>
   ),
   useDisclosure: vi.fn(() => ({
     isOpen: false,
@@ -67,7 +67,7 @@ describe('BackendLog', () => {
     expect(button).toHaveTextContent('Console')
   })
 
-  it('renders modal when open', () => {
+  it('renders drawer when open', () => {
     mockUseDisclosure.mockReturnValue({
       isOpen: true,
       onOpen: mockOnOpen,
@@ -80,12 +80,14 @@ describe('BackendLog', () => {
 
     render(<BackendLog />)
 
-    expect(screen.getByTestId('modal')).toBeInTheDocument()
-    expect(screen.getByTestId('modal-header')).toHaveTextContent('Backend Logs')
+    expect(screen.getByTestId('drawer')).toBeInTheDocument()
+    expect(screen.getByTestId('drawer-header')).toHaveTextContent(
+      'Backend Logs'
+    )
     expect(screen.getByTestId('backend-log-list')).toBeInTheDocument()
   })
 
-  it('does not render modal when closed', () => {
+  it('does not render drawer when closed', () => {
     mockUseDisclosure.mockReturnValue({
       isOpen: false,
       onOpen: mockOnOpen,
@@ -98,6 +100,6 @@ describe('BackendLog', () => {
 
     render(<BackendLog />)
 
-    expect(screen.queryByTestId('modal')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('drawer')).not.toBeInTheDocument()
   })
 })

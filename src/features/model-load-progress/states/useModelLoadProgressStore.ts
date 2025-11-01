@@ -16,6 +16,7 @@ export const useModelLoadProgressStore = create<State & Actions>()(
   (set, _get, store) => ({
     id: undefined,
     progress: undefined,
+
     onUpdateProgress: (progress) => set({ progress }),
     onSetId: (id) => set({ id }),
     reset: () => set(store.getInitialState())

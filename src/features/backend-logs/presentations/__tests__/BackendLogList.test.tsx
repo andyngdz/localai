@@ -118,4 +118,35 @@ describe('BackendLogList', () => {
     const message = screen.getByText('Error log')
     expect(message).toHaveClass('text-danger')
   })
+
+  it('strips ANSI color codes from log messages', () => {
+    // Mock log with ANSI escape sequences (like from Python colorlog)
+    const mockLogs: LogEntry[] = [
+      {
+        timestamp: 1234567890,
+        level: 'info',
+        message: '\u001b[32mGreen text\u001b[0m and \u001b[31mred text\u001b[0m'
+      }
+    ]
+
+    mockVirtualizer.getVirtualItems.mockReturnValue([
+      { index: 0, key: 'log-0', start: 0, size: 50, measureElement: vi.fn() }
+    ])
+
+    mockUseBackendLog.mockReturnValue({
+      logs: mockLogs,
+      onGetLogColor: vi.fn(() => 'text-secondary' as const),
+      scrollRef: mockScrollRef,
+      rowVirtualizer: mockVirtualizer as never,
+      isStreaming: false,
+      clearLogs: vi.fn()
+    })
+
+    render(<BackendLogList />)
+
+    // Should display the text without ANSI codes
+    expect(screen.getByText('Green text and red text')).toBeInTheDocument()
+    // Should NOT display the raw ANSI codes
+    expect(screen.queryByText(/\u001b/)).not.toBeInTheDocument()
+  })
 })
