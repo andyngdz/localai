@@ -1,6 +1,6 @@
 import { BackendStatusEmitter, BackendStatusLevel, Nullable } from '@types'
 import * as path from 'node:path'
-import { $, type ProcessPromise } from 'zx'
+import { $, type ProcessPromise } from '../zx-config'
 import { findAvailablePort, normalizeError, pathExists } from './utils'
 
 export interface RunBackendOptions {

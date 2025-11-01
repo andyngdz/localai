@@ -40,7 +40,8 @@ const { mock$, commandQueue, recordedCommands, platformState } = vi.hoisted(
 )
 
 vi.mock('zx', () => ({
-  $: (...args: Parameters<CommandRecorder>) => mock$(...args)
+  $: (...args: Parameters<CommandRecorder>) => mock$(...args),
+  usePowerShell: vi.fn()
 }))
 
 vi.mock('../utils', () => ({
