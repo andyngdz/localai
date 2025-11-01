@@ -4,7 +4,7 @@ import {
   BackendStatusLevel
 } from '@types'
 import * as path from 'node:path'
-import { $ } from 'zx'
+import { $ } from '../zx-config'
 import { ensurePathIncludes, isWindows, normalizeError } from './utils'
 
 interface InstallUvOptions {
