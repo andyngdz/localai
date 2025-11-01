@@ -7,7 +7,8 @@ const { mock$ } = vi.hoisted(() => ({
 }))
 
 vi.mock('zx', () => ({
-  $: (...args: unknown[]) => mock$(...args)
+  $: (...args: unknown[]) => mock$(...args),
+  usePowerShell: vi.fn()
 }))
 
 const { mockNormalizeError } = vi.hoisted(() => ({
