@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { UpdateSettings } from '../UpdateSettings'
 
@@ -35,13 +35,18 @@ describe('UpdateSettings', () => {
     })
   })
 
-  it('renders the component with title and description', () => {
+  it('renders the component with title and description', async () => {
     vi.mocked(window.electronAPI.app.getVersion).mockResolvedValue('1.2.3')
 
     render(<UpdateSettings />)
 
     expect(screen.getByText('Application updates')).toBeInTheDocument()
     expect(screen.getByText(/Current version:/)).toBeInTheDocument()
+
+    // Wait for async effect to complete
+    await waitFor(() => {
+      expect(screen.getByText(/Current version: 1.2.3/i)).toBeInTheDocument()
+    })
   })
 
   it('renders the current version once resolved', async () => {
@@ -54,7 +59,7 @@ describe('UpdateSettings', () => {
     ).toBeInTheDocument()
   })
 
-  it('shows "Development Build" as default version before API resolves', () => {
+  it('shows "Development Build" as default version before API resolves', async () => {
     vi.mocked(window.electronAPI.app.getVersion).mockResolvedValue('1.2.3')
 
     render(<UpdateSettings />)
@@ -62,9 +67,14 @@ describe('UpdateSettings', () => {
     expect(
       screen.getByText(/Current version: Development Build/i)
     ).toBeInTheDocument()
+
+    // Wait for async effect to complete
+    await waitFor(() => {
+      expect(screen.getByText(/Current version: 1.2.3/i)).toBeInTheDocument()
+    })
   })
 
-  it('renders check for updates button with correct text', () => {
+  it('renders check for updates button with correct text', async () => {
     vi.mocked(window.electronAPI.app.getVersion).mockResolvedValue('1.2.3')
 
     render(<UpdateSettings />)
@@ -75,6 +85,11 @@ describe('UpdateSettings', () => {
 
     expect(button).toBeInTheDocument()
     expect(button).toHaveAttribute('data-color', 'primary')
+
+    // Wait for async effect to complete
+    await waitFor(() => {
+      expect(screen.getByText(/Current version: 1.2.3/i)).toBeInTheDocument()
+    })
   })
 
   it('requests an update check when the button is pressed', async () => {
@@ -86,7 +101,9 @@ describe('UpdateSettings', () => {
       name: /Check for updates/i
     })
 
-    fireEvent.click(button)
+    await act(async () => {
+      fireEvent.click(button)
+    })
 
     await waitFor(() =>
       expect(window.electronAPI.updater.checkForUpdates).toHaveBeenCalled()
@@ -96,14 +113,19 @@ describe('UpdateSettings', () => {
   it('shows loading state while checking for updates', async () => {
     vi.mocked(window.electronAPI.app.getVersion).mockResolvedValue('1.2.3')
     vi.mocked(window.electronAPI.updater.checkForUpdates).mockImplementation(
-      () => new Promise((resolve) => setTimeout(resolve, 100))
+      () =>
+        new Promise((resolve) =>
+          setTimeout(() => resolve({ updateAvailable: false }), 100)
+        )
     )
 
     render(<UpdateSettings />)
 
     const button = screen.getByRole('button')
 
-    fireEvent.click(button)
+    await act(async () => {
+      fireEvent.click(button)
+    })
 
     // Button should show loading state
     await waitFor(() => {
@@ -115,15 +137,20 @@ describe('UpdateSettings', () => {
 
   it('returns to normal state after check completes', async () => {
     vi.mocked(window.electronAPI.app.getVersion).mockResolvedValue('1.2.3')
-    vi.mocked(window.electronAPI.updater.checkForUpdates).mockResolvedValue({
-      updateAvailable: false
-    })
+    vi.mocked(window.electronAPI.updater.checkForUpdates).mockImplementation(
+      () =>
+        new Promise((resolve) =>
+          setTimeout(() => resolve({ updateAvailable: false }), 50)
+        )
+    )
 
     render(<UpdateSettings />)
 
     const button = screen.getByRole('button')
 
-    fireEvent.click(button)
+    await act(async () => {
+      fireEvent.click(button)
+    })
 
     // Wait for loading state
     await waitFor(() => expect(button).toHaveAttribute('data-loading', 'true'))
@@ -146,7 +173,9 @@ describe('UpdateSettings', () => {
 
     const button = screen.getByRole('button')
 
-    fireEvent.click(button)
+    await act(async () => {
+      fireEvent.click(button)
+    })
 
     // Button should return to normal state after error
     await waitFor(() => {
@@ -166,7 +195,10 @@ describe('UpdateSettings', () => {
     const button = screen.getByRole('button')
 
     // First click
-    fireEvent.click(button)
+    await act(async () => {
+      fireEvent.click(button)
+    })
+
     await waitFor(() =>
       expect(window.electronAPI.updater.checkForUpdates).toHaveBeenCalledTimes(
         1
@@ -177,7 +209,10 @@ describe('UpdateSettings', () => {
     await waitFor(() => expect(button).not.toBeDisabled())
 
     // Second click
-    fireEvent.click(button)
+    await act(async () => {
+      fireEvent.click(button)
+    })
+
     await waitFor(() =>
       expect(window.electronAPI.updater.checkForUpdates).toHaveBeenCalledTimes(
         2

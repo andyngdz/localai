@@ -1,6 +1,6 @@
-import { renderHook, waitFor } from '@testing-library/react'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { addToast } from '@heroui/react'
+import { act, renderHook, waitFor } from '@testing-library/react'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useUpdaterSettings } from '../useUpdaterSettings'
 
 // Mock @heroui/react
@@ -27,12 +27,17 @@ describe('useUpdaterSettings', () => {
   })
 
   describe('initialization', () => {
-    it('should initialize with default values', () => {
+    it('should initialize with default values', async () => {
       const { result } = renderHook(() => useUpdaterSettings())
 
       expect(result.current.version).toBe('Development Build')
       expect(result.current.isChecking).toBe(false)
       expect(result.current.onCheck).toBeInstanceOf(Function)
+
+      // Wait for async effect to complete to avoid act() warnings
+      await waitFor(() => {
+        expect(result.current.version).toBe('1.0.0')
+      })
     })
 
     it('should fetch version on mount', async () => {
@@ -85,13 +90,18 @@ describe('useUpdaterSettings', () => {
         expect(result.current.version).toBe('1.0.0')
       })
 
-      const checkPromise = result.current.onCheck()
+      let checkPromise: Promise<void>
+      await act(async () => {
+        checkPromise = result.current.onCheck()
+      })
 
       await waitFor(() => {
         expect(result.current.isChecking).toBe(true)
       })
 
-      await checkPromise
+      await act(async () => {
+        await checkPromise
+      })
 
       await waitFor(() => {
         expect(result.current.isChecking).toBe(false)
@@ -105,7 +115,9 @@ describe('useUpdaterSettings', () => {
         expect(result.current.version).toBe('1.0.0')
       })
 
-      await result.current.onCheck()
+      await act(async () => {
+        await result.current.onCheck()
+      })
 
       expect(
         global.window.electronAPI.updater.checkForUpdates
@@ -119,7 +131,9 @@ describe('useUpdaterSettings', () => {
         expect(result.current.version).toBe('1.0.0')
       })
 
-      await result.current.onCheck()
+      await act(async () => {
+        await result.current.onCheck()
+      })
 
       expect(addToast).toHaveBeenCalledWith({
         title: "You're already on the latest version",
@@ -137,7 +151,9 @@ describe('useUpdaterSettings', () => {
 
       expect(result.current.isChecking).toBe(false)
 
-      await result.current.onCheck()
+      await act(async () => {
+        await result.current.onCheck()
+      })
 
       expect(result.current.isChecking).toBe(false)
     })
@@ -158,7 +174,9 @@ describe('useUpdaterSettings', () => {
         expect(result.current.version).toBe('1.0.0')
       })
 
-      await result.current.onCheck()
+      await act(async () => {
+        await result.current.onCheck()
+      })
 
       expect(addToast).not.toHaveBeenCalled()
     })
@@ -177,7 +195,9 @@ describe('useUpdaterSettings', () => {
         expect(result.current.version).toBe('1.0.0')
       })
 
-      await result.current.onCheck()
+      await act(async () => {
+        await result.current.onCheck()
+      })
 
       expect(result.current.isChecking).toBe(false)
     })
@@ -196,7 +216,9 @@ describe('useUpdaterSettings', () => {
         expect(result.current.version).toBe('1.0.0')
       })
 
-      await result.current.onCheck()
+      await act(async () => {
+        await result.current.onCheck()
+      })
 
       expect(addToast).toHaveBeenCalledWith({
         title: 'Failed to check for updates',
@@ -216,7 +238,9 @@ describe('useUpdaterSettings', () => {
         expect(result.current.version).toBe('1.0.0')
       })
 
-      await result.current.onCheck()
+      await act(async () => {
+        await result.current.onCheck()
+      })
 
       expect(addToast).toHaveBeenCalledWith({
         title: 'Failed to check for updates',
@@ -236,7 +260,9 @@ describe('useUpdaterSettings', () => {
         expect(result.current.version).toBe('1.0.0')
       })
 
-      await result.current.onCheck()
+      await act(async () => {
+        await result.current.onCheck()
+      })
 
       expect(result.current.isChecking).toBe(false)
     })
@@ -256,7 +282,9 @@ describe('useUpdaterSettings', () => {
         expect(result.current.version).toBe('1.0.0')
       })
 
-      await result.current.onCheck()
+      await act(async () => {
+        await result.current.onCheck()
+      })
 
       expect(consoleErrorSpy).toHaveBeenCalledWith(
         'Failed to check for updates',
@@ -279,7 +307,9 @@ describe('useUpdaterSettings', () => {
         expect(result.current.version).toBe('3.2.1')
       })
 
-      await result.current.onCheck()
+      await act(async () => {
+        await result.current.onCheck()
+      })
 
       expect(addToast).toHaveBeenCalledWith({
         title: "You're already on the latest version",
@@ -315,9 +345,15 @@ describe('useUpdaterSettings', () => {
         expect(result.current.version).toBe('1.0.0')
       })
 
-      await result.current.onCheck()
-      await result.current.onCheck()
-      await result.current.onCheck()
+      await act(async () => {
+        await result.current.onCheck()
+      })
+      await act(async () => {
+        await result.current.onCheck()
+      })
+      await act(async () => {
+        await result.current.onCheck()
+      })
 
       expect(
         global.window.electronAPI.updater.checkForUpdates
@@ -337,7 +373,9 @@ describe('useUpdaterSettings', () => {
       vi.mocked(
         global.window.electronAPI.updater.checkForUpdates
       ).mockResolvedValue({ updateAvailable: false })
-      await result.current.onCheck()
+      await act(async () => {
+        await result.current.onCheck()
+      })
 
       expect(addToast).toHaveBeenLastCalledWith(
         expect.objectContaining({ color: 'success' })
@@ -347,7 +385,9 @@ describe('useUpdaterSettings', () => {
       vi.mocked(
         global.window.electronAPI.updater.checkForUpdates
       ).mockRejectedValue(new Error('Failed'))
-      await result.current.onCheck()
+      await act(async () => {
+        await result.current.onCheck()
+      })
 
       expect(addToast).toHaveBeenLastCalledWith(
         expect.objectContaining({ color: 'danger' })
@@ -358,12 +398,17 @@ describe('useUpdaterSettings', () => {
   })
 
   describe('integration', () => {
-    it('should provide all expected properties', () => {
+    it('should provide all expected properties', async () => {
       const { result } = renderHook(() => useUpdaterSettings())
 
       expect(result.current).toHaveProperty('version')
       expect(result.current).toHaveProperty('isChecking')
       expect(result.current).toHaveProperty('onCheck')
+
+      // Wait for async effect to complete to avoid act() warnings
+      await waitFor(() => {
+        expect(result.current.version).toBe('1.0.0')
+      })
     })
 
     it('should work through complete update check lifecycle', async () => {
@@ -388,14 +433,19 @@ describe('useUpdaterSettings', () => {
       })
 
       // Start check
-      const checkPromise = result.current.onCheck()
+      let checkPromise: Promise<void>
+      await act(async () => {
+        checkPromise = result.current.onCheck()
+      })
 
       await waitFor(() => {
         expect(result.current.isChecking).toBe(true)
       })
 
       // Check completes
-      await checkPromise
+      await act(async () => {
+        await checkPromise
+      })
 
       await waitFor(() => {
         expect(result.current.isChecking).toBe(false)
