@@ -45,7 +45,8 @@ vi.mock('../utils', () => ({
   setupLog: vi.fn()
 }))
 vi.mock('zx', () => ({
-  $: (...args: unknown[]) => mock$(...args)
+  $: (...args: unknown[]) => mock$(...args),
+  usePowerShell: vi.fn()
 }))
 vi.mock('esbuild', () => ({
   build: (...args: unknown[]) => mockBuild(...args)
@@ -338,7 +339,7 @@ describe('electron toolchain', () => {
     it('runs concurrently with predefined arguments', async () => {
       await startFullDev()
 
-      expect(recordedCommands[0]).toContain('npx concurrently ')
+      expect(recordedCommands[0]).toContain('concurrently ')
       concurrentlyArgs.forEach((arg) => {
         expect(recordedCommands[0]).toContain(String(arg))
       })
