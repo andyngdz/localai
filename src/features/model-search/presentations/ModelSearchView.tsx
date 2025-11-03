@@ -1,5 +1,6 @@
 import { useModelSearchView } from '../states/useModelSearchView'
 
+import { useDownloadWatcher } from '@/features/download-watcher'
 import { ModelDownloadStatusLine } from '@/features/model-download-status-line'
 import { ScrollShadow } from '@heroui/react'
 import { useModelSearchSelectorStore } from '../states'
@@ -11,6 +12,7 @@ import { ModelSearchViewSpaces } from './ModelSearchViewSpaces'
 export const ModelSearchView = () => {
   const { model_id } = useModelSearchSelectorStore()
   const { modelDetails } = useModelSearchView(model_id)
+  const { isDownloading } = useDownloadWatcher(model_id)
 
   if (modelDetails) {
     return (
@@ -30,7 +32,7 @@ export const ModelSearchView = () => {
           />
         </ScrollShadow>
         <div className="flex flex-col">
-          <ModelDownloadStatusLine id={modelDetails.id} />
+          {isDownloading && <ModelDownloadStatusLine id={modelDetails.id} />}
           <ModelSearchViewFooter id={modelDetails.id} />
         </div>
       </div>

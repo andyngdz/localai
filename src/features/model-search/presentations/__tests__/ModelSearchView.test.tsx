@@ -127,6 +127,17 @@ vi.mock('@/features/model-download-status-line', () => ({
   )
 }))
 
+vi.mock('@/features/download-watcher', () => ({
+  useDownloadWatcher: () => ({
+    isDownloading: true,
+    step: null,
+    percent: 0,
+    downloadSized: 0,
+    downloadTotalSized: 0,
+    currentFile: 'N/A'
+  })
+}))
+
 // Import the component under test AFTER mocks so they take effect
 import { ModelSearchView } from '../ModelSearchView'
 
