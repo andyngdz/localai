@@ -14,7 +14,7 @@ export const GeneratorPreviewerSliderActions = () => {
   }
 
   return (
-    <div className="absolute inset-4 z-20 flex items-center justify-between">
+    <div className="absolute inset-4 flex items-center justify-between">
       <Button
         isIconOnly
         variant="flat"

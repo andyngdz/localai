@@ -89,7 +89,6 @@ describe('GeneratorPreviewerSliderActions', () => {
       expect(container).toHaveClass(
         'absolute',
         'inset-4',
-        'z-20',
         'flex',
         'items-center',
         'justify-between'
@@ -265,11 +264,9 @@ describe('GeneratorPreviewerSliderActions', () => {
     it('should have proper z-index for overlay positioning', () => {
       render(<GeneratorPreviewerSliderActions />)
 
-      const container = screen.getByTestId('prev-button').parentElement
       const prevButton = screen.getByTestId('prev-button')
       const nextButton = screen.getByTestId('next-button')
 
-      expect(container).toHaveClass('z-20')
       expect(prevButton).toHaveClass('z-10')
       expect(nextButton).toHaveClass('z-10')
     })

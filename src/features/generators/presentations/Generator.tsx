@@ -40,7 +40,7 @@ export const Generator = () => {
               <GeneratorConfig />
             </Allotment.Pane>
             <Allotment.Pane>
-              <div className="flex flex-col">
+              <div className="flex flex-col h-full">
                 <GeneratorPrompt />
                 <GeneratorAction />
                 <GeneratorPreviewer />
