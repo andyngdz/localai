@@ -42,6 +42,18 @@ describe('useSettingsStore', () => {
       expect(result.current.reset).toBeDefined()
       expect(typeof result.current.reset).toBe('function')
     })
+
+    it('should initialize modal state as closed', () => {
+      const { result } = renderHook(() => useSettingsStore())
+
+      expect(result.current.isModalOpen).toBe(false)
+    })
+
+    it('should initialize with general tab selected', () => {
+      const { result } = renderHook(() => useSettingsStore())
+
+      expect(result.current.selectedTab).toBe('general')
+    })
   })
 
   describe('setValues functionality', () => {
@@ -73,6 +85,58 @@ describe('useSettingsStore', () => {
       })
 
       expect(result.current.values).toEqual(defaultValues)
+    })
+  })
+
+  describe('modal control', () => {
+    it('should open modal with default general tab', () => {
+      const { result } = renderHook(() => useSettingsStore())
+
+      act(() => {
+        result.current.openModal()
+      })
+
+      expect(result.current.isModalOpen).toBe(true)
+      expect(result.current.selectedTab).toBe('general')
+    })
+
+    it('should open modal with specified tab', () => {
+      const { result } = renderHook(() => useSettingsStore())
+
+      act(() => {
+        result.current.openModal('models')
+      })
+
+      expect(result.current.isModalOpen).toBe(true)
+      expect(result.current.selectedTab).toBe('models')
+    })
+
+    it('should close modal', () => {
+      const { result } = renderHook(() => useSettingsStore())
+
+      act(() => {
+        result.current.openModal()
+      })
+
+      expect(result.current.isModalOpen).toBe(true)
+
+      act(() => {
+        result.current.closeModal()
+      })
+
+      expect(result.current.isModalOpen).toBe(false)
+    })
+  })
+
+  describe('tab selection', () => {
+    it('should change selected tab', () => {
+      const { result } = renderHook(() => useSettingsStore())
+
+      act(() => {
+        result.current.setSelectedTab('updates')
+      })
+
+      expect(result.current.selectedTab).toBe('updates')
     })
   })
 })
