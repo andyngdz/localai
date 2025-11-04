@@ -3,7 +3,7 @@
   "description": "LocalAI",
   "version": "1.14.0-beta.8",
   "private": true,
-  "packageManager": "pnpm@8.15.0",
+  "packageManager": "pnpm@10.20.0",
   "author": {
     "name": "Andy D. Nguyen",
     "email": "info@andyng.dev"

@@ -4,6 +4,7 @@ import { useBackendUrl } from '@/cores/backend-initialization'
 import { GeneratorConfigFormValues } from '@/features/generator-configs'
 import { ImageGenerationStepEndResponse } from '@/types'
 import { Button, Skeleton } from '@heroui/react'
+import { isEmpty } from 'es-toolkit/compat'
 import { Download } from 'lucide-react'
 import NextImage from 'next/image'
 import { FC, useCallback, useMemo } from 'react'
@@ -24,18 +25,16 @@ export const GeneratorPreviewerItem: FC<GeneratorPreviewerItemProps> = ({
   const width = watch('width')
   const height = watch('height')
   const aspectRatio = width / height
+  const item = items[imageStepEnd.index]
 
   const onHandleDownloadImage = useCallback(() => {
-    const item = items[imageStepEnd.index]
     const url = `${baseURL}/${item.path}`
 
     onDownloadImage(url)
-  }, [baseURL, imageStepEnd, items, onDownloadImage])
+  }, [baseURL, item.path, onDownloadImage])
 
   const ImageComponent = useMemo(() => {
-    const item = items[imageStepEnd.index]
-
-    if (item.path.length > 0) {
+    if (!isEmpty(item.path)) {
       return (
         <NextImage
           src={`${baseURL}/${item.path}`}
@@ -60,15 +59,13 @@ export const GeneratorPreviewerItem: FC<GeneratorPreviewerItemProps> = ({
         fill
       />
     )
-  }, [baseURL, imageStepEnd, items])
+  }, [baseURL, imageStepEnd.image_base64, imageStepEnd.index, item.path])
 
-  const hasImage =
-    items[imageStepEnd.index]?.path.length > 0 ||
-    imageStepEnd.image_base64.length > 0
+  const hasImage = !isEmpty(item.path) || !isEmpty(imageStepEnd.image_base64)
 
   return (
     <div
-      className="relative self-start group"
+      className="relative group h-full w-full"
       style={{
         aspectRatio
       }}
