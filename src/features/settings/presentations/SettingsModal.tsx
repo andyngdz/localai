@@ -1,15 +1,15 @@
 import {
+  Divider,
   Modal,
+  ModalBody,
   ModalContent,
   ModalHeader,
-  ModalBody,
-  Tabs,
   Tab,
-  Divider
+  Tabs
 } from '@heroui/react'
-import { GeneralSettings, ModelManagement, UpdateSettings } from './tabs'
 import { FC } from 'react'
 import { SettingsTab, useSettingsStore } from '../states/useSettingsStore'
+import { GeneralSettings, ModelManagement, UpdateSettings } from './tabs'
 
 interface SettingsModalProps {
   isOpen: boolean

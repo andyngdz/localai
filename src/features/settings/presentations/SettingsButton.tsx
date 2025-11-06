@@ -1,7 +1,7 @@
 import { Button } from '@heroui/react'
 import { Settings } from 'lucide-react'
-import { SettingsModal } from './SettingsModal'
 import { useSettingsStore } from '../states/useSettingsStore'
+import { SettingsModal } from './SettingsModal'
 
 export const SettingsButton = () => {
   const { isModalOpen, openModal, closeModal } = useSettingsStore()
