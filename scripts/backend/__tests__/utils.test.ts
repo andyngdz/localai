@@ -1,5 +1,6 @@
 import { BackendStatusLevel } from '@types'
 import { mkdtempSync, rmSync } from 'node:fs'
+import { Server } from 'node:net'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -224,8 +225,7 @@ describe('utils', () => {
   })
 
   describe('findAvailablePort', () => {
-    let testServer: ReturnType<typeof import('node:net').createServer> | null =
-      null
+    let testServer: Server | null = null
 
     afterEach(async () => {
       if (testServer && testServer.listening) {
