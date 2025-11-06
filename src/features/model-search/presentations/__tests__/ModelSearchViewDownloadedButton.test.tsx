@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi, beforeEach } from 'vitest'
 import userEvent from '@testing-library/user-event'
 
 import { ButtonProps } from '@heroui/react'
@@ -30,27 +30,69 @@ vi.mock('@heroui/react', () => ({
 }))
 
 describe('ModelSearchViewDownloadedButton', () => {
-  it('renders a bordered button with correct text', () => {
-    // Arrange & Act
-    render(<ModelSearchViewDownloadedButton />)
-
-    // Assert
-    const button = screen.getByTestId('button')
-    expect(button).toBeInTheDocument()
-    expect(button).toHaveAttribute('data-variant', 'bordered')
-    expect(button).toHaveTextContent('Manage this model')
+  beforeEach(() => {
+    vi.clearAllMocks()
   })
 
-  it('opens settings modal with models tab when clicked', async () => {
-    // Arrange
-    const user = userEvent.setup()
-    render(<ModelSearchViewDownloadedButton />)
+  describe('Rendering', () => {
+    it('renders a bordered button with correct text', () => {
+      // Arrange & Act
+      render(<ModelSearchViewDownloadedButton />)
 
-    // Act
-    const button = screen.getByTestId('button')
-    await user.click(button)
+      // Assert
+      const button = screen.getByTestId('button')
+      expect(button).toBeInTheDocument()
+      expect(button).toHaveAttribute('data-variant', 'bordered')
+      expect(button).toHaveTextContent('Manage this model')
+    })
 
-    // Assert
-    expect(mockOpenModal).toHaveBeenCalledWith('models')
+    it('renders as a button element', () => {
+      render(<ModelSearchViewDownloadedButton />)
+
+      const button = screen.getByTestId('button')
+      expect(button.tagName).toBe('BUTTON')
+    })
+  })
+
+  describe('User Interaction', () => {
+    it('opens settings modal with models tab when clicked', async () => {
+      // Arrange
+      const user = userEvent.setup()
+      render(<ModelSearchViewDownloadedButton />)
+
+      // Act
+      const button = screen.getByTestId('button')
+      await user.click(button)
+
+      // Assert
+      expect(mockOpenModal).toHaveBeenCalledTimes(1)
+      expect(mockOpenModal).toHaveBeenCalledWith('models')
+    })
+
+    it('opens modal to models tab specifically, not general tab', async () => {
+      const user = userEvent.setup()
+      render(<ModelSearchViewDownloadedButton />)
+
+      const button = screen.getByTestId('button')
+      await user.click(button)
+
+      // Verify it's called with 'models' and not 'general' or 'updates'
+      expect(mockOpenModal).not.toHaveBeenCalledWith('general')
+      expect(mockOpenModal).not.toHaveBeenCalledWith('updates')
+      expect(mockOpenModal).toHaveBeenCalledWith('models')
+    })
+
+    it('can be clicked multiple times', async () => {
+      const user = userEvent.setup()
+      render(<ModelSearchViewDownloadedButton />)
+
+      const button = screen.getByTestId('button')
+      await user.click(button)
+      await user.click(button)
+      await user.click(button)
+
+      expect(mockOpenModal).toHaveBeenCalledTimes(3)
+      expect(mockOpenModal).toHaveBeenCalledWith('models')
+    })
   })
 })

@@ -9,7 +9,7 @@ export const SetupLayoutBackground = () => {
         'bg-background/70 bg-blend-overlay',
         'bg-cover bg-center'
       )}
-      style={{ backgroundImage: `url(${BackgroundImage.src})` }}
+      style={{ backgroundImage: `url(${BackgroundImage})` }}
     />
   )
 }

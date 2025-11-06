@@ -12,7 +12,7 @@ export const SettingsButton = () => {
         isIconOnly
         variant="light"
         aria-label="Settings"
-        onPress={openModal}
+        onPress={() => openModal()}
         className="text-default-700 hover:text-foreground"
       >
         <Settings size={16} />
