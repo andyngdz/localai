@@ -2,8 +2,8 @@
 
 import { StyleSection } from '@/types'
 import { Card, CardBody, CardHeader, ScrollShadow } from '@heroui/react'
-import { useVirtualizer } from '@tanstack/react-virtual'
-import { FC, useRef } from 'react'
+import { FC } from 'react'
+import { useGeneratorConfigStyleSection } from '../states/useGeneratorConfigStyleSection'
 import { GeneratorConfigStyleItem } from './GeneratorConfigStyleItem'
 
 interface GeneratorConfigStyleSectionProps {
@@ -13,16 +13,8 @@ interface GeneratorConfigStyleSectionProps {
 export const GeneratorConfigStyleSection: FC<
   GeneratorConfigStyleSectionProps
 > = ({ styleSections }) => {
-  const parentRef = useRef<HTMLDivElement>(null)
-
-  // eslint-disable-next-line react-hooks/incompatible-library
-  const rowVirtualizer = useVirtualizer({
-    count: styleSections.length,
-    getScrollElement: () => parentRef.current,
-    estimateSize: () => 200,
-    overscan: 2,
-    measureElement: (element) => element.getBoundingClientRect().height
-  })
+  const { parentRef, rowVirtualizer } =
+    useGeneratorConfigStyleSection(styleSections)
 
   return (
     <ScrollShadow ref={parentRef} className="scrollbar-thin h-full">
