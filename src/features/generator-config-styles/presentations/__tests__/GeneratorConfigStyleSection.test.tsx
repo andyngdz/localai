@@ -5,6 +5,21 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { GeneratorConfigStyleSection } from '../GeneratorConfigStyleSection'
 
+// Mock @tanstack/react-virtual
+vi.mock('@tanstack/react-virtual', () => ({
+  useVirtualizer: vi.fn((options) => ({
+    getTotalSize: () => options.count * 200,
+    getVirtualItems: () =>
+      Array.from({ length: options.count }, (_, index) => ({
+        key: index,
+        index,
+        start: index * 200,
+        size: 200
+      })),
+    measureElement: vi.fn()
+  }))
+}))
+
 // Mock the GeneratorConfigStyleItem component
 vi.mock('../GeneratorConfigStyleItem', () => ({
   GeneratorConfigStyleItem: ({ styleItem }: { styleItem: StyleItem }) => (
