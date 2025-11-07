@@ -2,13 +2,14 @@
 
 import { useDownloadWatcherStore } from '@/features/download-watcher'
 import { SetupLayout } from '@/features/setup-layout'
+import { Button } from '@heroui/react'
 import { useRouter } from 'next/navigation'
 import { useModelRecommendation } from '../states/useModelRecommendation'
 import { ModelRecommendationsList } from './ModelRecommendationsList'
 
 export const ModelRecommendations = () => {
   const router = useRouter()
-  const { onNext, data } = useModelRecommendation()
+  const { onNext, onSkip, data } = useModelRecommendation()
   const id = useDownloadWatcherStore((state) => state.id)
   const isDownloading = !!id
 
@@ -27,6 +28,11 @@ export const ModelRecommendations = () => {
             sections={data.sections}
             defaultSection={data.default_section}
           />
+        )}
+        {!isDownloading && (
+          <Button onPress={onSkip} variant="light" color="primary" size="sm">
+            Skip for now, I will download later
+          </Button>
         )}
       </div>
     </SetupLayout>
