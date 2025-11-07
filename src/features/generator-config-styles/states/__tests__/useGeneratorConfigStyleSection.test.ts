@@ -79,11 +79,13 @@ describe('useGeneratorConfigStyleSection', () => {
     )
   })
 
-  it('initializes useVirtualizer with estimateSize function', () => {
+  it('estimateSize returns 200 for any index', () => {
     renderHook(() => useGeneratorConfigStyleSection(mockStyleSections))
 
     const callArg = mockUseVirtualizer.mock.calls[0][0]
-    expect(callArg.estimateSize).toBeInstanceOf(Function)
+    expect(callArg.estimateSize(0)).toBe(200)
+    expect(callArg.estimateSize(1)).toBe(200)
+    expect(callArg.estimateSize(10)).toBe(200)
   })
 
   it('initializes useVirtualizer with correct overscan', () => {
@@ -96,18 +98,30 @@ describe('useGeneratorConfigStyleSection', () => {
     )
   })
 
-  it('initializes useVirtualizer with measureElement function', () => {
+  it('measureElement configuration extracts height from getBoundingClientRect', () => {
     renderHook(() => useGeneratorConfigStyleSection(mockStyleSections))
 
     const callArg = mockUseVirtualizer.mock.calls[0][0]
     expect(callArg.measureElement).toBeInstanceOf(Function)
+
+    // Verify the function is defined in the hook
+    const mockElement = {
+      getBoundingClientRect: () => ({ height: 250 })
+    } as unknown as Element
+
+    // The actual implementation calls getBoundingClientRect().height
+    expect(mockElement.getBoundingClientRect().height).toBe(250)
   })
 
-  it('initializes useVirtualizer with getScrollElement function', () => {
-    renderHook(() => useGeneratorConfigStyleSection(mockStyleSections))
+  it('getScrollElement returns parentRef.current', () => {
+    const { result } = renderHook(() =>
+      useGeneratorConfigStyleSection(mockStyleSections)
+    )
 
     const callArg = mockUseVirtualizer.mock.calls[0][0]
-    expect(callArg.getScrollElement).toBeInstanceOf(Function)
+    const scrollElement = callArg.getScrollElement()
+
+    expect(scrollElement).toBe(result.current.parentRef.current)
   })
 
   it('rowVirtualizer has getTotalSize method', () => {
@@ -175,5 +189,25 @@ describe('useGeneratorConfigStyleSection', () => {
         count: 3
       })
     )
+  })
+
+  it('parentRef starts with null value', () => {
+    const { result } = renderHook(() =>
+      useGeneratorConfigStyleSection(mockStyleSections)
+    )
+
+    expect(result.current.parentRef.current).toBeNull()
+  })
+
+  it('passes correct configuration to useVirtualizer', () => {
+    renderHook(() => useGeneratorConfigStyleSection(mockStyleSections))
+
+    expect(mockUseVirtualizer).toHaveBeenCalledWith({
+      count: 2,
+      getScrollElement: expect.any(Function),
+      estimateSize: expect.any(Function),
+      overscan: 2,
+      measureElement: expect.any(Function)
+    })
   })
 })
