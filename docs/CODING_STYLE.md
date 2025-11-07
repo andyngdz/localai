@@ -7,7 +7,10 @@
   - Component names should include feature prefix (e.g., `GeneratorImageRenderer`, `GeneratorImageDownloadButton` for generator feature)
 - **Commits**: Conventional format (`feat:`, `fix:`, `test:`, `chore:`)
 - **Comments**: Write what code does, not why or how. Keep short and action-focused. Use `// Step N: <action>` for workflows. Avoid redundant explanations.
-- **Simplicity**: Prefer existing simple variables over nested property access (e.g., use `model_id` instead of `modelDetails?.id` when both are available). Only render components when relevant to current state.
+- **Simplicity**:
+  - Prefer existing simple variables over nested property access (e.g., use `model_id` instead of `modelDetails?.id` when both are available)
+  - Only render components when relevant to current state
+  - Use direct function references instead of arrow functions when no arguments are needed (e.g., `onPress={openModal}` instead of `onPress={() => openModal()}`)
 - **Modular design**:
   - Break down components and functions into smaller, reusable pieces
   - Keep components focused on a single responsibility
@@ -18,3 +21,8 @@
   - Never use `any` type. Use proper types, `unknown`, or type assertions (`as Type`) instead
   - Use built-in utility types where appropriate (e.g., `VoidFunction` instead of `() => void`)
 - **Testing**: Always run tests after refactoring to ensure behavior is preserved
+- **State Management**:
+  - Use Zustand stores for shared state that needs to be accessed across components
+  - Centralize UI state (modal open/close, tab selection) in stores when multiple components need to control it
+  - Use local state (`useState`) for component-specific state that doesn't need to be shared
+  - When storing UI state in Zustand, use `partialize` to exclude it from persistence (only persist user preferences)

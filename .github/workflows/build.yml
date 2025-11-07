@@ -49,7 +49,7 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 8
+          version: 10
 
       # Step 3: Setup Node.js environment
       - name: Setup Node.js
@@ -141,7 +141,7 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 8
+          version: 10
 
       # Step 3: Setup Node.js environment
       - name: Setup Node.js
