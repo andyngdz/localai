@@ -9,6 +9,7 @@ export interface UseGeneratorConfigStyleSearchResult {
   onClear: VoidFunction
   filteredSections: StyleSection[]
   hasResults: boolean
+  isEmptyState: boolean
 }
 
 export const useGeneratorConfigStyleSearch = (
@@ -54,11 +55,15 @@ export const useGeneratorConfigStyleSearch = (
 
   const onClear = () => setQuery('')
 
+  const hasResults = !isEmpty(filteredSections)
+  const isEmptyState = !hasResults && !isEmpty(query)
+
   return {
     query,
     setQuery,
     onClear,
     filteredSections,
-    hasResults: !isEmpty(filteredSections)
+    hasResults,
+    isEmptyState
   }
 }

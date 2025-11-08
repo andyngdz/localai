@@ -242,4 +242,40 @@ describe('useGeneratorConfigStyleSearch', () => {
       expect(result.current.filteredSections).toEqual(mockStyleSections)
     })
   })
+
+  it('returns isEmptyState as false when query is empty', () => {
+    const { result } = renderHook(() =>
+      useGeneratorConfigStyleSearch(mockStyleSections)
+    )
+
+    expect(result.current.isEmptyState).toBe(false)
+  })
+
+  it('returns isEmptyState as false when query has results', async () => {
+    const { result } = renderHook(() =>
+      useGeneratorConfigStyleSearch(mockStyleSections)
+    )
+
+    act(() => {
+      result.current.setQuery('portrait')
+    })
+
+    await waitFor(() => {
+      expect(result.current.isEmptyState).toBe(false)
+    })
+  })
+
+  it('returns isEmptyState as true when query has no results', async () => {
+    const { result } = renderHook(() =>
+      useGeneratorConfigStyleSearch(mockStyleSections)
+    )
+
+    act(() => {
+      result.current.setQuery('nonexistent')
+    })
+
+    await waitFor(() => {
+      expect(result.current.isEmptyState).toBe(true)
+    })
+  })
 })

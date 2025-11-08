@@ -7,7 +7,6 @@ import {
   ModalHeader,
   ModalProps
 } from '@heroui/react'
-import { isEmpty } from 'es-toolkit/compat'
 import { FC, useMemo } from 'react'
 import { useGeneratorConfigStyleSearch } from '../states'
 import { GeneratorConfigStyleEmptyState } from './GeneratorConfigStyleEmptyState'
@@ -23,10 +22,8 @@ export const GeneratorConfigStyleModal: FC<GeneratorConfigStyleModalProps> = ({
   styleSections,
   ...restProps
 }) => {
-  const { query, setQuery, onClear, filteredSections, hasResults } =
+  const { query, setQuery, onClear, filteredSections, isEmptyState } =
     useGeneratorConfigStyleSearch(styleSections)
-
-  const isEmptyState = !hasResults && !isEmpty(query)
 
   const content = useMemo(() => {
     if (isEmptyState) {
