@@ -429,7 +429,13 @@ describe('GeneratorConfigStyleModal', () => {
       const searchInput = screen.getByTestId('search-input-field')
       await user.type(searchInput, 'nonexistent')
 
-      expect(screen.queryByTestId('empty-state')).toBeInTheDocument()
+      await vi.waitFor(
+        () => {
+          expect(screen.queryByTestId('empty-state')).toBeInTheDocument()
+        },
+        { timeout: 500 }
+      )
+
       expect(
         screen.queryByTestId('generator-config-style-section')
       ).not.toBeInTheDocument()

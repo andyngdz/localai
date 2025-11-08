@@ -16,7 +16,6 @@ export const GeneratorConfigStyleSearchInput: FC<
 > = ({ value, onChange, onClear }) => {
   return (
     <Input
-      variant="bordered"
       placeholder="Search styles by name, category, or keywords..."
       value={value}
       onValueChange={onChange}
