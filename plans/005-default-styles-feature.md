@@ -87,9 +87,18 @@ export const DEFAULT_STYLE_IDS = [
 ] as const
 
 export type DefaultStyleId = (typeof DEFAULT_STYLE_IDS)[number]
+
+/**
+ * localStorage key for tracking if defaults have been applied
+ * Namespaced to prevent collisions with other features
+ */
+export const DEFAULTS_APPLIED_STORAGE_KEY =
+  'generator-config-styles:defaults-applied'
 ```
 
 **Tests**: Not needed for constants
+
+**Note**: The localStorage key is defined as a constant to avoid magic strings and improve maintainability.
 
 ---
 
@@ -127,7 +136,7 @@ import { useLocalStorage } from 'react-use'
 import { useStyleSections } from '@/cores/hooks'
 import type { GeneratorConfigFormValues } from '@/features/generator-configs'
 
-import { DEFAULT_STYLE_IDS } from '../constants'
+import { DEFAULT_STYLE_IDS, DEFAULTS_APPLIED_STORAGE_KEY } from '../constants'
 
 /**
  * Applies default styles on first visit when styles array is empty
@@ -138,7 +147,7 @@ export const useDefaultStyles = () => {
   const styles = watch('styles', [])
   const { styleItems } = useStyleSections()
   const [defaultsApplied, setDefaultsApplied] = useLocalStorage(
-    'defaults-applied',
+    DEFAULTS_APPLIED_STORAGE_KEY,
     false
   )
 
@@ -300,7 +309,10 @@ export { useGeneratorConfigStyleSection } from './useGeneratorConfigStyleSection
 **Content**:
 
 ```typescript
-export { DEFAULT_STYLE_IDS } from './default-styles'
+export {
+  DEFAULT_STYLE_IDS,
+  DEFAULTS_APPLIED_STORAGE_KEY
+} from './default-styles'
 export type { DefaultStyleId } from './default-styles'
 ```
 
@@ -400,8 +412,9 @@ All checks passed:
 1. **Persistence Strategy: useLocalStorage over useRef**
    - **Issue**: Initial implementation used `useRef` to track if defaults were applied
    - **Problem**: State doesn't persist across page reloads - defaults would re-apply on refresh
-   - **Solution**: Switched to `useLocalStorage('defaults-applied', false)` from react-use
+   - **Solution**: Switched to `useLocalStorage('generator-config-styles:defaults-applied', false)` from react-use
    - **Result**: True one-time application that survives browser reloads
+   - **localStorage Key Naming**: Use namespaced keys (feature:purpose) to prevent collisions across features
 
 2. **Design Simplification: YAGNI Principle**
    - **Original Plan**: Track model changes and re-apply defaults when model switches

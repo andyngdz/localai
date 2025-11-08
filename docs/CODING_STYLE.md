@@ -29,6 +29,8 @@
   - Use local state (`useState`) for component-specific state that doesn't need to be shared
   - When storing UI state in Zustand, use `partialize` to exclude it from persistence (only persist user preferences)
   - For simple persistent state within a single component, prefer `useLocalStorage` from `react-use` over `useRef` when state must survive page reloads
+  - **localStorage Key Naming**: Use namespaced keys in the format `feature-name:purpose` to prevent collisions (e.g., `'generator-config-styles:defaults-applied'` instead of `'defaults-applied'`)
+  - **Avoid Magic Strings**: Define localStorage keys and other repeated strings as constants to improve maintainability and prevent typos (e.g., `const DEFAULTS_APPLIED_STORAGE_KEY = 'generator-config-styles:defaults-applied'`)
 - **Import Organization**:
   - Use barrel exports (index.ts files) for cleaner imports
   - Prefer `from '../constants'` over `from '../constants/specific-file'` when barrel export exists

@@ -1,7 +1,7 @@
 import { useStyleSections } from '@/cores/hooks/useStyleSections'
 import { Button, Skeleton, useDisclosure } from '@heroui/react'
 import { Plus } from 'lucide-react'
-import { useDefaultStyles } from '../states/useDefaultStyles'
+import { useDefaultStyles } from '../states'
 import { GeneratorConfigStyleModal } from './GeneratorConfigStyleModal'
 import { GeneratorConfigStyleSelectedPreviewer } from './GeneratorConfigStyleSelectedPreviewer'
 

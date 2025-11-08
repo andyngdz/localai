@@ -6,7 +6,7 @@ import { useLocalStorage } from 'react-use'
 import { useStyleSections } from '@/cores/hooks'
 import type { GeneratorConfigFormValues } from '@/features/generator-configs'
 
-import { DEFAULT_STYLE_IDS } from '../constants'
+import { DEFAULT_STYLE_IDS, DEFAULTS_APPLIED_STORAGE_KEY } from '../constants'
 
 /**
  * Applies default styles on first visit when styles array is empty
@@ -17,7 +17,7 @@ export const useDefaultStyles = () => {
   const styles = watch('styles', [])
   const { styleItems } = useStyleSections()
   const [defaultsApplied, setDefaultsApplied] = useLocalStorage(
-    'defaults-applied',
+    DEFAULTS_APPLIED_STORAGE_KEY,
     false
   )
 
