@@ -17,16 +17,19 @@ export const HistoryItemContainer: FC<HistoryItemProps> = ({ history }) => {
   const baseURL = useBackendUrl()
   const { openPhotoview } = useHistoryPhotoviewStore()
 
+  const formattedTime = dateFormatter.time(`${history.created_at}Z`)
+  const ariaLabel = `View details for ${history.model} generated at ${formattedTime}`
+
   return (
     <Card
       isPressable
       onPress={() => openPhotoview(history.id)}
-      aria-label={`View details for ${history.model} generated at ${dateFormatter.time(`${history.created_at}Z`)}`}
+      aria-label={ariaLabel}
       radius="none"
     >
       <CardHeader className="flex items-center justify-between gap-2">
         <span className="text-default-700 font-bold text-sm">
-          {dateFormatter.time(`${history.created_at}Z`)}
+          {formattedTime}
         </span>
         <HistoryUseConfigButton history={history} />
       </CardHeader>
