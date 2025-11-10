@@ -1,8 +1,17 @@
 import { Button } from '@heroui/react'
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
+import { FC } from 'react'
 import { useSwiper } from 'swiper/react'
 
-export const GeneratorPreviewerSliderActions = () => {
+interface SwiperNavigationActionsProps {
+  previousLabel?: string
+  nextLabel?: string
+}
+
+export const SwiperNavigationActions: FC<SwiperNavigationActionsProps> = ({
+  previousLabel = 'Previous',
+  nextLabel = 'Next'
+}) => {
   const swiper = useSwiper()
 
   const onPrevious = () => {
@@ -14,14 +23,14 @@ export const GeneratorPreviewerSliderActions = () => {
   }
 
   return (
-    <div className="absolute inset-4 flex items-center justify-between">
+    <div className="absolute inset-4 flex items-center justify-between pointer-events-none">
       <Button
         isIconOnly
         variant="flat"
         color="default"
         onPress={onPrevious}
-        className="z-10"
-        aria-label="Previous image"
+        className="z-10 pointer-events-auto"
+        aria-label={previousLabel}
       >
         <ChevronLeftIcon />
       </Button>
@@ -30,8 +39,8 @@ export const GeneratorPreviewerSliderActions = () => {
         variant="flat"
         color="default"
         onPress={onNext}
-        className="z-10"
-        aria-label="Next image"
+        className="z-10 pointer-events-auto"
+        aria-label={nextLabel}
       >
         <ChevronRightIcon />
       </Button>

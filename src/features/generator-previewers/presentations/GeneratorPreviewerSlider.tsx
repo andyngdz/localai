@@ -2,6 +2,7 @@
 
 import 'swiper/css'
 
+import { SwiperNavigationActions } from '@/cores/presentations'
 import { ScrollShadow } from '@heroui/react'
 import { isEmpty } from 'es-toolkit/compat'
 import { useMemo } from 'react'
@@ -9,7 +10,6 @@ import { Keyboard, Mousewheel } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { useGeneratorPreviewer } from '../states'
 import { GeneratorPreviewerItem } from './GeneratorPreviewerItem'
-import { GeneratorPreviewerSliderActions } from './GeneratorPreviewerSliderActions'
 
 export const GeneratorPreviewerSlider = () => {
   const { imageStepEnds } = useGeneratorPreviewer()
@@ -56,7 +56,10 @@ export const GeneratorPreviewerSlider = () => {
         loop
       >
         {ImageSlides}
-        <GeneratorPreviewerSliderActions />
+        <SwiperNavigationActions
+          previousLabel="Previous image"
+          nextLabel="Next image"
+        />
       </Swiper>
     </ScrollShadow>
   )

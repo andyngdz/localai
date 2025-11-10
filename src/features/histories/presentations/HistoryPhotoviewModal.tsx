@@ -17,7 +17,8 @@ export const HistoryPhotoviewModal = () => {
       scrollBehavior="inside"
       aria-label="History photo viewer"
       classNames={{
-        body: 'p-0'
+        body: 'p-0',
+        closeButton: 'z-50'
       }}
     >
       <ModalContent>

@@ -3,54 +3,14 @@
 import 'swiper/css'
 
 import { useHistoriesQuery } from '@/cores/api-queries'
-import { Button } from '@heroui/react'
-import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
+import { SwiperNavigationActions } from '@/cores/presentations'
 import { FC, useMemo } from 'react'
 import { Keyboard, Mousewheel } from 'swiper/modules'
-import { Swiper, SwiperSlide, useSwiper } from 'swiper/react'
+import { Swiper, SwiperSlide } from 'swiper/react'
 import { HistoryPhotoviewCard } from './HistoryPhotoviewCard'
 
 interface HistoryPhotoviewCarouselProps {
   currentHistoryId: number | null
-}
-
-interface HistoryPhotoviewNavigationProps {
-  shouldShow: boolean
-}
-
-const HistoryPhotoviewNavigation: FC<HistoryPhotoviewNavigationProps> = ({
-  shouldShow
-}) => {
-  const swiper = useSwiper()
-
-  if (!shouldShow) {
-    return null
-  }
-
-  return (
-    <div className="absolute inset-4 flex items-center justify-between pointer-events-none">
-      <Button
-        isIconOnly
-        variant="flat"
-        color="default"
-        onPress={() => swiper.slidePrev()}
-        className="z-10 pointer-events-auto"
-        aria-label="Previous history"
-      >
-        <ChevronLeftIcon />
-      </Button>
-      <Button
-        isIconOnly
-        variant="flat"
-        color="default"
-        onPress={() => swiper.slideNext()}
-        className="z-10 pointer-events-auto"
-        aria-label="Next history"
-      >
-        <ChevronRightIcon />
-      </Button>
-    </div>
-  )
 }
 
 export const HistoryPhotoviewCarousel: FC<HistoryPhotoviewCarouselProps> = ({
@@ -97,7 +57,12 @@ export const HistoryPhotoviewCarousel: FC<HistoryPhotoviewCarouselProps> = ({
       style={{ width: '100%', overflow: 'hidden' }}
     >
       {slides}
-      <HistoryPhotoviewNavigation shouldShow={hasMultipleHistories} />
+      {hasMultipleHistories && (
+        <SwiperNavigationActions
+          previousLabel="Previous history"
+          nextLabel="Next history"
+        />
+      )}
     </Swiper>
   )
 }
