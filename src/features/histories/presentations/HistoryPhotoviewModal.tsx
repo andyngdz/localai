@@ -15,6 +15,7 @@ export const HistoryPhotoviewModal = () => {
       size="full"
       backdrop="blur"
       scrollBehavior="inside"
+      aria-label="History photo viewer"
       classNames={{
         body: 'p-0'
       }}

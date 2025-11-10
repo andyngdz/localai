@@ -18,7 +18,11 @@ export const HistoryItemContainer: FC<HistoryItemProps> = ({ history }) => {
   const { openPhotoview } = useHistoryPhotoviewStore()
 
   return (
-    <Card isPressable onPress={() => openPhotoview(history.id)}>
+    <Card
+      isPressable
+      onPress={() => openPhotoview(history.id)}
+      aria-label={`View details for ${history.model} generated at ${dateFormatter.time(`${history.created_at}Z`)}`}
+    >
       <CardHeader className="flex items-center justify-between gap-2">
         <span className="text-default-700 font-bold text-sm">
           {dateFormatter.time(`${history.created_at}Z`)}
