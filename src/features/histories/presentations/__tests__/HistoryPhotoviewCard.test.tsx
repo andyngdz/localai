@@ -26,7 +26,7 @@ vi.mock('../HistoryPhotoviewConfigRow', () => ({
     value: string | number | string[]
   }) => (
     <div data-testid="config-row" data-label={label} data-value={String(value)}>
-      {label}: {String(value)}
+      {label} {String(value)}
     </div>
   )
 }))
@@ -116,21 +116,29 @@ describe('HistoryPhotoviewCard', () => {
   })
 
   it('should render all config rows', () => {
-    render(<HistoryPhotoviewCard history={mockHistory} />)
+    const { container } = render(<HistoryPhotoviewCard history={mockHistory} />)
 
     const configRows = screen.getAllByTestId('config-row')
     expect(configRows.length).toBeGreaterThan(10)
 
-    expect(screen.getByText(/Prompt:/)).toBeInTheDocument()
-    expect(screen.getByText(/Width:/)).toBeInTheDocument()
-    expect(screen.getByText(/Height:/)).toBeInTheDocument()
-    expect(screen.getByText(/Steps:/)).toBeInTheDocument()
-    expect(screen.getByText(/CFG Scale:/)).toBeInTheDocument()
-    expect(screen.getByText(/Sampler:/)).toBeInTheDocument()
-    expect(screen.getByText(/Seed:/)).toBeInTheDocument()
-    expect(screen.getByText(/Number of Images:/)).toBeInTheDocument()
-    expect(screen.getByText(/Hires Fix:/)).toBeInTheDocument()
-    expect(screen.getByText(/Styles:/)).toBeInTheDocument()
+    expect(container.querySelector('[data-label="Prompt"]')).toBeInTheDocument()
+    expect(container.querySelector('[data-label="Width"]')).toBeInTheDocument()
+    expect(container.querySelector('[data-label="Height"]')).toBeInTheDocument()
+    expect(container.querySelector('[data-label="Steps"]')).toBeInTheDocument()
+    expect(
+      container.querySelector('[data-label="CFG Scale"]')
+    ).toBeInTheDocument()
+    expect(
+      container.querySelector('[data-label="Sampler"]')
+    ).toBeInTheDocument()
+    expect(container.querySelector('[data-label="Seed"]')).toBeInTheDocument()
+    expect(
+      container.querySelector('[data-label="Number of Images"]')
+    ).toBeInTheDocument()
+    expect(
+      container.querySelector('[data-label="Hires Fix"]')
+    ).toBeInTheDocument()
+    expect(container.querySelector('[data-label="Styles"]')).toBeInTheDocument()
   })
 
   it('should display "Random" for seed value -1', () => {

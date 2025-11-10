@@ -263,10 +263,12 @@ describe('HistoryItemContainer', () => {
       ]
     }
 
-    const { container } = render(<HistoryItemContainer history={mockHistory} />)
+    render(<HistoryItemContainer history={mockHistory} />)
 
-    expect(container.querySelector('[class*="CardHeader"]')).toBeInTheDocument()
-    expect(container.querySelector('[class*="CardBody"]')).toBeInTheDocument()
-    expect(container.querySelector('[class*="CardFooter"]')).toBeInTheDocument()
+    expect(screen.getByText('10:00 AM')).toBeInTheDocument()
+    expect(screen.getByText('test-model')).toBeInTheDocument()
+    expect(screen.getByText('Test prompt')).toBeInTheDocument()
+    expect(screen.getByTestId('use-config-button')).toBeInTheDocument()
+    expect(screen.getByTestId('next-image')).toBeInTheDocument()
   })
 })
