@@ -34,6 +34,20 @@ vi.mock('framer-motion', async () => {
   }
 })
 
+// Mock react-lottie to prevent canvas context issues during tests
+vi.mock('react-lottie', () => ({
+  default: () => ({
+    type: 'div',
+    props: { 'data-testid': 'lottie-animation' },
+    children: 'AI Animation'
+  })
+}))
+
+// Mock lottie animation data
+vi.mock('@/assets/ai.json', () => ({
+  default: { mockAnimationData: true }
+}))
+
 /**
  * ElectronAPI Mock
  * Provides a mock implementation of the Electron API for testing
