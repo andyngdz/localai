@@ -4,16 +4,9 @@ import { dateFormatter } from '@/services'
 import { HistoryItem } from '@/types'
 import { HistoryPhotoviewCard } from '../HistoryPhotoviewCard'
 
-vi.mock('next/image', () => ({
-  __esModule: true,
-  default: ({ src, alt }: { src: string; alt: string }) => (
-    <div data-testid="next-image" data-src={src} data-alt={alt} />
-  )
-}))
-
 vi.mock('@/services', () => ({
   dateFormatter: {
-    time: vi.fn().mockReturnValue('2024-01-15 10:30 AM')
+    datetime: vi.fn().mockReturnValue('Jan 15, 2024 at 10:30')
   }
 }))
 
@@ -29,6 +22,17 @@ vi.mock('../HistoryPhotoviewConfigRow', () => ({
       {label} {String(value)}
     </div>
   )
+}))
+
+vi.mock('../HistoryPhotoviewImageGrid', () => ({
+  HistoryPhotoviewImageGrid: ({ images }: { images: unknown[] }) =>
+    images.length > 0 ? (
+      <div data-testid="image-grid" data-count={images.length}>
+        {images.map((_, index) => (
+          <div key={index} data-testid="next-image" />
+        ))}
+      </div>
+    ) : null
 }))
 
 describe('HistoryPhotoviewCard', () => {
@@ -73,29 +77,20 @@ describe('HistoryPhotoviewCard', () => {
     ]
   }
 
-  it('should render header with formatted time and model', () => {
+  it('should render header with formatted datetime and model', () => {
     render(<HistoryPhotoviewCard history={mockHistory} />)
 
-    expect(dateFormatter.time).toHaveBeenCalledWith('2024-01-15T10:30:00Z')
-    expect(screen.getByText('2024-01-15 10:30 AM')).toBeInTheDocument()
+    expect(dateFormatter.datetime).toHaveBeenCalledWith('2024-01-15T10:30:00Z')
+    expect(screen.getByText('Jan 15, 2024 at 10:30')).toBeInTheDocument()
     expect(screen.getByText('stable-diffusion-v1-5')).toBeInTheDocument()
   })
 
   it('should render generated images grid', () => {
     render(<HistoryPhotoviewCard history={mockHistory} />)
 
-    const images = screen.getAllByTestId('next-image')
-    expect(images).toHaveLength(2)
-    expect(images[0]).toHaveAttribute(
-      'data-src',
-      'http://localhost:8000/static/images/image1.png'
-    )
-    expect(images[0]).toHaveAttribute('data-alt', 'Generated image 1')
-    expect(images[1]).toHaveAttribute(
-      'data-src',
-      'http://localhost:8000/static/images/image2.png'
-    )
-    expect(images[1]).toHaveAttribute('data-alt', 'Generated image 2')
+    const imageGrid = screen.getByTestId('image-grid')
+    expect(imageGrid).toBeInTheDocument()
+    expect(imageGrid).toHaveAttribute('data-count', '2')
   })
 
   it('should not render images grid when no images', () => {
@@ -106,7 +101,7 @@ describe('HistoryPhotoviewCard', () => {
 
     render(<HistoryPhotoviewCard history={historyWithoutImages} />)
 
-    expect(screen.queryByTestId('next-image')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('image-grid')).not.toBeInTheDocument()
   })
 
   it('should render Configuration section header', () => {
@@ -233,8 +228,8 @@ describe('HistoryPhotoviewCard', () => {
 
     render(<HistoryPhotoviewCard history={historyWithManyImages} />)
 
-    const images = screen.getAllByTestId('next-image')
-    expect(images).toHaveLength(4)
+    const imageGrid = screen.getByTestId('image-grid')
+    expect(imageGrid).toHaveAttribute('data-count', '4')
   })
 
   it('should render model in both header and config', () => {
