@@ -17,6 +17,22 @@
 - Update tests when behavior/API contracts change
 - Simplify tests when implementation simplifies
 - Prefer editing existing files over creating new ones
+- **Component Encapsulation**: Use hooks internally instead of passing derived values as props
+
+  ```typescript
+  // ✅ Good - component encapsulates its own dependencies
+  export const ImageGrid: FC<{ images: Image[] }> = ({ images }) => {
+    const baseURL = useBackendUrl()
+    return <div>{/* render images with baseURL */}</div>
+  }
+
+  // ❌ Avoid - unnecessary prop drilling
+  export const ImageGrid: FC<{ images: Image[]; baseURL: string }> = ({ images, baseURL }) => {
+    return <div>{/* render images */}</div>
+  }
+  ```
+
+- **Type Consistency**: Ensure types are used consistently across components and their test files
 
 **Extract duplicated configuration:**
 
