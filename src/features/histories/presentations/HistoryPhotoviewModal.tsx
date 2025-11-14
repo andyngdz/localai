@@ -8,6 +8,8 @@ export const HistoryPhotoviewModal = () => {
   const { isOpen, currentHistoryId, closePhotoview } =
     useHistoryPhotoviewStore()
 
+  if (!currentHistoryId) return null
+
   return (
     <Modal
       isOpen={isOpen}

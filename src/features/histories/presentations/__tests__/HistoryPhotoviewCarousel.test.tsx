@@ -120,7 +120,7 @@ describe('HistoryPhotoviewCarousel', () => {
       error: null
     } as never)
 
-    render(<HistoryPhotoviewCarousel currentHistoryId={null} />)
+    render(<HistoryPhotoviewCarousel currentHistoryId={1} />)
 
     expect(screen.getByText('No history items to display')).toBeInTheDocument()
   })
@@ -132,7 +132,7 @@ describe('HistoryPhotoviewCarousel', () => {
       error: null
     } as never)
 
-    render(<HistoryPhotoviewCarousel currentHistoryId={null} />)
+    render(<HistoryPhotoviewCarousel currentHistoryId={1} />)
 
     const cards = screen.getAllByTestId('history-card')
     expect(cards).toHaveLength(3)
@@ -148,7 +148,7 @@ describe('HistoryPhotoviewCarousel', () => {
       error: null
     } as never)
 
-    render(<HistoryPhotoviewCarousel currentHistoryId={null} />)
+    render(<HistoryPhotoviewCarousel currentHistoryId={1} />)
 
     const swiper = screen.getByTestId('swiper')
     expect(swiper).toHaveAttribute('data-loop', 'true')
@@ -161,23 +161,10 @@ describe('HistoryPhotoviewCarousel', () => {
       error: null
     } as never)
 
-    render(<HistoryPhotoviewCarousel currentHistoryId={null} />)
+    render(<HistoryPhotoviewCarousel currentHistoryId={1} />)
 
     const swiper = screen.getByTestId('swiper')
     expect(swiper).toHaveAttribute('data-loop', 'false')
-  })
-
-  it('should set initial slide to 0 when currentHistoryId is null', () => {
-    vi.mocked(useHistoriesQuery).mockReturnValue({
-      data: mockHistories,
-      isLoading: false,
-      error: null
-    } as never)
-
-    render(<HistoryPhotoviewCarousel currentHistoryId={null} />)
-
-    const swiper = screen.getByTestId('swiper')
-    expect(swiper).toHaveAttribute('data-initial-slide', '0')
   })
 
   it('should set initial slide based on currentHistoryId', () => {
@@ -213,7 +200,7 @@ describe('HistoryPhotoviewCarousel', () => {
       error: null
     } as never)
 
-    render(<HistoryPhotoviewCarousel currentHistoryId={null} />)
+    render(<HistoryPhotoviewCarousel currentHistoryId={1} />)
 
     expect(
       screen.getByRole('button', { name: /previous history/i })
@@ -230,7 +217,7 @@ describe('HistoryPhotoviewCarousel', () => {
       error: null
     } as never)
 
-    render(<HistoryPhotoviewCarousel currentHistoryId={null} />)
+    render(<HistoryPhotoviewCarousel currentHistoryId={1} />)
 
     expect(
       screen.queryByRole('button', { name: /previous history/i })
@@ -247,7 +234,7 @@ describe('HistoryPhotoviewCarousel', () => {
       error: null
     } as never)
 
-    render(<HistoryPhotoviewCarousel currentHistoryId={null} />)
+    render(<HistoryPhotoviewCarousel currentHistoryId={1} />)
 
     const slides = screen.getAllByTestId('swiper-slide')
     expect(slides).toHaveLength(3)
@@ -260,7 +247,7 @@ describe('HistoryPhotoviewCarousel', () => {
       error: null
     } as never)
 
-    render(<HistoryPhotoviewCarousel currentHistoryId={null} />)
+    render(<HistoryPhotoviewCarousel currentHistoryId={1} />)
 
     expect(screen.getByText('No history items to display')).toBeInTheDocument()
   })

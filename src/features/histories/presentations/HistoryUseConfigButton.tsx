@@ -15,14 +15,7 @@ export const HistoryUseConfigButton: FC<HistoryUseConfigButtonProps> = ({
 
   return (
     <Tooltip content="Use this config">
-      <Button
-        as="div"
-        isIconOnly
-        variant="light"
-        size="sm"
-        onPress={onUseConfig}
-        aria-label="Use this config"
-      >
+      <Button isIconOnly variant="light" size="sm" onPress={onUseConfig}>
         <Bolt className="text-default-700" size={16} />
       </Button>
     </Tooltip>

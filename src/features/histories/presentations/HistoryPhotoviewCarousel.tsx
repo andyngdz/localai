@@ -11,7 +11,7 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { HistoryPhotoviewCard } from './HistoryPhotoviewCard'
 
 interface HistoryPhotoviewCarouselProps {
-  currentHistoryId: number | null
+  currentHistoryId: number
 }
 
 export const HistoryPhotoviewCarousel: FC<HistoryPhotoviewCarouselProps> = ({
