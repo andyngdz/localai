@@ -28,7 +28,7 @@ export const HistoryPhotoviewCarousel: FC<HistoryPhotoviewCarouselProps> = ({
 
   const slides = useMemo(() => {
     return histories.map((history) => (
-      <SwiperSlide key={history.id} className="h-full">
+      <SwiperSlide key={history.id}>
         <HistoryPhotoviewCard history={history} />
       </SwiperSlide>
     ))
@@ -52,9 +52,8 @@ export const HistoryPhotoviewCarousel: FC<HistoryPhotoviewCarouselProps> = ({
         onlyInViewport: true
       }}
       initialSlide={initialSlide}
-      className="h-full w-full"
+      className="w-full"
       loop={hasMultipleHistories}
-      style={{ width: '100%', overflow: 'hidden' }}
     >
       {slides}
       {hasMultipleHistories && (

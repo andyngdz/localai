@@ -14,9 +14,9 @@ export const HistoryPhotoviewModal = () => {
     <Modal
       isOpen={isOpen}
       onClose={closePhotoview}
-      size="full"
+      size="5xl"
       backdrop="blur"
-      scrollBehavior="inside"
+      scrollBehavior="outside"
       aria-label="History photo viewer"
       classNames={{
         body: 'p-0',
