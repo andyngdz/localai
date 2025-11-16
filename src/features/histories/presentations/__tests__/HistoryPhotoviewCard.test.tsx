@@ -35,6 +35,12 @@ vi.mock('../HistoryPhotoviewImageGrid', () => ({
     ) : null
 }))
 
+vi.mock('../HistoryUseConfigButton', () => ({
+  HistoryUseConfigButton: () => (
+    <button data-testid="use-config-button">Use Config</button>
+  )
+}))
+
 describe('HistoryPhotoviewCard', () => {
   const mockHistory: HistoryItem = {
     id: 1,
@@ -83,6 +89,12 @@ describe('HistoryPhotoviewCard', () => {
     expect(dateFormatter.datetime).toHaveBeenCalledWith('2024-01-15T10:30:00Z')
     expect(screen.getByText('Jan 15, 2024 at 10:30')).toBeInTheDocument()
     expect(screen.getByText('stable-diffusion-v1-5')).toBeInTheDocument()
+  })
+
+  it('should render Use Config button in header', () => {
+    render(<HistoryPhotoviewCard history={mockHistory} />)
+
+    expect(screen.getByTestId('use-config-button')).toBeInTheDocument()
   })
 
   it('should render generated images grid', () => {
