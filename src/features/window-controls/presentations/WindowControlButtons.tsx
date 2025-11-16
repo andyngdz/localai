@@ -2,26 +2,26 @@
 
 import { Button } from '@heroui/react'
 import { Minus, Square, X } from 'lucide-react'
-import { useWindowState } from '../states/useWindowState'
 import { NO_DRAG_CLASS } from '../constants'
+import { useWindowStore } from '../states/useWindowStore'
 
 export const WindowControlButtons = () => {
-  const isMaximized = useWindowState((state) => state.isMaximized)
+  const isMaximized = useWindowStore((state) => state.isMaximized)
 
   const handleMinimize = () => {
-    window.electronAPI?.window.minimize().catch(console.error)
+    window.electronAPI.window.minimize().catch(console.error)
   }
 
   const handleToggleMaximize = () => {
     if (isMaximized) {
-      window.electronAPI?.window.unmaximize().catch(console.error)
+      window.electronAPI.window.unmaximize().catch(console.error)
     } else {
-      window.electronAPI?.window.maximize().catch(console.error)
+      window.electronAPI.window.maximize().catch(console.error)
     }
   }
 
   const handleClose = () => {
-    window.electronAPI?.window.close().catch(console.error)
+    window.electronAPI.window.close().catch(console.error)
   }
 
   return (

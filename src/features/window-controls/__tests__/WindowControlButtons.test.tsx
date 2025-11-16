@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { useWindowState } from '../states/useWindowState'
 import { WindowControlButtons } from '../presentations/WindowControlButtons'
+import { useWindowStore } from '../states/useWindowStore'
 
 describe('WindowControlButtons', () => {
   const mockWindowAPI = {
@@ -16,7 +16,7 @@ describe('WindowControlButtons', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    useWindowState.setState({ isMaximized: false })
+    useWindowStore.setState({ isMaximized: false })
 
     global.window.electronAPI = {
       window: mockWindowAPI
@@ -42,7 +42,7 @@ describe('WindowControlButtons', () => {
 
   it('calls maximize when maximize button is clicked and window is not maximized', async () => {
     const user = userEvent.setup()
-    useWindowState.setState({ isMaximized: false })
+    useWindowStore.setState({ isMaximized: false })
     render(<WindowControlButtons />)
 
     await user.click(screen.getByLabelText('Maximize window'))
@@ -53,7 +53,7 @@ describe('WindowControlButtons', () => {
 
   it('calls unmaximize when maximize button is clicked and window is maximized', async () => {
     const user = userEvent.setup()
-    useWindowState.setState({ isMaximized: true })
+    useWindowStore.setState({ isMaximized: true })
     render(<WindowControlButtons />)
 
     await user.click(screen.getByLabelText('Restore window'))
@@ -76,7 +76,7 @@ describe('WindowControlButtons', () => {
 
     expect(screen.getByLabelText('Maximize window')).toBeInTheDocument()
 
-    useWindowState.setState({ isMaximized: true })
+    useWindowStore.setState({ isMaximized: true })
     rerender(<WindowControlButtons />)
 
     expect(screen.getByLabelText('Restore window')).toBeInTheDocument()

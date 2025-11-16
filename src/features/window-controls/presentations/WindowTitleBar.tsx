@@ -1,8 +1,8 @@
 'use client'
 
-import { useWindowMaximizedListener } from '../states/useWindowState'
-import { WindowControlButtons } from './WindowControlButtons'
 import { DRAG_REGION_CLASS, TITLE_BAR_HEIGHT } from '../constants'
+import { useWindowMaximizedListener } from '../states/useWindowMaximizedListener'
+import { WindowControlButtons } from './WindowControlButtons'
 
 interface WindowTitleBarProps {
   currentSection?: string
