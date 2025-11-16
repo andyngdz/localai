@@ -132,6 +132,12 @@ class API {
     return data
   }
 
+  async deleteHistory(history_id: number) {
+    const { data } = await client.delete(`/histories/${history_id}`)
+
+    return data
+  }
+
   async deleteModel(model_id: string) {
     const { data } = await client.delete(`/models?model_id=${model_id}`)
 

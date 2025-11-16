@@ -41,6 +41,10 @@ vi.mock('../HistoryUseConfigButton', () => ({
   )
 }))
 
+vi.mock('../HistoryDeleteButton', () => ({
+  HistoryDeleteButton: () => <button data-testid="delete-button">Delete</button>
+}))
+
 describe('HistoryPhotoviewCard', () => {
   const mockHistory: HistoryItem = {
     id: 1,
@@ -95,6 +99,12 @@ describe('HistoryPhotoviewCard', () => {
     render(<HistoryPhotoviewCard history={mockHistory} />)
 
     expect(screen.getByTestId('use-config-button')).toBeInTheDocument()
+  })
+
+  it('should render Delete button in header', () => {
+    render(<HistoryPhotoviewCard history={mockHistory} />)
+
+    expect(screen.getByTestId('delete-button')).toBeInTheDocument()
   })
 
   it('should render generated images grid', () => {

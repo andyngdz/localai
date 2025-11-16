@@ -6,6 +6,12 @@ import { HistoryPhotoviewModal } from '../HistoryPhotoviewModal'
 
 vi.mock('@/cores/api-queries')
 vi.mock('../../states/useHistoryPhotoviewStore')
+vi.mock('../../states/useDeleteHistory', () => ({
+  useDeleteHistory: () => ({
+    mutate: vi.fn(),
+    isPending: false
+  })
+}))
 
 const mockHistories = [
   {
