@@ -15,7 +15,7 @@ export const HistoryPhotoviewImageGrid: FC<HistoryPhotoviewImageGridProps> = ({
 }) => {
   const baseURL = useBackendUrl()
 
-  if (isEmpty(images.length)) {
+  if (isEmpty(images)) {
     return null
   }
 

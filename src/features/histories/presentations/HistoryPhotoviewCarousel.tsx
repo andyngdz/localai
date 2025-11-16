@@ -23,7 +23,7 @@ export const HistoryPhotoviewCarousel: FC<HistoryPhotoviewCarouselProps> = ({
   const initialSlide = useMemo(() => {
     const index = histories.findIndex((h) => h.id === currentHistoryId)
 
-    return index
+    return Math.max(0, index)
   }, [currentHistoryId, histories])
 
   const slides = useMemo(() => {
