@@ -19,81 +19,86 @@ vi.mock('@/services', () => ({
   }
 }))
 
-vi.mock('@heroui/react', () => ({
-  Button: ({
-    children,
-    onPress,
-    isDisabled,
-    isLoading,
-    variant,
-    color,
-    isIconOnly,
-    size,
-    'aria-label': ariaLabel,
-    'data-testid': dataTestId
-  }: {
-    children: React.ReactNode
-    onPress?: () => void
-    isDisabled?: boolean
-    isLoading?: boolean
-    variant?: string
-    color?: string
-    isIconOnly?: boolean
-    size?: string
-    'aria-label'?: string
-    'data-testid'?: string
-  }) => (
-    <button
-      onClick={onPress}
-      disabled={isDisabled || isLoading}
-      data-variant={variant}
-      data-color={color}
-      data-icon-only={isIconOnly}
-      data-size={size}
-      aria-label={ariaLabel}
-      data-testid={dataTestId}
-      data-loading={isLoading}
-    >
-      {children}
-    </button>
-  ),
-  Modal: ({
-    children,
-    isOpen
-  }: {
-    children: React.ReactNode
-    isOpen: boolean
-    onClose: () => void
-  }) =>
-    isOpen ? (
-      <div data-testid="modal" role="dialog">
+vi.mock('@heroui/react', async () => {
+  const actual =
+    await vi.importActual<typeof import('@heroui/react')>('@heroui/react')
+  return {
+    ...actual,
+    Button: ({
+      children,
+      onPress,
+      isDisabled,
+      isLoading,
+      variant,
+      color,
+      isIconOnly,
+      size,
+      'aria-label': ariaLabel,
+      'data-testid': dataTestId
+    }: {
+      children: React.ReactNode
+      onPress?: () => void
+      isDisabled?: boolean
+      isLoading?: boolean
+      variant?: string
+      color?: string
+      isIconOnly?: boolean
+      size?: string
+      'aria-label'?: string
+      'data-testid'?: string
+    }) => (
+      <button
+        onClick={onPress}
+        disabled={isDisabled || isLoading}
+        data-variant={variant}
+        data-color={color}
+        data-icon-only={isIconOnly}
+        data-size={size}
+        aria-label={ariaLabel}
+        data-testid={dataTestId}
+        data-loading={isLoading}
+      >
+        {children}
+      </button>
+    ),
+    Modal: ({
+      children,
+      isOpen
+    }: {
+      children: React.ReactNode
+      isOpen: boolean
+      onClose: () => void
+    }) =>
+      isOpen ? (
+        <div data-testid="modal" role="dialog">
+          {children}
+        </div>
+      ) : null,
+    ModalContent: ({ children }: { children: React.ReactNode }) => (
+      <div data-testid="modal-content">{children}</div>
+    ),
+    ModalHeader: ({ children }: { children: React.ReactNode }) => (
+      <div data-testid="modal-header">{children}</div>
+    ),
+    ModalBody: ({ children }: { children: React.ReactNode }) => (
+      <div data-testid="modal-body">{children}</div>
+    ),
+    ModalFooter: ({ children }: { children: React.ReactNode }) => (
+      <div data-testid="modal-footer">{children}</div>
+    ),
+    Tooltip: ({
+      children,
+      content
+    }: {
+      children: React.ReactNode
+      content: string
+    }) => (
+      <div data-testid="tooltip" data-tooltip-content={content}>
         {children}
       </div>
-    ) : null,
-  ModalContent: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="modal-content">{children}</div>
-  ),
-  ModalHeader: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="modal-header">{children}</div>
-  ),
-  ModalBody: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="modal-body">{children}</div>
-  ),
-  ModalFooter: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="modal-footer">{children}</div>
-  ),
-  Tooltip: ({
-    children,
-    content
-  }: {
-    children: React.ReactNode
-    content: string
-  }) => (
-    <div data-testid="tooltip" data-tooltip-content={content}>
-      {children}
-    </div>
-  )
-}))
+    )
+  }
+})
 
 vi.mock('lucide-react', () => ({
   Trash2: ({ size }: { size?: number }) => (

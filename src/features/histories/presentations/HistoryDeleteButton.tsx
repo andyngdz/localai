@@ -7,10 +7,11 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
-  Tooltip
+  Tooltip,
+  useDisclosure
 } from '@heroui/react'
 import { Trash2 } from 'lucide-react'
-import { FC, useState } from 'react'
+import { FC } from 'react'
 import { useDeleteHistory } from '../states/useDeleteHistory'
 
 interface HistoryDeleteButtonProps {
@@ -20,11 +21,11 @@ interface HistoryDeleteButtonProps {
 export const HistoryDeleteButton: FC<HistoryDeleteButtonProps> = ({
   history
 }) => {
-  const [isOpen, setIsOpen] = useState(false)
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const deleteHistory = useDeleteHistory()
 
   const onConfirm = () => {
-    setIsOpen(false)
+    onClose()
     deleteHistory.mutate(history.id)
   }
 
@@ -36,7 +37,7 @@ export const HistoryDeleteButton: FC<HistoryDeleteButtonProps> = ({
           variant="light"
           color="danger"
           aria-label="Delete history"
-          onPress={() => setIsOpen(true)}
+          onPress={onOpen}
           isDisabled={deleteHistory.isPending}
           data-testid="delete-button"
           size="sm"
@@ -45,7 +46,7 @@ export const HistoryDeleteButton: FC<HistoryDeleteButtonProps> = ({
         </Button>
       </Tooltip>
 
-      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+      <Modal isOpen={isOpen} onClose={onClose}>
         <ModalContent>
           <ModalHeader>Delete history</ModalHeader>
           <ModalBody>
@@ -55,7 +56,7 @@ export const HistoryDeleteButton: FC<HistoryDeleteButtonProps> = ({
             </div>
           </ModalBody>
           <ModalFooter>
-            <Button variant="light" onPress={() => setIsOpen(false)}>
+            <Button variant="light" onPress={onClose}>
               Cancel
             </Button>
             <Button

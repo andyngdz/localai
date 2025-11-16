@@ -291,6 +291,37 @@ describe('API Service', () => {
     })
   })
 
+  describe('unloadModel', () => {
+    it('calls POST /models/unload and returns the data', async () => {
+      const mockResponse = {
+        status: 'unloaded',
+        message: 'Model unloaded successfully'
+      }
+      vi.spyOn(client, 'post').mockResolvedValueOnce({ data: mockResponse })
+
+      const result = await api.unloadModel()
+
+      expect(client.post).toHaveBeenCalledWith('/models/unload')
+      expect(result).toEqual(mockResponse)
+    })
+
+    it('handles API error when unloading model', async () => {
+      const errorMessage = 'No model is currently loaded'
+      vi.spyOn(client, 'post').mockRejectedValueOnce(new Error(errorMessage))
+
+      await expect(api.unloadModel()).rejects.toThrow(errorMessage)
+      expect(client.post).toHaveBeenCalledWith('/models/unload')
+    })
+
+    it('handles server error response', async () => {
+      const serverError = { message: 'Internal server error', status: 500 }
+      vi.spyOn(client, 'post').mockRejectedValueOnce(serverError)
+
+      await expect(api.unloadModel()).rejects.toEqual(serverError)
+      expect(client.post).toHaveBeenCalledWith('/models/unload')
+    })
+  })
+
   describe('generator', () => {
     it('calls POST /generators and returns ImageGenerationResponse data', async () => {
       const request = {
