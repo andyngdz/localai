@@ -468,6 +468,61 @@ describe('API Service', () => {
     })
   })
 
+  describe('deleteHistory', () => {
+    it('successfully deletes a history entry', async () => {
+      const historyId = 123
+      const mockResponse = {
+        success: true,
+        message: 'History entry deleted successfully 123'
+      }
+      vi.spyOn(client, 'delete').mockResolvedValueOnce({ data: mockResponse })
+
+      const result = await api.deleteHistory(historyId)
+
+      expect(client.delete).toHaveBeenCalledWith(`/histories/${historyId}`)
+      expect(result).toEqual(mockResponse)
+    })
+
+    it('handles API error when deleting history', async () => {
+      const historyId = 456
+      const errorMessage = 'History not found'
+      vi.spyOn(client, 'delete').mockRejectedValueOnce(new Error(errorMessage))
+
+      await expect(api.deleteHistory(historyId)).rejects.toThrow(errorMessage)
+      expect(client.delete).toHaveBeenCalledWith(`/histories/${historyId}`)
+    })
+
+    it('calls the correct endpoint with numeric history ID', async () => {
+      const historyId = 789
+      const mockResponse = { success: true }
+      vi.spyOn(client, 'delete').mockResolvedValueOnce({ data: mockResponse })
+
+      await api.deleteHistory(historyId)
+
+      expect(client.delete).toHaveBeenCalledWith(`/histories/${historyId}`)
+    })
+
+    it('handles server error response', async () => {
+      const historyId = 999
+      const serverError = { message: 'Internal server error', status: 500 }
+      vi.spyOn(client, 'delete').mockRejectedValueOnce(serverError)
+
+      await expect(api.deleteHistory(historyId)).rejects.toEqual(serverError)
+      expect(client.delete).toHaveBeenCalledWith(`/histories/${historyId}`)
+    })
+
+    it('handles 404 error when history does not exist', async () => {
+      const historyId = 1
+      const notFoundError = {
+        response: { status: 404, data: { detail: 'History entry not found' } }
+      }
+      vi.spyOn(client, 'delete').mockRejectedValueOnce(notFoundError)
+
+      await expect(api.deleteHistory(historyId)).rejects.toEqual(notFoundError)
+      expect(client.delete).toHaveBeenCalledWith(`/histories/${historyId}`)
+    })
+  })
+
   describe('deleteModel', () => {
     it('successfully deletes a model', async () => {
       const modelId = 'test-model-123'
