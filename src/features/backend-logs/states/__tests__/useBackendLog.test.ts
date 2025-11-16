@@ -57,6 +57,14 @@ describe('useBackendLog', () => {
         installUpdate: vi.fn().mockResolvedValue(undefined),
         getUpdateInfo: vi.fn().mockResolvedValue({ updateAvailable: false }),
         onUpdateStatus: vi.fn().mockReturnValue(() => {})
+      },
+      window: {
+        minimize: vi.fn().mockResolvedValue(undefined),
+        maximize: vi.fn().mockResolvedValue(undefined),
+        unmaximize: vi.fn().mockResolvedValue(undefined),
+        close: vi.fn().mockResolvedValue(undefined),
+        isMaximized: vi.fn().mockResolvedValue(false),
+        onMaximizedChange: vi.fn().mockReturnValue(() => {})
       }
     } as ElectronAPI
   })

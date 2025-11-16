@@ -45,3 +45,13 @@
   --swiper-pagination-color: hsl(var(--heroui-primary));
   --swiper-pagination-bullet-inactive-color: hsl(var(--heroui-default-900));
 }
+
+.window-drag-region {
+  -webkit-app-region: drag;
+  app-region: drag;
+}
+
+.window-no-drag {
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+}

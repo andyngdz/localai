@@ -19,6 +19,14 @@ export interface ElectronAPI {
     checkForUpdates: () => Promise<UpdateCheckResult>
     installUpdate: () => Promise<void>
   }
+  window: {
+    minimize: () => Promise<void>
+    maximize: () => Promise<void>
+    unmaximize: () => Promise<void>
+    close: () => Promise<void>
+    isMaximized: () => Promise<boolean>
+    onMaximizedChange: (listener: (isMaximized: boolean) => void) => () => void
+  }
 }
 
 declare global {

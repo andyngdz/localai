@@ -57,5 +57,27 @@ contextBridge.exposeInMainWorld('electronAPI', {
     checkForUpdates: (): Promise<UpdateCheckResult> =>
       ipcRenderer.invoke('updater:check'),
     installUpdate: () => ipcRenderer.invoke('updater:install')
+  },
+  window: {
+    minimize: () => ipcRenderer.invoke('window:minimize'),
+    maximize: () => ipcRenderer.invoke('window:maximize'),
+    unmaximize: () => ipcRenderer.invoke('window:unmaximize'),
+    close: () => ipcRenderer.invoke('window:close'),
+    isMaximized: (): Promise<boolean> =>
+      ipcRenderer.invoke('window:isMaximized'),
+    onMaximizedChange: (listener: (isMaximized: boolean) => void) => {
+      const subscription = (
+        _: Electron.IpcRendererEvent,
+        isMaximized: boolean
+      ) => {
+        listener(isMaximized)
+      }
+
+      ipcRenderer.on('window:maximized-changed', subscription)
+
+      return () => {
+        ipcRenderer.removeListener('window:maximized-changed', subscription)
+      }
+    }
   }
 })

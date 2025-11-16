@@ -73,6 +73,14 @@ const createElectronAPIMock = (): ElectronAPI => ({
       .fn()
       .mockResolvedValue({ updateAvailable: false, version: undefined }),
     installUpdate: vi.fn().mockResolvedValue(undefined)
+  },
+  window: {
+    minimize: vi.fn().mockResolvedValue(undefined),
+    maximize: vi.fn().mockResolvedValue(undefined),
+    unmaximize: vi.fn().mockResolvedValue(undefined),
+    close: vi.fn().mockResolvedValue(undefined),
+    isMaximized: vi.fn().mockResolvedValue(false),
+    onMaximizedChange: vi.fn().mockReturnValue(noop)
   }
 })
 

@@ -37,7 +37,9 @@ const onCreateWindow = async () => {
     height: 800,
     autoHideMenuBar: true,
     show: false,
-    backgroundColor: '#0B0B0B',
+    frame: false,
+    transparent: true,
+    roundedCorners: true,
     webPreferences: {
       preload: path.join(appDir, 'electron', 'preload.js'),
       sandbox: true,
@@ -51,6 +53,14 @@ const onCreateWindow = async () => {
   win.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url)
     return { action: 'deny' }
+  })
+
+  win.on('maximize', () => {
+    win.webContents.send('window:maximized-changed', true)
+  })
+
+  win.on('unmaximize', () => {
+    win.webContents.send('window:maximized-changed', false)
   })
 
   win.once('ready-to-show', () => {
@@ -120,6 +130,33 @@ const onAutoUpdate = () => {
   })
 }
 
+const onWindowControls = () => {
+  ipcMain.handle('window:minimize', () => {
+    const win = BrowserWindow.getFocusedWindow()
+    if (win) win.minimize()
+  })
+
+  ipcMain.handle('window:maximize', () => {
+    const win = BrowserWindow.getFocusedWindow()
+    if (win) win.maximize()
+  })
+
+  ipcMain.handle('window:unmaximize', () => {
+    const win = BrowserWindow.getFocusedWindow()
+    if (win) win.unmaximize()
+  })
+
+  ipcMain.handle('window:close', () => {
+    const win = BrowserWindow.getFocusedWindow()
+    if (win) win.close()
+  })
+
+  ipcMain.handle('window:isMaximized', () => {
+    const win = BrowserWindow.getFocusedWindow()
+    return win ? win.isMaximized() : false
+  })
+}
+
 const gotLock = app.requestSingleInstanceLock()
 
 if (!gotLock) {
@@ -153,6 +190,7 @@ if (!gotLock) {
     onAppInfo()
     setupBackendPortHandler()
     onAutoUpdate()
+    onWindowControls()
 
     if (process.env.SKIP_BACKEND !== 'true') {
       console.log('Starting Python backend...')
