@@ -5,6 +5,7 @@ import { HistoryItem } from '@/types'
 import { FC } from 'react'
 import { HistoryPhotoviewConfigRow } from './HistoryPhotoviewConfigRow'
 import { HistoryPhotoviewImageGrid } from './HistoryPhotoviewImageGrid'
+import { HistoryUseConfigButton } from './HistoryUseConfigButton'
 
 interface HistoryPhotoviewCardProps {
   history: HistoryItem
@@ -15,11 +16,14 @@ export const HistoryPhotoviewCard: FC<HistoryPhotoviewCardProps> = ({
 }) => {
   return (
     <div className="flex flex-col w-full max-w-4xl mx-auto p-6 gap-6">
-      <div className="flex flex-col gap-2">
-        <h2 className="text-2xl font-bold text-default-900">
-          {dateFormatter.datetime(`${history.created_at}Z`)}
-        </h2>
-        <p className="text-lg text-default-600">{history.model}</p>
+      <div className="flex flex-row items-start justify-between gap-4">
+        <div className="flex flex-col gap-2">
+          <h2 className="text-2xl font-bold text-default-900">
+            {dateFormatter.datetime(`${history.created_at}Z`)}
+          </h2>
+          <p className="text-lg text-default-600">{history.model}</p>
+        </div>
+        <HistoryUseConfigButton history={history} />
       </div>
 
       <HistoryPhotoviewImageGrid images={history.generated_images} />
