@@ -163,9 +163,8 @@ describe('GeneratorPreviewerSlider', () => {
     it('should render slider actions', () => {
       render(<GeneratorPreviewerSlider />)
 
-      expect(screen.getByTestId('slider-actions')).toBeInTheDocument()
-      expect(screen.getByTestId('prev-button')).toBeInTheDocument()
-      expect(screen.getByTestId('next-button')).toBeInTheDocument()
+      expect(screen.getByLabelText('Previous image')).toBeInTheDocument()
+      expect(screen.getByLabelText('Next image')).toBeInTheDocument()
     })
 
     it('should have correct container styling', () => {
@@ -190,7 +189,7 @@ describe('GeneratorPreviewerSlider', () => {
     it('should call slideNext when next button is clicked', () => {
       render(<GeneratorPreviewerSlider />)
 
-      const nextButton = screen.getByTestId('next-button')
+      const nextButton = screen.getByLabelText('Next image')
       fireEvent.click(nextButton)
 
       expect(mockSlideNext).toHaveBeenCalledTimes(1)
@@ -199,7 +198,7 @@ describe('GeneratorPreviewerSlider', () => {
     it('should call slidePrev when previous button is clicked', () => {
       render(<GeneratorPreviewerSlider />)
 
-      const prevButton = screen.getByTestId('prev-button')
+      const prevButton = screen.getByLabelText('Previous image')
       fireEvent.click(prevButton)
 
       expect(mockSlidePrev).toHaveBeenCalledTimes(1)

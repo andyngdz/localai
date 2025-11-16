@@ -51,6 +51,22 @@
 - **Type safety**:
   - Never use `any` type. Use proper types, `unknown`, or type assertions (`as Type`) instead
   - Use built-in utility types where appropriate (e.g., `VoidFunction` instead of `() => void`)
+  - **Explicit vs Derived Types**: Prefer explicit type names over indexed access types when the type is already exported
+
+    ```typescript
+    // ✅ Good - explicit and self-documenting
+    interface ComponentProps {
+      images: HistoryGeneratedImage[]
+    }
+
+    // ❌ Avoid - less clear when type is already exported
+    interface ComponentProps {
+      images: HistoryItem['generated_images']
+    }
+    ```
+
+    Note: Indexed access types (`Type['field']`) are still useful for deriving types when no explicit type exists
+
 - **Testing**: Always run tests after refactoring to ensure behavior is preserved
 - **State Management**:
   - Use Zustand stores for shared state that needs to be accessed across components
@@ -70,15 +86,27 @@
 - **Performance Optimization**:
   - Use `useMemo` to wrap conditional component rendering to prevent unnecessary re-renders
   - Memoize expensive computations or component selections based on state
-  - Example:
+  - Use `useMemo` for functions that compute JSX to avoid recalculation on every render
+  - Examples:
+
     ```typescript
+    // Conditional rendering
     const content = useMemo(() => {
       if (shouldShowEmpty) {
         return <EmptyState />
       }
       return <ExpensiveComponent data={filteredData} />
     }, [shouldShowEmpty, filteredData])
+
+    // JSX computation function
+    const renderValue = useMemo(() => {
+      if (Array.isArray(value)) {
+        return <div>{value.map(item => <Chip key={item}>{item}</Chip>)}</div>
+      }
+      return <span>{value}</span>
+    }, [value])
     ```
+
 - **es-toolkit Best Practices**:
   - `isEmpty()` is comprehensive - avoid redundant checks like `!value || isEmpty(value)`
   - Prefer empty string `''` over `undefined` for initial string state (more predictable)
