@@ -1,4 +1,4 @@
-import { Alert, ScrollShadow, Spinner } from '@heroui/react'
+import { Alert, Progress, ScrollShadow } from '@heroui/react'
 import { isEmpty } from 'es-toolkit/compat'
 import { useModelSearch } from '../states'
 import { ModelSearchItem } from './ModelSearchItem'
@@ -7,7 +7,14 @@ export const ModelSearchListModel = () => {
   const { data, isLoading } = useModelSearch()
 
   if (isLoading) {
-    return <Spinner />
+    return (
+      <Progress
+        isIndeterminate
+        aria-label="Loading..."
+        className="max-w-md"
+        size="sm"
+      />
+    )
   }
 
   if (data) {
@@ -23,7 +30,7 @@ export const ModelSearchListModel = () => {
 
     return (
       <ScrollShadow className="scrollable">
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 p-2">
           {models_search_info.map((model) => (
             <ModelSearchItem key={model.id} modelSearchInfo={model} />
           ))}

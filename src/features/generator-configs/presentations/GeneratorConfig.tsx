@@ -4,21 +4,16 @@ import { GeneratorConfigQuantity } from '@/features/generator-config-quantities/
 import { GeneratorConfigSampling } from '@/features/generator-config-sampling/presentations/GeneratorConfigSampling'
 import { GeneratorConfigSeed } from '@/features/generator-config-seed/presentations/GeneratorConfigSeed'
 import { GeneratorConfigStyle } from '@/features/generator-config-styles/presentations/GeneratorConfigStyle'
-import { Divider, ScrollShadow } from '@heroui/react'
+import { ScrollShadow } from '@heroui/react'
 
 export const GeneratorConfig = () => {
   return (
-    <ScrollShadow className="h-full scrollable">
+    <ScrollShadow className="h-full scrollable divide-y divide-default-200">
       <GeneratorConfigFormat />
-      <Divider />
       <GeneratorConfigExtra />
-      <Divider />
       <GeneratorConfigQuantity />
-      <Divider />
       <GeneratorConfigSampling />
-      <Divider />
       <GeneratorConfigSeed />
-      <Divider />
       <GeneratorConfigStyle />
     </ScrollShadow>
   )
