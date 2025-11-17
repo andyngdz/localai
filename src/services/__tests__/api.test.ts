@@ -333,6 +333,7 @@ describe('API Service', () => {
           steps: 20,
           width: 512,
           height: 512,
+          sampler: 'EULER_A',
           styles: [],
           number_of_images: 1,
           hires_fix: false,

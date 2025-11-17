@@ -11,6 +11,7 @@ describe('GeneratorConfigFormValues', () => {
       steps: 24,
       seed: -1,
       cfg_scale: 7.5,
+      sampler: 'EULER_A',
       negative_prompt: '',
       prompt: '',
       styles: []
