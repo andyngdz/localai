@@ -333,6 +333,7 @@ describe('API Service', () => {
           steps: 20,
           width: 512,
           height: 512,
+          sampler: 'EULER_A',
           styles: [],
           number_of_images: 1,
           hires_fix: false,
@@ -564,6 +565,29 @@ describe('API Service', () => {
 
       await expect(api.deleteModel(modelId)).rejects.toEqual(serverError)
       expect(client.delete).toHaveBeenCalledWith(`/models?model_id=${modelId}`)
+    })
+  })
+
+  describe('getSamplers', () => {
+    it('fetches samplers list', async () => {
+      const mockResponse = [
+        {
+          name: 'Euler A',
+          value: 'EULER_A',
+          description: 'Fast, exploratory, slightly non-deterministic.'
+        },
+        {
+          name: 'DDIM',
+          value: 'DDIM',
+          description: 'Deterministic, stable, and widely used.'
+        }
+      ]
+      vi.spyOn(client, 'get').mockResolvedValueOnce({ data: mockResponse })
+
+      const result = await api.getSamplers()
+
+      expect(client.get).toHaveBeenCalledWith('/generators/samplers')
+      expect(result).toEqual(mockResponse)
     })
   })
 })
