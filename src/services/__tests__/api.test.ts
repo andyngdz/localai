@@ -567,4 +567,27 @@ describe('API Service', () => {
       expect(client.delete).toHaveBeenCalledWith(`/models?model_id=${modelId}`)
     })
   })
+
+  describe('getSamplers', () => {
+    it('fetches samplers list', async () => {
+      const mockResponse = [
+        {
+          name: 'Euler A',
+          value: 'EULER_A',
+          description: 'Fast, exploratory, slightly non-deterministic.'
+        },
+        {
+          name: 'DDIM',
+          value: 'DDIM',
+          description: 'Deterministic, stable, and widely used.'
+        }
+      ]
+      vi.spyOn(client, 'get').mockResolvedValueOnce({ data: mockResponse })
+
+      const result = await api.getSamplers()
+
+      expect(client.get).toHaveBeenCalledWith('/generators/samplers')
+      expect(result).toEqual(mockResponse)
+    })
+  })
 })
