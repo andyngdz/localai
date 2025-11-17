@@ -39,6 +39,11 @@ vi.mock('../GeneratorConfigCommonSteps', () => ({
   GeneratorConfigCommonSteps: () => <div data-testid="common-steps" />
 }))
 
+// Mock the GeneratorConfigSamplerDropdown component
+vi.mock('../GeneratorConfigSamplerDropdown', () => ({
+  GeneratorConfigSamplerDropdown: () => <div data-testid="sampler-dropdown" />
+}))
+
 describe('GeneratorConfigSampling', () => {
   const Wrapper = () => {
     const methods = useForm<GeneratorConfigFormValues>({
@@ -77,5 +82,10 @@ describe('GeneratorConfigSampling', () => {
     const cfgScaleInput = screen.getByTestId('number-input-cfg_scale')
     expect(cfgScaleInput).toBeInTheDocument()
     expect(screen.getByText('CFG Scale')).toBeInTheDocument()
+  })
+
+  it('renders the sampler dropdown', () => {
+    render(<Wrapper />)
+    expect(screen.getByTestId('sampler-dropdown')).toBeInTheDocument()
   })
 })

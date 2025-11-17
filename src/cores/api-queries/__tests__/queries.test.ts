@@ -11,6 +11,7 @@ import {
   useHistoriesQuery,
   useMemoryQuery,
   useModelRecommendationsQuery,
+  useSamplersQuery,
   useStyleSectionsQuery
 } from '../queries'
 
@@ -23,7 +24,8 @@ vi.mock('@/services/api', () => ({
     getModelRecommendations: vi.fn(),
     getDownloadedModels: vi.fn(),
     styles: vi.fn(),
-    getHistories: vi.fn()
+    getHistories: vi.fn(),
+    getSamplers: vi.fn()
   }
 }))
 
@@ -412,6 +414,50 @@ describe('React Query Hooks', () => {
 
       expect(api.getHistories).toHaveBeenCalled()
       expect(result.current.error).toBeDefined()
+    })
+  })
+
+  describe('useSamplersQuery', () => {
+    it('calls api.getSamplers and returns data', async () => {
+      const mockResponse = [
+        {
+          name: 'Euler A',
+          value: 'EULER_A',
+          description: 'Fast, exploratory, slightly non-deterministic.'
+        },
+        {
+          name: 'DDIM',
+          value: 'DDIM',
+          description: 'Deterministic, stable, and widely used.'
+        }
+      ]
+      vi.mocked(api.getSamplers).mockResolvedValue(mockResponse)
+
+      const { result } = renderHook(() => useSamplersQuery(), {
+        wrapper: testEnv.wrapper
+      })
+
+      await waitFor(() => {
+        expect(result.current.isSuccess).toBe(true)
+      })
+
+      expect(api.getSamplers).toHaveBeenCalled()
+      expect(result.current.data).toEqual(mockResponse)
+    })
+
+    it('handles error', async () => {
+      const mockError = new Error('Network error')
+      vi.mocked(api.getSamplers).mockRejectedValue(mockError)
+
+      const { result } = renderHook(() => useSamplersQuery(), {
+        wrapper: testEnv.wrapper
+      })
+
+      await waitFor(() => {
+        expect(result.current.isError).toBe(true)
+      })
+
+      expect(api.getSamplers).toHaveBeenCalled()
     })
   })
 })

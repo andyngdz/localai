@@ -7,6 +7,7 @@ import {
   MemoryResponse,
   ModelDownloaded,
   ModelRecommendationResponse,
+  Sampler,
   StyleSection
 } from '@/types'
 import { useQuery } from '@tanstack/react-query'
@@ -62,6 +63,13 @@ const useHistoriesQuery = () => {
   })
 }
 
+const useSamplersQuery = () => {
+  return useQuery<Sampler[], ApiError>({
+    queryKey: ['getSamplers'],
+    queryFn: () => api.getSamplers()
+  })
+}
+
 export {
   useDownloadedModelsQuery,
   useHardwareQuery,
@@ -69,5 +77,6 @@ export {
   useHistoriesQuery,
   useMemoryQuery,
   useModelRecommendationsQuery,
+  useSamplersQuery,
   useStyleSectionsQuery
 }
