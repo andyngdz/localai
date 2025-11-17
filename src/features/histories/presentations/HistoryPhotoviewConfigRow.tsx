@@ -32,7 +32,7 @@ export const HistoryPhotoviewConfigRow: FC<HistoryPhotoviewConfigRowProps> = ({
   }, [value])
 
   return (
-    <div className="flex items-start justify-between gap-4 py-2 border-b border-default-200">
+    <div className="flex items-start justify-between gap-4 py-2 border-b border-default">
       <span className="text-default-500 font-medium text-sm shrink-0">
         {label}
       </span>

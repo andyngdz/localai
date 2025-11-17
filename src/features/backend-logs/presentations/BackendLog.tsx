@@ -28,10 +28,10 @@ export const BackendLog = () => {
         isOpen={isOpen}
         shouldBlockScroll={false}
         onClose={onClose}
-        backdrop="opaque"
         placement="right"
         scrollBehavior="inside"
         size="2xl"
+        radius="none"
         className="h-full"
       >
         <DrawerContent>
