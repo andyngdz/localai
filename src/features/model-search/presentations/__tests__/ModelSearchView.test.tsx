@@ -127,6 +127,17 @@ vi.mock('@/features/model-download-status-line', () => ({
   )
 }))
 
+vi.mock('@/features/download-watcher', () => ({
+  useDownloadWatcher: () => ({
+    isDownloading: true,
+    step: null,
+    percent: 0,
+    downloadSized: 0,
+    downloadTotalSized: 0,
+    currentFile: 'N/A'
+  })
+}))
+
 // Import the component under test AFTER mocks so they take effect
 import { ModelSearchView } from '../ModelSearchView'
 
@@ -232,8 +243,8 @@ describe('ModelSearchView', () => {
     const childComponents = screen.getAllByTestId(/mock-view-/)
     expect(childComponents).toHaveLength(4) // card, spaces, files, footer
 
-    // The wrapper should have the scrollbar-thin class
+    // The wrapper should have ScrollShadow styling
     const scrollShadow = screen.getByTestId('scrollshadow')
-    expect(scrollShadow).toHaveClass('scrollable')
+    expect(scrollShadow).toHaveClass('flex', 'flex-col', 'gap-8', 'p-6')
   })
 })

@@ -15,7 +15,7 @@ export const BackendStatusItem: FC<BackendStatusItemProps> = ({ status }) => {
   const isError = status.level === BackendStatusLevel.Error
 
   return (
-    <div className="space-y-3">
+    <div className="flex flex-col gap-4">
       <div className="flex items-start justify-between gap-3">
         <Badge color={isError ? 'danger' : 'secondary'} variant="flat">
           {status.message}

@@ -291,6 +291,37 @@ describe('API Service', () => {
     })
   })
 
+  describe('unloadModel', () => {
+    it('calls POST /models/unload and returns the data', async () => {
+      const mockResponse = {
+        status: 'unloaded',
+        message: 'Model unloaded successfully'
+      }
+      vi.spyOn(client, 'post').mockResolvedValueOnce({ data: mockResponse })
+
+      const result = await api.unloadModel()
+
+      expect(client.post).toHaveBeenCalledWith('/models/unload')
+      expect(result).toEqual(mockResponse)
+    })
+
+    it('handles API error when unloading model', async () => {
+      const errorMessage = 'No model is currently loaded'
+      vi.spyOn(client, 'post').mockRejectedValueOnce(new Error(errorMessage))
+
+      await expect(api.unloadModel()).rejects.toThrow(errorMessage)
+      expect(client.post).toHaveBeenCalledWith('/models/unload')
+    })
+
+    it('handles server error response', async () => {
+      const serverError = { message: 'Internal server error', status: 500 }
+      vi.spyOn(client, 'post').mockRejectedValueOnce(serverError)
+
+      await expect(api.unloadModel()).rejects.toEqual(serverError)
+      expect(client.post).toHaveBeenCalledWith('/models/unload')
+    })
+  })
+
   describe('generator', () => {
     it('calls POST /generators and returns ImageGenerationResponse data', async () => {
       const request = {
@@ -302,6 +333,7 @@ describe('API Service', () => {
           steps: 20,
           width: 512,
           height: 512,
+          sampler: 'EULER_A',
           styles: [],
           number_of_images: 1,
           hires_fix: false,
@@ -437,6 +469,61 @@ describe('API Service', () => {
     })
   })
 
+  describe('deleteHistory', () => {
+    it('successfully deletes a history entry', async () => {
+      const historyId = 123
+      const mockResponse = {
+        success: true,
+        message: 'History entry deleted successfully 123'
+      }
+      vi.spyOn(client, 'delete').mockResolvedValueOnce({ data: mockResponse })
+
+      const result = await api.deleteHistory(historyId)
+
+      expect(client.delete).toHaveBeenCalledWith(`/histories/${historyId}`)
+      expect(result).toEqual(mockResponse)
+    })
+
+    it('handles API error when deleting history', async () => {
+      const historyId = 456
+      const errorMessage = 'History not found'
+      vi.spyOn(client, 'delete').mockRejectedValueOnce(new Error(errorMessage))
+
+      await expect(api.deleteHistory(historyId)).rejects.toThrow(errorMessage)
+      expect(client.delete).toHaveBeenCalledWith(`/histories/${historyId}`)
+    })
+
+    it('calls the correct endpoint with numeric history ID', async () => {
+      const historyId = 789
+      const mockResponse = { success: true }
+      vi.spyOn(client, 'delete').mockResolvedValueOnce({ data: mockResponse })
+
+      await api.deleteHistory(historyId)
+
+      expect(client.delete).toHaveBeenCalledWith(`/histories/${historyId}`)
+    })
+
+    it('handles server error response', async () => {
+      const historyId = 999
+      const serverError = { message: 'Internal server error', status: 500 }
+      vi.spyOn(client, 'delete').mockRejectedValueOnce(serverError)
+
+      await expect(api.deleteHistory(historyId)).rejects.toEqual(serverError)
+      expect(client.delete).toHaveBeenCalledWith(`/histories/${historyId}`)
+    })
+
+    it('handles 404 error when history does not exist', async () => {
+      const historyId = 1
+      const notFoundError = {
+        response: { status: 404, data: { detail: 'History entry not found' } }
+      }
+      vi.spyOn(client, 'delete').mockRejectedValueOnce(notFoundError)
+
+      await expect(api.deleteHistory(historyId)).rejects.toEqual(notFoundError)
+      expect(client.delete).toHaveBeenCalledWith(`/histories/${historyId}`)
+    })
+  })
+
   describe('deleteModel', () => {
     it('successfully deletes a model', async () => {
       const modelId = 'test-model-123'
@@ -478,6 +565,29 @@ describe('API Service', () => {
 
       await expect(api.deleteModel(modelId)).rejects.toEqual(serverError)
       expect(client.delete).toHaveBeenCalledWith(`/models?model_id=${modelId}`)
+    })
+  })
+
+  describe('getSamplers', () => {
+    it('fetches samplers list', async () => {
+      const mockResponse = [
+        {
+          name: 'Euler A',
+          value: 'EULER_A',
+          description: 'Fast, exploratory, slightly non-deterministic.'
+        },
+        {
+          name: 'DDIM',
+          value: 'DDIM',
+          description: 'Deterministic, stable, and widely used.'
+        }
+      ]
+      vi.spyOn(client, 'get').mockResolvedValueOnce({ data: mockResponse })
+
+      const result = await api.getSamplers()
+
+      expect(client.get).toHaveBeenCalledWith('/generators/samplers')
+      expect(result).toEqual(mockResponse)
     })
   })
 })

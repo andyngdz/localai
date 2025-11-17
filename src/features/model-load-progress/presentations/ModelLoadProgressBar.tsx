@@ -5,22 +5,17 @@ import { Activity } from 'react'
 import { useModelLoadProgress } from '../states'
 
 export const ModelLoadProgressBar = () => {
-  const { isLoading, message, percentage } = useModelLoadProgress()
+  const { isLoading, percentage } = useModelLoadProgress()
 
   return (
     <Activity mode={isLoading ? 'visible' : 'hidden'}>
-      <div className="w-full px-4 py-2 bg-default-100">
+      <div className="w-full bg-default-100">
         <Progress
           size="sm"
           value={percentage}
           color="primary"
-          label={message}
-          showValueLabel
           className="max-w-full"
-          classNames={{
-            label: 'text-xs text-default-700',
-            value: 'text-xs text-default-700'
-          }}
+          aria-label="Model loading progress"
         />
       </div>
     </Activity>

@@ -42,7 +42,7 @@ describe('ModelSearchInput', () => {
       expect(input).toBeInTheDocument()
     })
 
-    it('applies flat variant to Input component', async () => {
+    it('applies correct props to Input component', async () => {
       const { Input } = await import('@heroui/react')
 
       render(
@@ -52,7 +52,7 @@ describe('ModelSearchInput', () => {
       )
 
       const callArgs = vi.mocked(Input).mock.calls[0][0]
-      expect(callArgs).toHaveProperty('variant', 'flat')
+      expect(callArgs).toHaveProperty('placeholder', 'Model name, author, ...')
     })
 
     it('registers the query field with react-hook-form', async () => {
@@ -287,7 +287,7 @@ describe('ModelSearchInput', () => {
       expect(callArgs).toHaveProperty('name', 'query')
       expect(callArgs).toHaveProperty('onChange')
       expect(callArgs).toHaveProperty('onBlur')
-      expect(callArgs).toHaveProperty('variant', 'flat')
+      expect(callArgs).toHaveProperty('placeholder', 'Model name, author, ...')
     })
 
     it('maintains Input component styling', async () => {
@@ -300,7 +300,7 @@ describe('ModelSearchInput', () => {
       )
 
       const callArgs = vi.mocked(Input).mock.calls[0][0]
-      expect(callArgs).toHaveProperty('variant', 'flat')
+      expect(callArgs).toHaveProperty('placeholder', 'Model name, author, ...')
     })
   })
 

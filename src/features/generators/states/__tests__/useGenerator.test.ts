@@ -51,7 +51,7 @@ describe('useGenerator', () => {
     cfg_scale: 7,
     steps: 20,
     seed: -1,
-    sampler_name: 'Euler a',
+    sampler: 'EULER_A',
     hires_fix: false,
     number_of_images: 1,
     styles: []

@@ -1,6 +1,6 @@
 'use client'
 
-import { Divider, Snippet, Spacer } from '@heroui/react'
+import { Divider, Snippet } from '@heroui/react'
 import type { BackendStatusCommand } from '@types'
 import { isEmpty } from 'es-toolkit/compat'
 import { FC } from 'react'
@@ -10,23 +10,20 @@ export interface SuggestedCommandsProps {
 }
 
 export const SuggestedCommands: FC<SuggestedCommandsProps> = ({ commands }) => {
-  if (isEmpty(commands)) {
-    return null
-  }
+  if (isEmpty(commands)) return null
 
   return (
-    <div>
-      <Divider className="my-2" />
-      <p className="text-tiny uppercase tracking-wide text-default-400">
+    <div className="flex flex-col gap-4">
+      <Divider />
+      <div className="text-tiny uppercase tracking-wide text-default-500">
         Suggested commands
-      </p>
-      <Spacer y={2} />
-      <div className="space-y-3">
+      </div>
+      <div className="flex flex-col gap-4">
         {commands.map((command) => (
-          <div key={command.command} className="space-y-1">
-            <p className="text-tiny font-semibold text-default-500">
+          <div key={command.command} className="flex felx-col gap-2">
+            <div className="text-tiny font-semibold text-default-500">
               {command.label}
-            </p>
+            </div>
             <Snippet
               size="sm"
               variant="flat"

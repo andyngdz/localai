@@ -7,6 +7,6 @@ const startDesktopDev = async () => {
   await startElectron()
 }
 
-runAsScript(startDesktopDev, '❌ Desktop development failed:')
+runAsScript(startDesktopDev, 'Desktop development failed:')
 
 export { startDesktopDev }

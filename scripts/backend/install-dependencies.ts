@@ -1,4 +1,4 @@
-import { $ } from 'zx'
+import { $ } from '../zx-config'
 import {
   BackendStatusEmitter,
   BackendStatusLevel,
@@ -23,7 +23,7 @@ const installDependencies = async ({
   })
 
   const command = 'uv'
-  const args = ['pip', 'install', '-r', 'requirements.txt']
+  const args = ['sync']
   const installCommand = [command, ...args].join(' ')
 
   try {

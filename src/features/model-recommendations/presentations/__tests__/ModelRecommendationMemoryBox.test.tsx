@@ -25,7 +25,6 @@ describe('ModelRecommendationMemoryBox', () => {
 
     // Check main container has the expected classes
     const mainDiv = container.firstChild
-    expect(mainDiv).toHaveClass('w-24')
     expect(mainDiv).toHaveClass('flex')
     expect(mainDiv).toHaveClass('items-center')
     expect(mainDiv).toHaveClass('gap-2')

@@ -1,15 +1,34 @@
 import { render, screen } from '@testing-library/react'
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi, beforeEach } from 'vitest'
+import userEvent from '@testing-library/user-event'
 import { SettingsModal } from '../SettingsModal'
+import { SettingsTab } from '../../states/useSettingsStore'
+
+const mockSetSelectedTab = vi.fn()
+let mockSelectedTab: SettingsTab = 'general'
+
+vi.mock('../../states/useSettingsStore', () => ({
+  useSettingsStore: () => ({
+    selectedTab: mockSelectedTab,
+    setSelectedTab: mockSetSelectedTab
+  })
+}))
 
 vi.mock('@heroui/react', () => ({
   Modal: ({
     isOpen,
-    children
+    children,
+    onClose
   }: {
     isOpen: boolean
     children: React.ReactNode
-  }) => (isOpen ? <div data-testid="modal">{children}</div> : null),
+    onClose: VoidFunction
+  }) =>
+    isOpen ? (
+      <div data-testid="modal" onClick={onClose}>
+        {children}
+      </div>
+    ) : null,
   ModalContent: ({ children }: { children: React.ReactNode }) => (
     <div data-testid="modal-content">{children}</div>
   ),
@@ -20,8 +39,30 @@ vi.mock('@heroui/react', () => ({
     <div data-testid="modal-body">{children}</div>
   ),
   Divider: () => <hr data-testid="divider" />,
-  Tabs: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="tabs">{children}</div>
+  Tabs: ({
+    children,
+    selectedKey,
+    onSelectionChange
+  }: {
+    children: React.ReactNode
+    selectedKey?: string
+    onSelectionChange?: (key: string) => void
+  }) => (
+    <div data-testid="tabs" data-selected-key={selectedKey}>
+      {children}
+      <button
+        data-testid="change-tab-models"
+        onClick={() => onSelectionChange?.('models')}
+      >
+        Change to models
+      </button>
+      <button
+        data-testid="change-tab-updates"
+        onClick={() => onSelectionChange?.('updates')}
+      >
+        Change to updates
+      </button>
+    </div>
   ),
   Tab: ({ title, children }: { title: string; children: React.ReactNode }) => (
     <section>
@@ -44,22 +85,131 @@ vi.mock('../tabs', () => ({
 }))
 
 describe('SettingsModal', () => {
-  it('renders the modal with all tabs when open', () => {
-    render(<SettingsModal isOpen onClose={vi.fn()} />)
-
-    expect(screen.getByTestId('modal')).toBeInTheDocument()
-    expect(screen.getByText('Settings')).toBeInTheDocument()
-    expect(screen.getByText('General')).toBeInTheDocument()
-    expect(screen.getByText('Model Management')).toBeInTheDocument()
-    expect(screen.getByText('Updates')).toBeInTheDocument()
-    expect(screen.getByTestId('general-settings')).toBeInTheDocument()
-    expect(screen.getByTestId('model-management')).toBeInTheDocument()
-    expect(screen.getByTestId('update-settings')).toBeInTheDocument()
+  beforeEach(() => {
+    mockSelectedTab = 'general'
+    vi.clearAllMocks()
   })
 
-  it('does not render the modal content when closed', () => {
-    render(<SettingsModal isOpen={false} onClose={vi.fn()} />)
+  describe('Modal Rendering', () => {
+    it('renders the modal with all tabs when open', () => {
+      render(<SettingsModal isOpen onClose={vi.fn()} />)
 
-    expect(screen.queryByTestId('modal')).not.toBeInTheDocument()
+      expect(screen.getByTestId('modal')).toBeInTheDocument()
+      expect(screen.getByText('Settings')).toBeInTheDocument()
+      expect(screen.getByText('General')).toBeInTheDocument()
+      expect(screen.getByText('Model Management')).toBeInTheDocument()
+      expect(screen.getByText('Updates')).toBeInTheDocument()
+      expect(screen.getByTestId('general-settings')).toBeInTheDocument()
+      expect(screen.getByTestId('model-management')).toBeInTheDocument()
+      expect(screen.getByTestId('update-settings')).toBeInTheDocument()
+    })
+
+    it('does not render the modal content when closed', () => {
+      render(<SettingsModal isOpen={false} onClose={vi.fn()} />)
+
+      expect(screen.queryByTestId('modal')).not.toBeInTheDocument()
+      expect(screen.queryByText('Settings')).not.toBeInTheDocument()
+    })
+
+    it('renders modal header with correct title', () => {
+      render(<SettingsModal isOpen onClose={vi.fn()} />)
+
+      const header = screen.getByTestId('modal-header')
+      expect(header).toHaveTextContent('Settings')
+    })
+
+    it('renders divider between header and body', () => {
+      render(<SettingsModal isOpen onClose={vi.fn()} />)
+
+      expect(screen.getByTestId('divider')).toBeInTheDocument()
+    })
+
+    it('renders all three tab panels', () => {
+      render(<SettingsModal isOpen onClose={vi.fn()} />)
+
+      expect(screen.getByTestId('general-settings')).toBeInTheDocument()
+      expect(screen.getByTestId('model-management')).toBeInTheDocument()
+      expect(screen.getByTestId('update-settings')).toBeInTheDocument()
+    })
+  })
+
+  describe('Tab Selection', () => {
+    it('displays the selected tab from store', () => {
+      render(<SettingsModal isOpen onClose={vi.fn()} />)
+
+      const tabs = screen.getByTestId('tabs')
+      expect(tabs).toHaveAttribute('data-selected-key', 'general')
+    })
+
+    it('calls setSelectedTab when tab selection changes to models', async () => {
+      const user = userEvent.setup()
+      render(<SettingsModal isOpen onClose={vi.fn()} />)
+
+      const changeButton = screen.getByTestId('change-tab-models')
+      await user.click(changeButton)
+
+      expect(mockSetSelectedTab).toHaveBeenCalledTimes(1)
+      expect(mockSetSelectedTab).toHaveBeenCalledWith('models')
+    })
+
+    it('calls setSelectedTab when tab selection changes to updates', async () => {
+      const user = userEvent.setup()
+      render(<SettingsModal isOpen onClose={vi.fn()} />)
+
+      const changeButton = screen.getByTestId('change-tab-updates')
+      await user.click(changeButton)
+
+      expect(mockSetSelectedTab).toHaveBeenCalledTimes(1)
+      expect(mockSetSelectedTab).toHaveBeenCalledWith('updates')
+    })
+
+    it('respects the selectedTab prop from store', () => {
+      mockSelectedTab = 'models'
+      render(<SettingsModal isOpen onClose={vi.fn()} />)
+
+      const tabs = screen.getByTestId('tabs')
+      expect(tabs).toHaveAttribute('data-selected-key', 'models')
+    })
+  })
+
+  describe('Modal Close', () => {
+    it('calls onClose when modal close is triggered', async () => {
+      const mockOnClose = vi.fn()
+      const user = userEvent.setup()
+      render(<SettingsModal isOpen onClose={mockOnClose} />)
+
+      const modal = screen.getByTestId('modal')
+      await user.click(modal)
+
+      expect(mockOnClose).toHaveBeenCalledTimes(1)
+    })
+
+    it('accepts onClose callback as prop', () => {
+      const mockOnClose = vi.fn()
+      render(<SettingsModal isOpen onClose={mockOnClose} />)
+
+      // Component should render without errors
+      expect(screen.getByTestId('modal')).toBeInTheDocument()
+    })
+  })
+
+  describe('Store Integration', () => {
+    it('uses selectedTab from settings store', () => {
+      mockSelectedTab = 'updates'
+      render(<SettingsModal isOpen onClose={vi.fn()} />)
+
+      const tabs = screen.getByTestId('tabs')
+      expect(tabs).toHaveAttribute('data-selected-key', 'updates')
+    })
+
+    it('uses setSelectedTab from settings store', async () => {
+      const user = userEvent.setup()
+      render(<SettingsModal isOpen onClose={vi.fn()} />)
+
+      const changeButton = screen.getByTestId('change-tab-models')
+      await user.click(changeButton)
+
+      expect(mockSetSelectedTab).toHaveBeenCalled()
+    })
   })
 })

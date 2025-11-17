@@ -1,8 +1,9 @@
+import { ModelLoadPhase } from '@/cores/sockets'
+import { GeneratorConfigFormValues } from '@/features/generator-configs'
 import { render, screen } from '@testing-library/react'
 import { UseFormReturn } from 'react-hook-form'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { GeneratorConfigFormValues } from '@/features/generator-configs'
-import { useGeneratorForm, useGenerator } from '../../states'
+import { useGenerator, useGeneratorForm } from '../../states'
 import { Generator } from '../Generator'
 
 // Mock all the feature components
@@ -83,6 +84,13 @@ vi.mock('allotment', () => {
     __esModule: true
   }
 })
+
+// Mock FullScreenLoader to avoid loading lottie/assets
+vi.mock('@/cores/presentations', () => ({
+  FullScreenLoader: ({ message }: { message: string }) => (
+    <div data-testid="fullscreen-loader">{message}</div>
+  )
+}))
 
 // Mock the state hooks
 const mockOnGenerate = vi.fn()
@@ -257,5 +265,33 @@ describe('Generator', () => {
 
     // Progress indicator should not be visible
     expect(screen.queryByTestId('progress-indicator')).not.toBeInTheDocument()
+  })
+
+  it('shows fullscreen loader when model is loading', async () => {
+    const { useModelLoadProgressStore } = await import(
+      '@/features/model-load-progress/states/useModelLoadProgressStore'
+    )
+
+    // Simulate loading state
+    useModelLoadProgressStore.setState({
+      id: 'model-123',
+      progress: {
+        id: 'model-123',
+        step: 1,
+        total: 2,
+        message: 'Loading...',
+        phase: ModelLoadPhase.INITIALIZATION
+      }
+    })
+
+    render(<Generator />)
+
+    // Loader overlay should be present
+    expect(screen.getByTestId('fullscreen-loader')).toHaveTextContent(
+      'Loading...'
+    )
+
+    // Cleanup loading state
+    useModelLoadProgressStore.getState().reset()
   })
 })

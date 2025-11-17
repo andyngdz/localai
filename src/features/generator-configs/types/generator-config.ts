@@ -5,6 +5,7 @@ export interface GeneratorConfigFormValues {
   negative_prompt: string
   number_of_images: number
   prompt: string
+  sampler: string
   seed: number
   steps: number
   styles: string[]

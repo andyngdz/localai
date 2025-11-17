@@ -3,7 +3,7 @@ import {
   BackendStatusEmitter,
   BackendStatusLevel
 } from '@types'
-import { $ } from 'zx'
+import { $ } from '../zx-config'
 import { isMac, isWindows } from './utils'
 
 interface PythonCandidate {

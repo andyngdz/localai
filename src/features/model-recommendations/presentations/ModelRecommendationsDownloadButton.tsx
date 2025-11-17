@@ -7,7 +7,7 @@ import {
 import { api, formatter } from '@/services'
 import { Button } from '@heroui/react'
 import clsx from 'clsx'
-import { Download } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
 import { FC } from 'react'
 
 interface ModelRecommendationsDownloadButtonProps {
@@ -27,7 +27,7 @@ export const ModelRecommendationsDownloadButton: FC<
   }
 
   return (
-    <div className="relative overflow-hidden rounded-lg">
+    <div className="relative overflow-hidden rounded-lg w-full">
       {isDownloading && (
         <div
           className="absolute inset-0 bg-primary/30 transition-all duration-300"
@@ -38,7 +38,7 @@ export const ModelRecommendationsDownloadButton: FC<
         color={isDownloading ? 'primary' : 'default'}
         isDisabled={isDisabled}
         onPress={onDownload}
-        startContent={!isDownloading && <Download size={16} />}
+        startContent={!isDownloading && <ChevronDown size={16} />}
         className="w-full relative z-10"
         variant={isDownloading ? 'bordered' : 'solid'}
         size="sm"

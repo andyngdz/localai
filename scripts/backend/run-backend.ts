@@ -1,6 +1,6 @@
 import { BackendStatusEmitter, BackendStatusLevel, Nullable } from '@types'
 import * as path from 'node:path'
-import { $, type ProcessPromise } from 'zx'
+import { $, type ProcessPromise } from '../zx-config'
 import { findAvailablePort, normalizeError, pathExists } from './utils'
 
 export interface RunBackendOptions {
@@ -69,8 +69,9 @@ const runBackend = async ({ backendPath, emit }: RunBackendOptions) => {
     // which will then be captured by the log streamer
     process.chdir(backendPath)
 
-    // Run uvicorn with the dynamically allocated port
-    backendProcess = $`uvicorn main:app --host 127.0.0.1 --port ${port}`
+    // Run uvicorn with the dynamically allocated port using uv run
+    // This ensures uvicorn runs in the virtual environment created by uv sync
+    backendProcess = $`uv run uvicorn main:app --host 127.0.0.1 --port ${port}`
 
     // Stream the output to console so it gets picked up by log streaming
     backendProcess.stdout.on('data', onLogOutput)

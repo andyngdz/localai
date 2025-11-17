@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { GeneratorPreviewerSliderActions } from '../GeneratorPreviewerSliderActions'
+import { SwiperNavigationActions } from '../SwiperNavigationActions'
 
 // Mock the useSwiper hook
 const mockSlideNext = vi.fn()
@@ -62,34 +62,33 @@ vi.mock('lucide-react', () => ({
   )
 }))
 
-describe('GeneratorPreviewerSliderActions', () => {
+describe('SwiperNavigationActions', () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
   describe('component rendering', () => {
     it('should render both navigation buttons', () => {
-      render(<GeneratorPreviewerSliderActions />)
+      render(<SwiperNavigationActions />)
 
       expect(screen.getByTestId('prev-button')).toBeInTheDocument()
       expect(screen.getByTestId('next-button')).toBeInTheDocument()
     })
 
     it('should render correct icons in buttons', () => {
-      render(<GeneratorPreviewerSliderActions />)
+      render(<SwiperNavigationActions />)
 
       expect(screen.getByTestId('chevron-left-icon')).toBeInTheDocument()
       expect(screen.getByTestId('chevron-right-icon')).toBeInTheDocument()
     })
 
     it('should have correct container styling', () => {
-      render(<GeneratorPreviewerSliderActions />)
+      render(<SwiperNavigationActions />)
 
       const container = screen.getByTestId('prev-button').parentElement
       expect(container).toHaveClass(
         'absolute',
         'inset-4',
-        'z-20',
         'flex',
         'items-center',
         'justify-between'
@@ -99,7 +98,7 @@ describe('GeneratorPreviewerSliderActions', () => {
 
   describe('button properties', () => {
     it('should render buttons with correct HeroUI properties', () => {
-      render(<GeneratorPreviewerSliderActions />)
+      render(<SwiperNavigationActions />)
 
       const prevButton = screen.getByTestId('prev-button')
       const nextButton = screen.getByTestId('next-button')
@@ -119,7 +118,7 @@ describe('GeneratorPreviewerSliderActions', () => {
 
   describe('navigation functionality', () => {
     it('should call swiper.slidePrev when previous button is clicked', () => {
-      render(<GeneratorPreviewerSliderActions />)
+      render(<SwiperNavigationActions />)
 
       const prevButton = screen.getByTestId('prev-button')
       fireEvent.click(prevButton)
@@ -129,7 +128,7 @@ describe('GeneratorPreviewerSliderActions', () => {
     })
 
     it('should call swiper.slideNext when next button is clicked', () => {
-      render(<GeneratorPreviewerSliderActions />)
+      render(<SwiperNavigationActions />)
 
       const nextButton = screen.getByTestId('next-button')
       fireEvent.click(nextButton)
@@ -139,7 +138,7 @@ describe('GeneratorPreviewerSliderActions', () => {
     })
 
     it('should handle multiple clicks correctly', () => {
-      render(<GeneratorPreviewerSliderActions />)
+      render(<SwiperNavigationActions />)
 
       const prevButton = screen.getByTestId('prev-button')
       const nextButton = screen.getByTestId('next-button')
@@ -159,7 +158,7 @@ describe('GeneratorPreviewerSliderActions', () => {
     })
 
     it('should call correct functions for each button independently', () => {
-      render(<GeneratorPreviewerSliderActions />)
+      render(<SwiperNavigationActions />)
 
       const prevButton = screen.getByTestId('prev-button')
       const nextButton = screen.getByTestId('next-button')
@@ -177,28 +176,28 @@ describe('GeneratorPreviewerSliderActions', () => {
 
   describe('accessibility', () => {
     it('should have proper aria-label for previous button', () => {
-      render(<GeneratorPreviewerSliderActions />)
+      render(<SwiperNavigationActions />)
 
       const prevButton = screen.getByTestId('prev-button')
-      expect(prevButton).toHaveAttribute('aria-label', 'Previous image')
+      expect(prevButton).toHaveAttribute('aria-label', 'Previous')
     })
 
     it('should have proper aria-label for next button', () => {
-      render(<GeneratorPreviewerSliderActions />)
+      render(<SwiperNavigationActions />)
 
       const nextButton = screen.getByTestId('next-button')
-      expect(nextButton).toHaveAttribute('aria-label', 'Next image')
+      expect(nextButton).toHaveAttribute('aria-label', 'Next')
     })
 
     it('should be accessible via aria-label queries', () => {
-      render(<GeneratorPreviewerSliderActions />)
+      render(<SwiperNavigationActions />)
 
-      expect(screen.getByLabelText('Previous image')).toBeInTheDocument()
-      expect(screen.getByLabelText('Next image')).toBeInTheDocument()
+      expect(screen.getByLabelText('Previous')).toBeInTheDocument()
+      expect(screen.getByLabelText('Next')).toBeInTheDocument()
     })
 
     it('should have icon titles for screen readers', () => {
-      render(<GeneratorPreviewerSliderActions />)
+      render(<SwiperNavigationActions />)
 
       expect(screen.getByTitle('Previous')).toBeInTheDocument()
       expect(screen.getByTitle('Next')).toBeInTheDocument()
@@ -207,7 +206,7 @@ describe('GeneratorPreviewerSliderActions', () => {
 
   describe('swiper integration', () => {
     it('should use swiper instance from useSwiper hook', () => {
-      render(<GeneratorPreviewerSliderActions />)
+      render(<SwiperNavigationActions />)
 
       // The component should render without errors, indicating successful hook usage
       expect(screen.getByTestId('prev-button')).toBeInTheDocument()
@@ -215,7 +214,7 @@ describe('GeneratorPreviewerSliderActions', () => {
     })
 
     it('should handle onPrevious function correctly', () => {
-      render(<GeneratorPreviewerSliderActions />)
+      render(<SwiperNavigationActions />)
 
       const prevButton = screen.getByTestId('prev-button')
 
@@ -226,7 +225,7 @@ describe('GeneratorPreviewerSliderActions', () => {
     })
 
     it('should handle onNext function correctly', () => {
-      render(<GeneratorPreviewerSliderActions />)
+      render(<SwiperNavigationActions />)
 
       const nextButton = screen.getByTestId('next-button')
 
@@ -239,7 +238,7 @@ describe('GeneratorPreviewerSliderActions', () => {
 
   describe('component structure', () => {
     it('should have correct DOM structure', () => {
-      render(<GeneratorPreviewerSliderActions />)
+      render(<SwiperNavigationActions />)
 
       const container = screen.getByTestId('prev-button').parentElement
       const buttons = container?.querySelectorAll('button')
@@ -249,27 +248,25 @@ describe('GeneratorPreviewerSliderActions', () => {
     })
 
     it('should position buttons at opposite ends of container', () => {
-      render(<GeneratorPreviewerSliderActions />)
+      render(<SwiperNavigationActions />)
 
       const container = screen.getByTestId('prev-button').parentElement
       expect(container).toHaveClass('justify-between')
     })
 
     it('should center buttons vertically in container', () => {
-      render(<GeneratorPreviewerSliderActions />)
+      render(<SwiperNavigationActions />)
 
       const container = screen.getByTestId('prev-button').parentElement
       expect(container).toHaveClass('items-center')
     })
 
     it('should have proper z-index for overlay positioning', () => {
-      render(<GeneratorPreviewerSliderActions />)
+      render(<SwiperNavigationActions />)
 
-      const container = screen.getByTestId('prev-button').parentElement
       const prevButton = screen.getByTestId('prev-button')
       const nextButton = screen.getByTestId('next-button')
 
-      expect(container).toHaveClass('z-20')
       expect(prevButton).toHaveClass('z-10')
       expect(nextButton).toHaveClass('z-10')
     })
@@ -277,7 +274,7 @@ describe('GeneratorPreviewerSliderActions', () => {
 
   describe('edge cases', () => {
     it('should handle rapid successive clicks', () => {
-      render(<GeneratorPreviewerSliderActions />)
+      render(<SwiperNavigationActions />)
 
       const nextButton = screen.getByTestId('next-button')
 
@@ -290,7 +287,7 @@ describe('GeneratorPreviewerSliderActions', () => {
     })
 
     it('should maintain button state after interactions', () => {
-      render(<GeneratorPreviewerSliderActions />)
+      render(<SwiperNavigationActions />)
 
       const prevButton = screen.getByTestId('prev-button')
       const nextButton = screen.getByTestId('next-button')

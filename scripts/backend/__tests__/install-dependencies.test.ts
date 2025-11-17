@@ -5,7 +5,8 @@ import * as utilsModule from '../utils'
 
 // Mock dependencies
 vi.mock('zx', () => ({
-  $: vi.fn()
+  $: vi.fn(),
+  usePowerShell: vi.fn()
 }))
 vi.mock('../utils')
 
@@ -59,8 +60,8 @@ describe('installDependencies', () => {
   })
 
   describe('error handling', () => {
-    it('should handle uv pip install command failure', async () => {
-      const installError = new Error('pip install failed')
+    it('should handle uv sync command failure', async () => {
+      const installError = new Error('uv sync failed')
       mock$.mockRejectedValue(installError)
       mockNormalizeError.mockReturnValue(installError)
 
@@ -69,7 +70,7 @@ describe('installDependencies', () => {
           backendPath: mockBackendPath,
           emit: mockEmit
         })
-      ).rejects.toThrow('pip install failed')
+      ).rejects.toThrow('uv sync failed')
 
       expect(zxWithCwd.cwd).toBe(mockBackendPath)
 
@@ -84,7 +85,7 @@ describe('installDependencies', () => {
         commands: [
           {
             label: 'Install dependencies manually',
-            command: 'uv pip install -r requirements.txt'
+            command: 'uv sync'
           }
         ]
       })
@@ -143,7 +144,7 @@ describe('installDependencies', () => {
         commands: [
           {
             label: 'Install dependencies manually',
-            command: 'uv pip install -r requirements.txt'
+            command: 'uv sync'
           }
         ]
       })
@@ -213,7 +214,7 @@ describe('installDependencies', () => {
         commands: [
           {
             label: 'Install dependencies manually',
-            command: 'uv pip install -r requirements.txt'
+            command: 'uv sync'
           }
         ]
       })

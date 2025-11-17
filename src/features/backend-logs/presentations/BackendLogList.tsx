@@ -1,6 +1,8 @@
 import { dateFormatter } from '@/services'
 import { ScrollShadow } from '@heroui/react'
+import clsx from 'clsx'
 import { useMemo } from 'react'
+import stripAnsi from 'strip-ansi'
 import { useBackendLog } from '../states'
 
 export const BackendLogList = () => {
@@ -22,11 +24,11 @@ export const BackendLogList = () => {
           }}
         >
           <div className="flex gap-1 text-sm">
-            <span className="flex-shrink-0 min-w-10 text-default-700">
+            <span className="shrink-0 min-w-10 text-default-700">
               {dateFormatter.timeFromTimestamp(timestamp)}
             </span>
-            <span className={`break-words ${onGetLogColor(level)}`}>
-              {log.message}
+            <span className={clsx(`wrap-break-word`, onGetLogColor(level))}>
+              {stripAnsi(log.message)}
             </span>
           </div>
         </div>

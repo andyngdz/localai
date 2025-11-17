@@ -12,6 +12,7 @@ describe('Generator Constants', () => {
         steps: 24,
         seed: -1,
         cfg_scale: 7.5,
+        sampler: 'EULER_A',
         styles: [],
         prompt: '',
         negative_prompt: ''
@@ -28,6 +29,7 @@ describe('Generator Constants', () => {
         'steps',
         'seed',
         'cfg_scale',
+        'sampler',
         'styles',
         'prompt',
         'negative_prompt'
