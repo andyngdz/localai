@@ -1,5 +1,6 @@
 import { Accordion, AccordionItem, ScrollShadow } from '@heroui/react'
 import { isEmpty } from 'es-toolkit/compat'
+import { Fragment } from 'react/jsx-runtime'
 import { useHistories } from '../states'
 import { HistoryEmpty } from './HistoryEmpty'
 import { HistoryErrors } from './HistoryErrors'
@@ -23,8 +24,8 @@ export const Histories = () => {
   }
 
   return (
-    <>
-      <ScrollShadow className="scrollable h-full">
+    <Fragment>
+      <ScrollShadow className="h-full">
         <Accordion>
           {historyGroups.map((group) => (
             <AccordionItem
@@ -41,6 +42,6 @@ export const Histories = () => {
         </Accordion>
       </ScrollShadow>
       <HistoryPhotoviewModal />
-    </>
+    </Fragment>
   )
 }
