@@ -17,7 +17,7 @@ export const GeneratorConfigStyleSection: FC<
     useGeneratorConfigStyleSection(styleSections)
 
   return (
-    <ScrollShadow ref={parentRef} className="scrollable h-full p-2">
+    <ScrollShadow ref={parentRef} className="h-full p-2">
       <div
         className="relative w-full"
         style={{ height: `${rowVirtualizer.getTotalSize()}px` }}

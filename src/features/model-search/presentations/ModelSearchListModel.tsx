@@ -29,7 +29,7 @@ export const ModelSearchListModel = () => {
     }
 
     return (
-      <ScrollShadow className="scrollable">
+      <ScrollShadow>
         <div className="flex flex-col gap-2 p-2">
           {models_search_info.map((model) => (
             <ModelSearchItem key={model.id} modelSearchInfo={model} />

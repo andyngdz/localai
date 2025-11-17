@@ -1,4 +1,4 @@
-import { Skeleton } from '@heroui/react'
+import { ScrollShadow, Skeleton } from '@heroui/react'
 
 const SKELETON_ITEMS = Array.from({ length: 10 }).map(
   (_, idx) => `skeleton-item-${idx}`
@@ -7,7 +7,7 @@ const SKELETON_ITEMS = Array.from({ length: 10 }).map(
 export const HistoryLoader = () => {
   return (
     <div className="flex flex-col" data-testid="history-loader">
-      <div className="scrollable">
+      <ScrollShadow>
         <div className="flex flex-col flex-1 divide-y divide-default-200">
           {SKELETON_ITEMS.map((id) => (
             <div
@@ -28,7 +28,7 @@ export const HistoryLoader = () => {
             </div>
           ))}
         </div>
-      </div>
+      </ScrollShadow>
     </div>
   )
 }

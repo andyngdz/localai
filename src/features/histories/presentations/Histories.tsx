@@ -25,7 +25,7 @@ export const Histories = () => {
 
   return (
     <Fragment>
-      <ScrollShadow className="scrollable h-full">
+      <ScrollShadow className="h-full">
         <Accordion>
           {historyGroups.map((group) => (
             <AccordionItem

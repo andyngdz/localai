@@ -8,7 +8,7 @@ import { ScrollShadow } from '@heroui/react'
 
 export const GeneratorConfig = () => {
   return (
-    <ScrollShadow className="h-full scrollable divide-y divide-default-200">
+    <ScrollShadow className="h-full divide-y divide-default-200">
       <GeneratorConfigFormat />
       <GeneratorConfigExtra />
       <GeneratorConfigQuantity />
