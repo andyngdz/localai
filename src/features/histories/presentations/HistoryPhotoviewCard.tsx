@@ -3,6 +3,7 @@
 import { dateFormatter } from '@/services'
 import { HistoryItem } from '@/types'
 import { FC } from 'react'
+import { HistoryDeleteButton } from './HistoryDeleteButton'
 import { HistoryPhotoviewConfigRow } from './HistoryPhotoviewConfigRow'
 import { HistoryPhotoviewImageGrid } from './HistoryPhotoviewImageGrid'
 import { HistoryUseConfigButton } from './HistoryUseConfigButton'
@@ -23,7 +24,10 @@ export const HistoryPhotoviewCard: FC<HistoryPhotoviewCardProps> = ({
           </h2>
           <p className="text-lg text-default-600">{history.model}</p>
         </div>
-        <HistoryUseConfigButton history={history} />
+        <div className="flex gap-4">
+          <HistoryUseConfigButton history={history} />
+          <HistoryDeleteButton history={history} />
+        </div>
       </div>
 
       <HistoryPhotoviewImageGrid images={history.generated_images} />
