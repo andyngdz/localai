@@ -21,7 +21,7 @@ export const GeneratorPreviewerGrid = () => {
   }, [imageStepEnds])
 
   return (
-    <ScrollShadow className="scrollbar-thin h-full">
+    <ScrollShadow className="h-full">
       <div
         data-testid="grid-container"
         className={clsx(

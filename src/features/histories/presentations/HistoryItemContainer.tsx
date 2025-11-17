@@ -26,6 +26,7 @@ export const HistoryItemContainer: FC<HistoryItemProps> = ({ history }) => {
       onPress={() => openPhotoview(history.id)}
       aria-label={ariaLabel}
       shadow="none"
+      className="bg-content2"
     >
       <CardHeader className="flex items-center justify-between gap-2">
         <span className="text-default-700 font-bold text-sm">

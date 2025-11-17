@@ -17,7 +17,7 @@ export const GeneratorConfigStyleSection: FC<
     useGeneratorConfigStyleSection(styleSections)
 
   return (
-    <ScrollShadow ref={parentRef} className="scrollbar-thin h-full">
+    <ScrollShadow ref={parentRef} className="h-full p-2">
       <div
         className="relative w-full"
         style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
@@ -35,7 +35,7 @@ export const GeneratorConfigStyleSection: FC<
                 transform: `translateY(${virtualItem.start}px)`
               }}
             >
-              <Card shadow="sm">
+              <Card shadow="none" className="border border-default-100">
                 <CardHeader className="text-lg font-medium capitalize">
                   {styleSection.id}
                 </CardHeader>

@@ -37,7 +37,6 @@ const onCreateWindow = async () => {
     height: 800,
     autoHideMenuBar: true,
     show: false,
-    backgroundColor: '#0B0B0B',
     webPreferences: {
       preload: path.join(appDir, 'electron', 'preload.js'),
       sandbox: true,

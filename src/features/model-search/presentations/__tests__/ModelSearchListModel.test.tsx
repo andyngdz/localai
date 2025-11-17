@@ -70,7 +70,7 @@ describe('ModelSearchListModel', () => {
     render(<ModelSearchListModel />)
 
     // Should show a spinner when loading
-    expect(screen.getByLabelText('Loading')).toBeInTheDocument()
+    expect(screen.getByLabelText('Loading...')).toBeInTheDocument()
     expect(screen.queryByText('No models found')).not.toBeInTheDocument()
     expect(
       screen.queryByTestId('mock-model-search-item')

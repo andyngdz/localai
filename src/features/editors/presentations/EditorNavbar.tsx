@@ -6,7 +6,7 @@ import NextImage from 'next/image'
 
 export const EditorNavbar = () => {
   return (
-    <Navbar maxWidth="full" className="bg-content1">
+    <Navbar maxWidth="full" isBordered isBlurred>
       <NavbarBrand>
         <NextImage
           src={LocalAILogo}

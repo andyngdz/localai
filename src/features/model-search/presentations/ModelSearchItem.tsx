@@ -15,7 +15,12 @@ export const ModelSearchItem: FC<ModelSearchItemProps> = ({
   const { id, author, downloads, likes } = modelSearchInfo
 
   return (
-    <Card className="max-w-96" onClick={() => onUpdateModelId(id)} isPressable>
+    <Card
+      className="max-w-96 bg-content2"
+      shadow="none"
+      onPress={() => onUpdateModelId(id)}
+      isPressable
+    >
       <CardHeader>
         <ModelWithAvatar author={author} id={id} />
       </CardHeader>

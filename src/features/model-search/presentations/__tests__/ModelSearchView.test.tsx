@@ -243,8 +243,8 @@ describe('ModelSearchView', () => {
     const childComponents = screen.getAllByTestId(/mock-view-/)
     expect(childComponents).toHaveLength(4) // card, spaces, files, footer
 
-    // The wrapper should have the scrollbar-thin class
+    // The wrapper should have ScrollShadow styling
     const scrollShadow = screen.getByTestId('scrollshadow')
-    expect(scrollShadow).toHaveClass('scrollable')
+    expect(scrollShadow).toHaveClass('flex', 'flex-col', 'gap-8', 'p-6')
   })
 })
