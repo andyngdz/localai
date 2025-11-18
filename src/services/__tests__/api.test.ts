@@ -261,12 +261,14 @@ describe('API Service', () => {
         width: 512,
         height: 512,
         styles: ['style1'],
+        loras: [],
         model: 'model1',
         guidance_scale: 7.5,
         sampler: 'Euler a',
         number_of_images: 1,
         hires_fix: false,
-        cfg_scale: 7
+        cfg_scale: 7,
+        clip_skip: 2
       }
       const mockResponse = 1
       vi.spyOn(client, 'post').mockResolvedValueOnce({ data: mockResponse })
@@ -335,9 +337,11 @@ describe('API Service', () => {
           height: 512,
           sampler: 'EULER_A',
           styles: [],
+          loras: [],
           number_of_images: 1,
           hires_fix: false,
-          cfg_scale: 7
+          cfg_scale: 7,
+          clip_skip: 2
         }
       }
       const mockResponse = {

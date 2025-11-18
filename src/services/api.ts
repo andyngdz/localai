@@ -9,6 +9,9 @@ import type {
   ImageGenerationRequest,
   ImageGenerationResponse,
   LoadModelRequest,
+  LoRA,
+  LoRADeleteResponse,
+  LoRAListResponse,
   MaxMemoryRequest,
   MemoryResponse,
   ModelDetailsResponse,
@@ -147,6 +150,24 @@ class API {
 
   async getSamplers() {
     const { data } = await client.get<Sampler[]>('/generators/samplers')
+
+    return data
+  }
+
+  async loras() {
+    const { data } = await client.get<LoRAListResponse>('/loras')
+
+    return data
+  }
+
+  async uploadLora(file_path: string) {
+    const { data } = await client.post<LoRA>('/loras/upload', { file_path })
+
+    return data
+  }
+
+  async deleteLora(id: number) {
+    const { data } = await client.delete<LoRADeleteResponse>(`/loras/${id}`)
 
     return data
   }

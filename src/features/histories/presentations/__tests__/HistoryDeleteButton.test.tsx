@@ -120,10 +120,12 @@ describe('HistoryDeleteButton', () => {
       height: 512,
       steps: 20,
       cfg_scale: 7,
+      clip_skip: 2,
       sampler: 'Euler',
       seed: 42,
       number_of_images: 1,
       hires_fix: false,
+      loras: [],
       prompt: 'Test prompt',
       negative_prompt: '',
       styles: []
