@@ -1,4 +1,6 @@
 import type { LoRA } from '@/types'
+import { Card, CardBody, Switch } from '@heroui/react'
+import clsx from 'clsx'
 import { FC } from 'react'
 
 interface LoraListItemProps {
@@ -18,24 +20,33 @@ export const LoraListItem: FC<LoraListItemProps> = ({
   }
 
   return (
-    <button
-      onClick={onSelect}
-      className="flex items-center gap-3 p-3 rounded-lg hover:bg-default-100 w-full text-left transition-colors"
+    <Card
+      tabIndex={0}
+      shadow="sm"
+      onPress={onSelect}
+      className={clsx('group w-full', {
+        'bg-primary/10': isSelected
+      })}
+      isPressable
     >
-      <div
-        className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-          isSelected ? 'border-primary bg-primary' : 'border-default-300'
-        }`}
-      >
-        {isSelected && <div className="w-2 h-2 bg-white rounded-full" />}
-      </div>
-
-      <div className="flex-1">
-        <div className="font-semibold text-sm">{lora.name}</div>
-        <div className="text-xs text-default-500">
-          {formatFileSize(lora.file_size)}
+      <CardBody className="flex flex-row items-center justify-between gap-3 p-3">
+        <div className="flex-1 min-w-0">
+          <span className="font-semibold text-sm truncate block">
+            {lora.name}
+          </span>
+          <div className="text-xs text-default-500">
+            {formatFileSize(lora.file_size)}
+          </div>
         </div>
-      </div>
-    </button>
+
+        <Switch
+          aria-label={`Toggle ${lora.name}`}
+          size="sm"
+          color="primary"
+          isSelected={isSelected}
+          onValueChange={onSelect}
+        />
+      </CardBody>
+    </Card>
   )
 }

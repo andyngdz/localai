@@ -1,5 +1,5 @@
-import { Button, Card, CardBody, CardHeader, Slider } from '@heroui/react'
 import type { LoRA } from '@/types'
+import { Button, Card, CardBody, CardHeader, Slider } from '@heroui/react'
 import { X } from 'lucide-react'
 import { FC } from 'react'
 
@@ -17,8 +17,8 @@ export const LoraCard: FC<LoraCardProps> = ({
   onRemove
 }) => {
   return (
-    <Card shadow="sm">
-      <CardHeader className="flex justify-between items-center">
+    <Card shadow="none" className="border border-default-200 bg-content1/30">
+      <CardHeader className="flex justify-between items-center pb-0">
         <span className="font-semibold text-sm">{lora.name}</span>
         <Button size="sm" isIconOnly variant="light" onPress={onRemove}>
           <X size={16} />

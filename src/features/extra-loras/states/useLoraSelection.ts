@@ -29,6 +29,21 @@ export const useLoraSelection = () => {
     [loras, setValue]
   )
 
+  const toggleLora = useCallback(
+    (lora: LoRA) => {
+      const exists = loras.some((l) => l.lora_id === lora.id)
+      if (exists) {
+        setValue(
+          'loras',
+          loras.filter((entry) => entry.lora_id !== lora.id)
+        )
+      } else {
+        setValue('loras', [...loras, { lora_id: lora.id, weight: 1.0 }])
+      }
+    },
+    [loras, setValue]
+  )
+
   const updateWeight = useCallback(
     (loraId: number, weight: number) => {
       setValue(
@@ -56,5 +71,12 @@ export const useLoraSelection = () => {
     )
   }, [loras])
 
-  return { selectedLoras, weights, addLora, removeLora, updateWeight }
+  return {
+    selectedLoras,
+    weights,
+    addLora,
+    removeLora,
+    updateWeight,
+    toggleLora
+  }
 }

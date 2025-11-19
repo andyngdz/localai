@@ -23,7 +23,7 @@ export const LoraList: FC<LoraListProps> = ({
   }
 
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-2">
       {loras.map((lora) => (
         <LoraListItem
           key={lora.id}

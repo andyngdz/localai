@@ -17,7 +17,7 @@ import { FC } from 'react'
 
 export const ExtraModal: FC<Omit<ModalProps, 'children'>> = (props) => {
   const { data } = useLorasQuery()
-  const { addLora, selectedLoras } = useLoraSelection()
+  const { toggleLora, selectedLoras } = useLoraSelection()
 
   const selectedIds = selectedLoras.map((l) => l.id)
 
@@ -34,7 +34,7 @@ export const ExtraModal: FC<Omit<ModalProps, 'children'>> = (props) => {
               <LoraList
                 loras={data?.loras || []}
                 selectedIds={selectedIds}
-                onSelect={addLora}
+                onSelect={toggleLora}
               />
             </Tab>
           </Tabs>
