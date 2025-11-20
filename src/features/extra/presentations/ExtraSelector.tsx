@@ -6,8 +6,7 @@ import { ExtraModal } from './ExtraModal'
 
 export const ExtraSelector = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
-  const { selectedLoras, weights, removeLora, updateWeight } =
-    useLoraSelection()
+  const { selectedLoras, removeLora } = useLoraSelection()
 
   return (
     <section className="flex flex-col gap-4 p-4">
@@ -23,8 +22,6 @@ export const ExtraSelector = () => {
           <LoraCard
             key={lora.id}
             lora={lora}
-            weight={weights[lora.id] || 1.0}
-            onWeightChange={(w) => updateWeight(lora.id, w)}
             onRemove={() => removeLora(lora.id)}
           />
         ))}

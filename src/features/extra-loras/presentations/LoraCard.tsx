@@ -5,22 +5,25 @@ import { FC } from 'react'
 
 interface LoraCardProps {
   lora: LoRA
-  weight: number
-  onWeightChange: (weight: number) => void
   onRemove: VoidFunction
 }
 
-export const LoraCard: FC<LoraCardProps> = ({
-  lora,
-  weight,
-  onWeightChange,
-  onRemove
-}) => {
+import { useLoraCard } from '@/features/extra-loras/states/useLoraCard'
+
+export const LoraCard: FC<LoraCardProps> = ({ lora, onRemove }) => {
+  const { weight, setWeight } = useLoraCard(lora.id)
+
   return (
     <Card shadow="none" className="border border-default-200 bg-content1/30">
       <CardHeader className="flex justify-between items-center pb-0">
         <span className="font-semibold text-sm">{lora.name}</span>
-        <Button size="sm" isIconOnly variant="light" onPress={onRemove}>
+        <Button
+          size="sm"
+          variant="light"
+          radius="full"
+          onPress={onRemove}
+          isIconOnly
+        >
           <X size={16} />
         </Button>
       </CardHeader>
@@ -32,12 +35,10 @@ export const LoraCard: FC<LoraCardProps> = ({
           minValue={0}
           maxValue={2}
           value={weight}
-          onChange={(value) => onWeightChange(value as number)}
+          onChange={(value) => setWeight(value as number)}
           className="max-w-full"
+          label="Weight"
         />
-        <span className="text-xs text-default-500 text-center mt-1">
-          Weight: {weight.toFixed(2)}
-        </span>
       </CardBody>
     </Card>
   )

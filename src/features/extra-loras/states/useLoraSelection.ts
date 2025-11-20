@@ -12,6 +12,7 @@ export const useLoraSelection = () => {
   const addLora = useCallback(
     (lora: LoRA) => {
       const exists = loras.some((l) => l.lora_id === lora.id)
+
       if (!exists) {
         setValue('loras', [...loras, { lora_id: lora.id, weight: 1.0 }])
       }
@@ -32,6 +33,7 @@ export const useLoraSelection = () => {
   const toggleLora = useCallback(
     (lora: LoRA) => {
       const exists = loras.some((l) => l.lora_id === lora.id)
+
       if (exists) {
         setValue(
           'loras',
@@ -44,39 +46,20 @@ export const useLoraSelection = () => {
     [loras, setValue]
   )
 
-  const updateWeight = useCallback(
-    (loraId: number, weight: number) => {
-      setValue(
-        'loras',
-        loras.map((l) => (l.lora_id === loraId ? { ...l, weight } : l))
-      )
-    },
-    [loras, setValue]
-  )
-
   const selectedLoras = useMemo(() => {
-    if (!data?.loras) return []
-    return loras
-      .map((l) => data.loras.find((lora) => lora.id === l.lora_id))
-      .filter(Boolean) as LoRA[]
-  }, [loras, data])
+    if (data) {
+      return loras
+        .map((l) => data.loras.find((lora) => lora.id === l.lora_id))
+        .filter(Boolean) as LoRA[]
+    }
 
-  const weights = useMemo(() => {
-    return loras.reduce(
-      (acc, l) => {
-        acc[l.lora_id] = l.weight
-        return acc
-      },
-      {} as Record<number, number>
-    )
-  }, [loras])
+    return []
+  }, [loras, data])
 
   return {
     selectedLoras,
-    weights,
     addLora,
     removeLora,
-    updateWeight,
     toggleLora
   }
 }

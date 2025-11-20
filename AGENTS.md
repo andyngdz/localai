@@ -1,6 +1,4 @@
-# CLAUDE.md
-
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+# AGENTS.md
 
 - **Critical Rules**: @docs/CRITICAL_RULES.md
 - **Best Practices**: @docs/BEST_PRACTICES.md

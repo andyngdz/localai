@@ -22,12 +22,13 @@ export const LoraListItem: FC<LoraListItemProps> = ({
   return (
     <Card
       tabIndex={0}
-      shadow="sm"
+      shadow="none"
       onPress={onSelect}
-      className={clsx('group w-full', {
-        'bg-primary/10': isSelected
+      className={clsx('border border-default', {
+        'bg-default': isSelected
       })}
       isPressable
+      isHoverable
     >
       <CardBody className="flex flex-row items-center justify-between gap-3 p-3">
         <div className="flex-1 min-w-0">

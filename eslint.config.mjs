@@ -25,6 +25,13 @@ const eslintConfig = defineConfig([
           varsIgnorePattern: '^_',
           ignoreRestSiblings: true
         }
+      ],
+      '@typescript-eslint/no-explicit-any': [
+        'error',
+        {
+          fixToUnknown: true,
+          ignoreRestArgs: false
+        }
       ]
     }
   },
