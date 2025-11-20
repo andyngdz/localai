@@ -4,13 +4,15 @@ import {
   HardwareResponse,
   HealthResponse,
   HistoryItem,
+  LoRA,
+  LoRADeleteResponse,
   MemoryResponse,
   ModelDownloaded,
   ModelRecommendationResponse,
   Sampler,
   StyleSection
 } from '@/types'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 const useHealthQuery = (enabled = true) => {
   return useQuery<HealthResponse, ApiError>({
@@ -70,13 +72,46 @@ const useSamplersQuery = () => {
   })
 }
 
+const useLorasQuery = () => {
+  return useQuery<LoRA[], ApiError>({
+    queryKey: ['loras'],
+    queryFn: async () => {
+      const response = await api.loras()
+      return response.loras
+    }
+  })
+}
+
+const useUploadLoraMutation = () => {
+  const queryClient = useQueryClient()
+  return useMutation<LoRA, ApiError, string>({
+    mutationFn: (file_path: string) => api.uploadLora(file_path),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['loras'] })
+    }
+  })
+}
+
+const useDeleteLoraMutation = () => {
+  const queryClient = useQueryClient()
+  return useMutation<LoRADeleteResponse, ApiError, number>({
+    mutationFn: (id: number) => api.deleteLora(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['loras'] })
+    }
+  })
+}
+
 export {
+  useDeleteLoraMutation,
   useDownloadedModelsQuery,
   useHardwareQuery,
   useHealthQuery,
   useHistoriesQuery,
+  useLorasQuery,
   useMemoryQuery,
   useModelRecommendationsQuery,
   useSamplersQuery,
-  useStyleSectionsQuery
+  useStyleSectionsQuery,
+  useUploadLoraMutation
 }

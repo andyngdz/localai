@@ -1,8 +1,10 @@
 import { renderHook, waitFor } from '@testing-library/react'
-import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
+import type { ElectronAPI, LogEntry } from '@types'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { useBackendLog } from '../useBackendLog'
 import { useBackendLogStore } from '../useBackendLogStore'
-import type { ElectronAPI, LogEntry } from '@types'
+
+const noop = () => {}
 
 // Mock the store
 vi.mock('../useBackendLogStore', () => ({
@@ -40,8 +42,9 @@ describe('useBackendLog', () => {
     })
 
     // Mock electron API
-    global.window.electronAPI = {
+    globalThis.window.electronAPI = {
       downloadImage: vi.fn(),
+      selectFile: vi.fn().mockResolvedValue(null),
       onBackendSetupStatus: vi.fn(),
       app: {
         getVersion: vi.fn().mockResolvedValue('0.0.0')
@@ -49,20 +52,20 @@ describe('useBackendLog', () => {
       backend: {
         getPort: vi.fn().mockResolvedValue(8000),
         isLogStreaming: mockIsLogStreaming.mockResolvedValue(false),
-        onLog: mockOnLog.mockReturnValue(() => {})
+        onLog: mockOnLog.mockReturnValue(noop)
       },
       updater: {
         checkForUpdates: vi.fn().mockResolvedValue(undefined),
         downloadUpdate: vi.fn().mockResolvedValue(undefined),
         installUpdate: vi.fn().mockResolvedValue(undefined),
         getUpdateInfo: vi.fn().mockResolvedValue({ updateAvailable: false }),
-        onUpdateStatus: vi.fn().mockReturnValue(() => {})
+        onUpdateStatus: vi.fn().mockReturnValue(noop)
       }
     } as ElectronAPI
   })
 
   afterEach(() => {
-    delete (global.window as { electronAPI?: ElectronAPI }).electronAPI
+    delete (globalThis.window as { electronAPI?: ElectronAPI }).electronAPI
   })
 
   describe('Initial Setup', () => {
@@ -172,7 +175,7 @@ describe('useBackendLog', () => {
 
       mockOnLog.mockImplementation((callback) => {
         logCallback = callback
-        return () => {}
+        return noop
       })
 
       renderHook(() => useBackendLog())

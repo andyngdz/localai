@@ -57,10 +57,12 @@ describe('HistoryPhotoviewCard', () => {
       height: 768,
       steps: 25,
       cfg_scale: 7.5,
+      clip_skip: 2,
       sampler: 'Euler a',
       seed: 12345,
       number_of_images: 4,
       hires_fix: true,
+      loras: [],
       prompt: 'A beautiful landscape',
       negative_prompt: 'blurry, low quality',
       styles: ['anime', 'fantasy']
