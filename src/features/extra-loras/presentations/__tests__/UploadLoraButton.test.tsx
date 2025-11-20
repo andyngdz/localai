@@ -1,13 +1,14 @@
 import { useUploadLoraMutation } from '@/cores/api-queries'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import type { ReactNode } from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { UploadLoraButton } from '../UploadLoraButton'
 
 interface ButtonProps {
-  children: React.ReactNode
+  children: ReactNode
   onPress: () => void
   isLoading: boolean
-  startContent: React.ReactNode
+  startContent: ReactNode
   color?: string
 }
 
@@ -19,8 +20,19 @@ vi.mock('@/cores/api-queries', () => ({
 const mockAddToast = vi.fn()
 vi.mock('@heroui/react', () => ({
   addToast: (args: unknown) => mockAddToast(args),
-  Button: ({ children, onPress, isLoading, startContent }: ButtonProps) => (
-    <button onClick={onPress} disabled={isLoading} data-testid="upload-button">
+  Button: ({
+    children,
+    onPress,
+    isLoading,
+    startContent,
+    color
+  }: ButtonProps) => (
+    <button
+      onClick={onPress}
+      disabled={isLoading}
+      data-testid="upload-button"
+      data-color={color ?? 'primary'}
+    >
       {startContent}
       {children}
     </button>
@@ -28,17 +40,20 @@ vi.mock('@heroui/react', () => ({
 }))
 
 const mockSelectFile = vi.fn()
-globalThis.window = {
-  electronAPI: {
-    selectFile: mockSelectFile
-  }
-} as unknown as Window & typeof globalThis
 
 describe('UploadLoraButton', () => {
   const mockMutateAsync = vi.fn()
 
   beforeEach(() => {
     vi.clearAllMocks()
+    mockSelectFile.mockReset()
+
+    const electronAPI = globalThis.window?.electronAPI
+    if (!electronAPI) {
+      throw new Error('window.electronAPI is not defined in test environment')
+    }
+
+    electronAPI.selectFile = mockSelectFile
     vi.mocked(useUploadLoraMutation).mockReturnValue({
       mutateAsync: mockMutateAsync,
       isPending: false

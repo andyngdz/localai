@@ -1,7 +1,7 @@
 import { useLorasQuery } from '@/cores/api-queries'
 import type { GeneratorConfigFormValues } from '@/features/generator-configs'
 import type { LoRA } from '@/types'
-import { renderHook } from '@testing-library/react'
+import { act, renderHook } from '@testing-library/react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useLoraSelection } from '../useLoraSelection'
@@ -82,7 +82,9 @@ describe('useLoraSelection', () => {
         wrapper: Wrapper
       })
 
-      result.current.addLora(mockLoras[0])
+      act(() => {
+        result.current.addLora(mockLoras[0])
+      })
 
       expect(result.current.selectedLoras).toHaveLength(1)
       expect(result.current.selectedLoras[0].id).toBe(1)
@@ -94,7 +96,9 @@ describe('useLoraSelection', () => {
         wrapper: Wrapper
       })
 
-      result.current.addLora(mockLoras[0])
+      act(() => {
+        result.current.addLora(mockLoras[0])
+      })
 
       expect(result.current.selectedLoras).toHaveLength(1)
     })
@@ -105,8 +109,12 @@ describe('useLoraSelection', () => {
         wrapper: Wrapper
       })
 
-      result.current.addLora(mockLoras[0])
-      result.current.addLora(mockLoras[1])
+      act(() => {
+        result.current.addLora(mockLoras[0])
+      })
+      act(() => {
+        result.current.addLora(mockLoras[1])
+      })
 
       expect(result.current.selectedLoras).toHaveLength(2)
       expect(result.current.selectedLoras[0].id).toBe(1)
@@ -124,7 +132,9 @@ describe('useLoraSelection', () => {
         wrapper: Wrapper
       })
 
-      result.current.removeLora(1)
+      act(() => {
+        result.current.removeLora(1)
+      })
 
       expect(result.current.selectedLoras).toHaveLength(1)
       expect(result.current.selectedLoras[0].id).toBe(2)
@@ -136,7 +146,9 @@ describe('useLoraSelection', () => {
         wrapper: Wrapper
       })
 
-      result.current.removeLora(999)
+      act(() => {
+        result.current.removeLora(999)
+      })
 
       expect(result.current.selectedLoras).toHaveLength(1)
     })
@@ -150,8 +162,12 @@ describe('useLoraSelection', () => {
         wrapper: Wrapper
       })
 
-      result.current.removeLora(1)
-      result.current.removeLora(2)
+      act(() => {
+        result.current.removeLora(1)
+      })
+      act(() => {
+        result.current.removeLora(2)
+      })
 
       expect(result.current.selectedLoras).toHaveLength(0)
     })
@@ -164,7 +180,9 @@ describe('useLoraSelection', () => {
         wrapper: Wrapper
       })
 
-      result.current.toggleLora(mockLoras[0])
+      act(() => {
+        result.current.toggleLora(mockLoras[0])
+      })
 
       expect(result.current.selectedLoras).toHaveLength(1)
       expect(result.current.selectedLoras[0].id).toBe(1)
@@ -176,7 +194,9 @@ describe('useLoraSelection', () => {
         wrapper: Wrapper
       })
 
-      result.current.toggleLora(mockLoras[0])
+      act(() => {
+        result.current.toggleLora(mockLoras[0])
+      })
 
       expect(result.current.selectedLoras).toHaveLength(0)
     })
@@ -187,13 +207,19 @@ describe('useLoraSelection', () => {
         wrapper: Wrapper
       })
 
-      result.current.toggleLora(mockLoras[0])
+      act(() => {
+        result.current.toggleLora(mockLoras[0])
+      })
       expect(result.current.selectedLoras).toHaveLength(1)
 
-      result.current.toggleLora(mockLoras[0])
+      act(() => {
+        result.current.toggleLora(mockLoras[0])
+      })
       expect(result.current.selectedLoras).toHaveLength(0)
 
-      result.current.toggleLora(mockLoras[0])
+      act(() => {
+        result.current.toggleLora(mockLoras[0])
+      })
       expect(result.current.selectedLoras).toHaveLength(1)
     })
   })
