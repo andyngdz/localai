@@ -8,6 +8,8 @@ import { contextBridge, ipcRenderer } from 'electron'
 
 contextBridge.exposeInMainWorld('electronAPI', {
   downloadImage: (url: string) => ipcRenderer.invoke('download-image', url),
+  selectFile: (filters?: Electron.FileFilter[]) =>
+    ipcRenderer.invoke('select-file', filters),
   onBackendSetupStatus: (listener: BackendStatusEmitter) => {
     const channel = 'backend-setup:status'
     ipcRenderer

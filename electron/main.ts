@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, shell } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron'
 import serve from 'electron-serve'
 import fixPath from 'fix-path'
 import path from 'path'
@@ -97,6 +97,21 @@ const onDownloadImage = () => {
   })
 }
 
+const onSelectFile = () => {
+  ipcMain.handle('select-file', async (_, filters?: Electron.FileFilter[]) => {
+    const result = await dialog.showOpenDialog({
+      properties: ['openFile'],
+      filters: filters || []
+    })
+
+    if (result.canceled || result.filePaths.length === 0) {
+      return null
+    }
+
+    return result.filePaths[0]
+  })
+}
+
 const onLogStreaming = () => {
   ipcMain.handle('backend:log-stream-status', () => {
     return isLogStreaming()
@@ -147,6 +162,7 @@ if (!gotLock) {
     console.log('Main window created')
 
     onDownloadImage()
+    onSelectFile()
     onLogStreaming()
     onBackendStatusHistory()
     onAppInfo()

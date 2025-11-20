@@ -31,6 +31,16 @@ export const GeneratorConfigSampling = () => {
           <span className="text-sm text-default-700 min-w-fit">CFG Scale</span>
         }
       />
+      <NumberInputController
+        aria-label="CLIP Skip"
+        control={control}
+        controlName="clip_skip"
+        minValue={1}
+        maxValue={12}
+        startContent={
+          <span className="text-sm text-default-700 min-w-fit">CLIP Skip</span>
+        }
+      />
     </div>
   )
 }

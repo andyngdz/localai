@@ -1,5 +1,6 @@
 export * from './api'
 export * from './histories'
 export * from './image-generations'
+export * from './loras'
 export * from './models'
 export * from './samplers'

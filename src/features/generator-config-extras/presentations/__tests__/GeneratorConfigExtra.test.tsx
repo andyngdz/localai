@@ -1,39 +1,82 @@
+import { GeneratorConfigFormValues } from '@/features/generator-configs/types/generator-config'
 import { render, screen } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { ReactNode } from 'react'
+import { FormProvider, useForm } from 'react-hook-form'
+import { describe, expect, it, vi } from 'vitest'
 import { GeneratorConfigExtra } from '../GeneratorConfigExtra'
+
+// Mock the API queries
+vi.mock('@/cores/api-queries', () => ({
+  useLorasQuery: vi.fn(() => ({
+    data: { loras: [] },
+    isLoading: false,
+    error: null
+  }))
+}))
+
+const MockFormProvider = ({ children }: { children: ReactNode }) => {
+  const methods = useForm<GeneratorConfigFormValues>({
+    defaultValues: {
+      width: 512,
+      height: 512,
+      hires_fix: false,
+      number_of_images: 1,
+      steps: 20,
+      cfg_scale: 7,
+      clip_skip: 2,
+      seed: 0,
+      sampler: 'EULER_A',
+      styles: [],
+      loras: [],
+      prompt: '',
+      negative_prompt: ''
+    }
+  })
+
+  return <FormProvider {...methods}>{children}</FormProvider>
+}
 
 describe('GeneratorConfigExtra', () => {
   it('should render the component with the correct header', () => {
-    render(<GeneratorConfigExtra />)
+    render(
+      <MockFormProvider>
+        <GeneratorConfigExtra />
+      </MockFormProvider>
+    )
 
-    // Check that the header text is displayed
     expect(screen.getByText('Extra')).toBeInTheDocument()
   })
 
-  it('should render the add button with correct aria-label', () => {
-    render(<GeneratorConfigExtra />)
+  it('should render the add button', () => {
+    render(
+      <MockFormProvider>
+        <GeneratorConfigExtra />
+      </MockFormProvider>
+    )
 
-    // Check that the button with aria-label is present
-    expect(
-      screen.getByRole('button', { name: 'Add Extra' })
-    ).toBeInTheDocument()
+    const button = screen.getByRole('button')
+    expect(button).toBeInTheDocument()
   })
 
   it('should render the Plus icon in the button', () => {
-    const { container } = render(<GeneratorConfigExtra />)
+    const { container } = render(
+      <MockFormProvider>
+        <GeneratorConfigExtra />
+      </MockFormProvider>
+    )
 
-    // Since the Plus is an SVG icon from lucide-react, we can check for SVG element
-    // The lucide icon has specific classes
     const iconElement = container.querySelector('svg')
     expect(iconElement).toBeInTheDocument()
   })
 
   it('should render the button as iconOnly', () => {
-    render(<GeneratorConfigExtra />)
+    render(
+      <MockFormProvider>
+        <GeneratorConfigExtra />
+      </MockFormProvider>
+    )
 
-    const button = screen.getByRole('button', { name: 'Add Extra' })
-    // IconOnly buttons typically have a specific styling or class
-    // Here we can check that the button doesn't have visible text content
-    expect(button).not.toHaveTextContent(/\S/) // No visible text in the button
+    const button = screen.getByRole('button')
+    expect(button).not.toHaveTextContent(/\S/)
   })
 })

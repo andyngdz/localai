@@ -49,7 +49,8 @@ describe('GeneratorConfigSampling', () => {
     const methods = useForm<GeneratorConfigFormValues>({
       defaultValues: {
         steps: 20,
-        cfg_scale: 7.5
+        cfg_scale: 7.5,
+        clip_skip: 2
       }
     })
 
@@ -82,6 +83,13 @@ describe('GeneratorConfigSampling', () => {
     const cfgScaleInput = screen.getByTestId('number-input-cfg_scale')
     expect(cfgScaleInput).toBeInTheDocument()
     expect(screen.getByText('CFG Scale')).toBeInTheDocument()
+  })
+
+  it('renders the CLIP Skip input with correct properties', () => {
+    render(<Wrapper />)
+    const clipSkipInput = screen.getByTestId('number-input-clip_skip')
+    expect(clipSkipInput).toBeInTheDocument()
+    expect(screen.getByText('CLIP Skip')).toBeInTheDocument()
   })
 
   it('renders the sampler dropdown', () => {

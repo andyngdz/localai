@@ -24,10 +24,12 @@ const mockHistories = [
       height: 512,
       steps: 20,
       cfg_scale: 7.5,
+      clip_skip: 2,
       sampler: 'Euler a',
       seed: 12345,
       number_of_images: 1,
       hires_fix: false,
+      loras: [],
       prompt: 'test prompt',
       negative_prompt: '',
       styles: []
