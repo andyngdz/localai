@@ -1,9 +1,4 @@
-import { useLorasQuery } from '@/cores/api-queries'
-import {
-  LoraList,
-  UploadLoraButton
-} from '@/features/extra-loras/presentations'
-import { useLoraSelection } from '@/features/extra-loras/states'
+import { LoraList } from '@/features/extra-loras/presentations'
 import {
   Modal,
   ModalBody,
@@ -16,26 +11,16 @@ import {
 import { FC } from 'react'
 
 export const ExtraModal: FC<Omit<ModalProps, 'children'>> = (props) => {
-  const { data } = useLorasQuery()
-  const { toggleLora, selectedLoras } = useLoraSelection()
-
-  const selectedIds = selectedLoras.map((l) => l.id)
-
   return (
     <Modal placement="center" size="2xl" scrollBehavior="inside" {...props}>
       <ModalContent>
         <ModalHeader className="flex items-center justify-between">
-          <span>Extra Networks</span>
-          <UploadLoraButton />
+          Extra Networks
         </ModalHeader>
         <ModalBody>
           <Tabs>
             <Tab key="lora" title="LoRA">
-              <LoraList
-                loras={data?.loras || []}
-                selectedIds={selectedIds}
-                onSelect={toggleLora}
-              />
+              <LoraList />
             </Tab>
           </Tabs>
         </ModalBody>

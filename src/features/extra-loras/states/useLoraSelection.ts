@@ -49,7 +49,7 @@ export const useLoraSelection = () => {
   const selectedLoras = useMemo(() => {
     if (data) {
       return loras
-        .map((l) => data.loras.find((lora) => lora.id === l.lora_id))
+        .map((l) => data.find((lora) => lora.id === l.lora_id))
         .filter(Boolean) as LoRA[]
     }
 

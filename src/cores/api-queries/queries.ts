@@ -6,7 +6,6 @@ import {
   HistoryItem,
   LoRA,
   LoRADeleteResponse,
-  LoRAListResponse,
   MemoryResponse,
   ModelDownloaded,
   ModelRecommendationResponse,
@@ -74,9 +73,12 @@ const useSamplersQuery = () => {
 }
 
 const useLorasQuery = () => {
-  return useQuery<LoRAListResponse, ApiError>({
+  return useQuery<LoRA[], ApiError>({
     queryKey: ['loras'],
-    queryFn: () => api.loras()
+    queryFn: async () => {
+      const response = await api.loras()
+      return response.loras
+    }
   })
 }
 

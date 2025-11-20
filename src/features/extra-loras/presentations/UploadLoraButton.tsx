@@ -40,10 +40,9 @@ export const UploadLoraButton = () => {
   return (
     <Button
       onPress={handleUploadClick}
-      variant="flat"
-      color="primary"
       startContent={<Upload size={16} />}
       isLoading={uploadMutation.isPending}
+      color="primary"
     >
       Upload LoRA
     </Button>
