@@ -32,7 +32,7 @@ export const LoraListItem: FC<LoraListItemProps> = ({
             {lora.name}
           </span>
           <div className="text-xs text-default-500">
-            {formatter.formatFileSize(lora.file_size)}
+            {formatter.bytes(lora.file_size, 0)}
           </div>
         </div>
 

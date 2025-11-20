@@ -16,11 +16,6 @@ class Formatter {
 
     return `${Number.parseFloat((value / k ** i).toFixed(dm))} ${sizes[i]}`
   }
-
-  formatFileSize(bytes: number) {
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`
-    return `${(bytes / (1024 * 1024)).toFixed(0)} MB`
-  }
 }
 
 export const formatter = new Formatter()
