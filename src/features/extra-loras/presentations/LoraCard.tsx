@@ -2,13 +2,12 @@ import type { LoRA } from '@/types'
 import { Button, Card, CardBody, CardHeader, Slider } from '@heroui/react'
 import { X } from 'lucide-react'
 import { FC } from 'react'
+import { useLoraCard } from '../states'
 
 interface LoraCardProps {
   lora: LoRA
   onRemove: VoidFunction
 }
-
-import { useLoraCard } from '@/features/extra-loras/states/useLoraCard'
 
 export const LoraCard: FC<LoraCardProps> = ({ lora, onRemove }) => {
   const { weight, setWeight } = useLoraCard(lora.id)
@@ -36,8 +35,12 @@ export const LoraCard: FC<LoraCardProps> = ({ lora, onRemove }) => {
           maxValue={2}
           value={weight}
           onChange={(value) => setWeight(value as number)}
-          className="max-w-full"
           label="Weight"
+          className="max-w-full"
+          classNames={{
+            label: 'text-default-500',
+            value: 'text-default-500'
+          }}
         />
       </CardBody>
     </Card>

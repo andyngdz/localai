@@ -16,7 +16,7 @@ export const useLoraCard = (loraId: number) => {
     const lora = loras.find((l) => l.lora_id === loraId)
     if (lora) return lora.weight
 
-    return 1.0
+    return 1
   }, [loras, loraId])
 
   const setWeight = useCallback(
