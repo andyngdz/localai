@@ -14,7 +14,7 @@ export const useLoraSelection = () => {
       const exists = loras.some((l) => l.lora_id === lora.id)
 
       if (!exists) {
-        setValue('loras', [...loras, { lora_id: lora.id, weight: 1.0 }])
+        setValue('loras', [...loras, { lora_id: lora.id, weight: 1 }])
       }
     },
     [loras, setValue]
@@ -40,7 +40,7 @@ export const useLoraSelection = () => {
           loras.filter((entry) => entry.lora_id !== lora.id)
         )
       } else {
-        setValue('loras', [...loras, { lora_id: lora.id, weight: 1.0 }])
+        setValue('loras', [...loras, { lora_id: lora.id, weight: 1 }])
       }
     },
     [loras, setValue]
@@ -56,8 +56,13 @@ export const useLoraSelection = () => {
     return []
   }, [loras, data])
 
+  const selectedIds = useMemo(() => {
+    return new Set(selectedLoras.map((l) => l.id))
+  }, [selectedLoras])
+
   return {
     selectedLoras,
+    selectedIds,
     addLora,
     removeLora,
     toggleLora

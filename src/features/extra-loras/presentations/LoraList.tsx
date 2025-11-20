@@ -5,8 +5,7 @@ import { UploadLoraButton } from './UploadLoraButton'
 
 export const LoraList = () => {
   const { data } = useLorasQuery()
-  const { toggleLora, selectedLoras } = useLoraSelection()
-  const selectedIds = selectedLoras.map((l) => l.id)
+  const { toggleLora, selectedIds } = useLoraSelection()
 
   if (!data) {
     return (
@@ -23,7 +22,7 @@ export const LoraList = () => {
           <LoraListItem
             key={lora.id}
             lora={lora}
-            isSelected={selectedIds.includes(lora.id)}
+            isSelected={selectedIds.has(lora.id)}
             onSelect={() => toggleLora(lora)}
           />
         ))}
