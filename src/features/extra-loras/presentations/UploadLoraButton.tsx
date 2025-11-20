@@ -9,7 +9,7 @@ export const UploadLoraButton = () => {
 
   const handleUploadClick = async () => {
     try {
-      const filePath = await window.electronAPI.selectFile([
+      const filePath = await globalThis.window.electronAPI.selectFile([
         {
           name: 'LoRA Models',
           extensions: ['safetensors', 'ckpt', 'pt', 'bin', 'pth']

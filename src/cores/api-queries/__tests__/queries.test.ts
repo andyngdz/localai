@@ -1,3 +1,4 @@
+import type { LoRA, LoRADeleteResponse } from '@/types'
 import type { ModelDownloaded } from '@/types/api'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { renderHook, waitFor } from '@testing-library/react'
@@ -5,14 +6,17 @@ import React from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { api } from '@/services/api'
 import {
+  useDeleteLoraMutation,
   useDownloadedModelsQuery,
   useHardwareQuery,
   useHealthQuery,
   useHistoriesQuery,
+  useLorasQuery,
   useMemoryQuery,
   useModelRecommendationsQuery,
   useSamplersQuery,
-  useStyleSectionsQuery
+  useStyleSectionsQuery,
+  useUploadLoraMutation
 } from '../queries'
 
 // Mock the API service
@@ -25,7 +29,10 @@ vi.mock('@/services/api', () => ({
     getDownloadedModels: vi.fn(),
     styles: vi.fn(),
     getHistories: vi.fn(),
-    getSamplers: vi.fn()
+    getSamplers: vi.fn(),
+    loras: vi.fn(),
+    uploadLora: vi.fn(),
+    deleteLora: vi.fn()
   }
 }))
 
@@ -460,6 +467,98 @@ describe('React Query Hooks', () => {
       })
 
       expect(api.getSamplers).toHaveBeenCalled()
+    })
+  })
+
+  describe('useLorasQuery', () => {
+    it('returns the lora list from api.loras', async () => {
+      const mockResponse = {
+        loras: [
+          {
+            id: 1,
+            name: 'Test LoRA',
+            file_path: '/loras/test.safetensors',
+            file_size: 1024,
+            created_at: '2024-01-01T00:00:00Z',
+            updated_at: '2024-01-02T00:00:00Z'
+          }
+        ]
+      }
+      vi.mocked(api.loras).mockResolvedValue(mockResponse)
+
+      const { result } = renderHook(() => useLorasQuery(), {
+        wrapper: testEnv.wrapper
+      })
+
+      await waitFor(() => {
+        expect(result.current.isSuccess).toBe(true)
+      })
+
+      expect(api.loras).toHaveBeenCalled()
+      expect(result.current.data).toEqual(mockResponse.loras)
+    })
+
+    it('handles errors from api.loras', async () => {
+      const mockError = new Error('Failed to fetch LoRAs')
+      vi.mocked(api.loras).mockRejectedValue(mockError)
+
+      const { result } = renderHook(() => useLorasQuery(), {
+        wrapper: testEnv.wrapper
+      })
+
+      await waitFor(() => {
+        expect(result.current.isError).toBe(true)
+      })
+
+      expect(api.loras).toHaveBeenCalled()
+    })
+  })
+
+  describe('useUploadLoraMutation', () => {
+    it('uploads a LoRA and invalidates the loras query cache', async () => {
+      const filePath = '/loras/new-lora.safetensors'
+      const mockResponse: LoRA = {
+        id: 2,
+        name: 'New LoRA',
+        file_path: filePath,
+        file_size: 2048,
+        created_at: '2024-02-01T00:00:00Z',
+        updated_at: '2024-02-01T00:00:00Z'
+      }
+      vi.mocked(api.uploadLora).mockResolvedValue(mockResponse)
+      const invalidateSpy = vi.spyOn(testEnv.queryClient, 'invalidateQueries')
+
+      const { result } = renderHook(() => useUploadLoraMutation(), {
+        wrapper: testEnv.wrapper
+      })
+
+      const response = await result.current.mutateAsync(filePath)
+
+      expect(api.uploadLora).toHaveBeenCalledWith(filePath)
+      expect(response).toEqual(mockResponse)
+      expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['loras'] })
+    })
+  })
+
+  describe('useDeleteLoraMutation', () => {
+    it('deletes a LoRA and invalidates the loras query cache', async () => {
+      const loraId = 5
+      const mockResponse: LoRADeleteResponse = {
+        id: loraId,
+        message: 'LoRA deleted'
+      }
+      vi.mocked(api.deleteLora).mockResolvedValue(mockResponse)
+      const invalidateSpy = vi.spyOn(testEnv.queryClient, 'invalidateQueries')
+
+      const { result } = renderHook(() => useDeleteLoraMutation(), {
+        wrapper: testEnv.wrapper
+      })
+
+      const response = await result.current.mutateAsync(loraId)
+
+      expect(api.deleteLora).toHaveBeenCalledWith(loraId)
+      expect(response).toEqual(mockResponse)
+      expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['loras'] })
     })
   })
 })

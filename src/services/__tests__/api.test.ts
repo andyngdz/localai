@@ -594,4 +594,62 @@ describe('API Service', () => {
       expect(result).toEqual(mockResponse)
     })
   })
+
+  describe('loras', () => {
+    it('fetches available LoRAs', async () => {
+      const mockResponse = {
+        loras: [
+          {
+            id: 1,
+            name: 'Anime Style',
+            file_path: '/loras/anime.safetensors',
+            file_size: 1024,
+            created_at: '2024-01-01T00:00:00Z',
+            updated_at: '2024-01-02T00:00:00Z'
+          }
+        ]
+      }
+      vi.spyOn(client, 'get').mockResolvedValueOnce({ data: mockResponse })
+
+      const result = await api.loras()
+
+      expect(client.get).toHaveBeenCalledWith('/loras')
+      expect(result).toEqual(mockResponse)
+    })
+  })
+
+  describe('uploadLora', () => {
+    it('uploads a LoRA file path', async () => {
+      const filePath = '/loras/new-lora.safetensors'
+      const mockResponse = {
+        id: 2,
+        name: 'New LoRA',
+        file_path: filePath,
+        file_size: 2048,
+        created_at: '2024-02-01T00:00:00Z',
+        updated_at: '2024-02-01T00:00:00Z'
+      }
+      vi.spyOn(client, 'post').mockResolvedValueOnce({ data: mockResponse })
+
+      const result = await api.uploadLora(filePath)
+
+      expect(client.post).toHaveBeenCalledWith('/loras/upload', {
+        file_path: filePath
+      })
+      expect(result).toEqual(mockResponse)
+    })
+  })
+
+  describe('deleteLora', () => {
+    it('deletes a LoRA by id', async () => {
+      const loraId = 3
+      const mockResponse = { id: loraId, message: 'LoRA deleted successfully' }
+      vi.spyOn(client, 'delete').mockResolvedValueOnce({ data: mockResponse })
+
+      const result = await api.deleteLora(loraId)
+
+      expect(client.delete).toHaveBeenCalledWith(`/loras/${loraId}`)
+      expect(result).toEqual(mockResponse)
+    })
+  })
 })
