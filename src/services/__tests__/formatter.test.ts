@@ -47,4 +47,21 @@ describe('Formatter', () => {
       expect(formatter.bytes(1125899906842624)).toBe('1 PB')
     })
   })
+
+  describe('formatFileSize', () => {
+    it('formats KB correctly', () => {
+      expect(formatter.formatFileSize(1024)).toBe('1 KB')
+      expect(formatter.formatFileSize(500 * 1024)).toBe('500 KB')
+    })
+
+    it('formats MB correctly', () => {
+      expect(formatter.formatFileSize(1024 * 1024)).toBe('1 MB')
+      expect(formatter.formatFileSize(50 * 1024 * 1024)).toBe('50 MB')
+    })
+
+    it('rounds correctly', () => {
+      expect(formatter.formatFileSize(1500)).toBe('1 KB') // 1.46 KB -> 1 KB (toFixed(0))
+      expect(formatter.formatFileSize(1.5 * 1024 * 1024)).toBe('2 MB') // 1.5 MB -> 2 MB
+    })
+  })
 })

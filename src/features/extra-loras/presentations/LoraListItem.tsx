@@ -1,4 +1,5 @@
-import type { LoRA } from '@/types'
+import { formatter } from '@/services/formatter'
+import { LoRA } from '@/types'
 import { Card, CardBody, Switch } from '@heroui/react'
 import clsx from 'clsx'
 import { FC } from 'react'
@@ -14,11 +15,6 @@ export const LoraListItem: FC<LoraListItemProps> = ({
   isSelected,
   onSelect
 }) => {
-  const formatFileSize = (bytes: number) => {
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`
-    return `${(bytes / (1024 * 1024)).toFixed(0)} MB`
-  }
-
   return (
     <Card
       tabIndex={0}
@@ -36,7 +32,7 @@ export const LoraListItem: FC<LoraListItemProps> = ({
             {lora.name}
           </span>
           <div className="text-xs text-default-500">
-            {formatFileSize(lora.file_size)}
+            {formatter.formatFileSize(lora.file_size)}
           </div>
         </div>
 
