@@ -32,8 +32,8 @@ export const HistoryPhotoviewConfigRow: FC<HistoryPhotoviewConfigRowProps> = ({
   }, [value])
 
   return (
-    <div className="flex items-start justify-between gap-4 py-2 border-b border-default">
-      <span className="text-default-500 font-medium text-sm shrink-0">
+    <div className="flex items-center justify-between gap-4 py-2 border-b border-default">
+      <span className="text-default-500 font-medium text-sm flex-1">
         {label}
       </span>
       <div className="flex-1 flex justify-end text-sm">{renderValue}</div>

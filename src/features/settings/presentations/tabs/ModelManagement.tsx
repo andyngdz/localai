@@ -3,8 +3,7 @@ import { Listbox, ListboxItem, Spinner } from '@heroui/react'
 import { DeleteModelButton } from './DeleteModelButton'
 
 export const ModelManagement = () => {
-  // Fetch models
-  const { data: models = [], isLoading } = useDownloadedModels()
+  const { data = [], isLoading } = useDownloadedModels()
 
   if (isLoading) {
     return (
@@ -18,7 +17,7 @@ export const ModelManagement = () => {
     <div>
       <h3 className="text-lg font-medium mb-4">Installed Models</h3>
       <Listbox aria-label="Models list">
-        {models.map((model) => (
+        {data.map((model) => (
           <ListboxItem
             key={model.model_id}
             endContent={<DeleteModelButton model_id={model.model_id} />}

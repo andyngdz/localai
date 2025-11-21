@@ -27,6 +27,7 @@ export const HistoryItemContainer: FC<HistoryItemProps> = ({ history }) => {
       aria-label={ariaLabel}
       shadow="none"
       className="bg-content2"
+      as="div"
     >
       <CardHeader className="flex items-center justify-between gap-2">
         <span className="text-default-700 font-bold text-sm">
