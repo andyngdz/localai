@@ -19,12 +19,18 @@ export const SkeletonLoader = <T,>({
 }: SkeletonLoaderProps<T>) => {
   const render = useMemo(() => {
     if (isLoading) {
-      return <SkeletonFadeBlock key="skeleton">{skeleton}</SkeletonFadeBlock>
+      return (
+        <SkeletonFadeBlock animationKey="skeleton">
+          {skeleton}
+        </SkeletonFadeBlock>
+      )
     }
 
     if (data) {
       return (
-        <SkeletonFadeBlock key="content">{children(data)}</SkeletonFadeBlock>
+        <SkeletonFadeBlock animationKey="content">
+          {children(data)}
+        </SkeletonFadeBlock>
       )
     }
   }, [isLoading, skeleton, data, children])

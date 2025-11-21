@@ -2,16 +2,16 @@ import { motion } from 'framer-motion'
 import { Key, PropsWithChildren } from 'react'
 
 export interface SkeletonLoaderBlockProps {
-  key: Key
+  animationKey: Key
 }
 
 export const SkeletonFadeBlock = ({
-  key,
+  animationKey,
   children
 }: PropsWithChildren<SkeletonLoaderBlockProps>) => {
   return (
     <motion.div
-      key={key}
+      key={animationKey}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}

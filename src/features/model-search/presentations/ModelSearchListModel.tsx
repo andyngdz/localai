@@ -16,27 +16,27 @@ export const ModelSearchListModel = () => {
   }
 
   return (
-    <SkeletonLoader
-      isLoading={isLoading}
-      data={data}
-      skeleton={
-        <Progress
-          isIndeterminate
-          aria-label="Loading..."
-          className="max-w-md"
-          size="sm"
-        />
-      }
-    >
-      {(models) => (
-        <ScrollShadow>
+    <ScrollShadow>
+      <SkeletonLoader
+        isLoading={isLoading}
+        data={data}
+        skeleton={
+          <Progress
+            isIndeterminate
+            aria-label="Loading..."
+            className="max-w-md"
+            size="sm"
+          />
+        }
+      >
+        {(models) => (
           <div className="flex flex-col gap-2 p-2">
             {models.map((model) => (
               <ModelSearchItem key={model.id} modelSearchInfo={model} />
             ))}
           </div>
-        </ScrollShadow>
-      )}
-    </SkeletonLoader>
+        )}
+      </SkeletonLoader>
+    </ScrollShadow>
   )
 }
