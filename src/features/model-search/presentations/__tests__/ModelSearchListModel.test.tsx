@@ -63,7 +63,7 @@ describe('ModelSearchListModel', () => {
   it('renders a spinner when loading', () => {
     // Setup mock for this test case
     useModelSearchMock.mockReturnValue({
-      data: undefined,
+      data: [],
       isLoading: true
     })
 
@@ -80,7 +80,7 @@ describe('ModelSearchListModel', () => {
   it('shows an alert when no models are found', () => {
     // Setup mock for this test case
     useModelSearchMock.mockReturnValue({
-      data: { models_search_info: [] },
+      data: [],
       isLoading: false
     })
 
@@ -97,7 +97,7 @@ describe('ModelSearchListModel', () => {
   it('renders a list of models when available', () => {
     // Setup mock for this test case
     useModelSearchMock.mockReturnValue({
-      data: { models_search_info: mockModels },
+      data: mockModels,
       isLoading: false
     })
 
