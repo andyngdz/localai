@@ -7,17 +7,20 @@ import { useModelSearchSelectorStore } from '../states'
 import { ModelSearchViewCard } from './ModelSearchViewCard'
 import { ModelSearchViewFiles } from './ModelSearchViewFiles'
 import { ModelSearchViewFooter } from './ModelSearchViewFooter'
+import { ModelSearchViewLoader } from './ModelSearchViewLoader'
 import { ModelSearchViewSpaces } from './ModelSearchViewSpaces'
 
 export const ModelSearchView = () => {
   const { model_id } = useModelSearchSelectorStore()
-  const { modelDetails } = useModelSearchView(model_id)
+  const { modelDetails, isLoading } = useModelSearchView(model_id)
   const { isDownloading } = useDownloadWatcher(model_id)
+
+  if (isLoading) return <ModelSearchViewLoader />
 
   if (modelDetails) {
     return (
       <div className="flex flex-col gap-2 h-full">
-        <ScrollShadow className="flex flex-col gap-8 p-6">
+        <ScrollShadow className="flex flex-col gap-8 p-4 flex-1">
           <ModelSearchViewCard
             author={modelDetails.author}
             downloads={modelDetails.downloads}
