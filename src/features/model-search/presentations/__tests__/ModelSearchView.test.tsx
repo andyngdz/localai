@@ -127,15 +127,10 @@ vi.mock('@/features/model-download-status-line', () => ({
   )
 }))
 
+const useDownloadWatcherMock = vi.fn()
+
 vi.mock('@/features/download-watcher', () => ({
-  useDownloadWatcher: () => ({
-    isDownloading: true,
-    step: null,
-    percent: 0,
-    downloadSized: 0,
-    downloadTotalSized: 0,
-    currentFile: 'N/A'
-  })
+  useDownloadWatcher: () => useDownloadWatcherMock()
 }))
 
 // Import the component under test AFTER mocks so they take effect
@@ -146,6 +141,16 @@ describe('ModelSearchView', () => {
     vi.clearAllMocks()
     // Reset the mock implementation for each test
     useModelSearchViewMock.mockClear()
+
+    // Set default mock return value for useDownloadWatcher
+    useDownloadWatcherMock.mockReturnValue({
+      isDownloading: true,
+      step: null,
+      percent: 0,
+      downloadSized: 0,
+      downloadTotalSized: 0,
+      currentFile: 'N/A'
+    })
   })
 
   it('renders nothing when no model details are available', () => {
@@ -245,6 +250,44 @@ describe('ModelSearchView', () => {
 
     // The wrapper should have ScrollShadow styling
     const scrollShadow = screen.getByTestId('scrollshadow')
-    expect(scrollShadow).toHaveClass('flex', 'flex-col', 'gap-8', 'p-6')
+    expect(scrollShadow).toHaveClass(
+      'flex',
+      'flex-col',
+      'gap-8',
+      'p-4',
+      'flex-1'
+    )
+  })
+
+  it('hides download status line when not downloading', () => {
+    // Mock useDownloadWatcher to return isDownloading: false
+    useDownloadWatcherMock.mockReturnValue({
+      isDownloading: false,
+      step: null,
+      percent: 0,
+      downloadSized: 0,
+      downloadTotalSized: 0,
+      currentFile: 'N/A'
+    })
+
+    // Set up mock to return model details
+    useModelSearchViewMock.mockReturnValue({
+      modelDetails: mockModelDetailsData,
+      isLoading: false,
+      isError: false
+    })
+
+    render(<ModelSearchView />, {
+      wrapper: createQueryClientWrapper()
+    })
+
+    // Download status line should NOT be present when isDownloading is false
+    expect(
+      screen.queryByTestId('mock-download-status-line')
+    ).not.toBeInTheDocument()
+
+    // But other sections should still render
+    expect(screen.getByTestId('mock-view-card')).toBeInTheDocument()
+    expect(screen.getByTestId('mock-view-footer')).toBeInTheDocument()
   })
 })
