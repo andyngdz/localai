@@ -129,9 +129,9 @@ describe('ModelSearchListModel', () => {
 
     render(<ModelSearchListModel />)
 
-    // When data is undefined and not loading, component should render nothing
+    // When data is undefined and not loading, component should show the empty state alert
     expect(screen.queryByRole('status')).not.toBeInTheDocument()
-    expect(screen.queryByText('No models found')).not.toBeInTheDocument()
+    expect(screen.getByText('No models found')).toBeInTheDocument()
     expect(
       screen.queryByTestId('mock-model-search-item')
     ).not.toBeInTheDocument()
