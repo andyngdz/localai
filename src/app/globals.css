@@ -48,16 +48,12 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: hsl(var(--heroui-default-50));
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--heroui-default-100));
-  border-radius: calc(var(--spacing) * 1.5);
-}
-
-::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--heroui-default-200));
+  border-radius: calc(var(--spacing) * 1.5);
 }
 
 /* Remove scrollbar arrows */

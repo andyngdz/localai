@@ -59,6 +59,7 @@ const noop = (): void => {}
 
 const createElectronAPIMock = (): ElectronAPI => ({
   downloadImage: vi.fn().mockReturnThis(),
+  selectFile: vi.fn().mockResolvedValue(null),
   onBackendSetupStatus: vi.fn().mockReturnValue(noop),
   app: {
     getVersion: vi.fn().mockResolvedValue('0.0.0')
