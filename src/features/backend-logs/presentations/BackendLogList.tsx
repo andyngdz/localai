@@ -1,37 +1,30 @@
 import { ScrollShadow } from '@heroui/react'
-import { useMemo } from 'react'
 import { useBackendLog } from '../states'
 import { BackendLogItem } from './BackendLogItem'
 
 export const BackendLogList = () => {
   const { logs, scrollRef, rowVirtualizer } = useBackendLog()
-
-  const LogsComponent = useMemo(() => {
-    return rowVirtualizer.getVirtualItems().map((virtualItem) => {
-      const log = logs[virtualItem.index]
-      const { timestamp, level, message } = log
-
-      return (
-        <BackendLogItem
-          key={virtualItem.key}
-          data-index={virtualItem.index}
-          virtualItem={virtualItem}
-          timestamp={timestamp}
-          level={level}
-          message={message}
-          measureElement={rowVirtualizer.measureElement}
-        />
-      )
-    })
-  }, [logs, rowVirtualizer])
+  const virtualItems = rowVirtualizer.getVirtualItems()
 
   return (
     <ScrollShadow ref={scrollRef}>
       <div
-        className="relative w-full"
+        className="relative"
         style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
       >
-        {LogsComponent}
+        {virtualItems.map((virtualItem) => {
+          const log = logs[virtualItem.index]
+
+          return (
+            <BackendLogItem
+              key={virtualItem.key}
+              virtualItem={virtualItem}
+              data-index={virtualItem.index}
+              log={log}
+              ref={rowVirtualizer.measureElement}
+            />
+          )
+        })}
       </div>
     </ScrollShadow>
   )

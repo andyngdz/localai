@@ -26,13 +26,11 @@ export const BackendLog = () => {
       </Button>
       <Drawer
         isOpen={isOpen}
-        shouldBlockScroll={false}
         onClose={onClose}
         placement="right"
         scrollBehavior="inside"
         size="5xl"
         radius="none"
-        className="h-full"
       >
         <DrawerContent>
           <DrawerHeader>Backend Logs</DrawerHeader>

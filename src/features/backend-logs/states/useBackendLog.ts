@@ -13,8 +13,7 @@ export const useBackendLog = () => {
   const rowVirtualizer = useVirtualizer({
     count: logs.length,
     getScrollElement: () => scrollRef.current,
-    estimateSize: () => 60,
-    overscan: 10,
+    estimateSize: () => 50,
     measureElement: (element) => element.getBoundingClientRect().height
   })
 

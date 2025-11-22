@@ -87,7 +87,15 @@ describe('BackendLogList', () => {
     ]
 
     mockVirtualizer.getVirtualItems.mockReturnValue([
-      { index: 0, key: 'log-0', start: 0, size: 50, measureElement: vi.fn() }
+      {
+        index: 0,
+        key: 'log-0',
+        start: 0,
+        size: 50,
+        measureElement: vi.fn(),
+        lane: 0,
+        end: 50
+      }
     ])
 
     mockUseBackendLog.mockReturnValue({
@@ -110,7 +118,15 @@ describe('BackendLogList', () => {
     ]
 
     mockVirtualizer.getVirtualItems.mockReturnValue([
-      { index: 0, key: 'log-0', start: 0, size: 50, measureElement: vi.fn() }
+      {
+        index: 0,
+        key: 'log-0',
+        start: 0,
+        size: 50,
+        measureElement: vi.fn(),
+        lane: 0,
+        end: 50
+      }
     ])
 
     mockUseBackendLog.mockReturnValue({
@@ -138,7 +154,15 @@ describe('BackendLogList', () => {
     ]
 
     mockVirtualizer.getVirtualItems.mockReturnValue([
-      { index: 0, key: 'log-0', start: 0, size: 50, measureElement: vi.fn() }
+      {
+        index: 0,
+        key: 'log-0',
+        start: 0,
+        size: 50,
+        measureElement: vi.fn(),
+        lane: 0,
+        end: 50
+      }
     ])
 
     mockUseBackendLog.mockReturnValue({
