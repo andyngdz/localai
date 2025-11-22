@@ -10,19 +10,19 @@ describe('BackendLogsService', () => {
     expect(backendLogsService.onGetLogColor('warn')).toBe('text-warning')
   })
 
-  it('should return "text-success" for "info" level', () => {
-    expect(backendLogsService.onGetLogColor('info')).toBe('text-success')
+  it('should return "text-default-500" for "info" level', () => {
+    expect(backendLogsService.onGetLogColor('info')).toBe('text-default-500')
   })
 
-  it('should return "text-success" for "log" level', () => {
-    expect(backendLogsService.onGetLogColor('log')).toBe('text-success')
+  it('should return "text-default-500" for "log" level', () => {
+    expect(backendLogsService.onGetLogColor('log')).toBe('text-default-500')
   })
 
-  it('should return "text-success" for unknown levels', () => {
-    expect(backendLogsService.onGetLogColor('unknown')).toBe('text-success')
+  it('should return "text-default-500" for unknown levels', () => {
+    expect(backendLogsService.onGetLogColor('unknown')).toBe('text-default-500')
   })
 
-  it('should return "text-success" for any other level', () => {
-    expect(backendLogsService.onGetLogColor('debug')).toBe('text-success')
+  it('should return "text-default-500" for any other level', () => {
+    expect(backendLogsService.onGetLogColor('debug')).toBe('text-default-500')
   })
 })

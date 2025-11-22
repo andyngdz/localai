@@ -8,7 +8,20 @@ class BackendLogsService {
       case 'info':
       case 'log':
       default:
-        return 'text-success'
+        return 'text-default-500'
+    }
+  }
+
+  onGetBorderColor(level: string) {
+    switch (level) {
+      case 'error':
+        return 'border-l-danger'
+      case 'warn':
+        return 'border-l-warning'
+      case 'info':
+      case 'log':
+      default:
+        return 'border-l-success'
     }
   }
 }

@@ -25,7 +25,8 @@ vi.mock('../../services/backend-logs', () => ({
         default:
           return 'text-success'
       }
-    })
+    }),
+    onGetBorderColor: vi.fn(() => 'border-l-success')
   }
 }))
 
@@ -56,7 +57,7 @@ describe('BackendLogList', () => {
     const { container } = render(<BackendLogList />)
     // The first div should be the scrollable container
     const scrollContainer = container.firstChild
-    expect(scrollContainer).toHaveClass('py-4', 'overflow-auto')
+    expect(scrollContainer).toHaveClass('py-4', 'overflow-y-auto')
   })
 
   it('renders empty list when no logs', () => {
