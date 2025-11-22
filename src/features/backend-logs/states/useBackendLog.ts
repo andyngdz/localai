@@ -14,6 +14,7 @@ export const useBackendLog = () => {
     count: logs.length,
     getScrollElement: () => scrollRef.current,
     estimateSize: () => 50,
+    overscan: 10,
     measureElement: (element) => element.getBoundingClientRect().height
   })
 

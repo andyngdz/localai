@@ -9,20 +9,24 @@ export const BackendLogList = () => {
   return (
     <ScrollShadow ref={scrollRef}>
       <div
-        className="relative"
+        className="relative w-full"
         style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
       >
         {virtualItems.map((virtualItem) => {
           const log = logs[virtualItem.index]
 
           return (
-            <BackendLogItem
+            <div
               key={virtualItem.key}
-              virtualItem={virtualItem}
-              data-index={virtualItem.index}
-              log={log}
               ref={rowVirtualizer.measureElement}
-            />
+              className="absolute inset-x-0 w-full"
+              style={{
+                height: `${virtualItem.size}px`,
+                transform: `translateY(${virtualItem.start}px)`
+              }}
+            >
+              <BackendLogItem log={log} />
+            </div>
           )
         })}
       </div>
