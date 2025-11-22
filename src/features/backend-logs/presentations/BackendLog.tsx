@@ -30,7 +30,7 @@ export const BackendLog = () => {
         onClose={onClose}
         placement="right"
         scrollBehavior="inside"
-        size="2xl"
+        size="5xl"
         radius="none"
         className="h-full"
       >

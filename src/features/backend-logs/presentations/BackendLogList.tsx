@@ -37,7 +37,7 @@ export const BackendLogList = () => {
   }, [logs, onGetLogColor, rowVirtualizer])
 
   return (
-    <ScrollShadow ref={scrollRef} className="scrollbar-thin h-96">
+    <ScrollShadow ref={scrollRef}>
       <div
         className="relative w-full"
         style={{ height: `${rowVirtualizer.getTotalSize()}px` }}

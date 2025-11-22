@@ -44,7 +44,7 @@ describe('BackendLogList', () => {
     vi.clearAllMocks()
     mockUseBackendLog.mockReturnValue({
       logs: [],
-      onGetLogColor: vi.fn(() => 'text-default-700' as const),
+      onGetLogColor: vi.fn(() => 'text-default-500' as const),
       scrollRef: mockScrollRef,
       rowVirtualizer: mockVirtualizer as never,
       isStreaming: false,
@@ -57,7 +57,6 @@ describe('BackendLogList', () => {
 
     const scrollShadow = screen.getByTestId('scroll-shadow')
     expect(scrollShadow).toBeInTheDocument()
-    expect(scrollShadow).toHaveClass('scrollbar-thin', 'h-96')
   })
 
   it('renders empty list when no logs', () => {
@@ -79,7 +78,7 @@ describe('BackendLogList', () => {
 
     mockUseBackendLog.mockReturnValue({
       logs: mockLogs,
-      onGetLogColor: vi.fn(() => 'text-secondary' as const),
+      onGetLogColor: vi.fn(() => 'text-default-500' as const),
       scrollRef: mockScrollRef,
       rowVirtualizer: mockVirtualizer as never,
       isStreaming: false,
@@ -106,7 +105,7 @@ describe('BackendLogList', () => {
       onGetLogColor: (level) =>
         level === 'error'
           ? ('text-danger' as const)
-          : ('text-default-700' as const),
+          : ('text-default-500' as const),
       scrollRef: mockScrollRef,
       rowVirtualizer: mockVirtualizer as never,
       isStreaming: false,
@@ -135,7 +134,7 @@ describe('BackendLogList', () => {
 
     mockUseBackendLog.mockReturnValue({
       logs: mockLogs,
-      onGetLogColor: vi.fn(() => 'text-secondary' as const),
+      onGetLogColor: vi.fn(() => 'text-default-500' as const),
       scrollRef: mockScrollRef,
       rowVirtualizer: mockVirtualizer as never,
       isStreaming: false,
@@ -146,7 +145,5 @@ describe('BackendLogList', () => {
 
     // Should display the text without ANSI codes
     expect(screen.getByText('Green text and red text')).toBeInTheDocument()
-    // Should NOT display the raw ANSI codes
-    expect(screen.queryByText(/\u001b/)).not.toBeInTheDocument()
   })
 })

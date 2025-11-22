@@ -17,10 +17,9 @@ export const useBackendLog = () => {
       case 'warn':
         return 'text-warning'
       case 'info':
-        return 'text-secondary'
       case 'log':
       default:
-        return 'text-default-700'
+        return 'text-default-500'
     }
   }
 
