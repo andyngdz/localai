@@ -12,15 +12,15 @@ interface BackendLogStore {
   setIsStreaming: (isStreaming: boolean) => void
 }
 
-const getInitialState = () => ({
+const initialState = {
   logs: [],
   isStreaming: false
-})
+}
 
 export const useBackendLogStore = create<BackendLogStore>()(
   persist(
     (set) => ({
-      ...getInitialState(),
+      ...initialState,
 
       addLog: (log: LogEntry) => {
         set((state) => {

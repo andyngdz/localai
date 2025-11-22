@@ -5,29 +5,15 @@ import { useEffect, useRef } from 'react'
 import { useBackendLogStore } from './useBackendLogStore'
 
 export const useBackendLog = () => {
-  'use no memo'
   const scrollRef = useRef<HTMLDivElement>(null)
   const { logs, isStreaming, addLog, clearLogs, setIsStreaming } =
     useBackendLogStore()
-
-  const onGetLogColor = (level: string) => {
-    switch (level) {
-      case 'error':
-        return 'text-danger'
-      case 'warn':
-        return 'text-warning'
-      case 'info':
-      case 'log':
-      default:
-        return 'text-default-500'
-    }
-  }
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const rowVirtualizer = useVirtualizer({
     count: logs.length,
     getScrollElement: () => scrollRef.current,
-    estimateSize: () => 50,
+    estimateSize: () => 60,
     overscan: 10,
     measureElement: (element) => element.getBoundingClientRect().height
   })
@@ -52,7 +38,6 @@ export const useBackendLog = () => {
     logs,
     isStreaming,
     clearLogs,
-    onGetLogColor,
     scrollRef,
     rowVirtualizer
   }

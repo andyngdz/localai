@@ -127,38 +127,6 @@ describe('useBackendLog', () => {
     })
   })
 
-  describe('onGetLogColor', () => {
-    it('should return text-danger for error level', () => {
-      const { result } = renderHook(() => useBackendLog())
-
-      expect(result.current.onGetLogColor('error')).toBe('text-danger')
-    })
-
-    it('should return text-warning for warn level', () => {
-      const { result } = renderHook(() => useBackendLog())
-
-      expect(result.current.onGetLogColor('warn')).toBe('text-warning')
-    })
-
-    it('should return text-default-500 for info level', () => {
-      const { result } = renderHook(() => useBackendLog())
-
-      expect(result.current.onGetLogColor('info')).toBe('text-default-500')
-    })
-
-    it('should return text-default-500 for log level', () => {
-      const { result } = renderHook(() => useBackendLog())
-
-      expect(result.current.onGetLogColor('log')).toBe('text-default-500')
-    })
-
-    it('should return text-default-500 for unknown level', () => {
-      const { result } = renderHook(() => useBackendLog())
-
-      expect(result.current.onGetLogColor('unknown')).toBe('text-default-500')
-    })
-  })
-
   describe('clearLogs', () => {
     it('should expose clearLogs from store', () => {
       const { result } = renderHook(() => useBackendLog())

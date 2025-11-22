@@ -4,7 +4,7 @@ import { useBackendLog } from '../states'
 import { BackendLogItem } from './BackendLogItem'
 
 export const BackendLogList = () => {
-  const { logs, onGetLogColor, scrollRef, rowVirtualizer } = useBackendLog()
+  const { logs, scrollRef, rowVirtualizer } = useBackendLog()
 
   const LogsComponent = useMemo(() => {
     return rowVirtualizer.getVirtualItems().map((virtualItem) => {
@@ -17,13 +17,13 @@ export const BackendLogList = () => {
           data-index={virtualItem.index}
           virtualItem={virtualItem}
           timestamp={timestamp}
-          level={onGetLogColor(level)}
+          level={level}
           message={message}
-          ref={rowVirtualizer.measureElement}
+          measureElement={rowVirtualizer.measureElement}
         />
       )
     })
-  }, [logs, onGetLogColor, rowVirtualizer])
+  }, [logs, rowVirtualizer])
 
   return (
     <ScrollShadow ref={scrollRef}>

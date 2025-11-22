@@ -14,6 +14,21 @@ vi.mock('@/services', () => ({
   }
 }))
 
+vi.mock('../../services/backend-logs', () => ({
+  backendLogsService: {
+    onGetLogColor: vi.fn((level: string) => {
+      switch (level) {
+        case 'error':
+          return 'text-danger'
+        case 'warn':
+          return 'text-warning'
+        default:
+          return 'text-success'
+      }
+    })
+  }
+}))
+
 vi.mock('@heroui/react', () => ({
   ScrollShadow: ({
     children,
@@ -44,7 +59,6 @@ describe('BackendLogList', () => {
     vi.clearAllMocks()
     mockUseBackendLog.mockReturnValue({
       logs: [],
-      onGetLogColor: vi.fn(() => 'text-default-500' as const),
       scrollRef: mockScrollRef,
       rowVirtualizer: mockVirtualizer as never,
       isStreaming: false,
@@ -78,7 +92,6 @@ describe('BackendLogList', () => {
 
     mockUseBackendLog.mockReturnValue({
       logs: mockLogs,
-      onGetLogColor: vi.fn(() => 'text-default-500' as const),
       scrollRef: mockScrollRef,
       rowVirtualizer: mockVirtualizer as never,
       isStreaming: false,
@@ -102,10 +115,6 @@ describe('BackendLogList', () => {
 
     mockUseBackendLog.mockReturnValue({
       logs: mockLogs,
-      onGetLogColor: (level) =>
-        level === 'error'
-          ? ('text-danger' as const)
-          : ('text-default-500' as const),
       scrollRef: mockScrollRef,
       rowVirtualizer: mockVirtualizer as never,
       isStreaming: false,
@@ -134,7 +143,6 @@ describe('BackendLogList', () => {
 
     mockUseBackendLog.mockReturnValue({
       logs: mockLogs,
-      onGetLogColor: vi.fn(() => 'text-default-500' as const),
       scrollRef: mockScrollRef,
       rowVirtualizer: mockVirtualizer as never,
       isStreaming: false,
