@@ -1,4 +1,3 @@
-import { ScrollShadow } from '@heroui/react'
 import { useBackendLog } from '../states'
 import { BackendLogItem } from './BackendLogItem'
 
@@ -7,8 +6,9 @@ export const BackendLogList = () => {
   const virtualItems = rowVirtualizer.getVirtualItems()
 
   return (
-    <ScrollShadow ref={scrollRef}>
+    <div className="py-4">
       <div
+        ref={scrollRef}
         className="relative w-full"
         style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
       >
@@ -30,6 +30,6 @@ export const BackendLogList = () => {
           )
         })}
       </div>
-    </ScrollShadow>
+    </div>
   )
 }

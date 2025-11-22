@@ -29,20 +29,6 @@ vi.mock('../../services/backend-logs', () => ({
   }
 }))
 
-vi.mock('@heroui/react', () => ({
-  ScrollShadow: ({
-    children,
-    className
-  }: {
-    children: React.ReactNode
-    className: string
-  }) => (
-    <div data-testid="scroll-shadow" className={className}>
-      {children}
-    </div>
-  )
-}))
-
 import { useBackendLog } from '../../states'
 
 const mockUseBackendLog = vi.mocked(useBackendLog)
@@ -66,11 +52,11 @@ describe('BackendLogList', () => {
     })
   })
 
-  it('renders ScrollShadow container', () => {
-    render(<BackendLogList />)
-
-    const scrollShadow = screen.getByTestId('scroll-shadow')
-    expect(scrollShadow).toBeInTheDocument()
+  it('renders content container', () => {
+    const { container } = render(<BackendLogList />)
+    // The first div should be the content container
+    const contentContainer = container.firstChild
+    expect(contentContainer).toHaveClass('relative', 'w-full')
   })
 
   it('renders empty list when no logs', () => {
