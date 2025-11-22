@@ -6,9 +6,8 @@ export const BackendLogList = () => {
   const virtualItems = rowVirtualizer.getVirtualItems()
 
   return (
-    <div className="py-4">
+    <div className="py-4 overflow-auto" ref={scrollRef}>
       <div
-        ref={scrollRef}
         className="relative w-full"
         style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
       >

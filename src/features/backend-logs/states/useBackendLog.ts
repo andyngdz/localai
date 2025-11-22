@@ -1,7 +1,7 @@
 'use client'
 
 import { useVirtualizer } from '@tanstack/react-virtual'
-import { useEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef } from 'react'
 import { useBackendLogStore } from './useBackendLogStore'
 
 export const useBackendLog = () => {
@@ -28,11 +28,11 @@ export const useBackendLog = () => {
     return unsubscribe
   }, [addLog, setIsStreaming])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight
     }
-  }, [logs])
+  }, [logs, scrollRef])
 
   return {
     logs,
