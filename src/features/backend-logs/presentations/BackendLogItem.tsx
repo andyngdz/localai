@@ -3,7 +3,7 @@ import { LogEntry } from '@types'
 import clsx from 'clsx'
 import { FC } from 'react'
 import stripAnsi from 'strip-ansi'
-import { backendLogsService } from '../services/backend-logs'
+import { backendLogsService } from '../services'
 
 export interface BackendLogItemProps {
   log: LogEntry
