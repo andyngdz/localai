@@ -1,4 +1,4 @@
-import { Card, Radio } from '@heroui/react'
+import { Radio } from '@heroui/react'
 import clsx from 'clsx'
 import { FC } from 'react'
 import { maxMemoryScaleFactorService } from '../services'
@@ -16,19 +16,20 @@ export const MaxMemoryScaleFactorItem: FC<MaxMemoryScaleFactorItemProps> = ({
   const { bgClassName, textClassName, color } = colors
 
   return (
-    <Card
-      key={option.scaleFactor}
-      className={clsx('border-none shadow-none', bgClassName)}
+    <Radio
+      value={option.scaleFactor.toString()}
+      color={color}
+      classNames={{
+        base: clsx(
+          'inline-flex m-0 bg-content1 items-center justify-between',
+          'flex-row-reverse max-w-full cursor-pointer rounded-lg gap-4 p-4 border-2 border-transparent',
+          bgClassName
+        )
+      }}
     >
-      <Radio
-        value={option.scaleFactor.toString()}
-        color={color}
-        className="p-5"
-      >
-        <span className={clsx('font-medium', textClassName)}>
-          {percent}% GPU / {percent}% RAM
-        </span>
-      </Radio>
-    </Card>
+      <span className={clsx('font-medium', textClassName)}>
+        {percent}% GPU / {percent}% RAM
+      </span>
+    </Radio>
   )
 }

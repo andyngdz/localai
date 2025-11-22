@@ -9,7 +9,7 @@ export const FORM_DEFAULT_VALUES: GeneratorConfigFormValues = {
   steps: 24,
   seed: -1,
   cfg_scale: 7.5,
-  clip_skip: 2,
+  clip_skip: 1,
   sampler: 'EULER_A',
   styles: [],
   prompt: '',

@@ -13,6 +13,7 @@ export const MaxMemoryScaleFactorItems = () => {
         setValue('scaleFactor', Number(value))
       }}
       defaultValue={getValues('scaleFactor').toString()}
+      className="w-full"
     >
       {MEMORY_OPTIONS.map((option) => {
         return (

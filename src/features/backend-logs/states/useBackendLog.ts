@@ -1,28 +1,13 @@
 'use client'
 
 import { useVirtualizer } from '@tanstack/react-virtual'
-import { useEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef } from 'react'
 import { useBackendLogStore } from './useBackendLogStore'
 
 export const useBackendLog = () => {
-  'use no memo'
   const scrollRef = useRef<HTMLDivElement>(null)
   const { logs, isStreaming, addLog, clearLogs, setIsStreaming } =
     useBackendLogStore()
-
-  const onGetLogColor = (level: string) => {
-    switch (level) {
-      case 'error':
-        return 'text-danger'
-      case 'warn':
-        return 'text-warning'
-      case 'info':
-        return 'text-secondary'
-      case 'log':
-      default:
-        return 'text-default-700'
-    }
-  }
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const rowVirtualizer = useVirtualizer({
@@ -43,17 +28,16 @@ export const useBackendLog = () => {
     return unsubscribe
   }, [addLog, setIsStreaming])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight
     }
-  }, [logs])
+  }, [logs, scrollRef])
 
   return {
     logs,
     isStreaming,
     clearLogs,
-    onGetLogColor,
     scrollRef,
     rowVirtualizer
   }

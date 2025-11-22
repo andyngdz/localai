@@ -20,14 +20,12 @@
 - Command: `pnpm run test:coverage -- path/to/files`
 - Focus on behavior coverage, not just line coverage
 
-**Testing Patterns (Simplified):**
+**Testing Patterns:**
 
 ```typescript
 // Socket Events - Capture handlers
 let handlers: Record<string, (data: unknown) => void> = {}
-vi.mock('@/cores/sockets', () => ({
-  useSocketEvent: (event, handler) => (handlers[event] = handler)
-}))
+vi.mock('@/cores/sockets', () => ({ useSocketEvent: (e, h) => handlers[e] = h }))
 handlers[SocketEvents.DOWNLOAD_START]({ id: 'model-123' })
 
 // Zustand Stores
@@ -35,6 +33,5 @@ const { result } = renderHook(() => useMyStore())
 act(() => result.current.setValue('new'))
 
 // React Query
-const Wrapper = createQueryClientWrapper()
-render(<Wrapper><MyComponent /></Wrapper>)
+render(<QueryClientWrapper><MyComponent /></QueryClientWrapper>)
 ```
