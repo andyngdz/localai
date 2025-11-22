@@ -17,11 +17,11 @@ export const BackendLogList = () => {
 
           return (
             <div
+              className="absolute inset-x-0 w-full"
+              data-index={virtualItem.index}
               key={virtualItem.key}
               ref={rowVirtualizer.measureElement}
-              className="absolute inset-x-0 w-full"
               style={{
-                height: `${virtualItem.size}px`,
                 transform: `translateY(${virtualItem.start}px)`
               }}
             >
