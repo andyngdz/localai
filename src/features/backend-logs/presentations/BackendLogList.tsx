@@ -1,9 +1,7 @@
-import { dateFormatter } from '@/services'
 import { ScrollShadow } from '@heroui/react'
-import clsx from 'clsx'
 import { useMemo } from 'react'
-import stripAnsi from 'strip-ansi'
 import { useBackendLog } from '../states'
+import { BackendLogItem } from './BackendLogItem'
 
 export const BackendLogList = () => {
   const { logs, onGetLogColor, scrollRef, rowVirtualizer } = useBackendLog()
@@ -11,27 +9,18 @@ export const BackendLogList = () => {
   const LogsComponent = useMemo(() => {
     return rowVirtualizer.getVirtualItems().map((virtualItem) => {
       const log = logs[virtualItem.index]
-      const { timestamp, level } = log
+      const { timestamp, level, message } = log
 
       return (
-        <div
+        <BackendLogItem
           key={virtualItem.key}
           data-index={virtualItem.index}
+          virtualItem={virtualItem}
+          timestamp={timestamp}
+          level={onGetLogColor(level)}
+          message={message}
           ref={rowVirtualizer.measureElement}
-          className="absolute inset-x-0 w-full"
-          style={{
-            transform: `translateY(${virtualItem.start}px)`
-          }}
-        >
-          <div className="flex gap-1 text-sm">
-            <span className="shrink-0 min-w-10 text-default-700">
-              {dateFormatter.timeFromTimestamp(timestamp)}
-            </span>
-            <span className={clsx(`wrap-break-word`, onGetLogColor(level))}>
-              {stripAnsi(log.message)}
-            </span>
-          </div>
-        </div>
+        />
       )
     })
   }, [logs, onGetLogColor, rowVirtualizer])
