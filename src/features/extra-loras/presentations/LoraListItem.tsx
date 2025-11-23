@@ -18,11 +18,11 @@ export const LoraListItem: FC<LoraListItemProps> = ({
   return (
     <Card
       tabIndex={0}
-      shadow="none"
       onPress={onSelect}
-      className={clsx('border border-default', {
+      className={clsx({
         'bg-default': isSelected
       })}
+      shadow="sm"
       isPressable
       isHoverable
     >

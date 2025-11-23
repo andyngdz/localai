@@ -6,7 +6,6 @@ import {
 } from '@/cores/backend-initialization'
 import { FullScreenLoader } from '@/cores/presentations'
 import { AppFooter } from '@/features/app-footer'
-import { Divider } from '@heroui/react'
 import { usePathname } from 'next/navigation'
 import { FC, PropsWithChildren, useEffect, useMemo } from 'react'
 
@@ -30,7 +29,6 @@ export const AppLayout: FC<PropsWithChildren> = ({ children }) => {
   return (
     <div className="flex flex-col h-screen">
       <main className="flex justify-center flex-1">{content}</main>
-      <Divider />
       <AppFooter />
     </div>
   )
