@@ -183,8 +183,15 @@ describe('useBackendLog', () => {
 
       const mockScrollElement = {
         scrollTop: 0,
-        scrollHeight: 1000
-      } as HTMLDivElement
+        scrollHeight: 1000,
+        scrollTo: vi.fn()
+      } as unknown as HTMLDivElement
+
+      mockScrollElement.scrollTo = vi.fn((options: ScrollToOptions) => {
+        if (options?.top) {
+          mockScrollElement.scrollTop = options.top
+        }
+      }) as typeof mockScrollElement.scrollTo
 
       result.current.scrollRef.current = mockScrollElement
 

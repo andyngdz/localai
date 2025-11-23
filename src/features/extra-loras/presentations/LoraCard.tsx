@@ -13,7 +13,7 @@ export const LoraCard: FC<LoraCardProps> = ({ lora, onRemove }) => {
   const { weight, setWeight } = useLoraCard(lora.id)
 
   return (
-    <Card shadow="none" className="border border-default-200 bg-content1/30">
+    <Card shadow="sm">
       <CardHeader className="flex justify-between items-center pb-0">
         <span className="font-semibold text-sm">{lora.name}</span>
         <Button

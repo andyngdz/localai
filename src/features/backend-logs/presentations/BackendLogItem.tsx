@@ -13,7 +13,13 @@ export const BackendLogItem: FC<BackendLogItemProps> = ({ log }) => {
   const { timestamp, level, message } = log
 
   return (
-    <div className="flex gap-1 text-sm">
+    <div className="flex gap-1 text-sm py-2">
+      <span
+        className={clsx(
+          backendLogsService.onGetBorderColor(level),
+          'border-l-2'
+        )}
+      />
       <span className="shrink-0 min-w-10 text-default">
         {dateFormatter.timeFromTimestamp(timestamp)}
       </span>
