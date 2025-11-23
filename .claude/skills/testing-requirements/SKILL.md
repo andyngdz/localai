@@ -101,7 +101,3 @@ Before marking work complete, ALWAYS run:
 
 - Always reset Zustand stores in `beforeEach`
 - Clear mocks between tests
-
-## Reference
-
-See `@docs/TESTING.md` for detailed testing guide and examples.
