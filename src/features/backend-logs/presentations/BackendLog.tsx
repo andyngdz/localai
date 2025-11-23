@@ -27,7 +27,7 @@ export const BackendLog = () => {
       <Drawer isOpen={isOpen} onClose={onClose} placement="right" size="5xl">
         <DrawerContent>
           <DrawerHeader>Backend Logs</DrawerHeader>
-          <DrawerBody>
+          <DrawerBody className="p-0">
             <BackendLogList />
           </DrawerBody>
         </DrawerContent>

@@ -9,8 +9,8 @@ export const ModelSearchListModel = () => {
 
   if (isEmpty(data) && !isLoading) {
     return (
-      <Alert className="grow-0" color="warning">
-        No models found
+      <Alert className="grow-0">
+        <span className="text-default">No models found</span>
       </Alert>
     )
   }
