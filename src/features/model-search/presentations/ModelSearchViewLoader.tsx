@@ -78,15 +78,15 @@ const ModelSearchViewFilesSkeleton = () => {
   return (
     <div className="flex flex-col gap-6">
       <SectionHeaderSkeleton showLink />
-      <div className="rounded-lg border border-default-200 overflow-hidden">
-        <div className="grid grid-cols-2 gap-4 border-b border-default-200 bg-default-50/20 p-3">
+      <div className="rounded-lg border border-default overflow-hidden">
+        <div className="grid grid-cols-2 gap-4 border-b border-default bg-default-50/20 p-3">
           <Skeleton className="h-4 w-1/2 rounded" />
           <Skeleton className="h-4 w-1/4 rounded" />
         </div>
         {FILE_SKELETON_ITEMS.map((key) => (
           <div
             key={key}
-            className="grid grid-cols-2 gap-4 border-b border-default-100 p-3 last:border-b-0"
+            className="grid grid-cols-2 gap-4 border-b border-default p-3 last:border-b-0"
           >
             <Skeleton className="h-3 w-3/4 rounded" />
             <Skeleton className="h-3 w-1/4 rounded" />
