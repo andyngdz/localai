@@ -53,7 +53,7 @@ describe('useGenerator', () => {
     steps: 20,
     seed: -1,
     sampler: 'EULER_A',
-    hires_fix: false,
+
     loras: [],
     number_of_images: 1,
     styles: []

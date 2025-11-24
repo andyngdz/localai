@@ -85,7 +85,7 @@ const TestWrapper = ({
     defaultValues: {
       width: 512,
       height: 512,
-      hires_fix: false,
+
       number_of_images: 4,
       steps: 24,
       seed: -1,

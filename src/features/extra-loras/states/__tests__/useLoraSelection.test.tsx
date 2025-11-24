@@ -55,7 +55,7 @@ const createWrapper = (
         steps: 20,
         seed: -1,
         sampler: 'euler_a',
-        hires_fix: false,
+
         styles: []
       }
     })
@@ -91,7 +91,7 @@ describe('useLoraSelection', () => {
     })
 
     it('does not add lora if it already exists', () => {
-      const Wrapper = createWrapper([{ lora_id: 1, weight: 1.0 }])
+      const Wrapper = createWrapper([{ lora_id: 1, weight: 1 }])
       const { result } = renderHook(() => useLoraSelection(), {
         wrapper: Wrapper
       })
@@ -125,8 +125,8 @@ describe('useLoraSelection', () => {
   describe('removeLora', () => {
     it('removes a lora by id', () => {
       const Wrapper = createWrapper([
-        { lora_id: 1, weight: 1.0 },
-        { lora_id: 2, weight: 1.0 }
+        { lora_id: 1, weight: 1 },
+        { lora_id: 2, weight: 1 }
       ])
       const { result } = renderHook(() => useLoraSelection(), {
         wrapper: Wrapper
@@ -141,7 +141,7 @@ describe('useLoraSelection', () => {
     })
 
     it('does nothing if lora id does not exist', () => {
-      const Wrapper = createWrapper([{ lora_id: 1, weight: 1.0 }])
+      const Wrapper = createWrapper([{ lora_id: 1, weight: 1 }])
       const { result } = renderHook(() => useLoraSelection(), {
         wrapper: Wrapper
       })
@@ -155,8 +155,8 @@ describe('useLoraSelection', () => {
 
     it('can remove all loras', () => {
       const Wrapper = createWrapper([
-        { lora_id: 1, weight: 1.0 },
-        { lora_id: 2, weight: 1.0 }
+        { lora_id: 1, weight: 1 },
+        { lora_id: 2, weight: 1 }
       ])
       const { result } = renderHook(() => useLoraSelection(), {
         wrapper: Wrapper
@@ -189,7 +189,7 @@ describe('useLoraSelection', () => {
     })
 
     it('removes lora if it exists', () => {
-      const Wrapper = createWrapper([{ lora_id: 1, weight: 1.0 }])
+      const Wrapper = createWrapper([{ lora_id: 1, weight: 1 }])
       const { result } = renderHook(() => useLoraSelection(), {
         wrapper: Wrapper
       })
@@ -242,7 +242,7 @@ describe('useLoraSelection', () => {
         refetch: vi.fn()
       } as unknown as ReturnType<typeof useLorasQuery>)
 
-      const Wrapper = createWrapper([{ lora_id: 1, weight: 1.0 }])
+      const Wrapper = createWrapper([{ lora_id: 1, weight: 1 }])
       const { result } = renderHook(() => useLoraSelection(), {
         wrapper: Wrapper
       })
@@ -252,7 +252,7 @@ describe('useLoraSelection', () => {
 
     it('returns selected loras with full details from data', () => {
       const Wrapper = createWrapper([
-        { lora_id: 1, weight: 1.0 },
+        { lora_id: 1, weight: 1 },
         { lora_id: 3, weight: 1.5 }
       ])
       const { result } = renderHook(() => useLoraSelection(), {
@@ -266,8 +266,8 @@ describe('useLoraSelection', () => {
 
     it('filters out loras that no longer exist in data', () => {
       const Wrapper = createWrapper([
-        { lora_id: 1, weight: 1.0 },
-        { lora_id: 999, weight: 1.0 }
+        { lora_id: 1, weight: 1 },
+        { lora_id: 999, weight: 1 }
       ])
       const { result } = renderHook(() => useLoraSelection(), {
         wrapper: Wrapper
@@ -279,9 +279,9 @@ describe('useLoraSelection', () => {
 
     it('maintains order of selected loras', () => {
       const Wrapper = createWrapper([
-        { lora_id: 3, weight: 1.0 },
-        { lora_id: 1, weight: 1.0 },
-        { lora_id: 2, weight: 1.0 }
+        { lora_id: 3, weight: 1 },
+        { lora_id: 1, weight: 1 },
+        { lora_id: 2, weight: 1 }
       ])
       const { result } = renderHook(() => useLoraSelection(), {
         wrapper: Wrapper

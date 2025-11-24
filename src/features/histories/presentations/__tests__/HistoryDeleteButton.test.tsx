@@ -124,7 +124,7 @@ describe('HistoryDeleteButton', () => {
       sampler: 'Euler',
       seed: 42,
       number_of_images: 1,
-      hires_fix: false,
+
       loras: [],
       prompt: 'Test prompt',
       negative_prompt: '',

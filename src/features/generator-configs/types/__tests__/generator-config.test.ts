@@ -6,7 +6,7 @@ describe('GeneratorConfigFormValues', () => {
     const configValues: GeneratorConfigFormValues = {
       width: 512,
       height: 512,
-      hires_fix: false,
+
       loras: [],
       number_of_images: 4,
       steps: 24,

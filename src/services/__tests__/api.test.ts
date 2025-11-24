@@ -266,7 +266,7 @@ describe('API Service', () => {
         guidance_scale: 7.5,
         sampler: 'Euler a',
         number_of_images: 1,
-        hires_fix: false,
+
         cfg_scale: 7,
         clip_skip: 2
       }
@@ -339,7 +339,7 @@ describe('API Service', () => {
           styles: [],
           loras: [],
           number_of_images: 1,
-          hires_fix: false,
+
           cfg_scale: 7,
           clip_skip: 2
         }
@@ -374,7 +374,7 @@ describe('API Service', () => {
           config: {
             width: 1024,
             height: 1024,
-            hires_fix: false,
+
             number_of_images: 4,
             prompt: 'a beautiful landscape',
             negative_prompt: 'blurry, low quality',

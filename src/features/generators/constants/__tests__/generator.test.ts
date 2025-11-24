@@ -7,7 +7,6 @@ describe('Generator Constants', () => {
       expect(FORM_DEFAULT_VALUES).toEqual({
         width: 512,
         height: 512,
-        hires_fix: false,
         number_of_images: 4,
         steps: 24,
         seed: -1,
@@ -26,7 +25,6 @@ describe('Generator Constants', () => {
       const requiredFields = [
         'width',
         'height',
-        'hires_fix',
         'number_of_images',
         'steps',
         'seed',
@@ -67,11 +65,6 @@ describe('Generator Constants', () => {
     it('should have empty array for loras', () => {
       expect(Array.isArray(FORM_DEFAULT_VALUES.loras)).toBe(true)
       expect(FORM_DEFAULT_VALUES.loras.length).toBe(0)
-    })
-
-    it('should have boolean value for hires_fix', () => {
-      expect(typeof FORM_DEFAULT_VALUES.hires_fix).toBe('boolean')
-      expect(FORM_DEFAULT_VALUES.hires_fix).toBe(false)
     })
   })
 })
