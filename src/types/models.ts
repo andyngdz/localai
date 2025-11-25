@@ -1,9 +1,9 @@
 interface LoadModelRequest {
-  id: string
+  model_id: string
 }
 
 interface LoadModelResponse {
-  id: string
+  model_id: string
   config: Record<string, unknown>
   sample_size: number
 }

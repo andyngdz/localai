@@ -11,7 +11,7 @@ export const useModelSelectors = () => {
   const onInitLoadModel = useCallback(async () => {
     if (isEmpty(selected_model_id)) return
 
-    await api.loadModel({ id: selected_model_id })
+    await api.loadModel({ model_id: selected_model_id })
   }, [selected_model_id])
 
   useEffect(() => {

@@ -46,7 +46,7 @@ describe('useModelSelectors', () => {
 
     // Should call loadModel with the selected model id
     await waitFor(() => {
-      expect(mockedApi.loadModel).toHaveBeenCalledWith({ id: 'llama-3' })
+      expect(mockedApi.loadModel).toHaveBeenCalledWith({ model_id: 'llama-3' })
     })
   })
 
@@ -73,7 +73,7 @@ describe('useModelSelectors', () => {
     const { rerender } = renderHook(() => useModelSelectors())
 
     await waitFor(() => {
-      expect(mockedApi.loadModel).toHaveBeenCalledWith({ id: 'llama-3' })
+      expect(mockedApi.loadModel).toHaveBeenCalledWith({ model_id: 'llama-3' })
     })
 
     // Change to second model
@@ -81,7 +81,9 @@ describe('useModelSelectors', () => {
     rerender()
 
     await waitFor(() => {
-      expect(mockedApi.loadModel).toHaveBeenCalledWith({ id: 'codellama' })
+      expect(mockedApi.loadModel).toHaveBeenCalledWith({
+        model_id: 'codellama'
+      })
     })
   })
 })

@@ -192,7 +192,9 @@ describe('API Service', () => {
 
       const result = await api.modelDetails(modelId)
 
-      expect(client.get).toHaveBeenCalledWith(`/models/details?id=${modelId}`)
+      expect(client.get).toHaveBeenCalledWith(
+        `/models/details?model_id=${modelId}`
+      )
       expect(result).toEqual(mockResponse)
     })
   })
@@ -203,7 +205,9 @@ describe('API Service', () => {
 
       await api.downloadModel(modelId)
 
-      expect(client.post).toHaveBeenCalledWith('/downloads/', { id: modelId })
+      expect(client.post).toHaveBeenCalledWith('/downloads/', {
+        model_id: modelId
+      })
     })
   })
 
@@ -282,7 +286,7 @@ describe('API Service', () => {
 
   describe('loadModel', () => {
     it('calls POST /models/load and returns the data', async () => {
-      const request = { id: 'model1' }
+      const request = { model_id: 'model1' }
       const mockResponse = { status: 'loaded', id: 'model1' }
       vi.spyOn(client, 'post').mockResolvedValueOnce({ data: mockResponse })
 
