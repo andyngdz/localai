@@ -93,14 +93,14 @@ class API {
 
   async modelDetails(model_id: string) {
     const { data } = await client.get<ModelDetailsResponse>(
-      `/models/details?id=${model_id}`
+      `/models/details?model_id=${model_id}`
     )
 
     return data
   }
 
-  async downloadModel(id: string) {
-    await client.post('/downloads/', { id })
+  async downloadModel(model_id: string) {
+    await client.post('/downloads/', { model_id })
   }
 
   async getDownloadedModels() {

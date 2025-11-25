@@ -10,8 +10,8 @@ import { ModelRecommendationsList } from './ModelRecommendationsList'
 export const ModelRecommendations = () => {
   const router = useRouter()
   const { onNext, onSkip, data } = useModelRecommendation()
-  const id = useDownloadWatcherStore((state) => state.id)
-  const isDownloading = !!id
+  const model_id = useDownloadWatcherStore((state) => state.model_id)
+  const isDownloading = !!model_id
 
   return (
     <SetupLayout
