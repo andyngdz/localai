@@ -6,9 +6,10 @@ export const DEFAULT_BACKEND_PORT = 8000
 export const DEFAULT_BACKEND_URL = 'http://localhost:8000'
 
 export enum UpscalerType {
-  LATENT = 'Latent',
-  LATENT_NEAREST = 'Latent (nearest)',
-  LATENT_NEAREST_EXACT = 'Latent (nearest-exact)'
+  LANCZOS = 'Lanczos',
+  BICUBIC = 'Bicubic',
+  BILINEAR = 'Bilinear',
+  NEAREST = 'Nearest'
 }
 
 export enum UpscaleFactor {

@@ -64,7 +64,7 @@ describe('HistoryPhotoviewCard', () => {
       number_of_images: 4,
       hires_fix: {
         upscale_factor: UpscaleFactor.TWO,
-        upscaler: UpscalerType.LATENT,
+        upscaler: UpscalerType.LANCZOS,
         denoising_strength: 0.7,
         steps: 20
       },

@@ -8,7 +8,8 @@ export const UPSCALE_FACTORS = [
 ]
 
 export const UPSCALERS = [
-  { value: UpscalerType.LATENT, label: 'Latent' },
-  { value: UpscalerType.LATENT_NEAREST, label: 'Latent (nearest)' },
-  { value: UpscalerType.LATENT_NEAREST_EXACT, label: 'Latent (nearest-exact)' }
+  { value: UpscalerType.LANCZOS, label: 'Lanczos (Highest Quality)' },
+  { value: UpscalerType.BICUBIC, label: 'Bicubic (High Quality)' },
+  { value: UpscalerType.BILINEAR, label: 'Bilinear (Balanced)' },
+  { value: UpscalerType.NEAREST, label: 'Nearest (Fastest)' }
 ]

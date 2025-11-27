@@ -16,12 +16,12 @@ export const useGeneratorConfigFormats = () => {
     if (checked) {
       setValue('hires_fix', {
         upscale_factor: UpscaleFactor.TWO,
-        upscaler: UpscalerType.LATENT,
+        upscaler: UpscalerType.LANCZOS,
         denoising_strength: 0.7,
         steps: 0
       })
     } else {
-      resetField('hires_fix')
+      resetField('hires_fix', undefined)
     }
   }
 
