@@ -4,8 +4,7 @@ import { useFormContext } from 'react-hook-form'
 import { useToggle } from 'react-use'
 
 export const useGeneratorConfigFormats = () => {
-  const { watch, setValue, resetField } =
-    useFormContext<GeneratorConfigFormValues>()
+  const { watch, setValue } = useFormContext<GeneratorConfigFormValues>()
   const hiresFixValue = watch('hires_fix')
   const [isHiresFixEnabled, toggleIsHiresFixEnabled] =
     useToggle(!!hiresFixValue)
@@ -21,7 +20,7 @@ export const useGeneratorConfigFormats = () => {
         steps: 0
       })
     } else {
-      resetField('hires_fix', undefined)
+      setValue('hires_fix', undefined)
     }
   }
 
