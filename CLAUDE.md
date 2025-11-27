@@ -39,4 +39,8 @@ Next.js 15 + Electron + Python FastAPI. Feature-first structure: `src/features/f
 - `best-practices` - Validation/refactoring
 - `communication-guidelines` - Questions/commits
 
-See @docs/ARCHITECTURE.md, @docs/CODING_STYLE.md, @docs/DEVELOPMENT_COMMANDS.md for full details.
+## Documentation to Read
+
+- @docs/ARCHITECTURE.md - Stack, structure, circular imports, modularity rules
+- @docs/CODING_STYLE.md - Complete style guide with examples
+- @docs/DEVELOPMENT_COMMANDS.md - All available commands
