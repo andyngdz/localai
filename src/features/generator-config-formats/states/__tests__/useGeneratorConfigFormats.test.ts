@@ -19,8 +19,8 @@ vi.mock('react-hook-form', () => ({
 
 // Mock react-use with stateful toggle
 let mockIsEnabled = false
-const mockToggle = vi.fn(() => {
-  mockIsEnabled = !mockIsEnabled
+const mockToggle = vi.fn((value?: boolean) => {
+  mockIsEnabled = value ?? !mockIsEnabled
 })
 vi.mock('react-use', () => ({
   useToggle: () => [mockIsEnabled, mockToggle]
@@ -133,7 +133,7 @@ describe('useGeneratorConfigFormats', () => {
       expect(setValueCall[1].steps).toBe(0)
     })
 
-    it('calls toggleIsHiresFixEnabled on each toggle', () => {
+    it('calls toggleIsHiresFixEnabled with correct value on each toggle', () => {
       const { result } = renderHook(() => useGeneratorConfigFormats())
 
       act(() => {
@@ -141,12 +141,14 @@ describe('useGeneratorConfigFormats', () => {
       })
 
       expect(mockToggle).toHaveBeenCalledTimes(1)
+      expect(mockToggle).toHaveBeenCalledWith(true)
 
       act(() => {
         result.current.onHiresFixToggle(false)
       })
 
       expect(mockToggle).toHaveBeenCalledTimes(2)
+      expect(mockToggle).toHaveBeenLastCalledWith(false)
     })
   })
 

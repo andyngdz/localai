@@ -10,7 +10,7 @@ export const useGeneratorConfigFormats = () => {
     useToggle(!!hiresFixValue)
 
   const onHiresFixToggle = (checked: boolean) => {
-    toggleIsHiresFixEnabled()
+    toggleIsHiresFixEnabled(checked)
 
     if (checked) {
       setValue('hires_fix', {
