@@ -1,12 +1,24 @@
 'use client'
 
+import { useConfig } from '@/cores/hooks'
 import { GeneratorConfigFormValues } from '@/features/generator-configs/types/generator-config'
 import { Select, SelectItem, Skeleton } from '@heroui/react'
 import { Controller, useFormContext } from 'react-hook-form'
-import { UPSCALERS } from '../constants'
 
 export const GeneratorConfigHiresFixUpscaler = () => {
-  const { control } = useFormContext<GeneratorConfigFormValues>()
+  const { control, setValue } = useFormContext<GeneratorConfigFormValues>()
+  const { upscalers } = useConfig()
+
+  const onUpscalerChange = (upscalerValue: string) => {
+    const selectedUpscaler = upscalers.find((u) => u.value === upscalerValue)
+
+    if (selectedUpscaler) {
+      setValue(
+        'hires_fix.denoising_strength',
+        selectedUpscaler.suggested_denoise_strength
+      )
+    }
+  }
 
   return (
     <Controller
@@ -25,13 +37,14 @@ export const GeneratorConfigHiresFixUpscaler = () => {
               const selectedKey = keys.currentKey
               if (selectedKey) {
                 field.onChange(selectedKey)
+                onUpscalerChange(selectedKey)
               }
             }}
             aria-label="Upscaler"
             size="sm"
           >
-            {UPSCALERS.map((upscaler) => (
-              <SelectItem key={upscaler.value}>{upscaler.label}</SelectItem>
+            {upscalers.map((upscaler) => (
+              <SelectItem key={upscaler.value}>{upscaler.name}</SelectItem>
             ))}
           </Select>
         )

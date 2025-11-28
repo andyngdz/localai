@@ -1,18 +1,44 @@
 import { UpscaleFactor, UpscalerType } from '@/cores/constants'
+import { useConfig } from '@/cores/hooks'
 import { GeneratorConfigFormValues } from '@/features/generator-configs'
+import { Upscaler } from '@/types'
 import { renderHook, act } from '@testing-library/react'
 import { UseFormReturn } from 'react-hook-form'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useGeneratorConfigFormats } from '../useGeneratorConfigFormats'
 
+// Mock useConfig hook
+vi.mock('@/cores/hooks', () => ({
+  useConfig: vi.fn()
+}))
+
+const mockUpscalers: Upscaler[] = [
+  {
+    value: UpscalerType.LANCZOS,
+    name: 'Lanczos',
+    description: 'High quality upscaler',
+    suggested_denoise_strength: 0.5
+  },
+  {
+    value: UpscalerType.BICUBIC,
+    name: 'Bicubic',
+    description: 'Smooth upscaler',
+    suggested_denoise_strength: 0.4
+  }
+]
+
 // Mock react-hook-form
 const mockWatch = vi.fn()
+const mockRegister = vi.fn()
+const mockUnregister = vi.fn()
 const mockSetValue = vi.fn()
 
 vi.mock('react-hook-form', () => ({
   useFormContext: () =>
     ({
       watch: mockWatch,
+      register: mockRegister,
+      unregister: mockUnregister,
       setValue: mockSetValue
     }) as Partial<UseFormReturn<GeneratorConfigFormValues>>
 }))
@@ -30,6 +56,7 @@ describe('useGeneratorConfigFormats', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mockIsEnabled = false
+    vi.mocked(useConfig).mockReturnValue({ upscalers: mockUpscalers })
   })
 
   describe('initialization', () => {
@@ -46,7 +73,7 @@ describe('useGeneratorConfigFormats', () => {
       mockWatch.mockReturnValue({
         upscale_factor: UpscaleFactor.TWO,
         upscaler: UpscalerType.LANCZOS,
-        denoising_strength: 0.7,
+        denoising_strength: 0.5,
         steps: 0
       })
       mockIsEnabled = true
@@ -57,39 +84,37 @@ describe('useGeneratorConfigFormats', () => {
     })
   })
 
-  describe('onHiresFixToggle', () => {
+  describe('onHiresFixToggle - enable', () => {
     beforeEach(() => {
       mockWatch.mockReturnValue(undefined)
     })
 
-    it('enables hires fix with default values when toggled on', () => {
+    it('registers hires_fix field when toggled on', () => {
       const { result } = renderHook(() => useGeneratorConfigFormats())
 
       act(() => {
         result.current.onHiresFixToggle(true)
       })
 
-      expect(mockToggle).toHaveBeenCalled()
+      expect(mockRegister).toHaveBeenCalledWith('hires_fix')
+    })
+
+    it('sets default values from backend config when toggled on (first-time user)', () => {
+      const { result } = renderHook(() => useGeneratorConfigFormats())
+
+      act(() => {
+        result.current.onHiresFixToggle(true)
+      })
+
       expect(mockSetValue).toHaveBeenCalledWith('hires_fix', {
         upscale_factor: UpscaleFactor.TWO,
         upscaler: UpscalerType.LANCZOS,
-        denoising_strength: 0.7,
+        denoising_strength: 0.5, // From backend config
         steps: 0
       })
     })
 
-    it('disables hires fix by setting undefined when toggled off', () => {
-      const { result } = renderHook(() => useGeneratorConfigFormats())
-
-      act(() => {
-        result.current.onHiresFixToggle(false)
-      })
-
-      expect(mockToggle).toHaveBeenCalled()
-      expect(mockSetValue).toHaveBeenCalledWith('hires_fix', undefined)
-    })
-
-    it('uses Lanczos as default upscaler', () => {
+    it('uses first upscaler from backend config as default', () => {
       const { result } = renderHook(() => useGeneratorConfigFormats())
 
       act(() => {
@@ -100,7 +125,7 @@ describe('useGeneratorConfigFormats', () => {
       expect(setValueCall[1].upscaler).toBe(UpscalerType.LANCZOS)
     })
 
-    it('uses 2x as default upscale factor', () => {
+    it('uses suggested_denoise_strength from first upscaler', () => {
       const { result } = renderHook(() => useGeneratorConfigFormats())
 
       act(() => {
@@ -108,47 +133,89 @@ describe('useGeneratorConfigFormats', () => {
       })
 
       const setValueCall = mockSetValue.mock.calls[0]
-      expect(setValueCall[1].upscale_factor).toBe(UpscaleFactor.TWO)
+      expect(setValueCall[1].denoising_strength).toBe(0.5)
     })
 
-    it('uses 0.7 as default denoising strength', () => {
+    it('does not set default values when user already has hires_fix config', () => {
+      mockWatch.mockReturnValue({
+        upscale_factor: UpscaleFactor.THREE,
+        upscaler: UpscalerType.NEAREST,
+        denoising_strength: 0.3,
+        steps: 10
+      })
+
       const { result } = renderHook(() => useGeneratorConfigFormats())
 
       act(() => {
         result.current.onHiresFixToggle(true)
       })
 
-      const setValueCall = mockSetValue.mock.calls[0]
-      expect(setValueCall[1].denoising_strength).toBe(0.7)
+      // Should register but NOT set value (user has existing config)
+      expect(mockRegister).toHaveBeenCalledWith('hires_fix')
+      expect(mockSetValue).not.toHaveBeenCalled()
     })
 
-    it('uses 0 as default steps (inherit from base)', () => {
+    it('does not set default values when no upscalers available', () => {
+      vi.mocked(useConfig).mockReturnValue({ upscalers: [] })
+
       const { result } = renderHook(() => useGeneratorConfigFormats())
 
       act(() => {
         result.current.onHiresFixToggle(true)
       })
 
-      const setValueCall = mockSetValue.mock.calls[0]
-      expect(setValueCall[1].steps).toBe(0)
+      // Should register but NOT set value (no default upscaler)
+      expect(mockRegister).toHaveBeenCalledWith('hires_fix')
+      expect(mockSetValue).not.toHaveBeenCalled()
     })
+  })
 
-    it('calls toggleIsHiresFixEnabled with correct value on each toggle', () => {
+  describe('onHiresFixToggle - disable', () => {
+    it('unregisters hires_fix field when toggled off', () => {
+      mockWatch.mockReturnValue(undefined)
       const { result } = renderHook(() => useGeneratorConfigFormats())
-
-      act(() => {
-        result.current.onHiresFixToggle(true)
-      })
-
-      expect(mockToggle).toHaveBeenCalledTimes(1)
-      expect(mockToggle).toHaveBeenCalledWith(true)
 
       act(() => {
         result.current.onHiresFixToggle(false)
       })
 
-      expect(mockToggle).toHaveBeenCalledTimes(2)
-      expect(mockToggle).toHaveBeenLastCalledWith(false)
+      expect(mockUnregister).toHaveBeenCalledWith('hires_fix')
+    })
+
+    it('does not call register or setValue when toggled off', () => {
+      mockWatch.mockReturnValue(undefined)
+      const { result } = renderHook(() => useGeneratorConfigFormats())
+
+      act(() => {
+        result.current.onHiresFixToggle(false)
+      })
+
+      expect(mockRegister).not.toHaveBeenCalled()
+      expect(mockSetValue).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('toggle state', () => {
+    it('calls toggleIsHiresFixEnabled with correct value on enable', () => {
+      mockWatch.mockReturnValue(undefined)
+      const { result } = renderHook(() => useGeneratorConfigFormats())
+
+      act(() => {
+        result.current.onHiresFixToggle(true)
+      })
+
+      expect(mockToggle).toHaveBeenCalledWith(true)
+    })
+
+    it('calls toggleIsHiresFixEnabled with correct value on disable', () => {
+      mockWatch.mockReturnValue(undefined)
+      const { result } = renderHook(() => useGeneratorConfigFormats())
+
+      act(() => {
+        result.current.onHiresFixToggle(false)
+      })
+
+      expect(mockToggle).toHaveBeenCalledWith(false)
     })
   })
 

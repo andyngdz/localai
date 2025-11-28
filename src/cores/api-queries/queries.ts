@@ -1,6 +1,7 @@
 import { api } from '@/services/api'
 import {
   ApiError,
+  BackendConfig,
   HardwareResponse,
   HealthResponse,
   HistoryItem,
@@ -102,7 +103,16 @@ const useDeleteLoraMutation = () => {
   })
 }
 
+const useBackendConfigQuery = () => {
+  return useQuery<BackendConfig, ApiError>({
+    queryKey: ['config'],
+    queryFn: () => api.getConfig(),
+    staleTime: Infinity
+  })
+}
+
 export {
+  useBackendConfigQuery,
   useDeleteLoraMutation,
   useDownloadedModelsQuery,
   useHardwareQuery,
