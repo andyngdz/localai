@@ -1,3 +1,5 @@
+import { UpscalerType } from '@/cores/constants'
+
 export interface HealthResponse {
   status: string
   message: string
@@ -86,4 +88,15 @@ export interface StyleSection {
 export interface ApiError {
   message: string
   status?: number
+}
+
+export interface Upscaler {
+  value: UpscalerType
+  name: string
+  description: string
+  suggested_denoise_strength: number
+}
+
+export interface BackendConfig {
+  upscalers: Upscaler[]
 }

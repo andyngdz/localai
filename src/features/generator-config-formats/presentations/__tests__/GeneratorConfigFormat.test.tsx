@@ -1,9 +1,24 @@
+import { UpscalerType } from '@/cores/constants'
 import { GeneratorConfigFormValues } from '@/features/generator-configs/types/generator-config'
 import { render, screen } from '@testing-library/react'
 import { ReactNode } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { describe, expect, it, vi } from 'vitest'
 import { GeneratorConfigFormat } from '../GeneratorConfigFormat'
+
+// Mock useConfig hook
+vi.mock('@/cores/hooks', () => ({
+  useConfig: vi.fn(() => ({
+    upscalers: [
+      {
+        value: UpscalerType.LANCZOS,
+        name: 'Lanczos',
+        description: 'High quality upscaler',
+        suggested_denoise_strength: 0.5
+      }
+    ]
+  }))
+}))
 
 // Mock the NumberInputController component
 vi.mock('@/cores/presentations/NumberInputController', () => ({

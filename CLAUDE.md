@@ -44,3 +44,13 @@ Next.js 15 + Electron + Python FastAPI. Feature-first structure: `src/features/f
 - @docs/ARCHITECTURE.md - Stack, structure, circular imports, modularity rules
 - @docs/CODING_STYLE.md - Complete style guide with examples
 - @docs/DEVELOPMENT_COMMANDS.md - All available commands
+
+## Active Technologies
+
+- TypeScript 5.9, React 19, Next.js 16 + TanStack Query 5.x, Zustand 5.x, Axios, HeroUI (009-backend-config)
+- N/A (in-memory state only) (009-backend-config)
+- N/A (React Query cache + existing Zustand persistence) (009-backend-config)
+
+## Recent Changes
+
+- 009-backend-config: Added TypeScript 5.9, React 19, Next.js 16 + TanStack Query 5.x, Zustand 5.x, Axios, HeroUI

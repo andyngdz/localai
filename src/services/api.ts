@@ -2,6 +2,7 @@ import { DEFAULT_BACKEND_URL } from '@/cores/constants'
 import { GeneratorConfigFormValues } from '@/features/generator-configs'
 import axios from 'axios'
 import type {
+  BackendConfig,
   DeviceIndexResponse,
   HardwareResponse,
   HealthResponse,
@@ -168,6 +169,12 @@ class API {
 
   async deleteLora(id: number) {
     const { data } = await client.delete<LoRADeleteResponse>(`/loras/${id}`)
+
+    return data
+  }
+
+  async getConfig() {
+    const { data } = await client.get<BackendConfig>('/config/')
 
     return data
   }
