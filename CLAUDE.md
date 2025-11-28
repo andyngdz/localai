@@ -1,3 +1,25 @@
+<!-- OPENSPEC:START -->
+
+# OpenSpec Instructions
+
+These instructions are for AI assistants working in this project.
+
+Always open `@/openspec/AGENTS.md` when the request:
+
+- Mentions planning or proposals (words like proposal, spec, change, plan)
+- Introduces new capabilities, breaking changes, architecture shifts, or big performance/security work
+- Sounds ambiguous and you need the authoritative spec before coding
+
+Use `@/openspec/AGENTS.md` to learn:
+
+- How to create and apply change proposals
+- Spec format and conventions
+- Project structure and guidelines
+
+Keep this managed block so 'openspec update' can refresh the instructions.
+
+<!-- OPENSPEC:END -->
+
 # Agent Guide for LocalAI
 
 ## Quick Commands
@@ -41,16 +63,6 @@ Next.js 15 + Electron + Python FastAPI. Feature-first structure: `src/features/f
 
 ## Documentation to Read
 
-- @docs/ARCHITECTURE.md - Stack, structure, circular imports, modularity rules
-- @docs/CODING_STYLE.md - Complete style guide with examples
-- @docs/DEVELOPMENT_COMMANDS.md - All available commands
-
-## Active Technologies
-
-- TypeScript 5.9, React 19, Next.js 16 + TanStack Query 5.x, Zustand 5.x, Axios, HeroUI (009-backend-config)
-- N/A (in-memory state only) (009-backend-config)
-- N/A (React Query cache + existing Zustand persistence) (009-backend-config)
-
-## Recent Changes
-
-- 009-backend-config: Added TypeScript 5.9, React 19, Next.js 16 + TanStack Query 5.x, Zustand 5.x, Axios, HeroUI
+- `@docs/ARCHITECTURE.md` - Stack, structure, circular imports, modularity rules
+- `@docs/CODING_STYLE.md` - Complete style guide with examples
+- `@docs/DEVELOPMENT_COMMANDS.md` - All available commands
