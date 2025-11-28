@@ -8,7 +8,7 @@ export const HistoryLoader = () => {
   return (
     <div className="flex flex-col" data-testid="history-loader">
       <ScrollShadow>
-        <div className="flex flex-col flex-1 divide-y divide-default-200">
+        <div className="flex flex-col flex-1 divide-y divide-default">
           {SKELETON_ITEMS.map((id) => (
             <div
               key={id}

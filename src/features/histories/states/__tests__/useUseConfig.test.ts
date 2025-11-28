@@ -41,7 +41,7 @@ describe('useUseConfig', () => {
       config: {
         width: 512,
         height: 512,
-        hires_fix: false,
+
         loras: [],
         number_of_images: 1,
         prompt: 'test prompt',
@@ -82,7 +82,7 @@ describe('useUseConfig', () => {
       config: {
         width: 512,
         height: 512,
-        hires_fix: false,
+
         loras: [],
         number_of_images: 1,
         prompt: 'test prompt',

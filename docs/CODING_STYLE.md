@@ -20,6 +20,13 @@
   - Never use `any` type. Use proper types, `unknown`, or type assertions (`as Type`) instead
   - Use built-in utility types where appropriate (e.g., `VoidFunction` instead of `() => void`)
 
+- **Truthiness & Nullish Checks**:
+  - Prefer truthy checks over explicit comparisons: `if (value)` not `if (value !== undefined)`
+  - Use `!!value` to convert to boolean, `!value` for negation
+  - Use nullish coalescing `??` for defaults: `value ?? fallback` not `value !== undefined ? value : fallback`
+  - Use optional chaining `?.` for safe access: `obj?.prop` not `obj && obj.prop`
+  - Exception: Use explicit checks when `0`, `''`, or `false` are valid values that shouldn't be falsy
+
 - **State Management**:
   - Use Zustand stores for shared state across components
   - Centralize UI state (modal open/close, tab selection) in stores when multiple components need to control it

@@ -10,11 +10,15 @@ export const GeneratorActionSubmitButton = () => {
   const numberOfImages = watch('number_of_images')
 
   return (
-    <Button variant="faded" type="submit" isDisabled={isGenerating}>
+    <Button
+      color="primary"
+      type="submit"
+      className="opacity-100"
+      isDisabled={isGenerating}
+    >
       <span
         className={clsx({
-          'text-primary': !isGenerating,
-          'animate-shine text-primary/40': isGenerating
+          'animate-shine text-primary/50': isGenerating
         })}
       >
         Generate {numberOfImages} images

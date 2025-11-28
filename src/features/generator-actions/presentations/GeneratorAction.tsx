@@ -1,6 +1,6 @@
 import {
-  useImageViewModeStore,
-  ImageViewMode
+  ImageViewMode,
+  useImageViewModeStore
 } from '@/features/generator-previewers/states/useImageViewModeStore'
 import { Select, SelectItem, Selection } from '@heroui/react'
 import { GeneratorActionSubmitButton } from './GeneratorActionSubmitButton'

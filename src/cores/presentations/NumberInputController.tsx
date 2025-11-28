@@ -20,7 +20,7 @@ export const NumberInputController = <T extends FieldValues, C>({
     name: controlName,
     rules: {
       validate: (value) => {
-        if (isNaN(value)) {
+        if (Number.isNaN(value)) {
           return 'Input is required'
         }
       }

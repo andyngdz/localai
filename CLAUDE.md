@@ -1,28 +1,46 @@
-# Claude Code Guide
+# Agent Guide for LocalAI
 
-Welcome to LocalAI! This guide provides quick orientation to project conventions. For detailed procedures, use the skills listed below.
+## Quick Commands
 
-## Essential Documentation
+- **Single test**: `pnpm test -- path/to/test.test.ts`
+- **All tests**: `pnpm test` | **Coverage**: `pnpm test:coverage`
+- **Dev server**: `pnpm run dev` | **Desktop**: `pnpm run desktop`
+- **Lint**: `pnpm run lint` | **Format**: `pnpm run format` | **Type check**: `pnpm run type-check`
 
-Read these files before working on tasks:
+## Architecture
 
-- **Architecture**: @docs/ARCHITECTURE.md - Next.js 15 + Electron + Python FastAPI stack
-- **Coding Style**: @docs/CODING_STYLE.md - TypeScript standards, formatting, React patterns
-- **Development Commands**: @docs/DEVELOPMENT_COMMANDS.md - Dev server, tests, build commands
+Next.js 15 + Electron + Python FastAPI. Feature-first structure: `src/features/feature-name/{presentations,states}`. Zustand for state, React Query for server data, Socket.io with reactive Zustand pattern (never `socket.on()` directly, use `useSocketEvent()` hook).
 
-## Available Skills
+## Code Style
 
-Use these skills for detailed procedural guidance:
+- **TypeScript**: Never use `any` (error enforced). Use `unknown` or proper types. Path aliases: `@/*` for src, `@types` for shared types
+- **Format**: Prettier - 2 spaces, single quotes, no semicolons, 80-char width
+- **Naming**: PascalCase components (with feature prefix: `GeneratorImageRenderer`), camelCase functions/vars, kebab-case dirs
+- **Imports**: Group by external → internal → types. Use `es-toolkit/compat` for utilities
+- **Components**: `'use client'` for hooks/Zustand/browser APIs. Hooks at top (custom → UI library → React). Use `useMemo` for conditional/expensive renders
+- **State**: Zustand for shared state, `useState` for local. Use `partialize` to exclude UI state from persistence. Prefer `useLocalStorage` over `useRef` for persistent component state
+- **Comments**: Brief action-focused (what, not why/how). Use `// Step N: <action>` for workflows. Omit when code is self-documenting
+- **Simplicity**: Simple vars over nested access, direct function refs vs arrows, YAGNI principle, extract conditionals to named vars before JSX
 
-**Procedural Skills:**
+## Critical Rules
 
-- `communication-guidelines` - When to ask questions, commit policies
-- `testing-requirements` - Test structure, verification steps, coverage goals
-- `security-patterns` - Electron IPC security, renderer isolation
+- **Electron IPC**: Frontend uses `window.electronAPI.backend.method()`
+- **Sockets**: Only `useSocketEvent()` hook, never direct `socket.on()`
+- **Types**: `@typescript-eslint/no-explicit-any` enforced as error
+- **Research**: Check official docs/patterns before implementing unfamiliar APIs
 
-**Code Quality Skills:**
+## Skills (Mandatory)
 
-- `critical-rules` - TypeScript safety, socket events, useEffect cleanup
-- `best-practices` - Validation patterns, component encapsulation, refactoring
+**BEFORE any task**: Check if a skill applies → Use it. No exceptions.
 
-**Note:** Claude Code automatically uses relevant skills when working on tasks.
+- `testing-requirements` - Test structure/verification
+- `security-patterns` - Electron IPC security
+- `critical-rules` - TypeScript/sockets/useEffect
+- `best-practices` - Validation/refactoring
+- `communication-guidelines` - Questions/commits
+
+## Documentation to Read
+
+- @docs/ARCHITECTURE.md - Stack, structure, circular imports, modularity rules
+- @docs/CODING_STYLE.md - Complete style guide with examples
+- @docs/DEVELOPMENT_COMMANDS.md - All available commands

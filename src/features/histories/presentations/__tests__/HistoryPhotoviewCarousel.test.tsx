@@ -63,7 +63,7 @@ describe('HistoryPhotoviewCarousel', () => {
         sampler: 'Euler a',
         seed: 12345,
         number_of_images: 1,
-        hires_fix: false,
+
         loras: [],
         prompt: 'Test prompt 1',
         negative_prompt: '',
@@ -86,7 +86,7 @@ describe('HistoryPhotoviewCarousel', () => {
         sampler: 'Euler a',
         seed: 67890,
         number_of_images: 1,
-        hires_fix: false,
+
         loras: [],
         prompt: 'Test prompt 2',
         negative_prompt: '',
@@ -109,7 +109,7 @@ describe('HistoryPhotoviewCarousel', () => {
         sampler: 'Euler a',
         seed: 11111,
         number_of_images: 1,
-        hires_fix: false,
+
         loras: [],
         prompt: 'Test prompt 3',
         negative_prompt: '',

@@ -345,7 +345,6 @@ describe('React Query Hooks', () => {
           config: {
             width: 1024,
             height: 1024,
-            hires_fix: false,
             loras: [],
             number_of_images: 4,
             prompt: 'a beautiful landscape',

@@ -28,7 +28,7 @@ const mockHistories = [
       sampler: 'Euler a',
       seed: 12345,
       number_of_images: 1,
-      hires_fix: false,
+
       loras: [],
       prompt: 'test prompt',
       negative_prompt: '',
