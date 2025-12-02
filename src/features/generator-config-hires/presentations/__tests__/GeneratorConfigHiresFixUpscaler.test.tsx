@@ -117,7 +117,6 @@ vi.mock('@heroui/react', () => {
     }: {
       title: string
       children: React.ReactNode
-      showDivider?: boolean
     }) => (
       <optgroup label={title} data-testid={`section-${title.toLowerCase()}`}>
         {children}
@@ -216,7 +215,7 @@ describe('GeneratorConfigHiresFixUpscaler', () => {
 
   it('displays selected value', () => {
     render(<GeneratorConfigHiresFixUpscaler />)
-    const select = screen.getByTestId('select-input') as HTMLSelectElement
+    const select = screen.getByTestId<HTMLSelectElement>('select-input')
 
     expect(select.value).toBe(UpscalerType.LANCZOS)
   })
