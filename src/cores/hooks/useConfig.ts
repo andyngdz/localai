@@ -1,10 +1,11 @@
 'use client'
 
 import { useBackendConfigQuery } from '@/cores/api-queries'
-import { Upscaler } from '@/types'
+import { UpscalerOption, UpscalerSection } from '@/types'
 
 interface ConfigResult {
-  upscalers: Upscaler[]
+  upscalers: UpscalerSection[]
+  upscalerOptions: UpscalerOption[]
 }
 
 /**
@@ -18,8 +19,11 @@ interface ConfigResult {
  */
 export const useConfig = (): ConfigResult => {
   const { data } = useBackendConfigQuery()
+  const upscalers = data?.upscalers ?? []
+  const upscalerOptions = upscalers.flatMap((section) => section.options)
 
   return {
-    upscalers: data?.upscalers ?? []
+    upscalers,
+    upscalerOptions
   }
 }

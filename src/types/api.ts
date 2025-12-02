@@ -1,4 +1,4 @@
-import { UpscalerType } from '@/cores/constants'
+import { UpscalerMethod, UpscalerType } from '@/cores/constants'
 
 export interface HealthResponse {
   status: string
@@ -90,13 +90,21 @@ export interface ApiError {
   status?: number
 }
 
-export interface Upscaler {
+export interface UpscalerOption {
   value: UpscalerType
   name: string
   description: string
   suggested_denoise_strength: number
+  method: UpscalerMethod
+  is_recommended: boolean
+}
+
+export interface UpscalerSection {
+  method: UpscalerMethod
+  title: string
+  options: UpscalerOption[]
 }
 
 export interface BackendConfig {
-  upscalers: Upscaler[]
+  upscalers: UpscalerSection[]
 }

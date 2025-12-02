@@ -5,11 +5,19 @@ export class DeviceSelection {
 export const DEFAULT_BACKEND_PORT = 8000
 export const DEFAULT_BACKEND_URL = 'http://localhost:8000'
 
+export enum UpscalerMethod {
+  TRADITIONAL = 'traditional',
+  AI = 'ai'
+}
+
 export enum UpscalerType {
   LANCZOS = 'Lanczos',
   BICUBIC = 'Bicubic',
   BILINEAR = 'Bilinear',
-  NEAREST = 'Nearest'
+  NEAREST = 'Nearest',
+  REAL_ESRGAN_X2_PLUS = 'RealESRGAN_x2plus',
+  REAL_ESRGAN_X4_PLUS = 'RealESRGAN_x4plus',
+  REAL_ESRGAN_X4_PLUS_ANIME = 'RealESRGAN_x4plus_anime'
 }
 
 export enum UpscaleFactor {

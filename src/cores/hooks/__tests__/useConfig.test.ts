@@ -4,8 +4,8 @@ import { useConfig } from '../useConfig'
 import { useBackendConfigQuery } from '@/cores/api-queries'
 import { createQueryClientWrapper } from '@/cores/test-utils/query-client'
 import { createMockQueryResult } from '@/cores/test-utils/query-result-mock'
-import { BackendConfig, Upscaler } from '@/types'
-import { UpscalerType } from '@/cores/constants'
+import { BackendConfig, UpscalerSection } from '@/types'
+import { UpscalerMethod, UpscalerType } from '@/cores/constants'
 
 vi.mock('@/cores/api-queries', () => ({
   useBackendConfigQuery: vi.fn()
@@ -16,7 +16,7 @@ describe('useConfig', () => {
     vi.resetAllMocks()
   })
 
-  it('should return empty array as default when query returns undefined', () => {
+  it('should return empty arrays as default when query returns undefined', () => {
     // Arrange
     vi.mocked(useBackendConfigQuery).mockReturnValue(
       createMockQueryResult<BackendConfig>(undefined)
@@ -29,27 +29,38 @@ describe('useConfig', () => {
 
     // Assert
     expect(result.current.upscalers).toEqual([])
+    expect(result.current.upscalerOptions).toEqual([])
   })
 
-  it('should return upscalers from the query data', () => {
+  it('should return upscalers and upscalerOptions from the query data', () => {
     // Arrange
-    const mockUpscalers: Upscaler[] = [
+    const mockUpscalerSections: UpscalerSection[] = [
       {
-        value: UpscalerType.LANCZOS,
-        name: 'Lanczos',
-        description: 'High quality upscaler',
-        suggested_denoise_strength: 0.5
-      },
-      {
-        value: UpscalerType.BICUBIC,
-        name: 'Bicubic',
-        description: 'Smooth upscaler',
-        suggested_denoise_strength: 0.4
+        method: UpscalerMethod.TRADITIONAL,
+        title: 'Traditional',
+        options: [
+          {
+            value: UpscalerType.LANCZOS,
+            name: 'Lanczos',
+            description: 'High quality upscaler',
+            suggested_denoise_strength: 0.5,
+            method: UpscalerMethod.TRADITIONAL,
+            is_recommended: false
+          },
+          {
+            value: UpscalerType.BICUBIC,
+            name: 'Bicubic',
+            description: 'Smooth upscaler',
+            suggested_denoise_strength: 0.4,
+            method: UpscalerMethod.TRADITIONAL,
+            is_recommended: false
+          }
+        ]
       }
     ]
 
     const mockConfig: BackendConfig = {
-      upscalers: mockUpscalers
+      upscalers: mockUpscalerSections
     }
 
     vi.mocked(useBackendConfigQuery).mockReturnValue(
@@ -62,10 +73,13 @@ describe('useConfig', () => {
     })
 
     // Assert
-    expect(result.current.upscalers).toEqual(mockUpscalers)
+    expect(result.current.upscalers).toEqual(mockUpscalerSections)
+    expect(result.current.upscalerOptions).toEqual(
+      mockUpscalerSections[0].options
+    )
   })
 
-  it('should return empty array when config has no upscalers field', () => {
+  it('should return empty arrays when config has no upscalers field', () => {
     // Arrange
     const mockConfig = {} as BackendConfig
 
@@ -80,5 +94,6 @@ describe('useConfig', () => {
 
     // Assert
     expect(result.current.upscalers).toEqual([])
+    expect(result.current.upscalerOptions).toEqual([])
   })
 })

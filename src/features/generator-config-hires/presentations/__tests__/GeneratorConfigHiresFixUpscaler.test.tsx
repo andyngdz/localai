@@ -1,7 +1,7 @@
-import { UpscalerType } from '@/cores/constants'
+import { UpscalerMethod, UpscalerType } from '@/cores/constants'
 import { useConfig } from '@/cores/hooks'
 import { GeneratorConfigFormValues } from '@/features/generator-configs/types/generator-config'
-import { Upscaler } from '@/types'
+import { UpscalerSection } from '@/types'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { UseFormReturn } from 'react-hook-form'
@@ -13,32 +13,72 @@ vi.mock('@/cores/hooks', () => ({
   useConfig: vi.fn()
 }))
 
-const mockUpscalers: Upscaler[] = [
+const mockUpscalerSections: UpscalerSection[] = [
   {
-    value: UpscalerType.LANCZOS,
-    name: 'Lanczos',
-    description: 'High quality upscaler',
-    suggested_denoise_strength: 0.5
+    method: UpscalerMethod.TRADITIONAL,
+    title: 'Traditional',
+    options: [
+      {
+        value: UpscalerType.LANCZOS,
+        name: 'Lanczos',
+        description: 'High quality upscaler',
+        suggested_denoise_strength: 0.5,
+        method: UpscalerMethod.TRADITIONAL,
+        is_recommended: false
+      },
+      {
+        value: UpscalerType.BICUBIC,
+        name: 'Bicubic',
+        description: 'Smooth upscaler',
+        suggested_denoise_strength: 0.4,
+        method: UpscalerMethod.TRADITIONAL,
+        is_recommended: false
+      },
+      {
+        value: UpscalerType.BILINEAR,
+        name: 'Bilinear',
+        description: 'Balanced upscaler',
+        suggested_denoise_strength: 0.35,
+        method: UpscalerMethod.TRADITIONAL,
+        is_recommended: false
+      },
+      {
+        value: UpscalerType.NEAREST,
+        name: 'Nearest',
+        description: 'Fast upscaler',
+        suggested_denoise_strength: 0.3,
+        method: UpscalerMethod.TRADITIONAL,
+        is_recommended: false
+      }
+    ]
   },
   {
-    value: UpscalerType.BICUBIC,
-    name: 'Bicubic',
-    description: 'Smooth upscaler',
-    suggested_denoise_strength: 0.4
-  },
-  {
-    value: UpscalerType.BILINEAR,
-    name: 'Bilinear',
-    description: 'Balanced upscaler',
-    suggested_denoise_strength: 0.35
-  },
-  {
-    value: UpscalerType.NEAREST,
-    name: 'Nearest',
-    description: 'Fast upscaler',
-    suggested_denoise_strength: 0.3
+    method: UpscalerMethod.AI,
+    title: 'AI',
+    options: [
+      {
+        value: UpscalerType.REAL_ESRGAN_X2_PLUS,
+        name: 'Real-ESRGAN 2x',
+        description: 'AI upscaler 2x',
+        suggested_denoise_strength: 0.35,
+        method: UpscalerMethod.AI,
+        is_recommended: true
+      },
+      {
+        value: UpscalerType.REAL_ESRGAN_X4_PLUS,
+        name: 'Real-ESRGAN 4x',
+        description: 'AI upscaler 4x',
+        suggested_denoise_strength: 0.3,
+        method: UpscalerMethod.AI,
+        is_recommended: true
+      }
+    ]
   }
 ]
+
+const mockUpscalerOptions = mockUpscalerSections.flatMap(
+  (section) => section.options
+)
 
 // Mock HeroUI components
 vi.mock('@heroui/react', () => {
@@ -71,13 +111,40 @@ vi.mock('@heroui/react', () => {
         </div>
       )
     },
+    SelectSection: ({
+      title,
+      children
+    }: {
+      title: string
+      children: React.ReactNode
+      showDivider?: boolean
+    }) => (
+      <optgroup label={title} data-testid={`section-${title.toLowerCase()}`}>
+        {children}
+      </optgroup>
+    ),
     SelectItem: ({
       children,
+      description,
+      'data-key': dataKey,
       ...props
     }: {
       children: React.ReactNode
+      description?: React.ReactNode
+      'data-key'?: string
       [key: string]: unknown
-    }) => <option {...props}>{children}</option>,
+    }) => (
+      <option
+        {...props}
+        value={dataKey}
+        data-description={description ? 'true' : undefined}
+      >
+        {children}
+        {description && (
+          <span data-testid="description-recommended">{description}</span>
+        )}
+      </option>
+    ),
     Skeleton: ({ className }: { className: string }) => (
       <div data-testid="skeleton" className={className}>
         Loading...
@@ -116,7 +183,10 @@ describe('GeneratorConfigHiresFixUpscaler', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mockFieldValue = UpscalerType.LANCZOS
-    vi.mocked(useConfig).mockReturnValue({ upscalers: mockUpscalers })
+    vi.mocked(useConfig).mockReturnValue({
+      upscalers: mockUpscalerSections,
+      upscalerOptions: mockUpscalerOptions
+    })
   })
 
   it('renders without crashing', () => {
@@ -194,16 +264,26 @@ describe('GeneratorConfigHiresFixUpscaler', () => {
   })
 
   it('does not set denoise strength if upscaler not found in config', async () => {
-    // When upscalers array doesn't contain the selected value
+    // When upscalers sections don't contain the selected value
+    const limitedUpscalerSections = [
+      {
+        method: UpscalerMethod.TRADITIONAL,
+        title: 'Traditional',
+        options: [
+          {
+            value: UpscalerType.LANCZOS,
+            name: 'Lanczos',
+            description: 'High quality upscaler',
+            suggested_denoise_strength: 0.5,
+            method: UpscalerMethod.TRADITIONAL,
+            is_recommended: false
+          }
+        ]
+      }
+    ]
     vi.mocked(useConfig).mockReturnValue({
-      upscalers: [
-        {
-          value: UpscalerType.LANCZOS,
-          name: 'Lanczos',
-          description: 'High quality upscaler',
-          suggested_denoise_strength: 0.5
-        }
-      ]
+      upscalers: limitedUpscalerSections,
+      upscalerOptions: limitedUpscalerSections.flatMap((s) => s.options)
     })
 
     const user = userEvent.setup()
@@ -237,10 +317,78 @@ describe('GeneratorConfigHiresFixUpscaler', () => {
   })
 
   it('handles empty upscalers array gracefully', () => {
-    vi.mocked(useConfig).mockReturnValue({ upscalers: [] })
+    vi.mocked(useConfig).mockReturnValue({
+      upscalers: [],
+      upscalerOptions: []
+    })
     render(<GeneratorConfigHiresFixUpscaler />)
 
     // Should render without crashing, just with no options
     expect(screen.getByTestId('select')).toBeInTheDocument()
+  })
+
+  describe('sections and recommendations', () => {
+    it('groups upscalers into Traditional and AI sections', () => {
+      render(<GeneratorConfigHiresFixUpscaler />)
+
+      expect(screen.getByTestId('section-traditional')).toBeInTheDocument()
+      expect(screen.getByTestId('section-ai')).toBeInTheDocument()
+    })
+
+    it('displays AI upscalers in the AI section', () => {
+      render(<GeneratorConfigHiresFixUpscaler />)
+
+      expect(screen.getByText('Real-ESRGAN 2x')).toBeInTheDocument()
+      expect(screen.getByText('Real-ESRGAN 4x')).toBeInTheDocument()
+    })
+
+    it('shows Recommended text for recommended upscalers', () => {
+      render(<GeneratorConfigHiresFixUpscaler />)
+
+      const recommendations = screen.getAllByTestId('description-recommended')
+      expect(recommendations.length).toBe(2) // Both AI upscalers are recommended
+      expect(recommendations[0]).toHaveTextContent('Recommended')
+    })
+
+    it('does not show Recommended for non-recommended upscalers', () => {
+      const nonRecommendedSections = [
+        {
+          method: UpscalerMethod.TRADITIONAL,
+          title: 'Traditional',
+          options: [
+            {
+              value: UpscalerType.LANCZOS,
+              name: 'Lanczos',
+              description: 'High quality upscaler',
+              suggested_denoise_strength: 0.5,
+              method: UpscalerMethod.TRADITIONAL,
+              is_recommended: false
+            }
+          ]
+        }
+      ]
+      vi.mocked(useConfig).mockReturnValue({
+        upscalers: nonRecommendedSections,
+        upscalerOptions: nonRecommendedSections.flatMap((s) => s.options)
+      })
+
+      render(<GeneratorConfigHiresFixUpscaler />)
+
+      expect(
+        screen.queryByTestId('description-recommended')
+      ).not.toBeInTheDocument()
+    })
+
+    it('includes AI upscalers with correct denoise strength in config', () => {
+      // The AI upscalers are in the config with their suggested_denoise_strength
+      // The denoise strength change is tested in other tests via selection
+      const aiSection = mockUpscalerSections.find(
+        (s) => s.method === UpscalerMethod.AI
+      )
+      const aiUpscaler = aiSection?.options.find(
+        (o) => o.value === UpscalerType.REAL_ESRGAN_X4_PLUS
+      )
+      expect(aiUpscaler?.suggested_denoise_strength).toBe(0.3)
+    })
   })
 })

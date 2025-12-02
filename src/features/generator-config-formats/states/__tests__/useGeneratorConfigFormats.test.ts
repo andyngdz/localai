@@ -1,7 +1,7 @@
-import { UpscaleFactor, UpscalerType } from '@/cores/constants'
+import { UpscaleFactor, UpscalerMethod, UpscalerType } from '@/cores/constants'
 import { useConfig } from '@/cores/hooks'
 import { GeneratorConfigFormValues } from '@/features/generator-configs'
-import { Upscaler } from '@/types'
+import { UpscalerSection } from '@/types'
 import { renderHook, act } from '@testing-library/react'
 import { UseFormReturn } from 'react-hook-form'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
@@ -12,20 +12,34 @@ vi.mock('@/cores/hooks', () => ({
   useConfig: vi.fn()
 }))
 
-const mockUpscalers: Upscaler[] = [
+const mockUpscalerSections: UpscalerSection[] = [
   {
-    value: UpscalerType.LANCZOS,
-    name: 'Lanczos',
-    description: 'High quality upscaler',
-    suggested_denoise_strength: 0.5
-  },
-  {
-    value: UpscalerType.BICUBIC,
-    name: 'Bicubic',
-    description: 'Smooth upscaler',
-    suggested_denoise_strength: 0.4
+    method: UpscalerMethod.TRADITIONAL,
+    title: 'Traditional',
+    options: [
+      {
+        value: UpscalerType.LANCZOS,
+        name: 'Lanczos',
+        description: 'High quality upscaler',
+        suggested_denoise_strength: 0.5,
+        method: UpscalerMethod.TRADITIONAL,
+        is_recommended: false
+      },
+      {
+        value: UpscalerType.BICUBIC,
+        name: 'Bicubic',
+        description: 'Smooth upscaler',
+        suggested_denoise_strength: 0.4,
+        method: UpscalerMethod.TRADITIONAL,
+        is_recommended: false
+      }
+    ]
   }
 ]
+
+const mockUpscalerOptions = mockUpscalerSections.flatMap(
+  (section) => section.options
+)
 
 // Mock react-hook-form
 const mockWatch = vi.fn()
@@ -56,7 +70,10 @@ describe('useGeneratorConfigFormats', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mockIsEnabled = false
-    vi.mocked(useConfig).mockReturnValue({ upscalers: mockUpscalers })
+    vi.mocked(useConfig).mockReturnValue({
+      upscalers: mockUpscalerSections,
+      upscalerOptions: mockUpscalerOptions
+    })
   })
 
   describe('initialization', () => {
@@ -156,7 +173,10 @@ describe('useGeneratorConfigFormats', () => {
     })
 
     it('does not set default values when no upscalers available', () => {
-      vi.mocked(useConfig).mockReturnValue({ upscalers: [] })
+      vi.mocked(useConfig).mockReturnValue({
+        upscalers: [],
+        upscalerOptions: []
+      })
 
       const { result } = renderHook(() => useGeneratorConfigFormats())
 

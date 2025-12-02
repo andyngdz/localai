@@ -8,13 +8,13 @@ import { useToggle } from 'react-use'
 export const useGeneratorConfigFormats = () => {
   const { watch, register, unregister, setValue } =
     useFormContext<GeneratorConfigFormValues>()
-  const { upscalers } = useConfig()
+  const { upscalerOptions } = useConfig()
   const hiresFixValue = watch('hires_fix')
   const [isHiresFixEnabled, toggleIsHiresFixEnabled] =
     useToggle(!!hiresFixValue)
 
   const onHiresFixToggle = (checked: boolean) => {
-    const defaultUpscaler = first(upscalers)
+    const defaultUpscaler = first(upscalerOptions)
     toggleIsHiresFixEnabled(checked)
 
     if (checked) {
