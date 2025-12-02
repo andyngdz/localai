@@ -1,24 +1,13 @@
 'use client'
 
-import { useConfig } from '@/cores/hooks'
 import { GeneratorConfigFormValues } from '@/features/generator-configs/types/generator-config'
-import { Select, SelectItem, Skeleton } from '@heroui/react'
+import { Select, SelectItem, SelectSection, Skeleton } from '@heroui/react'
 import { Controller, useFormContext } from 'react-hook-form'
+import { useGeneratorConfigHiresFixUpscaler } from '../states'
 
 export const GeneratorConfigHiresFixUpscaler = () => {
-  const { control, setValue } = useFormContext<GeneratorConfigFormValues>()
-  const { upscalers } = useConfig()
-
-  const onUpscalerChange = (upscalerValue: string) => {
-    const selectedUpscaler = upscalers.find((u) => u.value === upscalerValue)
-
-    if (selectedUpscaler) {
-      setValue(
-        'hires_fix.denoising_strength',
-        selectedUpscaler.suggested_denoise_strength
-      )
-    }
-  }
+  const { control } = useFormContext<GeneratorConfigFormValues>()
+  const { upscalers, onUpscalerChange } = useGeneratorConfigHiresFixUpscaler()
 
   return (
     <Controller
@@ -43,8 +32,27 @@ export const GeneratorConfigHiresFixUpscaler = () => {
             aria-label="Upscaler"
             size="sm"
           >
-            {upscalers.map((upscaler) => (
-              <SelectItem key={upscaler.value}>{upscaler.name}</SelectItem>
+            {upscalers.map((section, index) => (
+              <SelectSection
+                key={section.method}
+                title={section.title}
+                showDivider={index < upscalers.length - 1}
+              >
+                {section.options.map((option) => (
+                  <SelectItem
+                    key={option.value}
+                    description={
+                      option.is_recommended && (
+                        <span className="text-xs text-success">
+                          Recommended
+                        </span>
+                      )
+                    }
+                  >
+                    {option.name}
+                  </SelectItem>
+                ))}
+              </SelectSection>
             ))}
           </Select>
         )
