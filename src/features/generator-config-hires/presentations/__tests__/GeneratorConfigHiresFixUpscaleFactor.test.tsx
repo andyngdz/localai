@@ -98,7 +98,8 @@ describe('GeneratorConfigHiresFixUpscaleFactor', () => {
   })
 
   it('renders without crashing', () => {
-    render(<GeneratorConfigHiresFixUpscaleFactor />)
+    const { container } = render(<GeneratorConfigHiresFixUpscaleFactor />)
+    expect(container).toBeInTheDocument()
   })
 
   it('renders select with correct label', () => {

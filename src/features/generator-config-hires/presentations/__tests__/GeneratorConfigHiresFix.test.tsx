@@ -98,7 +98,8 @@ describe('GeneratorConfigHiresFix', () => {
   })
 
   it('renders without crashing', () => {
-    render(<GeneratorConfigHiresFix />)
+    const { container } = render(<GeneratorConfigHiresFix />)
+    expect(container).toBeInTheDocument()
   })
 
   it('renders upscale factor component', () => {

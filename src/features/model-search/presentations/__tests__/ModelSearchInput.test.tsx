@@ -25,6 +25,26 @@ const TestWrapper = ({
   return <FormProvider {...methods}>{children}</FormProvider>
 }
 
+// Test wrapper with reset button functionality
+const TestWrapperWithReset = ({ children }: { children: React.ReactNode }) => {
+  const methods = useForm<ModelSearchFormValues>({
+    defaultValues: { query: 'initial' }
+  })
+
+  const handleReset = () => methods.reset({ query: 'reset value' })
+
+  return (
+    <FormProvider {...methods}>
+      <form>
+        {children}
+        <button type="button" onClick={handleReset} data-testid="reset-button">
+          Reset
+        </button>
+      </form>
+    </FormProvider>
+  )
+}
+
 describe('ModelSearchInput', () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -312,31 +332,6 @@ describe('ModelSearchInput', () => {
 
     it('works with different form states', async () => {
       const user = userEvent.setup()
-
-      const TestWrapperWithReset = ({
-        children
-      }: {
-        children: React.ReactNode
-      }) => {
-        const methods = useForm<ModelSearchFormValues>({
-          defaultValues: { query: 'initial' }
-        })
-
-        return (
-          <FormProvider {...methods}>
-            <form>
-              {children}
-              <button
-                type="button"
-                onClick={() => methods.reset({ query: 'reset value' })}
-                data-testid="reset-button"
-              >
-                Reset
-              </button>
-            </form>
-          </FormProvider>
-        )
-      }
 
       render(
         <TestWrapperWithReset>
