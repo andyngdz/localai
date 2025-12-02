@@ -1,11 +1,11 @@
-import { renderHook } from '@testing-library/react'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { useConfig } from '../useConfig'
 import { useBackendConfigQuery } from '@/cores/api-queries'
+import { UpscalerMethod, UpscalerType } from '@/cores/constants'
 import { createQueryClientWrapper } from '@/cores/test-utils/query-client'
 import { createMockQueryResult } from '@/cores/test-utils/query-result-mock'
 import { BackendConfig, UpscalerSection } from '@/types'
-import { UpscalerMethod, UpscalerType } from '@/cores/constants'
+import { renderHook } from '@testing-library/react'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { useConfig } from '../useConfig'
 
 vi.mock('@/cores/api-queries', () => ({
   useBackendConfigQuery: vi.fn()
@@ -19,7 +19,7 @@ describe('useConfig', () => {
   it('should return empty arrays as default when query returns undefined', () => {
     // Arrange
     vi.mocked(useBackendConfigQuery).mockReturnValue(
-      createMockQueryResult<BackendConfig>(undefined)
+      createMockQueryResult<BackendConfig>()
     )
 
     // Act
