@@ -26,8 +26,8 @@ describe('GeneralSettings', () => {
     expect(screen.getByText('Safety check')).toBeInTheDocument()
   })
 
-  it('registers safetyCheck field', () => {
+  it('registers safety_check_enabled field', () => {
     render(<GeneralSettings />)
-    expect(mockRegister).toHaveBeenCalledWith('safetyCheck')
+    expect(mockRegister).toHaveBeenCalledWith('safety_check_enabled')
   })
 })

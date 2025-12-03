@@ -184,7 +184,8 @@ describe('GeneratorConfigHiresFixUpscaler', () => {
     mockFieldValue = UpscalerType.LANCZOS
     vi.mocked(useConfig).mockReturnValue({
       upscalers: mockUpscalerSections,
-      upscalerOptions: mockUpscalerOptions
+      upscalerOptions: mockUpscalerOptions,
+      safety_check_enabled: true
     })
   })
 
@@ -283,7 +284,8 @@ describe('GeneratorConfigHiresFixUpscaler', () => {
     ]
     vi.mocked(useConfig).mockReturnValue({
       upscalers: limitedUpscalerSections,
-      upscalerOptions: limitedUpscalerSections.flatMap((s) => s.options)
+      upscalerOptions: limitedUpscalerSections.flatMap((s) => s.options),
+      safety_check_enabled: true
     })
 
     const user = userEvent.setup()
@@ -319,7 +321,8 @@ describe('GeneratorConfigHiresFixUpscaler', () => {
   it('handles empty upscalers array gracefully', () => {
     vi.mocked(useConfig).mockReturnValue({
       upscalers: [],
-      upscalerOptions: []
+      upscalerOptions: [],
+      safety_check_enabled: true
     })
     render(<GeneratorConfigHiresFixUpscaler />)
 
@@ -369,7 +372,8 @@ describe('GeneratorConfigHiresFixUpscaler', () => {
       ]
       vi.mocked(useConfig).mockReturnValue({
         upscalers: nonRecommendedSections,
-        upscalerOptions: nonRecommendedSections.flatMap((s) => s.options)
+        upscalerOptions: nonRecommendedSections.flatMap((s) => s.options),
+        safety_check_enabled: true
       })
 
       render(<GeneratorConfigHiresFixUpscaler />)

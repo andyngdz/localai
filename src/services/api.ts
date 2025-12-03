@@ -178,6 +178,10 @@ class API {
 
     return data
   }
+
+  async setSafetyCheckEnabled(enabled: boolean) {
+    await client.put('/config/safety-check', { enabled })
+  }
 }
 
 export const api = new API()

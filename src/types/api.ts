@@ -107,4 +107,5 @@ export interface UpscalerSection {
 
 export interface BackendConfig {
   upscalers: UpscalerSection[]
+  safety_check_enabled: boolean
 }

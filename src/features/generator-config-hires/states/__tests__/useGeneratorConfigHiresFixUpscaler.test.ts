@@ -76,7 +76,8 @@ describe('useGeneratorConfigHiresFixUpscaler', () => {
     vi.clearAllMocks()
     vi.mocked(useConfig).mockReturnValue({
       upscalers: mockUpscalerSections,
-      upscalerOptions: mockUpscalerOptions
+      upscalerOptions: mockUpscalerOptions,
+      safety_check_enabled: true
     })
   })
 
@@ -112,7 +113,8 @@ describe('useGeneratorConfigHiresFixUpscaler', () => {
     it('returns empty array when no sections', () => {
       vi.mocked(useConfig).mockReturnValue({
         upscalers: [],
-        upscalerOptions: []
+        upscalerOptions: [],
+        safety_check_enabled: true
       })
 
       const { result } = renderHook(() => useGeneratorConfigHiresFixUpscaler())

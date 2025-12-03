@@ -16,7 +16,7 @@ describe('useConfig', () => {
     vi.resetAllMocks()
   })
 
-  it('should return empty arrays as default when query returns undefined', () => {
+  it('should return empty arrays and default safety_check_enabled when query returns undefined', () => {
     // Arrange
     vi.mocked(useBackendConfigQuery).mockReturnValue(
       createMockQueryResult<BackendConfig>()
@@ -30,6 +30,7 @@ describe('useConfig', () => {
     // Assert
     expect(result.current.upscalers).toEqual([])
     expect(result.current.upscalerOptions).toEqual([])
+    expect(result.current.safety_check_enabled).toBe(true)
   })
 
   it('should return upscalers and upscalerOptions from the query data', () => {
@@ -60,7 +61,8 @@ describe('useConfig', () => {
     ]
 
     const mockConfig: BackendConfig = {
-      upscalers: mockUpscalerSections
+      upscalers: mockUpscalerSections,
+      safety_check_enabled: false
     }
 
     vi.mocked(useBackendConfigQuery).mockReturnValue(
@@ -77,9 +79,10 @@ describe('useConfig', () => {
     expect(result.current.upscalerOptions).toEqual(
       mockUpscalerSections[0].options
     )
+    expect(result.current.safety_check_enabled).toBe(false)
   })
 
-  it('should return empty arrays when config has no upscalers field', () => {
+  it('should return empty arrays and default safety_check_enabled when config has no fields', () => {
     // Arrange
     const mockConfig = {} as BackendConfig
 
@@ -95,5 +98,6 @@ describe('useConfig', () => {
     // Assert
     expect(result.current.upscalers).toEqual([])
     expect(result.current.upscalerOptions).toEqual([])
+    expect(result.current.safety_check_enabled).toBe(true)
   })
 })
