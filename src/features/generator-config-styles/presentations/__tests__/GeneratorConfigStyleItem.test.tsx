@@ -1,8 +1,44 @@
 import { GeneratorConfigFormValues } from '@/features/generator-configs/types/generator-config'
 import { fireEvent, render, screen } from '@testing-library/react'
+import { ReactNode } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { GeneratorConfigStyleItem } from '../GeneratorConfigStyleItem'
+
+// Mock @heroui/react components
+vi.mock('@heroui/react', () => ({
+  Tooltip: ({
+    closeDelay,
+    classNames,
+    children
+  }: {
+    closeDelay?: number
+    classNames?: Record<string, string>
+    children: ReactNode
+  }) => (
+    <div
+      data-testid="tooltip"
+      data-close-delay={closeDelay}
+      data-tooltip-classnames={JSON.stringify(classNames)}
+    >
+      {children}
+    </div>
+  ),
+  Chip: ({
+    children,
+    className,
+    onClick
+  }: {
+    children: ReactNode
+    className?: string
+    onClick?: () => void
+  }) => (
+    <button data-testid="chip" className={className} onClick={onClick}>
+      {children}
+    </button>
+  ),
+  Avatar: () => <div data-testid="avatar" />
+}))
 
 // Mock the style item data
 const mockStyleItem = {
@@ -61,7 +97,7 @@ describe('GeneratorConfigStyleItem', () => {
       </TestWrapper>
     )
 
-    const chip = screen.getByText('Test Style').closest('div')
+    const chip = screen.getByText('Test Style').closest('button')
     expect(chip).not.toHaveClass('border-primary')
   })
 
@@ -72,7 +108,7 @@ describe('GeneratorConfigStyleItem', () => {
       </TestWrapper>
     )
 
-    const chip = screen.getByText('Test Style').closest('div')
+    const chip = screen.getByText('Test Style').closest('button')
     expect(chip).toHaveClass('border-primary')
   })
 
@@ -83,8 +119,8 @@ describe('GeneratorConfigStyleItem', () => {
       </TestWrapper>
     )
 
-    const chip = screen.getByText('Test Style').closest('div')
-    fireEvent.click(chip!)
+    const chip = screen.getByTestId('chip')
+    fireEvent.click(chip)
 
     // The chip should now have the selected styling
     expect(chip).toHaveClass('border-primary')
@@ -97,8 +133,8 @@ describe('GeneratorConfigStyleItem', () => {
       </TestWrapper>
     )
 
-    const chip = screen.getByText('Test Style').closest('div')
-    fireEvent.click(chip!)
+    const chip = screen.getByTestId('chip')
+    fireEvent.click(chip)
 
     // The chip should no longer have the selected styling
     expect(chip).not.toHaveClass('border-primary')
@@ -115,7 +151,32 @@ describe('GeneratorConfigStyleItem', () => {
       </TestWrapper>
     )
 
-    const chip = screen.getByText('Test Style').closest('div')
+    const chip = screen.getByText('Test Style').closest('button')
     expect(chip).toHaveClass('border-primary')
+  })
+
+  it('renders tooltip with closeDelay={0} to close immediately', () => {
+    render(
+      <TestWrapper>
+        <GeneratorConfigStyleItem styleItem={mockStyleItem} />
+      </TestWrapper>
+    )
+
+    const tooltip = screen.getByTestId('tooltip')
+    expect(tooltip).toHaveAttribute('data-close-delay', '0')
+  })
+
+  it('renders tooltip with pointer-events-none class to allow interaction with adjacent items', () => {
+    render(
+      <TestWrapper>
+        <GeneratorConfigStyleItem styleItem={mockStyleItem} />
+      </TestWrapper>
+    )
+
+    const tooltip = screen.getByTestId('tooltip')
+    const classNamesStr = tooltip.dataset.tooltipClassnames
+    const classNames = classNamesStr ? JSON.parse(classNamesStr) : {}
+
+    expect(classNames.base).toBe('pointer-events-none')
   })
 })
