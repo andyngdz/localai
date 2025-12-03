@@ -2,6 +2,10 @@ import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { UpdateSettings } from '../UpdateSettings'
 
+// Helper to create a delayed promise
+const createDelayedPromise = <T,>(value: T, ms: number): Promise<T> =>
+  new Promise((resolve) => setTimeout(() => resolve(value), ms))
+
 // Mock HeroUI components
 vi.mock('@heroui/react', () => ({
   Button: ({
@@ -113,10 +117,7 @@ describe('UpdateSettings', () => {
   it('shows loading state while checking for updates', async () => {
     vi.mocked(window.electronAPI.app.getVersion).mockResolvedValue('1.2.3')
     vi.mocked(window.electronAPI.updater.checkForUpdates).mockImplementation(
-      () =>
-        new Promise((resolve) =>
-          setTimeout(() => resolve({ updateAvailable: false }), 100)
-        )
+      () => createDelayedPromise({ updateAvailable: false }, 100)
     )
 
     render(<UpdateSettings />)
@@ -138,10 +139,7 @@ describe('UpdateSettings', () => {
   it('returns to normal state after check completes', async () => {
     vi.mocked(window.electronAPI.app.getVersion).mockResolvedValue('1.2.3')
     vi.mocked(window.electronAPI.updater.checkForUpdates).mockImplementation(
-      () =>
-        new Promise((resolve) =>
-          setTimeout(() => resolve({ updateAvailable: false }), 50)
-        )
+      () => createDelayedPromise({ updateAvailable: false }, 50)
     )
 
     render(<UpdateSettings />)

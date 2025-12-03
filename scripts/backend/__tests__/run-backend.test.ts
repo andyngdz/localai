@@ -100,7 +100,7 @@ describe('runBackend', () => {
 
       expect(mockEmit).toHaveBeenCalledWith({
         level: BackendStatusLevel.Info,
-        message: 'LocalAI Backend started successfully'
+        message: 'LocalAI Backend is starting'
       })
 
       expect(mockEmit).toHaveBeenCalledTimes(3)
@@ -383,7 +383,7 @@ describe('runBackend', () => {
 
       expect(mockEmit).toHaveBeenNthCalledWith(3, {
         level: BackendStatusLevel.Info,
-        message: 'LocalAI Backend started successfully'
+        message: 'LocalAI Backend is starting'
       })
 
       expect(mockEmit).toHaveBeenCalledTimes(3)

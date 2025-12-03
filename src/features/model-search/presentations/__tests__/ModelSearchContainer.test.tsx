@@ -103,10 +103,10 @@ describe('ModelSearchContainer', () => {
   })
 
   it('renders with correct form configuration', () => {
-    render(<ModelSearchContainer />)
+    const { container } = render(<ModelSearchContainer />)
 
-    // With our mock setup, we're just verifying the component renders
-    // Form configuration is verified by the mock itself
+    // Verify component renders successfully
+    expect(container).toBeInTheDocument()
   })
 
   it('renders all child components', () => {

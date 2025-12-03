@@ -105,6 +105,9 @@ vi.mock('@/features/settings/states/useDeleteModel', () => ({
   })
 }))
 
+// Helper to create a pending promise (never resolves)
+const createPendingPromise = <T,>(): Promise<T> => new Promise(() => {})
+
 describe('ModelManagement', () => {
   let wrapper = createQueryClientWrapper()
 
@@ -117,7 +120,7 @@ describe('ModelManagement', () => {
     it('displays loading spinner when fetching models', () => {
       // Mock API to never resolve to keep loading state
       vi.mocked(api.getDownloadedModels).mockImplementation(
-        () => new Promise(() => {}) // Never resolves
+        createPendingPromise
       )
 
       render(<ModelManagement />, { wrapper })
@@ -129,7 +132,7 @@ describe('ModelManagement', () => {
 
     it('has correct loading container styling', () => {
       vi.mocked(api.getDownloadedModels).mockImplementation(
-        () => new Promise(() => {})
+        createPendingPromise
       )
 
       render(<ModelManagement />, { wrapper })

@@ -61,7 +61,7 @@ const runBackend = async ({ backendPath, emit }: RunBackendOptions) => {
 
     emit({
       level: BackendStatusLevel.Info,
-      message: 'LocalAI Backend started successfully'
+      message: 'LocalAI Backend is starting'
     })
 
     // Configure zx to stream output and run uvicorn

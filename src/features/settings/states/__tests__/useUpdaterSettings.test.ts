@@ -8,6 +8,10 @@ vi.mock('@heroui/react', () => ({
   addToast: vi.fn()
 }))
 
+// Helper to create a delayed promise
+const createDelayedPromise = <T>(value: T, ms: number): Promise<T> =>
+  new Promise((resolve) => setTimeout(() => resolve(value), ms))
+
 describe('useUpdaterSettings', () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -77,11 +81,8 @@ describe('useUpdaterSettings', () => {
     it('should set isChecking to true during check', async () => {
       vi.mocked(
         global.window.electronAPI.updater.checkForUpdates
-      ).mockImplementation(
-        () =>
-          new Promise((resolve) => {
-            setTimeout(() => resolve({ updateAvailable: false }), 100)
-          })
+      ).mockImplementation(() =>
+        createDelayedPromise({ updateAvailable: false }, 100)
       )
 
       const { result } = renderHook(() => useUpdaterSettings())
@@ -414,11 +415,8 @@ describe('useUpdaterSettings', () => {
     it('should work through complete update check lifecycle', async () => {
       vi.mocked(
         global.window.electronAPI.updater.checkForUpdates
-      ).mockImplementation(
-        () =>
-          new Promise((resolve) => {
-            setTimeout(() => resolve({ updateAvailable: false }), 100)
-          })
+      ).mockImplementation(() =>
+        createDelayedPromise({ updateAvailable: false }, 100)
       )
 
       const { result } = renderHook(() => useUpdaterSettings())
