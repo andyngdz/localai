@@ -111,6 +111,16 @@ const useBackendConfigQuery = () => {
   })
 }
 
+const useSafetyCheckMutation = () => {
+  const queryClient = useQueryClient()
+  return useMutation<void, ApiError, boolean>({
+    mutationFn: (enabled: boolean) => api.setSafetyCheckEnabled(enabled),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['config'] })
+    }
+  })
+}
+
 export {
   useBackendConfigQuery,
   useDeleteLoraMutation,
@@ -121,6 +131,7 @@ export {
   useLorasQuery,
   useMemoryQuery,
   useModelRecommendationsQuery,
+  useSafetyCheckMutation,
   useSamplersQuery,
   useStyleSectionsQuery,
   useUploadLoraMutation

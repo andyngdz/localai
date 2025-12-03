@@ -15,7 +15,7 @@ vi.mock('zustand/middleware', async () => {
 
 describe('useSettingsStore', () => {
   const defaultValues: SettingFormValues = {
-    safetyCheck: true
+    safety_check_enabled: true
   }
 
   afterEach(() => {
@@ -57,16 +57,16 @@ describe('useSettingsStore', () => {
   })
 
   describe('setValues functionality', () => {
-    it('should update safetyCheck when setValues is called', () => {
+    it('should update safety_check_enabled when setValues is called', () => {
       const { result } = renderHook(() => useSettingsStore())
-      const newValues: SettingFormValues = { safetyCheck: false }
+      const newValues: SettingFormValues = { safety_check_enabled: false }
 
       act(() => {
         result.current.setValues(newValues)
       })
 
       expect(result.current.values).toEqual(newValues)
-      expect(result.current.values.safetyCheck).toBe(false)
+      expect(result.current.values.safety_check_enabled).toBe(false)
     })
   })
 
@@ -75,7 +75,7 @@ describe('useSettingsStore', () => {
       const { result } = renderHook(() => useSettingsStore())
 
       act(() => {
-        result.current.setValues({ safetyCheck: false })
+        result.current.setValues({ safety_check_enabled: false })
       })
 
       expect(result.current.values).not.toEqual(defaultValues)

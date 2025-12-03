@@ -20,7 +20,7 @@ const useSettingsStore = create<UseSettingsStore>()(
     persist(
       (set, _get, state) => ({
         values: {
-          safetyCheck: true
+          safety_check_enabled: true
         },
         setValues: (values) => set({ values }),
         reset: () => set(state.getInitialState()),
@@ -32,7 +32,7 @@ const useSettingsStore = create<UseSettingsStore>()(
         setSelectedTab: (tab) => set({ selectedTab: tab })
       }),
       {
-        name: 'app-settings',
+        name: 'app-config',
         partialize: (state) => ({ values: state.values })
       }
     )

@@ -6,6 +6,7 @@ import { UpscalerOption, UpscalerSection } from '@/types'
 interface ConfigResult {
   upscalers: UpscalerSection[]
   upscalerOptions: UpscalerOption[]
+  safety_check_enabled: boolean
 }
 
 /**
@@ -21,9 +22,11 @@ export const useConfig = (): ConfigResult => {
   const { data } = useBackendConfigQuery()
   const upscalers = data?.upscalers ?? []
   const upscalerOptions = upscalers.flatMap((section) => section.options)
+  const safety_check_enabled = data?.safety_check_enabled ?? true
 
   return {
     upscalers,
-    upscalerOptions
+    upscalerOptions,
+    safety_check_enabled
   }
 }

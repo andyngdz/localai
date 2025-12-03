@@ -72,7 +72,8 @@ describe('useGeneratorConfigFormats', () => {
     mockIsEnabled = false
     vi.mocked(useConfig).mockReturnValue({
       upscalers: mockUpscalerSections,
-      upscalerOptions: mockUpscalerOptions
+      upscalerOptions: mockUpscalerOptions,
+      safety_check_enabled: true
     })
   })
 
@@ -175,7 +176,8 @@ describe('useGeneratorConfigFormats', () => {
     it('does not set default values when no upscalers available', () => {
       vi.mocked(useConfig).mockReturnValue({
         upscalers: [],
-        upscalerOptions: []
+        upscalerOptions: [],
+        safety_check_enabled: true
       })
 
       const { result } = renderHook(() => useGeneratorConfigFormats())
