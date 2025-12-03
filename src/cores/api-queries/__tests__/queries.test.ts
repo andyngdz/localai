@@ -1,11 +1,13 @@
-import type { LoRA, LoRADeleteResponse } from '@/types'
+import { UpscalerMethod } from '@/cores/constants'
+import { api } from '@/services/api'
+import type { BackendConfig, LoRA, LoRADeleteResponse } from '@/types'
 import type { ModelDownloaded } from '@/types/api'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { renderHook, waitFor } from '@testing-library/react'
 import React from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { api } from '@/services/api'
 import {
+  useBackendConfigQuery,
   useDeleteLoraMutation,
   useDownloadedModelsQuery,
   useHardwareQuery,
@@ -14,6 +16,7 @@ import {
   useLorasQuery,
   useMemoryQuery,
   useModelRecommendationsQuery,
+  useSafetyCheckMutation,
   useSamplersQuery,
   useStyleSectionsQuery,
   useUploadLoraMutation
@@ -32,7 +35,9 @@ vi.mock('@/services/api', () => ({
     getSamplers: vi.fn(),
     loras: vi.fn(),
     uploadLora: vi.fn(),
-    deleteLora: vi.fn()
+    deleteLora: vi.fn(),
+    getConfig: vi.fn(),
+    setSafetyCheckEnabled: vi.fn()
   }
 }))
 
@@ -558,6 +563,88 @@ describe('React Query Hooks', () => {
       expect(api.deleteLora).toHaveBeenCalledWith(loraId)
       expect(response).toEqual(mockResponse)
       expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['loras'] })
+    })
+  })
+
+  describe('useBackendConfigQuery', () => {
+    it('calls api.getConfig and returns the data', async () => {
+      const mockResponse: BackendConfig = {
+        upscalers: [
+          { method: UpscalerMethod.AI, title: 'AI Upscaler', options: [] }
+        ],
+        safety_check_enabled: true
+      }
+      vi.mocked(api.getConfig).mockResolvedValue(mockResponse)
+
+      const { result } = renderHook(() => useBackendConfigQuery(), {
+        wrapper: testEnv.wrapper
+      })
+
+      await waitFor(() => {
+        expect(result.current.isSuccess).toBe(true)
+      })
+
+      expect(api.getConfig).toHaveBeenCalled()
+      expect(result.current.data).toEqual(mockResponse)
+    })
+
+    it('handles error', async () => {
+      const mockError = new Error('Failed to fetch config')
+      vi.mocked(api.getConfig).mockRejectedValue(mockError)
+
+      const { result } = renderHook(() => useBackendConfigQuery(), {
+        wrapper: testEnv.wrapper
+      })
+
+      await waitFor(() => {
+        expect(result.current.isError).toBe(true)
+      })
+
+      expect(api.getConfig).toHaveBeenCalled()
+    })
+  })
+
+  describe('useSafetyCheckMutation', () => {
+    it('calls setSafetyCheckEnabled with true and invalidates config cache', async () => {
+      vi.mocked(api.setSafetyCheckEnabled).mockResolvedValue(undefined)
+      const invalidateSpy = vi.spyOn(testEnv.queryClient, 'invalidateQueries')
+
+      const { result } = renderHook(() => useSafetyCheckMutation(), {
+        wrapper: testEnv.wrapper
+      })
+
+      await result.current.mutateAsync(true)
+
+      expect(api.setSafetyCheckEnabled).toHaveBeenCalledWith(true)
+      expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['config'] })
+    })
+
+    it('calls setSafetyCheckEnabled with false and invalidates config cache', async () => {
+      vi.mocked(api.setSafetyCheckEnabled).mockResolvedValue(undefined)
+      const invalidateSpy = vi.spyOn(testEnv.queryClient, 'invalidateQueries')
+
+      const { result } = renderHook(() => useSafetyCheckMutation(), {
+        wrapper: testEnv.wrapper
+      })
+
+      await result.current.mutateAsync(false)
+
+      expect(api.setSafetyCheckEnabled).toHaveBeenCalledWith(false)
+      expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['config'] })
+    })
+
+    it('handles error from setSafetyCheckEnabled', async () => {
+      const mockError = new Error('Failed to update safety check')
+      vi.mocked(api.setSafetyCheckEnabled).mockRejectedValue(mockError)
+
+      const { result } = renderHook(() => useSafetyCheckMutation(), {
+        wrapper: testEnv.wrapper
+      })
+
+      await expect(result.current.mutateAsync(true)).rejects.toThrow(
+        'Failed to update safety check'
+      )
+      expect(api.setSafetyCheckEnabled).toHaveBeenCalledWith(true)
     })
   })
 })
