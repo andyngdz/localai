@@ -35,7 +35,7 @@ export const GeneratorConfigStyleSection: FC<
                 transform: `translateY(${virtualItem.start}px)`
               }}
             >
-              <Card shadow="none" className="border border-default">
+              <Card shadow="sm">
                 <CardHeader className="text-lg font-medium capitalize">
                   {styleSection.id}
                 </CardHeader>
