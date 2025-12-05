@@ -6,7 +6,8 @@ import { MaxMemoryFormProps } from '../types'
 export const MaxMemoryScaleFactorPreview = () => {
   const { data } = useMemoryQuery()
   const { watch } = useFormContext<MaxMemoryFormProps>()
-  const scaleFactor = watch('scaleFactor')
+  const gpuScaleFactor = watch('gpuScaleFactor') ?? 0.5
+  const ramScaleFactor = watch('ramScaleFactor') ?? 0.5
 
   if (!data) {
     return (
@@ -23,13 +24,12 @@ export const MaxMemoryScaleFactorPreview = () => {
   return (
     <div className="flex flex-col items-center gap-2">
       <div className="text-center text-default-500">Memory Usage Preview</div>
-      <div className="flex gap-2">
+      <div className="flex flex-col gap-1 text-center">
         <div className="font-bold">
-          GPU: {formatter.bytes(data.gpu * scaleFactor)}
+          GPU: {formatter.bytes(data.gpu * gpuScaleFactor)}
         </div>
-        <div>/</div>
         <div className="font-bold">
-          RAM: {formatter.bytes(data.ram * scaleFactor)}
+          RAM: {formatter.bytes(data.ram * ramScaleFactor)}
         </div>
       </div>
     </div>

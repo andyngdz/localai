@@ -20,9 +20,15 @@ vi.mock('@/services/formatter', () => ({
 }))
 
 describe('MaxMemoryScaleFactorPreview', () => {
-  const FormWrapper = ({ children }: { children: React.ReactNode }) => {
+  const FormWrapper = ({
+    children,
+    defaultValues = { gpuScaleFactor: 0.6, ramScaleFactor: 0.6 }
+  }: {
+    children: React.ReactNode
+    defaultValues?: MaxMemoryFormProps
+  }) => {
     const methods = useForm<MaxMemoryFormProps>({
-      defaultValues: { scaleFactor: 0.6 }
+      defaultValues
     })
 
     return <FormProvider {...methods}>{children}</FormProvider>
@@ -90,24 +96,20 @@ describe('MaxMemoryScaleFactorPreview', () => {
     expect(formatter.bytes).toHaveBeenCalledWith(8000000000 * 0.6)
     expect(formatter.bytes).toHaveBeenCalledWith(16000000000 * 0.6)
 
-    // Now create a new form context with a different scale factor
-    const CustomFormWrapper = ({ children }: { children: React.ReactNode }) => {
-      const methods = useForm<MaxMemoryFormProps>({
-        defaultValues: { scaleFactor: 0.8 }
-      })
+    vi.mocked(formatter.bytes).mockClear()
 
-      return <FormProvider {...methods}>{children}</FormProvider>
-    }
-
-    // Re-render with the new form context
+    // Re-render with new GPU/RAM scale factors, forcing form remount via key
     rerender(
-      <CustomFormWrapper>
+      <FormWrapper
+        key="updated-values"
+        defaultValues={{ gpuScaleFactor: 0.8, ramScaleFactor: 0.7 }}
+      >
         <MaxMemoryScaleFactorPreview />
-      </CustomFormWrapper>
+      </FormWrapper>
     )
 
-    // Check if the calculations updated with the new scale factor
+    // Check if the calculations updated with the new scale factors
     expect(formatter.bytes).toHaveBeenCalledWith(8000000000 * 0.8)
-    expect(formatter.bytes).toHaveBeenCalledWith(16000000000 * 0.8)
+    expect(formatter.bytes).toHaveBeenCalledWith(16000000000 * 0.7)
   })
 })

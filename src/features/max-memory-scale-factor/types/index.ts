@@ -1,4 +1,4 @@
-import { RadioProps } from '@heroui/react'
+import { SliderProps } from '@heroui/react'
 
 export interface MemoryOption {
   scaleFactor: number
@@ -6,11 +6,12 @@ export interface MemoryOption {
 }
 
 export interface MaxMemoryFormProps {
-  scaleFactor: number
+  gpuScaleFactor: number
+  ramScaleFactor: number
 }
 
 export interface MemoryColorClasses {
   bgClassName: string
   textClassName: string
-  color: RadioProps['color']
+  color: SliderProps['color']
 }

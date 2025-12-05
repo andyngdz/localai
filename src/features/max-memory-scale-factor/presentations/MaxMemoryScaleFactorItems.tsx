@@ -1,25 +1,27 @@
-import { RadioGroup } from '@heroui/react'
-import { useFormContext } from 'react-hook-form'
-import { MEMORY_OPTIONS } from '../constants'
-import { MaxMemoryFormProps } from '../types'
 import { MaxMemoryScaleFactorItem } from './MaxMemoryScaleFactorItem'
 
-export const MaxMemoryScaleFactorItems = () => {
-  const { setValue, getValues } = useFormContext<MaxMemoryFormProps>()
+const sliderConfigs = [
+  {
+    fieldName: 'gpuScaleFactor' as const,
+    label: 'GPU allocation',
+    description: 'Limit how much VRAM the pipeline can consume.'
+  },
+  {
+    fieldName: 'ramScaleFactor' as const,
+    label: 'RAM allocation',
+    description: 'Limit how much system RAM background tasks may use.'
+  }
+]
 
+export const MaxMemoryScaleFactorItems = () => {
   return (
-    <RadioGroup
-      onValueChange={(value) => {
-        setValue('scaleFactor', Number(value))
-      }}
-      defaultValue={getValues('scaleFactor').toString()}
-      className="w-full"
+    <div
+      className="flex w-full flex-col gap-6"
+      data-testid="memory-scale-factor-sliders"
     >
-      {MEMORY_OPTIONS.map((option) => {
-        return (
-          <MaxMemoryScaleFactorItem key={option.scaleFactor} option={option} />
-        )
-      })}
-    </RadioGroup>
+      {sliderConfigs.map((config) => (
+        <MaxMemoryScaleFactorItem key={config.fieldName} {...config} />
+      ))}
+    </div>
   )
 }
