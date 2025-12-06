@@ -12,13 +12,13 @@ import { MaxMemoryScaleFactorPreview } from './MaxMemoryScaleFactorPreview'
 export const MaxMemoryScaleFactor = () => {
   const router = useRouter()
   const methods = useForm<MaxMemoryFormProps>({
-    defaultValues: { scaleFactor: 0.5 }
+    defaultValues: { gpuScaleFactor: 0.5, ramScaleFactor: 0.5 }
   })
 
   const onSubmit: SubmitHandler<MaxMemoryFormProps> = async (values) => {
     await api.setMaxMemory({
-      gpu_scale_factor: values.scaleFactor,
-      ram_scale_factor: values.scaleFactor
+      gpu_scale_factor: values.gpuScaleFactor,
+      ram_scale_factor: values.ramScaleFactor
     })
 
     router.push('/model-recommendations')
