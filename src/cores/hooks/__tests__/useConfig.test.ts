@@ -16,7 +16,7 @@ describe('useConfig', () => {
     vi.resetAllMocks()
   })
 
-  it('should return empty arrays and default safety_check_enabled when query returns undefined', () => {
+  it('should return empty arrays and default values when query returns undefined', () => {
     // Arrange
     vi.mocked(useBackendConfigQuery).mockReturnValue(
       createMockQueryResult<BackendConfig>()
@@ -31,6 +31,10 @@ describe('useConfig', () => {
     expect(result.current.upscalers).toEqual([])
     expect(result.current.upscalerOptions).toEqual([])
     expect(result.current.safety_check_enabled).toBe(true)
+    expect(result.current.gpu_scale_factor).toBe(0)
+    expect(result.current.ram_scale_factor).toBe(0)
+    expect(result.current.total_gpu_memory).toBe(0)
+    expect(result.current.total_ram_memory).toBe(0)
   })
 
   it('should return upscalers and upscalerOptions from the query data', () => {
@@ -62,7 +66,11 @@ describe('useConfig', () => {
 
     const mockConfig: BackendConfig = {
       upscalers: mockUpscalerSections,
-      safety_check_enabled: false
+      safety_check_enabled: false,
+      gpu_scale_factor: 0.8,
+      ram_scale_factor: 0.7,
+      total_gpu_memory: 12485197824,
+      total_ram_memory: 32943878144
     }
 
     vi.mocked(useBackendConfigQuery).mockReturnValue(
@@ -80,9 +88,13 @@ describe('useConfig', () => {
       mockUpscalerSections[0].options
     )
     expect(result.current.safety_check_enabled).toBe(false)
+    expect(result.current.gpu_scale_factor).toBe(0.8)
+    expect(result.current.ram_scale_factor).toBe(0.7)
+    expect(result.current.total_gpu_memory).toBe(12485197824)
+    expect(result.current.total_ram_memory).toBe(32943878144)
   })
 
-  it('should return empty arrays and default safety_check_enabled when config has no fields', () => {
+  it('should return empty arrays and default values when config has no fields', () => {
     // Arrange
     const mockConfig = {} as BackendConfig
 
@@ -99,5 +111,9 @@ describe('useConfig', () => {
     expect(result.current.upscalers).toEqual([])
     expect(result.current.upscalerOptions).toEqual([])
     expect(result.current.safety_check_enabled).toBe(true)
+    expect(result.current.gpu_scale_factor).toBe(0)
+    expect(result.current.ram_scale_factor).toBe(0)
+    expect(result.current.total_gpu_memory).toBe(0)
+    expect(result.current.total_ram_memory).toBe(0)
   })
 })

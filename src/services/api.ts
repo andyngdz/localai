@@ -14,7 +14,6 @@ import type {
   LoRADeleteResponse,
   LoRAListResponse,
   MaxMemoryRequest,
-  MemoryResponse,
   ModelDetailsResponse,
   ModelDownloaded,
   ModelRecommendationResponse,
@@ -46,12 +45,6 @@ class API {
 
   async setMaxMemory(request: MaxMemoryRequest) {
     await client.post('/hardware/max-memory', request)
-  }
-
-  async getMemory() {
-    const { data } = await client.get<MemoryResponse>('/hardware/memory')
-
-    return data
   }
 
   async selectDevice(request: SelectDeviceRequest) {

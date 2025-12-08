@@ -7,6 +7,10 @@ interface ConfigResult {
   upscalers: UpscalerSection[]
   upscalerOptions: UpscalerOption[]
   safety_check_enabled: boolean
+  gpu_scale_factor: number
+  ram_scale_factor: number
+  total_gpu_memory: number
+  total_ram_memory: number
 }
 
 /**
@@ -23,10 +27,18 @@ export const useConfig = (): ConfigResult => {
   const upscalers = data?.upscalers ?? []
   const upscalerOptions = upscalers.flatMap((section) => section.options)
   const safety_check_enabled = data?.safety_check_enabled ?? true
+  const gpu_scale_factor = data?.gpu_scale_factor ?? 0
+  const ram_scale_factor = data?.ram_scale_factor ?? 0
+  const total_gpu_memory = data?.total_gpu_memory ?? 0
+  const total_ram_memory = data?.total_ram_memory ?? 0
 
   return {
     upscalers,
     upscalerOptions,
-    safety_check_enabled
+    safety_check_enabled,
+    gpu_scale_factor,
+    ram_scale_factor,
+    total_gpu_memory,
+    total_ram_memory
   }
 }

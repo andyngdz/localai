@@ -71,18 +71,6 @@ describe('API Service', () => {
     })
   })
 
-  describe('getMemory', () => {
-    it('fetches memory information', async () => {
-      const mockResponse = { gpu: 24576000000, ram: 32000000000 }
-      vi.spyOn(client, 'get').mockResolvedValueOnce({ data: mockResponse })
-
-      const result = await api.getMemory()
-
-      expect(client.get).toHaveBeenCalledWith('/hardware/memory')
-      expect(result).toEqual(mockResponse)
-    })
-  })
-
   describe('selectDevice', () => {
     it('selects a device', async () => {
       const request = { device_index: 0 }
