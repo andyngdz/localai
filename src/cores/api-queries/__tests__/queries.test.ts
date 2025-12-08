@@ -14,7 +14,6 @@ import {
   useHealthQuery,
   useHistoriesQuery,
   useLorasQuery,
-  useMemoryQuery,
   useModelRecommendationsQuery,
   useSafetyCheckMutation,
   useSamplersQuery,
@@ -27,7 +26,6 @@ vi.mock('@/services/api', () => ({
   api: {
     health: vi.fn(),
     getHardwareStatus: vi.fn(),
-    getMemory: vi.fn(),
     getModelRecommendations: vi.fn(),
     getDownloadedModels: vi.fn(),
     styles: vi.fn(),
@@ -151,39 +149,6 @@ describe('React Query Hooks', () => {
       })
 
       expect(api.getHardwareStatus).toHaveBeenCalled()
-    })
-  })
-
-  describe('useMemoryQuery', () => {
-    it('calls api.getMemory and returns the data', async () => {
-      const mockResponse = { gpu: 24576000000, ram: 32000000000 }
-      vi.mocked(api.getMemory).mockResolvedValue(mockResponse)
-
-      const { result } = renderHook(() => useMemoryQuery(), {
-        wrapper: testEnv.wrapper
-      })
-
-      await waitFor(() => {
-        expect(result.current.isSuccess).toBe(true)
-      })
-
-      expect(api.getMemory).toHaveBeenCalled()
-      expect(result.current.data).toEqual(mockResponse)
-    })
-
-    it('handles error', async () => {
-      const mockError = new Error('Network error')
-      vi.mocked(api.getMemory).mockRejectedValue(mockError)
-
-      const { result } = renderHook(() => useMemoryQuery(), {
-        wrapper: testEnv.wrapper
-      })
-
-      await waitFor(() => {
-        expect(result.current.isError).toBe(true)
-      })
-
-      expect(api.getMemory).toHaveBeenCalled()
     })
   })
 
@@ -572,7 +537,12 @@ describe('React Query Hooks', () => {
         upscalers: [
           { method: UpscalerMethod.AI, title: 'AI Upscaler', options: [] }
         ],
-        safety_check_enabled: true
+        safety_check_enabled: true,
+        gpu_scale_factor: 0.8,
+        ram_scale_factor: 0.8,
+        total_gpu_memory: 12485197824,
+        total_ram_memory: 32943878144,
+        device_index: 0
       }
       vi.mocked(api.getConfig).mockResolvedValue(mockResponse)
 

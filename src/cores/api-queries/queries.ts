@@ -7,7 +7,6 @@ import {
   HistoryItem,
   LoRA,
   LoRADeleteResponse,
-  MemoryResponse,
   ModelDownloaded,
   ModelRecommendationResponse,
   Sampler,
@@ -28,13 +27,6 @@ const useHardwareQuery = () => {
   return useQuery<HardwareResponse, ApiError>({
     queryKey: ['getHardwareStatus'],
     queryFn: () => api.getHardwareStatus()
-  })
-}
-
-const useMemoryQuery = () => {
-  return useQuery<MemoryResponse, ApiError>({
-    queryKey: ['getMemory'],
-    queryFn: () => api.getMemory()
   })
 }
 
@@ -129,7 +121,6 @@ export {
   useHealthQuery,
   useHistoriesQuery,
   useLorasQuery,
-  useMemoryQuery,
   useModelRecommendationsQuery,
   useSafetyCheckMutation,
   useSamplersQuery,

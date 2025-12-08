@@ -185,7 +185,12 @@ describe('GeneratorConfigHiresFixUpscaler', () => {
     vi.mocked(useConfig).mockReturnValue({
       upscalers: mockUpscalerSections,
       upscalerOptions: mockUpscalerOptions,
-      safety_check_enabled: true
+      safety_check_enabled: true,
+      gpu_scale_factor: 0.8,
+      ram_scale_factor: 0.8,
+      total_gpu_memory: 12485197824,
+      total_ram_memory: 32943878144,
+      device_index: 0
     })
   })
 
@@ -285,7 +290,12 @@ describe('GeneratorConfigHiresFixUpscaler', () => {
     vi.mocked(useConfig).mockReturnValue({
       upscalers: limitedUpscalerSections,
       upscalerOptions: limitedUpscalerSections.flatMap((s) => s.options),
-      safety_check_enabled: true
+      safety_check_enabled: true,
+      gpu_scale_factor: 0.8,
+      ram_scale_factor: 0.8,
+      total_gpu_memory: 12485197824,
+      total_ram_memory: 32943878144,
+      device_index: 0
     })
 
     const user = userEvent.setup()
@@ -322,7 +332,12 @@ describe('GeneratorConfigHiresFixUpscaler', () => {
     vi.mocked(useConfig).mockReturnValue({
       upscalers: [],
       upscalerOptions: [],
-      safety_check_enabled: true
+      safety_check_enabled: true,
+      gpu_scale_factor: 0.8,
+      ram_scale_factor: 0.8,
+      total_gpu_memory: 12485197824,
+      total_ram_memory: 32943878144,
+      device_index: 0
     })
     render(<GeneratorConfigHiresFixUpscaler />)
 
@@ -373,7 +388,12 @@ describe('GeneratorConfigHiresFixUpscaler', () => {
       vi.mocked(useConfig).mockReturnValue({
         upscalers: nonRecommendedSections,
         upscalerOptions: nonRecommendedSections.flatMap((s) => s.options),
-        safety_check_enabled: true
+        safety_check_enabled: true,
+        gpu_scale_factor: 0.8,
+        ram_scale_factor: 0.8,
+        total_gpu_memory: 12485197824,
+        total_ram_memory: 32943878144,
+        device_index: 0
       })
 
       render(<GeneratorConfigHiresFixUpscaler />)
