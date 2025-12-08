@@ -136,7 +136,7 @@ describe('useSettingsStore', () => {
         result.current.setSelectedTab(SettingsTab.UPDATES)
       })
 
-      expect(result.current.selectedTab).toBe('updates')
+      expect(result.current.selectedTab).toBe(SettingsTab.UPDATES)
     })
   })
 })

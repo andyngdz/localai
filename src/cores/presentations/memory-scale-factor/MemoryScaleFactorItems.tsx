@@ -24,14 +24,14 @@ export const MemoryScaleFactorItems: FC<MemoryScaleFactorItemsProps> = ({
     <MemoryScaleFactorItem
       fieldName="gpuScaleFactor"
       label="GPU allocation"
-      description="Limit VRAM usage"
+      description="Limit how much VRAM the pipeline can consume."
       value={gpuScaleFactor}
       onChange={onGpuChange}
     />
     <MemoryScaleFactorItem
       fieldName="ramScaleFactor"
       label="RAM allocation"
-      description="Limit RAM usage"
+      description="Limit how much system RAM background tasks may use."
       value={ramScaleFactor}
       onChange={onRamChange}
     />
