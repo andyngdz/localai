@@ -2,16 +2,16 @@
 
 ### Requirement: Memory Configuration in Settings
 
-The system SHALL provide GPU and RAM memory allocation sliders in the Settings modal General tab.
+The system SHALL provide GPU and RAM memory allocation sliders in the Settings modal **Memory** tab.
 
 #### Scenario: Sliders display current values
 
-- **WHEN** user opens Settings modal General tab
+- **WHEN** user opens the Settings modal Memory tab
 - **THEN** GPU and RAM allocation sliders display current values from backend config
 
 #### Scenario: User adjusts memory allocation
 
-- **WHEN** user moves GPU or RAM slider
+- **WHEN** user moves GPU or RAM slider in the Memory tab
 - **THEN** the new value is persisted to the backend via `api.setMaxMemory()`
 
 ### Requirement: Memory Preview Display
@@ -58,5 +58,5 @@ The system SHALL use separate container components for setup flow and settings, 
 
 #### Scenario: Settings uses SettingsMemoryConfig container
 
-- **WHEN** user is in Settings modal
-- **THEN** `SettingsMemoryConfig` manages form state and auto-save behavior
+- **WHEN** user is in the Settings modal Memory tab
+- **THEN** `SettingsMemoryConfig` (via `useSettingsMemory`) reads current values from `useConfig()` and calls `api.setMaxMemory()` on slider changes to keep backend and UI in sync

@@ -39,9 +39,9 @@
 
 ## 7. Create Settings Container
 
-- [ ] 7.1 Create `useSettingsMemory` hook with form state and `api.setMaxMemory()` sync
-- [ ] 7.2 Create `SettingsMemoryConfig` container component
-- [ ] 7.3 Add `SettingsMemoryConfig` to `GeneralSettings.tsx`
+- [ ] 7.1 Create `useSettingsMemory` hook with form state, read values via `useConfig()`, and sync via `api.setMaxMemory()`
+- [ ] 7.2 Create `SettingsMemoryConfig` container component (Memory tab)
+- [ ] 7.3 Ensure `SettingsMemoryConfig` is rendered in `MemorySettings.tsx` (dedicated Memory tab)
 - [ ] 7.4 Add tests for settings memory configuration
 
 ## 8. Cleanup

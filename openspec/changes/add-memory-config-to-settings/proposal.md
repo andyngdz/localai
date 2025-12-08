@@ -30,7 +30,7 @@ Update `MaxMemoryScaleFactor` (setup screen) to pass props from its `useForm` to
 
 ### 3. Create Settings Container
 
-Create `SettingsMemoryConfig` in settings feature with its own form state and auto-save behavior.
+Create `SettingsMemoryConfig` in the Settings feature with its own form state (via `useSettingsMemory` hook) and auto-save behavior, rendered in the dedicated **Memory** tab (not General). Hook should read values from `useConfig()` and call `api.setMaxMemory()` on slider change.
 
 ## Impact
 
@@ -38,5 +38,5 @@ Create `SettingsMemoryConfig` in settings feature with its own form state and au
 - Affected code:
   - `src/cores/presentations/memory-scale-factor/` - New reusable memory components folder
   - `src/features/max-memory-scale-factor/presentations/MaxMemoryScaleFactor.tsx` - Update to pass props
-  - `src/features/settings/presentations/SettingsMemoryConfig.tsx` - New container
-  - `src/features/settings/presentations/tabs/GeneralSettings.tsx` - Add SettingsMemoryConfig
+  - `src/features/settings/presentations/SettingsMemoryConfig.tsx` - New container (Memory tab)
+  - `src/features/settings/presentations/tabs/MemorySettings.tsx` - Hosts SettingsMemoryConfig
