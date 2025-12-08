@@ -9,7 +9,7 @@ The system SHALL provide a `useConfig()` wrapper hook that returns config with d
 #### Scenario: Empty array and zero defaults
 
 - **WHEN** config is not yet loaded
-- **THEN** `useConfig()` returns `{ upscalers: [], safety_check_enabled: false, gpu_scale_factor: 0, ram_scale_factor: 0, total_gpu_memory: 0, total_ram_memory: 0 }`
+- **THEN** `useConfig()` returns `{ upscalers: [], safety_check_enabled: true, gpu_scale_factor: 0, ram_scale_factor: 0, total_gpu_memory: 0, total_ram_memory: 0 }`
 
 ## ADDED Requirements
 
