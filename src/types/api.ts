@@ -25,6 +25,11 @@ export interface MaxMemoryRequest {
   ram_scale_factor: number
 }
 
+export interface MaxMemoryParams {
+  gpuScaleFactor: number
+  ramScaleFactor: number
+}
+
 export interface ModelRecommendationItem {
   id: string
   name: string

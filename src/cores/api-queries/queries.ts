@@ -7,6 +7,7 @@ import {
   HistoryItem,
   LoRA,
   LoRADeleteResponse,
+  MaxMemoryParams,
   ModelDownloaded,
   ModelRecommendationResponse,
   Sampler,
@@ -113,6 +114,20 @@ const useSafetyCheckMutation = () => {
   })
 }
 
+const useMaxMemoryMutation = () => {
+  const queryClient = useQueryClient()
+  return useMutation<BackendConfig, ApiError, MaxMemoryParams>({
+    mutationFn: ({ gpuScaleFactor, ramScaleFactor }) =>
+      api.setMaxMemory({
+        gpu_scale_factor: gpuScaleFactor,
+        ram_scale_factor: ramScaleFactor
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['config'] })
+    }
+  })
+}
+
 export {
   useBackendConfigQuery,
   useDeleteLoraMutation,
@@ -121,6 +136,7 @@ export {
   useHealthQuery,
   useHistoriesQuery,
   useLorasQuery,
+  useMaxMemoryMutation,
   useModelRecommendationsQuery,
   useSafetyCheckMutation,
   useSamplersQuery,

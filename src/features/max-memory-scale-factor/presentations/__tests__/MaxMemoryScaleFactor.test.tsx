@@ -41,14 +41,11 @@ vi.mock('@/features/setup-layout/presentations/SetupLayout', () => ({
   )
 }))
 
-vi.mock('../MaxMemoryScaleFactorItems', () => ({
-  MaxMemoryScaleFactorItems: () => (
+vi.mock('@/cores/presentations/memory-scale-factor', () => ({
+  MemoryScaleFactorItems: () => (
     <div data-testid="memory-scale-factor-items">Memory Items</div>
-  )
-}))
-
-vi.mock('../MaxMemoryScaleFactorPreview', () => ({
-  MaxMemoryScaleFactorPreview: () => (
+  ),
+  MemoryScaleFactorPreview: () => (
     <div data-testid="memory-scale-factor-preview">Memory Preview</div>
   )
 }))

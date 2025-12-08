@@ -1,10 +1,8 @@
 import { useConfig } from '@/cores/hooks'
 import { formatter } from '@/services'
 import { render, screen } from '@testing-library/react'
-import { FormProvider, useForm } from 'react-hook-form'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { MaxMemoryFormProps } from '../../types'
-import { MaxMemoryScaleFactorPreview } from '../MaxMemoryScaleFactorPreview'
+import { MemoryScaleFactorPreview } from '../MemoryScaleFactorPreview'
 
 vi.mock('@/cores/hooks', () => ({
   useConfig: vi.fn()
@@ -16,21 +14,7 @@ vi.mock('@/services/formatter', () => ({
   }
 }))
 
-describe('MaxMemoryScaleFactorPreview', () => {
-  const FormWrapper = ({
-    children,
-    defaultValues = { gpuScaleFactor: 0.6, ramScaleFactor: 0.6 }
-  }: {
-    children: React.ReactNode
-    defaultValues?: MaxMemoryFormProps
-  }) => {
-    const methods = useForm<MaxMemoryFormProps>({
-      defaultValues
-    })
-
-    return <FormProvider {...methods}>{children}</FormProvider>
-  }
-
+describe('MemoryScaleFactorPreview', () => {
   beforeEach(() => {
     vi.mocked(formatter.bytes).mockImplementation((bytes) => `${bytes} B`)
     vi.mocked(useConfig).mockReturnValue({
@@ -51,9 +35,7 @@ describe('MaxMemoryScaleFactorPreview', () => {
 
   it('displays memory usage preview with config data', () => {
     render(
-      <FormWrapper>
-        <MaxMemoryScaleFactorPreview />
-      </FormWrapper>
+      <MemoryScaleFactorPreview gpuScaleFactor={0.6} ramScaleFactor={0.6} />
     )
 
     expect(screen.getByText('Memory Usage Preview')).toBeInTheDocument()
@@ -76,20 +58,16 @@ describe('MaxMemoryScaleFactorPreview', () => {
     })
 
     render(
-      <FormWrapper>
-        <MaxMemoryScaleFactorPreview />
-      </FormWrapper>
+      <MemoryScaleFactorPreview gpuScaleFactor={0.6} ramScaleFactor={0.6} />
     )
 
     expect(screen.getByText('Memory Usage Preview')).toBeInTheDocument()
     expect(formatter.bytes).toHaveBeenCalledWith(0)
   })
 
-  it('updates the preview when scale factor changes', () => {
+  it('updates the preview when scale factor props change', () => {
     const { rerender } = render(
-      <FormWrapper>
-        <MaxMemoryScaleFactorPreview />
-      </FormWrapper>
+      <MemoryScaleFactorPreview gpuScaleFactor={0.6} ramScaleFactor={0.6} />
     )
 
     expect(formatter.bytes).toHaveBeenCalledWith(8000000000 * 0.6)
@@ -98,12 +76,7 @@ describe('MaxMemoryScaleFactorPreview', () => {
     vi.mocked(formatter.bytes).mockClear()
 
     rerender(
-      <FormWrapper
-        key="updated-values"
-        defaultValues={{ gpuScaleFactor: 0.8, ramScaleFactor: 0.7 }}
-      >
-        <MaxMemoryScaleFactorPreview />
-      </FormWrapper>
+      <MemoryScaleFactorPreview gpuScaleFactor={0.8} ramScaleFactor={0.7} />
     )
 
     expect(formatter.bytes).toHaveBeenCalledWith(8000000000 * 0.8)

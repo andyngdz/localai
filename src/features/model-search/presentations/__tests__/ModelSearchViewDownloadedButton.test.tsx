@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event'
 
 import { ButtonProps } from '@heroui/react'
 import { ModelSearchViewDownloadedButton } from '../ModelSearchViewDownloadedButton'
+import { SettingsTab } from '@/features/settings/states/useSettingsStore'
 
 // Mock openModal function
 const mockOpenModal = vi.fn()
@@ -66,7 +67,7 @@ describe('ModelSearchViewDownloadedButton', () => {
 
       // Assert
       expect(mockOpenModal).toHaveBeenCalledTimes(1)
-      expect(mockOpenModal).toHaveBeenCalledWith('models')
+      expect(mockOpenModal).toHaveBeenCalledWith(SettingsTab.MODELS)
     })
 
     it('opens modal to models tab specifically, not general tab', async () => {
@@ -76,10 +77,10 @@ describe('ModelSearchViewDownloadedButton', () => {
       const button = screen.getByTestId('button')
       await user.click(button)
 
-      // Verify it's called with 'models' and not 'general' or 'updates'
-      expect(mockOpenModal).not.toHaveBeenCalledWith('general')
-      expect(mockOpenModal).not.toHaveBeenCalledWith('updates')
-      expect(mockOpenModal).toHaveBeenCalledWith('models')
+      // Verify it's called with models and not other tabs
+      expect(mockOpenModal).not.toHaveBeenCalledWith(SettingsTab.GENERAL)
+      expect(mockOpenModal).not.toHaveBeenCalledWith(SettingsTab.UPDATES)
+      expect(mockOpenModal).toHaveBeenCalledWith(SettingsTab.MODELS)
     })
 
     it('can be clicked multiple times', async () => {
@@ -92,7 +93,7 @@ describe('ModelSearchViewDownloadedButton', () => {
       await user.click(button)
 
       expect(mockOpenModal).toHaveBeenCalledTimes(3)
-      expect(mockOpenModal).toHaveBeenCalledWith('models')
+      expect(mockOpenModal).toHaveBeenCalledWith(SettingsTab.MODELS)
     })
   })
 })
