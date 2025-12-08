@@ -9,12 +9,18 @@ import { SettingsTab } from '@/features/settings/states/useSettingsStore'
 // Mock openModal function
 const mockOpenModal = vi.fn()
 
-// Mock the settings store
-vi.mock('@/features/settings/states/useSettingsStore', () => ({
-  useSettingsStore: () => ({
-    openModal: mockOpenModal
-  })
-}))
+// Mock the settings store, keeping SettingsTab from the real module
+vi.mock('@/features/settings/states/useSettingsStore', async () => {
+  const actual = await vi.importActual<
+    typeof import('@/features/settings/states/useSettingsStore')
+  >('@/features/settings/states/useSettingsStore')
+  return {
+    ...actual,
+    useSettingsStore: () => ({
+      openModal: mockOpenModal
+    })
+  }
+})
 
 // Mock the Button from @heroui/react to a simple button for testing
 vi.mock('@heroui/react', () => ({
