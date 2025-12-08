@@ -8,17 +8,23 @@ import { SetupLayout } from '@/features/setup-layout/presentations/SetupLayout'
 import { api } from '@/services'
 import { Divider } from '@heroui/react'
 import { useRouter } from 'next/navigation'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { SubmitHandler, useForm, useWatch } from 'react-hook-form'
 import { MaxMemoryFormProps } from '../types'
 
 export const MaxMemoryScaleFactor = () => {
   const router = useRouter()
-  const { handleSubmit, watch, setValue } = useForm<MaxMemoryFormProps>({
+  const { handleSubmit, setValue, control } = useForm<MaxMemoryFormProps>({
     defaultValues: { gpuScaleFactor: 0.5, ramScaleFactor: 0.5 }
   })
 
-  const gpuScaleFactor = watch('gpuScaleFactor')
-  const ramScaleFactor = watch('ramScaleFactor')
+  const gpuScaleFactor = useWatch({
+    name: 'gpuScaleFactor',
+    control
+  })
+  const ramScaleFactor = useWatch({
+    name: 'ramScaleFactor',
+    control
+  })
 
   const onSubmit: SubmitHandler<MaxMemoryFormProps> = async (values) => {
     await api.setMaxMemory({
