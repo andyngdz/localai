@@ -4,8 +4,8 @@ import {
   MemoryScaleFactorItems,
   MemoryScaleFactorPreview
 } from '@/cores/presentations/memory-scale-factor'
+import { useMaxMemoryMutation } from '@/cores/api-queries'
 import { SetupLayout } from '@/features/setup-layout/presentations/SetupLayout'
-import { api } from '@/services'
 import { Divider } from '@heroui/react'
 import { useRouter } from 'next/navigation'
 import { SubmitHandler, useForm, useWatch } from 'react-hook-form'
@@ -13,6 +13,7 @@ import { MaxMemoryFormProps } from '../types'
 
 export const MaxMemoryScaleFactor = () => {
   const router = useRouter()
+  const { mutateAsync: setMaxMemory } = useMaxMemoryMutation()
   const { handleSubmit, setValue, control } = useForm<MaxMemoryFormProps>({
     defaultValues: { gpuScaleFactor: 0.5, ramScaleFactor: 0.5 }
   })
@@ -27,9 +28,9 @@ export const MaxMemoryScaleFactor = () => {
   })
 
   const onSubmit: SubmitHandler<MaxMemoryFormProps> = async (values) => {
-    await api.setMaxMemory({
-      gpu_scale_factor: values.gpuScaleFactor,
-      ram_scale_factor: values.ramScaleFactor
+    await setMaxMemory({
+      gpuScaleFactor: values.gpuScaleFactor,
+      ramScaleFactor: values.ramScaleFactor
     })
 
     router.push('/model-recommendations')

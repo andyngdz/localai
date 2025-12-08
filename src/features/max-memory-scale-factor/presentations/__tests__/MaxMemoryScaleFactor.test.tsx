@@ -1,21 +1,24 @@
-import { api } from '@/services'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { MaxMemoryScaleFactor } from '../MaxMemoryScaleFactor'
+
+const mockRouter = {
+  push: vi.fn(),
+  back: vi.fn()
+}
+
+const mockMutation = {
+  mutateAsync: vi.fn()
+}
 
 // Mock dependencies
 vi.mock('next/navigation', () => ({
-  useRouter: () => ({
-    push: vi.fn(),
-    back: vi.fn()
-  })
+  useRouter: () => mockRouter
 }))
 
-vi.mock('@/services/api', () => ({
-  api: {
-    setMaxMemory: vi.fn()
-  }
+vi.mock('@/cores/api-queries', () => ({
+  useMaxMemoryMutation: () => mockMutation
 }))
 
 vi.mock('@/features/setup-layout/presentations/SetupLayout', () => ({
@@ -87,47 +90,41 @@ vi.mock('@/cores/presentations/memory-scale-factor', () => ({
   )
 }))
 
+beforeEach(() => {
+  vi.clearAllMocks()
+  mockMutation.mutateAsync.mockResolvedValue(undefined)
+})
+
 describe('MaxMemoryScaleFactor', () => {
   it('renders all components correctly', () => {
     render(<MaxMemoryScaleFactor />)
 
-    // Check title and description
     expect(screen.getByText('Max Memory')).toBeInTheDocument()
     expect(
       screen.getByText('Configure the maximum memory allocation for AI models')
     ).toBeInTheDocument()
 
-    // Check that child components are rendered
     expect(screen.getByTestId('memory-scale-factor-items')).toBeInTheDocument()
     expect(
       screen.getByTestId('memory-scale-factor-preview')
     ).toBeInTheDocument()
   })
 
-  it('calls API and navigates on form submission', async () => {
-    vi.mocked(api.setMaxMemory).mockResolvedValue({
-      upscalers: [],
-      safety_check_enabled: true,
-      gpu_scale_factor: 0.5,
-      ram_scale_factor: 0.5,
-      total_gpu_memory: 12485197824,
-      total_ram_memory: 32943878144,
-      device_index: 0
-    })
+  it('calls mutation and navigates on form submission', async () => {
     const user = userEvent.setup()
 
     render(<MaxMemoryScaleFactor />)
 
-    // Click the next button to submit the form
     await user.click(screen.getByTestId('next-button'))
 
-    // Check that API was called with default scale factor
     await waitFor(() => {
-      expect(api.setMaxMemory).toHaveBeenCalledWith({
-        gpu_scale_factor: 0.5,
-        ram_scale_factor: 0.5
+      expect(mockMutation.mutateAsync).toHaveBeenCalledWith({
+        gpuScaleFactor: 0.5,
+        ramScaleFactor: 0.5
       })
     })
+
+    expect(mockRouter.push).toHaveBeenCalledWith('/model-recommendations')
   })
 
   it('updates watched values before submit when sliders change', async () => {
@@ -139,9 +136,9 @@ describe('MaxMemoryScaleFactor', () => {
     await user.click(screen.getByTestId('next-button'))
 
     await waitFor(() => {
-      expect(api.setMaxMemory).toHaveBeenCalledWith({
-        gpu_scale_factor: 0.7,
-        ram_scale_factor: 0.4
+      expect(mockMutation.mutateAsync).toHaveBeenCalledWith({
+        gpuScaleFactor: 0.7,
+        ramScaleFactor: 0.4
       })
     })
 
