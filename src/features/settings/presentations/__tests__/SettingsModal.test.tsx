@@ -7,12 +7,19 @@ import { SettingsTab } from '../../states/useSettingsStore'
 const mockSetSelectedTab = vi.fn()
 let mockSelectedTab: SettingsTab = SettingsTab.GENERAL
 
-vi.mock('../../states/useSettingsStore', () => ({
-  useSettingsStore: () => ({
-    selectedTab: mockSelectedTab,
-    setSelectedTab: mockSetSelectedTab
-  })
-}))
+vi.mock('../../states/useSettingsStore', async () => {
+  const actual = await vi.importActual<
+    typeof import('../../states/useSettingsStore')
+  >('../../states/useSettingsStore')
+
+  return {
+    ...actual,
+    useSettingsStore: () => ({
+      selectedTab: mockSelectedTab,
+      setSelectedTab: mockSetSelectedTab
+    })
+  }
+})
 
 vi.mock('@heroui/react', () => ({
   Modal: ({
