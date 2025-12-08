@@ -71,7 +71,15 @@ describe('MaxMemoryScaleFactor', () => {
   })
 
   it('calls API and navigates on form submission', async () => {
-    vi.mocked(api.setMaxMemory).mockResolvedValue()
+    vi.mocked(api.setMaxMemory).mockResolvedValue({
+      upscalers: [],
+      safety_check_enabled: true,
+      gpu_scale_factor: 0.5,
+      ram_scale_factor: 0.5,
+      total_gpu_memory: 12485197824,
+      total_ram_memory: 32943878144,
+      device_index: 0
+    })
     const user = userEvent.setup()
 
     render(<MaxMemoryScaleFactor />)

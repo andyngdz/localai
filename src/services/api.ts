@@ -3,7 +3,6 @@ import { GeneratorConfigFormValues } from '@/features/generator-configs'
 import axios from 'axios'
 import type {
   BackendConfig,
-  DeviceIndexResponse,
   HardwareResponse,
   HealthResponse,
   HistoryItem,
@@ -44,15 +43,16 @@ class API {
   }
 
   async setMaxMemory(request: MaxMemoryRequest) {
-    await client.post('/hardware/max-memory', request)
+    const { data } = await client.put<BackendConfig>(
+      '/config/max-memory',
+      request
+    )
+
+    return data
   }
 
   async selectDevice(request: SelectDeviceRequest) {
-    await client.post('/hardware/device', request)
-  }
-
-  async getDeviceIndex() {
-    const { data } = await client.get<DeviceIndexResponse>('/hardware/device')
+    const { data } = await client.put<BackendConfig>('/config/device', request)
 
     return data
   }

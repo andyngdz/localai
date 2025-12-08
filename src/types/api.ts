@@ -20,14 +20,6 @@ export interface HardwareResponse {
   message: string
 }
 
-export interface DeviceIndexResponse {
-  device_index: number
-}
-
-export interface SelectDeviceRequest {
-  device_index: number
-}
-
 export interface MaxMemoryRequest {
   gpu_scale_factor: number
   ram_scale_factor: number
@@ -107,4 +99,9 @@ export interface BackendConfig {
   ram_scale_factor: number
   total_gpu_memory: number
   total_ram_memory: number
+  device_index: number
+}
+
+export interface SelectDeviceRequest {
+  device_index: number
 }

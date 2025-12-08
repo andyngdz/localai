@@ -1,5 +1,9 @@
 import { useBackendConfigQuery } from '@/cores/api-queries'
-import { UpscalerMethod, UpscalerType } from '@/cores/constants'
+import {
+  DeviceSelection,
+  UpscalerMethod,
+  UpscalerType
+} from '@/cores/constants'
 import { createQueryClientWrapper } from '@/cores/test-utils/query-client'
 import { createMockQueryResult } from '@/cores/test-utils/query-result-mock'
 import { BackendConfig, UpscalerSection } from '@/types'
@@ -35,6 +39,7 @@ describe('useConfig', () => {
     expect(result.current.ram_scale_factor).toBe(0)
     expect(result.current.total_gpu_memory).toBe(0)
     expect(result.current.total_ram_memory).toBe(0)
+    expect(result.current.device_index).toBe(DeviceSelection.NOT_FOUND)
   })
 
   it('should return upscalers and upscalerOptions from the query data', () => {
@@ -70,7 +75,8 @@ describe('useConfig', () => {
       gpu_scale_factor: 0.8,
       ram_scale_factor: 0.7,
       total_gpu_memory: 12485197824,
-      total_ram_memory: 32943878144
+      total_ram_memory: 32943878144,
+      device_index: 0
     }
 
     vi.mocked(useBackendConfigQuery).mockReturnValue(
@@ -92,6 +98,7 @@ describe('useConfig', () => {
     expect(result.current.ram_scale_factor).toBe(0.7)
     expect(result.current.total_gpu_memory).toBe(12485197824)
     expect(result.current.total_ram_memory).toBe(32943878144)
+    expect(result.current.device_index).toBe(0)
   })
 
   it('should return empty arrays and default values when config has no fields', () => {
@@ -115,5 +122,6 @@ describe('useConfig', () => {
     expect(result.current.ram_scale_factor).toBe(0)
     expect(result.current.total_gpu_memory).toBe(0)
     expect(result.current.total_ram_memory).toBe(0)
+    expect(result.current.device_index).toBe(DeviceSelection.NOT_FOUND)
   })
 })

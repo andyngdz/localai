@@ -541,7 +541,8 @@ describe('React Query Hooks', () => {
         gpu_scale_factor: 0.8,
         ram_scale_factor: 0.8,
         total_gpu_memory: 12485197824,
-        total_ram_memory: 32943878144
+        total_ram_memory: 32943878144,
+        device_index: 0
       }
       vi.mocked(api.getConfig).mockResolvedValue(mockResponse)
 

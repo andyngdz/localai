@@ -3,10 +3,10 @@
 import { DeviceSelection } from '@/cores/constants'
 import { useBackendInitStore } from '@/cores/backend-initialization'
 import { useHealthQuery } from '@/cores/api-queries'
+import { useConfig } from '@/cores/hooks'
 import { SetupLayout } from '@/features/setup-layout/presentations'
-import { api } from '@/services'
 import { useRouter } from 'next/navigation'
-import { useCallback, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useBackendSetupStatus } from '../states/useBackendSetupStatus'
 import { HealthCheckContent } from './HealthCheckContent'
 
@@ -16,10 +16,10 @@ export const HealthCheck = () => {
   const { data } = useHealthQuery(isInitialized)
   const isHealthy = !!data
   const { entries } = useBackendSetupStatus()
+  const { device_index } = useConfig()
 
-  const onCheckDeviceIndex = useCallback(async () => {
+  useEffect(() => {
     if (isHealthy) {
-      const { device_index } = await api.getDeviceIndex()
       const isHasDevice = device_index !== DeviceSelection.NOT_FOUND
 
       if (isHasDevice) {
@@ -28,11 +28,7 @@ export const HealthCheck = () => {
         router.push('/gpu-detection')
       }
     }
-  }, [isHealthy, router])
-
-  useEffect(() => {
-    onCheckDeviceIndex()
-  }, [onCheckDeviceIndex])
+  }, [isHealthy, device_index, router])
 
   return (
     <SetupLayout

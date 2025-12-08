@@ -8,6 +8,7 @@ vi.mock('axios', () => {
       create: () => ({
         get: vi.fn(),
         post: vi.fn(),
+        put: vi.fn(),
         delete: vi.fn()
       })
     }
@@ -61,35 +62,43 @@ describe('API Service', () => {
   })
 
   describe('setMaxMemory', () => {
-    it('sends max memory configuration', async () => {
+    it('sends max memory configuration via PUT /config/max-memory', async () => {
       const request = { gpu_scale_factor: 0.7, ram_scale_factor: 0.7 }
-      vi.spyOn(client, 'post').mockResolvedValueOnce({})
+      const mockResponse = {
+        upscalers: [],
+        safety_check_enabled: true,
+        gpu_scale_factor: 0.7,
+        ram_scale_factor: 0.7,
+        total_gpu_memory: 8589934592,
+        total_ram_memory: 17179869184,
+        device_index: 0
+      }
+      vi.spyOn(client, 'put').mockResolvedValueOnce({ data: mockResponse })
 
-      await api.setMaxMemory(request)
+      const result = await api.setMaxMemory(request)
 
-      expect(client.post).toHaveBeenCalledWith('/hardware/max-memory', request)
+      expect(client.put).toHaveBeenCalledWith('/config/max-memory', request)
+      expect(result).toEqual(mockResponse)
     })
   })
 
   describe('selectDevice', () => {
-    it('selects a device', async () => {
+    it('selects a device via PUT /config/device', async () => {
       const request = { device_index: 0 }
-      vi.spyOn(client, 'post').mockResolvedValueOnce({})
+      const mockResponse = {
+        upscalers: [],
+        safety_check_enabled: true,
+        gpu_scale_factor: 0.5,
+        ram_scale_factor: 0.5,
+        total_gpu_memory: 8589934592,
+        total_ram_memory: 17179869184,
+        device_index: 0
+      }
+      vi.spyOn(client, 'put').mockResolvedValueOnce({ data: mockResponse })
 
-      await api.selectDevice(request)
+      const result = await api.selectDevice(request)
 
-      expect(client.post).toHaveBeenCalledWith('/hardware/device', request)
-    })
-  })
-
-  describe('getDeviceIndex', () => {
-    it('fetches device index', async () => {
-      const mockResponse = { device_index: 1 }
-      vi.spyOn(client, 'get').mockResolvedValueOnce({ data: mockResponse })
-
-      const result = await api.getDeviceIndex()
-
-      expect(client.get).toHaveBeenCalledWith('/hardware/device')
+      expect(client.put).toHaveBeenCalledWith('/config/device', request)
       expect(result).toEqual(mockResponse)
     })
   })
