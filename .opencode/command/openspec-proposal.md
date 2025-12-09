@@ -1,9 +1,12 @@
 ---
-name: OpenSpec: Proposal
+agent: build
 description: Scaffold a new OpenSpec change and validate strictly.
-category: OpenSpec
-tags: [openspec, change]
 ---
+
+The user has requested the following change proposal. Use the openspec instructions to create their change proposal.
+<UserRequest>
+$ARGUMENTS
+</UserRequest>
 
 <!-- OPENSPEC:START -->
 

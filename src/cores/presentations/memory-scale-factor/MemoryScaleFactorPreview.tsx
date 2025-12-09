@@ -1,14 +1,19 @@
+'use client'
+
 import { useConfig } from '@/cores/hooks'
 import { formatter } from '@/services'
-import { useFormContext } from 'react-hook-form'
-import { DEFAULT_SCALE_FACTOR } from '../constants'
-import { MaxMemoryFormProps } from '../types'
+import { FC } from 'react'
 
-export const MaxMemoryScaleFactorPreview = () => {
+export interface MemoryScaleFactorPreviewProps {
+  gpuScaleFactor: number
+  ramScaleFactor: number
+}
+
+export const MemoryScaleFactorPreview: FC<MemoryScaleFactorPreviewProps> = ({
+  gpuScaleFactor,
+  ramScaleFactor
+}) => {
   const { total_gpu_memory, total_ram_memory } = useConfig()
-  const { watch } = useFormContext<MaxMemoryFormProps>()
-  const gpuScaleFactor = watch('gpuScaleFactor') ?? DEFAULT_SCALE_FACTOR
-  const ramScaleFactor = watch('ramScaleFactor') ?? DEFAULT_SCALE_FACTOR
 
   return (
     <div className="flex flex-col items-center gap-2">

@@ -5,14 +5,21 @@ import { SettingsModal } from '../SettingsModal'
 import { SettingsTab } from '../../states/useSettingsStore'
 
 const mockSetSelectedTab = vi.fn()
-let mockSelectedTab: SettingsTab = 'general'
+let mockSelectedTab: SettingsTab = SettingsTab.GENERAL
 
-vi.mock('../../states/useSettingsStore', () => ({
-  useSettingsStore: () => ({
-    selectedTab: mockSelectedTab,
-    setSelectedTab: mockSetSelectedTab
-  })
-}))
+vi.mock('../../states/useSettingsStore', async () => {
+  const actual = await vi.importActual<
+    typeof import('../../states/useSettingsStore')
+  >('../../states/useSettingsStore')
+
+  return {
+    ...actual,
+    useSettingsStore: () => ({
+      selectedTab: mockSelectedTab,
+      setSelectedTab: mockSetSelectedTab
+    })
+  }
+})
 
 vi.mock('@heroui/react', () => ({
   Modal: ({
@@ -76,6 +83,9 @@ vi.mock('../tabs', () => ({
   GeneralSettings: () => (
     <div data-testid="general-settings">General settings content</div>
   ),
+  MemorySettings: () => (
+    <div data-testid="memory-settings">Memory settings content</div>
+  ),
   ModelManagement: () => (
     <div data-testid="model-management">Model management content</div>
   ),
@@ -86,7 +96,7 @@ vi.mock('../tabs', () => ({
 
 describe('SettingsModal', () => {
   beforeEach(() => {
-    mockSelectedTab = 'general'
+    mockSelectedTab = SettingsTab.GENERAL
     vi.clearAllMocks()
   })
 
@@ -97,9 +107,11 @@ describe('SettingsModal', () => {
       expect(screen.getByTestId('modal')).toBeInTheDocument()
       expect(screen.getByText('Settings')).toBeInTheDocument()
       expect(screen.getByText('General')).toBeInTheDocument()
+      expect(screen.getByText('Memory')).toBeInTheDocument()
       expect(screen.getByText('Model Management')).toBeInTheDocument()
       expect(screen.getByText('Updates')).toBeInTheDocument()
       expect(screen.getByTestId('general-settings')).toBeInTheDocument()
+      expect(screen.getByTestId('memory-settings')).toBeInTheDocument()
       expect(screen.getByTestId('model-management')).toBeInTheDocument()
       expect(screen.getByTestId('update-settings')).toBeInTheDocument()
     })
@@ -124,10 +136,11 @@ describe('SettingsModal', () => {
       expect(screen.getByTestId('divider')).toBeInTheDocument()
     })
 
-    it('renders all three tab panels', () => {
+    it('renders all four tab panels', () => {
       render(<SettingsModal isOpen onClose={vi.fn()} />)
 
       expect(screen.getByTestId('general-settings')).toBeInTheDocument()
+      expect(screen.getByTestId('memory-settings')).toBeInTheDocument()
       expect(screen.getByTestId('model-management')).toBeInTheDocument()
       expect(screen.getByTestId('update-settings')).toBeInTheDocument()
     })
@@ -138,7 +151,7 @@ describe('SettingsModal', () => {
       render(<SettingsModal isOpen onClose={vi.fn()} />)
 
       const tabs = screen.getByTestId('tabs')
-      expect(tabs).toHaveAttribute('data-selected-key', 'general')
+      expect(tabs).toHaveAttribute('data-selected-key', SettingsTab.GENERAL)
     })
 
     it('calls setSelectedTab when tab selection changes to models', async () => {
@@ -149,7 +162,7 @@ describe('SettingsModal', () => {
       await user.click(changeButton)
 
       expect(mockSetSelectedTab).toHaveBeenCalledTimes(1)
-      expect(mockSetSelectedTab).toHaveBeenCalledWith('models')
+      expect(mockSetSelectedTab).toHaveBeenCalledWith(SettingsTab.MODELS)
     })
 
     it('calls setSelectedTab when tab selection changes to updates', async () => {
@@ -160,15 +173,15 @@ describe('SettingsModal', () => {
       await user.click(changeButton)
 
       expect(mockSetSelectedTab).toHaveBeenCalledTimes(1)
-      expect(mockSetSelectedTab).toHaveBeenCalledWith('updates')
+      expect(mockSetSelectedTab).toHaveBeenCalledWith(SettingsTab.UPDATES)
     })
 
     it('respects the selectedTab prop from store', () => {
-      mockSelectedTab = 'models'
+      mockSelectedTab = SettingsTab.MODELS
       render(<SettingsModal isOpen onClose={vi.fn()} />)
 
       const tabs = screen.getByTestId('tabs')
-      expect(tabs).toHaveAttribute('data-selected-key', 'models')
+      expect(tabs).toHaveAttribute('data-selected-key', SettingsTab.MODELS)
     })
   })
 
@@ -195,11 +208,11 @@ describe('SettingsModal', () => {
 
   describe('Store Integration', () => {
     it('uses selectedTab from settings store', () => {
-      mockSelectedTab = 'updates'
+      mockSelectedTab = SettingsTab.UPDATES
       render(<SettingsModal isOpen onClose={vi.fn()} />)
 
       const tabs = screen.getByTestId('tabs')
-      expect(tabs).toHaveAttribute('data-selected-key', 'updates')
+      expect(tabs).toHaveAttribute('data-selected-key', SettingsTab.UPDATES)
     })
 
     it('uses setSelectedTab from settings store', async () => {

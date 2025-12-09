@@ -16,6 +16,7 @@ import {
   useLorasQuery,
   useModelRecommendationsQuery,
   useSafetyCheckMutation,
+  useMaxMemoryMutation,
   useSamplersQuery,
   useStyleSectionsQuery,
   useUploadLoraMutation
@@ -35,7 +36,8 @@ vi.mock('@/services/api', () => ({
     uploadLora: vi.fn(),
     deleteLora: vi.fn(),
     getConfig: vi.fn(),
-    setSafetyCheckEnabled: vi.fn()
+    setSafetyCheckEnabled: vi.fn(),
+    setMaxMemory: vi.fn()
   }
 }))
 
@@ -615,6 +617,54 @@ describe('React Query Hooks', () => {
         'Failed to update safety check'
       )
       expect(api.setSafetyCheckEnabled).toHaveBeenCalledWith(true)
+    })
+  })
+
+  describe('useMaxMemoryMutation', () => {
+    it('calls setMaxMemory and invalidates config cache', async () => {
+      const mockResponse: BackendConfig = {
+        upscalers: [],
+        safety_check_enabled: true,
+        gpu_scale_factor: 0.7,
+        ram_scale_factor: 0.6,
+        total_gpu_memory: 8589934592,
+        total_ram_memory: 17179869184,
+        device_index: 0
+      }
+      vi.mocked(api.setMaxMemory).mockResolvedValue(mockResponse)
+      const invalidateSpy = vi.spyOn(testEnv.queryClient, 'invalidateQueries')
+
+      const { result } = renderHook(() => useMaxMemoryMutation(), {
+        wrapper: testEnv.wrapper
+      })
+
+      await result.current.mutateAsync({
+        gpuScaleFactor: 0.7,
+        ramScaleFactor: 0.6
+      })
+
+      expect(api.setMaxMemory).toHaveBeenCalledWith({
+        gpu_scale_factor: 0.7,
+        ram_scale_factor: 0.6
+      })
+      expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['config'] })
+    })
+
+    it('handles error from setMaxMemory', async () => {
+      const mockError = new Error('Failed to update max memory')
+      vi.mocked(api.setMaxMemory).mockRejectedValue(mockError)
+
+      const { result } = renderHook(() => useMaxMemoryMutation(), {
+        wrapper: testEnv.wrapper
+      })
+
+      await expect(
+        result.current.mutateAsync({ gpuScaleFactor: 0.5, ramScaleFactor: 0.5 })
+      ).rejects.toThrow('Failed to update max memory')
+      expect(api.setMaxMemory).toHaveBeenCalledWith({
+        gpu_scale_factor: 0.5,
+        ram_scale_factor: 0.5
+      })
     })
   })
 })

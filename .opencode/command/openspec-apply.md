@@ -1,9 +1,12 @@
 ---
-name: OpenSpec: Apply
+agent: build
 description: Implement an approved OpenSpec change and keep tasks in sync.
-category: OpenSpec
-tags: [openspec, apply]
 ---
+
+The user has requested to implement the following change proposal. Find the change proposal and follow the instructions below. If you're not sure or if ambiguous, ask for clarification from the user.
+<UserRequest>
+$ARGUMENTS
+</UserRequest>
 
 <!-- OPENSPEC:START -->
 
