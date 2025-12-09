@@ -12,13 +12,14 @@ export const SettingsMemoryConfig = () => {
     useSettingsMemory()
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-6">
       <div>
         <h3 className="text-lg font-semibold">Memory Configuration</h3>
         <p className="text-sm text-default-500">
           Adjust memory allocation for AI models
         </p>
       </div>
+      <Divider />
       <MemoryScaleFactorItems
         gpuScaleFactor={gpu_scale_factor}
         ramScaleFactor={ram_scale_factor}

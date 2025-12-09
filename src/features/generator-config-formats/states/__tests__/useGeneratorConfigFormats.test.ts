@@ -34,6 +34,28 @@ const mockUpscalerSections: UpscalerSection[] = [
         is_recommended: false
       }
     ]
+  },
+  {
+    method: UpscalerMethod.AI,
+    title: 'AI',
+    options: [
+      {
+        value: UpscalerType.REAL_ESRGAN_X2_PLUS,
+        name: 'RealESRGAN_x2plus',
+        description: 'AI upscaler 2x',
+        suggested_denoise_strength: 0.35,
+        method: UpscalerMethod.AI,
+        is_recommended: true
+      },
+      {
+        value: UpscalerType.REAL_ESRGAN_X4_PLUS,
+        name: 'RealESRGAN_x4plus',
+        description: 'AI upscaler 4x',
+        suggested_denoise_strength: 0.3,
+        method: UpscalerMethod.AI,
+        is_recommended: false
+      }
+    ]
   }
 ]
 
@@ -122,7 +144,7 @@ describe('useGeneratorConfigFormats', () => {
       expect(mockRegister).toHaveBeenCalledWith('hires_fix')
     })
 
-    it('sets default values from backend config when toggled on (first-time user)', () => {
+    it('sets default values with RealESRGAN_x2plus when toggled on (first-time user)', () => {
       const { result } = renderHook(() => useGeneratorConfigFormats())
 
       act(() => {
@@ -131,13 +153,70 @@ describe('useGeneratorConfigFormats', () => {
 
       expect(mockSetValue).toHaveBeenCalledWith('hires_fix', {
         upscale_factor: UpscaleFactor.TWO,
-        upscaler: UpscalerType.LANCZOS,
-        denoising_strength: 0.5, // From backend config
+        upscaler: UpscalerType.REAL_ESRGAN_X2_PLUS,
+        denoising_strength: 0.35, // From RealESRGAN_x2plus config
         steps: 0
       })
     })
 
-    it('uses first upscaler from backend config as default', () => {
+    it('uses RealESRGAN_x2plus as default upscaler when available', () => {
+      const { result } = renderHook(() => useGeneratorConfigFormats())
+
+      act(() => {
+        result.current.onHiresFixToggle(true)
+      })
+
+      const setValueCall = mockSetValue.mock.calls[0]
+      expect(setValueCall[1].upscaler).toBe(UpscalerType.REAL_ESRGAN_X2_PLUS)
+    })
+
+    it('uses suggested_denoise_strength from RealESRGAN_x2plus', () => {
+      const { result } = renderHook(() => useGeneratorConfigFormats())
+
+      act(() => {
+        result.current.onHiresFixToggle(true)
+      })
+
+      const setValueCall = mockSetValue.mock.calls[0]
+      expect(setValueCall[1].denoising_strength).toBe(0.35)
+    })
+
+    it('falls back to first upscaler if RealESRGAN_x2plus not available', () => {
+      vi.mocked(useConfig).mockReturnValue({
+        upscalers: [
+          {
+            method: UpscalerMethod.TRADITIONAL,
+            title: 'Traditional',
+            options: [
+              {
+                value: UpscalerType.LANCZOS,
+                name: 'Lanczos',
+                description: 'High quality upscaler',
+                suggested_denoise_strength: 0.5,
+                method: UpscalerMethod.TRADITIONAL,
+                is_recommended: false
+              }
+            ]
+          }
+        ],
+        upscalerOptions: [
+          {
+            value: UpscalerType.LANCZOS,
+            name: 'Lanczos',
+            description: 'High quality upscaler',
+            suggested_denoise_strength: 0.5,
+            method: UpscalerMethod.TRADITIONAL,
+            is_recommended: false
+          }
+        ],
+        safety_check_enabled: true,
+        gpu_scale_factor: 0.8,
+        ram_scale_factor: 0.8,
+        total_gpu_memory: 12485197824,
+        total_ram_memory: 32943878144,
+        device_index: 0
+      })
+
       const { result } = renderHook(() => useGeneratorConfigFormats())
 
       act(() => {
@@ -146,16 +225,6 @@ describe('useGeneratorConfigFormats', () => {
 
       const setValueCall = mockSetValue.mock.calls[0]
       expect(setValueCall[1].upscaler).toBe(UpscalerType.LANCZOS)
-    })
-
-    it('uses suggested_denoise_strength from first upscaler', () => {
-      const { result } = renderHook(() => useGeneratorConfigFormats())
-
-      act(() => {
-        result.current.onHiresFixToggle(true)
-      })
-
-      const setValueCall = mockSetValue.mock.calls[0]
       expect(setValueCall[1].denoising_strength).toBe(0.5)
     })
 
