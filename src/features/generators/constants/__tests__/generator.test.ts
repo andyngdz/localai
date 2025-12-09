@@ -66,5 +66,9 @@ describe('Generator Constants', () => {
       expect(Array.isArray(FORM_DEFAULT_VALUES.loras)).toBe(true)
       expect(FORM_DEFAULT_VALUES.loras.length).toBe(0)
     })
+
+    it('should not have hires_fix by default (applied lazily when enabled)', () => {
+      expect(FORM_DEFAULT_VALUES.hires_fix).toBeUndefined()
+    })
   })
 })

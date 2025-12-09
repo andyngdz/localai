@@ -37,7 +37,7 @@ export const MemoryScaleFactorItem: FC<MemoryScaleFactorItemProps> = ({
 
   return (
     <div
-      className="w-full rounded-2xl p-2 transition-colors"
+      className="w-full rounded-2xl transition-colors"
       data-testid={`memory-slider-${fieldName}`}
     >
       <div className="flex flex-col gap-1 md:flex-row md:items-center md:justify-between">

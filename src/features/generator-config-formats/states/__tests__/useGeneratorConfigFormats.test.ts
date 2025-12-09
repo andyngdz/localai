@@ -1,15 +1,19 @@
 import { UpscaleFactor, UpscalerMethod, UpscalerType } from '@/cores/constants'
 import { useConfig } from '@/cores/hooks'
 import { GeneratorConfigFormValues } from '@/features/generator-configs'
+import { useHiresFixEnabledStore } from '@/features/generators'
 import { UpscalerSection } from '@/types'
-import { renderHook, act } from '@testing-library/react'
+import { act, renderHook } from '@testing-library/react'
 import { UseFormReturn } from 'react-hook-form'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useGeneratorConfigFormats } from '../useGeneratorConfigFormats'
 
-// Mock useConfig hook
 vi.mock('@/cores/hooks', () => ({
   useConfig: vi.fn()
+}))
+
+vi.mock('@/features/generators', () => ({
+  useHiresFixEnabledStore: vi.fn()
 }))
 
 const mockUpscalerSections: UpscalerSection[] = [
@@ -34,6 +38,28 @@ const mockUpscalerSections: UpscalerSection[] = [
         is_recommended: false
       }
     ]
+  },
+  {
+    method: UpscalerMethod.AI,
+    title: 'AI',
+    options: [
+      {
+        value: UpscalerType.REAL_ESRGAN_X2_PLUS,
+        name: 'RealESRGAN_x2plus',
+        description: 'AI upscaler 2x',
+        suggested_denoise_strength: 0.35,
+        method: UpscalerMethod.AI,
+        is_recommended: true
+      },
+      {
+        value: UpscalerType.REAL_ESRGAN_X4_PLUS,
+        name: 'RealESRGAN_x4plus',
+        description: 'AI upscaler 4x',
+        suggested_denoise_strength: 0.3,
+        method: UpscalerMethod.AI,
+        is_recommended: false
+      }
+    ]
   }
 ]
 
@@ -41,10 +67,8 @@ const mockUpscalerOptions = mockUpscalerSections.flatMap(
   (section) => section.options
 )
 
-// Mock react-hook-form
 const mockWatch = vi.fn()
 const mockRegister = vi.fn()
-const mockUnregister = vi.fn()
 const mockSetValue = vi.fn()
 
 vi.mock('react-hook-form', () => ({
@@ -52,24 +76,21 @@ vi.mock('react-hook-form', () => ({
     ({
       watch: mockWatch,
       register: mockRegister,
-      unregister: mockUnregister,
       setValue: mockSetValue
     }) as Partial<UseFormReturn<GeneratorConfigFormValues>>
 }))
 
-// Mock react-use with stateful toggle
-let mockIsEnabled = false
-const mockToggle = vi.fn((value?: boolean) => {
-  mockIsEnabled = value ?? !mockIsEnabled
-})
-vi.mock('react-use', () => ({
-  useToggle: () => [mockIsEnabled, mockToggle]
-}))
+const mockSetIsHiresFixEnabled = vi.fn()
+let mockIsHiresFixEnabled = false
 
 describe('useGeneratorConfigFormats', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    mockIsEnabled = false
+    mockIsHiresFixEnabled = false
+    vi.mocked(useHiresFixEnabledStore).mockReturnValue({
+      isHiresFixEnabled: mockIsHiresFixEnabled,
+      setIsHiresFixEnabled: mockSetIsHiresFixEnabled
+    })
     vi.mocked(useConfig).mockReturnValue({
       upscalers: mockUpscalerSections,
       upscalerOptions: mockUpscalerOptions,
@@ -92,14 +113,17 @@ describe('useGeneratorConfigFormats', () => {
       expect(mockWatch).toHaveBeenCalledWith('hires_fix')
     })
 
-    it('initializes with hires fix enabled when value exists', () => {
+    it('initializes with hires fix enabled when store value is true', () => {
       mockWatch.mockReturnValue({
         upscale_factor: UpscaleFactor.TWO,
         upscaler: UpscalerType.LANCZOS,
         denoising_strength: 0.5,
         steps: 0
       })
-      mockIsEnabled = true
+      vi.mocked(useHiresFixEnabledStore).mockReturnValue({
+        isHiresFixEnabled: true,
+        setIsHiresFixEnabled: mockSetIsHiresFixEnabled
+      })
 
       const { result } = renderHook(() => useGeneratorConfigFormats())
 
@@ -122,7 +146,7 @@ describe('useGeneratorConfigFormats', () => {
       expect(mockRegister).toHaveBeenCalledWith('hires_fix')
     })
 
-    it('sets default values from backend config when toggled on (first-time user)', () => {
+    it('sets default values with RealESRGAN_x2plus when toggled on (first-time user)', () => {
       const { result } = renderHook(() => useGeneratorConfigFormats())
 
       act(() => {
@@ -131,13 +155,59 @@ describe('useGeneratorConfigFormats', () => {
 
       expect(mockSetValue).toHaveBeenCalledWith('hires_fix', {
         upscale_factor: UpscaleFactor.TWO,
-        upscaler: UpscalerType.LANCZOS,
-        denoising_strength: 0.5, // From backend config
+        upscaler: UpscalerType.REAL_ESRGAN_X2_PLUS,
+        denoising_strength: 0.35,
         steps: 0
       })
     })
 
-    it('uses first upscaler from backend config as default', () => {
+    it('uses suggested_denoise_strength from RealESRGAN_x2plus', () => {
+      const { result } = renderHook(() => useGeneratorConfigFormats())
+
+      act(() => {
+        result.current.onHiresFixToggle(true)
+      })
+
+      const setValueCall = mockSetValue.mock.calls[0]
+      expect(setValueCall[1].denoising_strength).toBe(0.35)
+    })
+
+    it('falls back to first upscaler if RealESRGAN_x2plus not available', () => {
+      vi.mocked(useConfig).mockReturnValue({
+        upscalers: [
+          {
+            method: UpscalerMethod.TRADITIONAL,
+            title: 'Traditional',
+            options: [
+              {
+                value: UpscalerType.LANCZOS,
+                name: 'Lanczos',
+                description: 'High quality upscaler',
+                suggested_denoise_strength: 0.5,
+                method: UpscalerMethod.TRADITIONAL,
+                is_recommended: false
+              }
+            ]
+          }
+        ],
+        upscalerOptions: [
+          {
+            value: UpscalerType.LANCZOS,
+            name: 'Lanczos',
+            description: 'High quality upscaler',
+            suggested_denoise_strength: 0.5,
+            method: UpscalerMethod.TRADITIONAL,
+            is_recommended: false
+          }
+        ],
+        safety_check_enabled: true,
+        gpu_scale_factor: 0.8,
+        ram_scale_factor: 0.8,
+        total_gpu_memory: 12485197824,
+        total_ram_memory: 32943878144,
+        device_index: 0
+      })
+
       const { result } = renderHook(() => useGeneratorConfigFormats())
 
       act(() => {
@@ -146,16 +216,6 @@ describe('useGeneratorConfigFormats', () => {
 
       const setValueCall = mockSetValue.mock.calls[0]
       expect(setValueCall[1].upscaler).toBe(UpscalerType.LANCZOS)
-    })
-
-    it('uses suggested_denoise_strength from first upscaler', () => {
-      const { result } = renderHook(() => useGeneratorConfigFormats())
-
-      act(() => {
-        result.current.onHiresFixToggle(true)
-      })
-
-      const setValueCall = mockSetValue.mock.calls[0]
       expect(setValueCall[1].denoising_strength).toBe(0.5)
     })
 
@@ -173,7 +233,6 @@ describe('useGeneratorConfigFormats', () => {
         result.current.onHiresFixToggle(true)
       })
 
-      // Should register but NOT set value (user has existing config)
       expect(mockRegister).toHaveBeenCalledWith('hires_fix')
       expect(mockSetValue).not.toHaveBeenCalled()
     })
@@ -196,14 +255,13 @@ describe('useGeneratorConfigFormats', () => {
         result.current.onHiresFixToggle(true)
       })
 
-      // Should register but NOT set value (no default upscaler)
       expect(mockRegister).toHaveBeenCalledWith('hires_fix')
       expect(mockSetValue).not.toHaveBeenCalled()
     })
   })
 
   describe('onHiresFixToggle - disable', () => {
-    it('unregisters hires_fix field when toggled off', () => {
+    it('sets enable flag to false when toggled off', () => {
       mockWatch.mockReturnValue(undefined)
       const { result } = renderHook(() => useGeneratorConfigFormats())
 
@@ -211,43 +269,7 @@ describe('useGeneratorConfigFormats', () => {
         result.current.onHiresFixToggle(false)
       })
 
-      expect(mockUnregister).toHaveBeenCalledWith('hires_fix')
-    })
-
-    it('does not call register or setValue when toggled off', () => {
-      mockWatch.mockReturnValue(undefined)
-      const { result } = renderHook(() => useGeneratorConfigFormats())
-
-      act(() => {
-        result.current.onHiresFixToggle(false)
-      })
-
-      expect(mockRegister).not.toHaveBeenCalled()
-      expect(mockSetValue).not.toHaveBeenCalled()
-    })
-  })
-
-  describe('toggle state', () => {
-    it('calls toggleIsHiresFixEnabled with correct value on enable', () => {
-      mockWatch.mockReturnValue(undefined)
-      const { result } = renderHook(() => useGeneratorConfigFormats())
-
-      act(() => {
-        result.current.onHiresFixToggle(true)
-      })
-
-      expect(mockToggle).toHaveBeenCalledWith(true)
-    })
-
-    it('calls toggleIsHiresFixEnabled with correct value on disable', () => {
-      mockWatch.mockReturnValue(undefined)
-      const { result } = renderHook(() => useGeneratorConfigFormats())
-
-      act(() => {
-        result.current.onHiresFixToggle(false)
-      })
-
-      expect(mockToggle).toHaveBeenCalledWith(false)
+      expect(mockSetIsHiresFixEnabled).toHaveBeenCalledWith(false)
     })
   })
 
@@ -257,7 +279,6 @@ describe('useGeneratorConfigFormats', () => {
 
       const { result } = renderHook(() => useGeneratorConfigFormats())
 
-      expect(result.current).toHaveProperty('isHiresFixEnabled')
       expect(typeof result.current.isHiresFixEnabled).toBe('boolean')
     })
 
@@ -266,7 +287,6 @@ describe('useGeneratorConfigFormats', () => {
 
       const { result } = renderHook(() => useGeneratorConfigFormats())
 
-      expect(result.current).toHaveProperty('onHiresFixToggle')
       expect(typeof result.current.onHiresFixToggle).toBe('function')
     })
   })
