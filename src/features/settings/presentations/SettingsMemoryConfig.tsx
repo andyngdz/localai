@@ -6,20 +6,17 @@ import {
 } from '@/cores/presentations/memory-scale-factor'
 import { Divider } from '@heroui/react'
 import { useSettingsMemory } from '../states/useSettingsMemory'
+import { SettingsBase } from './SettingsBase'
 
 export const SettingsMemoryConfig = () => {
   const { gpu_scale_factor, ram_scale_factor, onGpuChange, onRamChange } =
     useSettingsMemory()
 
   return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <h3 className="text-lg font-semibold">Memory Configuration</h3>
-        <p className="text-sm text-default-500">
-          Adjust memory allocation for AI models
-        </p>
-      </div>
-      <Divider />
+    <SettingsBase
+      title="Memory Configuration"
+      description="Adjust memory allocation for AI models"
+    >
       <MemoryScaleFactorItems
         gpuScaleFactor={gpu_scale_factor}
         ramScaleFactor={ram_scale_factor}
@@ -31,6 +28,6 @@ export const SettingsMemoryConfig = () => {
         gpuScaleFactor={gpu_scale_factor}
         ramScaleFactor={ram_scale_factor}
       />
-    </div>
+    </SettingsBase>
   )
 }

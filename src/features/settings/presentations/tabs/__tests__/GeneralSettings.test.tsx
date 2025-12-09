@@ -8,7 +8,10 @@ vi.mock('../../../states/useGeneralSettings', () => ({
 }))
 
 vi.mock('@heroui/react', () => ({
-  Switch: ({ children }: { children: React.ReactNode }) => <div>{children}</div>
+  Switch: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+  Divider: () => <hr />
 }))
 
 describe('GeneralSettings', () => {
@@ -19,6 +22,14 @@ describe('GeneralSettings', () => {
     vi.mocked(useGeneralSettings).mockReturnValue({
       register: mockRegister
     })
+  })
+
+  it('renders with SettingsBase title and description', () => {
+    render(<GeneralSettings />)
+    expect(screen.getByText('General')).toBeInTheDocument()
+    expect(
+      screen.getByText('Configure general application settings')
+    ).toBeInTheDocument()
   })
 
   it('renders safety check switch', () => {
