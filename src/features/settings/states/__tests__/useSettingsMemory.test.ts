@@ -11,8 +11,7 @@ vi.mock('@/cores/hooks', () => ({
 
 vi.mock('@/cores/api-queries', () => ({
   useMaxMemoryMutation: () => ({
-    mutate: mockMutate,
-    isPending: false
+    mutate: mockMutate
   })
 }))
 
@@ -35,12 +34,11 @@ describe('useSettingsMemory', () => {
     vi.clearAllMocks()
   })
 
-  it('returns config values and isSaving state', () => {
+  it('returns config values', () => {
     const { result } = renderHook(() => useSettingsMemory())
 
-    expect(result.current.gpuScaleFactor).toBe(0.6)
-    expect(result.current.ramScaleFactor).toBe(0.7)
-    expect(result.current.isSaving).toBe(false)
+    expect(result.current.gpu_scale_factor).toBe(0.6)
+    expect(result.current.ram_scale_factor).toBe(0.7)
   })
 
   it('calls mutate with updated GPU value and current RAM', () => {

@@ -8,7 +8,7 @@ import { Divider } from '@heroui/react'
 import { useSettingsMemory } from '../states/useSettingsMemory'
 
 export const SettingsMemoryConfig = () => {
-  const { gpuScaleFactor, ramScaleFactor, onGpuChange, onRamChange } =
+  const { gpu_scale_factor, ram_scale_factor, onGpuChange, onRamChange } =
     useSettingsMemory()
 
   return (
@@ -20,15 +20,15 @@ export const SettingsMemoryConfig = () => {
         </p>
       </div>
       <MemoryScaleFactorItems
-        gpuScaleFactor={gpuScaleFactor}
-        ramScaleFactor={ramScaleFactor}
+        gpuScaleFactor={gpu_scale_factor}
+        ramScaleFactor={ram_scale_factor}
         onGpuChange={onGpuChange}
         onRamChange={onRamChange}
       />
       <Divider />
       <MemoryScaleFactorPreview
-        gpuScaleFactor={gpuScaleFactor}
-        ramScaleFactor={ramScaleFactor}
+        gpuScaleFactor={gpu_scale_factor}
+        ramScaleFactor={ram_scale_factor}
       />
     </div>
   )

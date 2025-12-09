@@ -7,7 +7,7 @@ import { useCallback } from 'react'
 
 export const useSettingsMemory = () => {
   const { gpu_scale_factor, ram_scale_factor } = useConfig()
-  const { mutate: setMaxMemory, isPending } = useMaxMemoryMutation()
+  const { mutate: setMaxMemory } = useMaxMemoryMutation()
 
   const onGpuChange = useCallback(
     (value: SliderValue) => {
@@ -34,10 +34,9 @@ export const useSettingsMemory = () => {
   )
 
   return {
-    gpuScaleFactor: gpu_scale_factor,
-    ramScaleFactor: ram_scale_factor,
+    gpu_scale_factor,
+    ram_scale_factor,
     onGpuChange,
-    onRamChange,
-    isSaving: isPending
+    onRamChange
   }
 }

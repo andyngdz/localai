@@ -48,8 +48,8 @@ vi.mock('@/cores/presentations/memory-scale-factor', () => ({
 describe('SettingsMemoryConfig', () => {
   it('renders headings and memory controls', () => {
     useSettingsMemoryMock.mockReturnValue({
-      gpuScaleFactor: 0.5,
-      ramScaleFactor: 0.6,
+      gpu_scale_factor: 0.5,
+      ram_scale_factor: 0.6,
       onGpuChange: vi.fn(),
       onRamChange: vi.fn()
     })
@@ -68,8 +68,8 @@ describe('SettingsMemoryConfig', () => {
     const onGpuChange = vi.fn()
     const onRamChange = vi.fn()
     useSettingsMemoryMock.mockReturnValue({
-      gpuScaleFactor: 0.25,
-      ramScaleFactor: 0.35,
+      gpu_scale_factor: 0.25,
+      ram_scale_factor: 0.35,
       onGpuChange,
       onRamChange
     })
