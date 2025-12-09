@@ -8,6 +8,10 @@ vi.mock('../../states/useSettingsMemory', () => ({
   useSettingsMemory: useSettingsMemoryMock
 }))
 
+vi.mock('@heroui/react', () => ({
+  Divider: () => <hr />
+}))
+
 vi.mock('@/cores/presentations/memory-scale-factor', () => ({
   MemoryScaleFactorItems: ({
     gpuScaleFactor,

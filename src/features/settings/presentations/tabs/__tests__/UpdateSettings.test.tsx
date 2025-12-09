@@ -28,7 +28,8 @@ vi.mock('@heroui/react', () => ({
       {children}
     </button>
   ),
-  addToast: vi.fn()
+  addToast: vi.fn(),
+  Divider: () => <hr />
 }))
 
 describe('UpdateSettings', () => {
@@ -44,7 +45,7 @@ describe('UpdateSettings', () => {
 
     render(<UpdateSettings />)
 
-    expect(screen.getByText('Application updates')).toBeInTheDocument()
+    expect(screen.getByText('Updates')).toBeInTheDocument()
     expect(screen.getByText(/Current version:/)).toBeInTheDocument()
 
     // Wait for async effect to complete
