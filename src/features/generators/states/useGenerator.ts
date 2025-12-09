@@ -5,12 +5,14 @@ import { addToast } from '@heroui/react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { SubmitHandler } from 'react-hook-form'
 import { useGenerationStatusStore } from './useGenerationStatusStore'
+import { useHiresFixEnabledStore } from './useHiresFixEnabledStore'
 import { useUseImageGenerationStore } from './useImageGenerationResponseStores'
 
 export const useGenerator = () => {
   const queryClient = useQueryClient()
   const { onCompleted, onInit } = useUseImageGenerationStore()
   const { onSetIsGenerating } = useGenerationStatusStore()
+  const { isHiresFixEnabled } = useHiresFixEnabledStore()
 
   const generator = useMutation({
     mutationKey: ['generator'],
@@ -56,12 +58,14 @@ export const useGenerator = () => {
   ) => {
     try {
       onSetIsGenerating(true)
-      const history_id = await addHistory.mutateAsync(config)
+      const { hires_fix, ...configWithoutHiresFix } = config
+      const historyConfig = isHiresFixEnabled ? config : configWithoutHiresFix
+      const history_id = await addHistory.mutateAsync(historyConfig)
       queryClient.refetchQueries({ queryKey: ['getHistories'] })
 
       onInit(config.number_of_images)
 
-      await generator.mutateAsync({ history_id, config })
+      await generator.mutateAsync({ history_id, config: historyConfig })
     } finally {
       onSetIsGenerating(false)
       queryClient.refetchQueries({ queryKey: ['getHistories'] })

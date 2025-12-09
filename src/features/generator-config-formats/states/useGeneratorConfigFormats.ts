@@ -1,20 +1,19 @@
 import { UpscaleFactor, UpscalerType } from '@/cores/constants'
 import { useConfig } from '@/cores/hooks'
 import { GeneratorConfigFormValues } from '@/features/generator-configs'
+import { useHiresFixEnabledStore } from '@/features/generators'
 import { first } from 'es-toolkit/compat'
 import { useFormContext } from 'react-hook-form'
-import { useToggle } from 'react-use'
 
 export const useGeneratorConfigFormats = () => {
-  const { watch, register, unregister, setValue } =
+  const { watch, register, setValue } =
     useFormContext<GeneratorConfigFormValues>()
   const { upscalerOptions } = useConfig()
   const hiresFixValue = watch('hires_fix')
-  const [isHiresFixEnabled, toggleIsHiresFixEnabled] =
-    useToggle(!!hiresFixValue)
+  const { isHiresFixEnabled, setIsHiresFixEnabled } = useHiresFixEnabledStore()
 
   const onHiresFixToggle = (checked: boolean) => {
-    toggleIsHiresFixEnabled(checked)
+    setIsHiresFixEnabled(checked)
 
     if (checked) {
       register('hires_fix')
@@ -34,8 +33,6 @@ export const useGeneratorConfigFormats = () => {
           })
         }
       }
-    } else {
-      unregister('hires_fix')
     }
   }
 
