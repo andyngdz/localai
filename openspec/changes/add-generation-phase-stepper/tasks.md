@@ -13,7 +13,7 @@
 
 ## 3. Presentation Components
 
-- [x] 3.1 Create `src/features/generation-phase-stepper/presentations/GenerationPhaseStepItem.tsx`
+- [x] 3.1 Create `src/features/generation-phase-stepper/presentations/GenerationPhaseIndicator.tsx`
 - [x] 3.2 Create `src/features/generation-phase-stepper/presentations/GenerationPhaseStepper.tsx`
 - [x] 3.3 Create `src/features/generation-phase-stepper/presentations/index.ts` exports
 
@@ -26,5 +26,4 @@
 
 - [x] 5.1 Create `src/features/generation-phase-stepper/states/__tests__/useGenerationPhaseStore.test.ts`
 - [x] 5.2 Create `src/features/generation-phase-stepper/states/__tests__/useGenerationPhase.test.ts`
-- [x] 5.3 Create `src/features/generation-phase-stepper/presentations/__tests__/GenerationPhaseStepItem.test.tsx`
-- [x] 5.4 Create `src/features/generation-phase-stepper/presentations/__tests__/GenerationPhaseStepper.test.tsx`
+- [x] 5.3 Create `src/features/generation-phase-stepper/presentations/__tests__/GenerationPhaseStepper.test.tsx`
