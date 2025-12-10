@@ -1,6 +1,7 @@
 'use client'
 
 import { FullScreenLoader } from '@/cores/presentations'
+import { GenerationPhaseStepper } from '@/features/generation-phase-stepper'
 import { GeneratorAction } from '@/features/generator-actions'
 import { GeneratorConfig } from '@/features/generator-configs'
 import { GeneratorPreviewer } from '@/features/generator-previewers'
@@ -52,6 +53,7 @@ export const Generator = () => {
           </Allotment>
         </form>
         {progress && <FullScreenLoader message={progress.message} />}
+        <GenerationPhaseStepper />
       </div>
     </FormProvider>
   )
