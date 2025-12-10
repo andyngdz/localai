@@ -1,6 +1,7 @@
 import { GenerationPhase } from '@/cores/sockets'
 import { renderHook } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { PHASE_LABELS } from '../../constants'
 import { useGenerationPhase } from '../useGenerationPhase'
 import * as useGenerationPhaseStoreModule from '../useGenerationPhaseStore'
 
@@ -103,6 +104,36 @@ describe('useGenerationPhase', () => {
     })
   })
 
+  describe('steps', () => {
+    it('returns empty steps when phases is empty', () => {
+      const { result } = renderHook(() => useGenerationPhase())
+
+      expect(result.current.steps).toEqual([])
+    })
+
+    it('returns steps with labels for each phase', () => {
+      mockUseGenerationPhaseStore.mockReturnValue({
+        phases: [GenerationPhase.IMAGE_GENERATION, GenerationPhase.UPSCALING],
+        current: GenerationPhase.IMAGE_GENERATION,
+        onPhaseChange: vi.fn(),
+        reset: vi.fn()
+      })
+
+      const { result } = renderHook(() => useGenerationPhase())
+
+      expect(result.current.steps).toEqual([
+        {
+          phase: GenerationPhase.IMAGE_GENERATION,
+          label: PHASE_LABELS[GenerationPhase.IMAGE_GENERATION]
+        },
+        {
+          phase: GenerationPhase.UPSCALING,
+          label: PHASE_LABELS[GenerationPhase.UPSCALING]
+        }
+      ])
+    })
+  })
+
   describe('integration', () => {
     it('provides all expected properties', () => {
       mockUseGenerationPhaseStore.mockReturnValue({
@@ -116,6 +147,7 @@ describe('useGenerationPhase', () => {
 
       expect(result.current).toHaveProperty('phases')
       expect(result.current).toHaveProperty('current')
+      expect(result.current).toHaveProperty('steps')
       expect(result.current).toHaveProperty('isVisible')
     })
   })
