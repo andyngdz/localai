@@ -36,6 +36,17 @@ export interface ModelLoadStartedResponse {
   model_id: string
 }
 
+export enum GenerationPhase {
+  IMAGE_GENERATION = 'image_generation',
+  UPSCALING = 'upscaling',
+  COMPLETED = 'completed'
+}
+
+export interface GenerationPhaseResponse {
+  phases: GenerationPhase[]
+  current: GenerationPhase
+}
+
 export type {
   DownloadModelResponse,
   DownloadModelStartResponse,

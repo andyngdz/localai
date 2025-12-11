@@ -5,6 +5,7 @@
 - **Naming**:
   - PascalCase for components, camelCase for functions/variables, kebab-case for directories
   - Component names should include feature prefix (e.g., `GeneratorImageRenderer`, `GeneratorImageDownloadButton` for generator feature)
+  - Event handlers must start with `on` prefix (e.g., `onClick`, `onSubmit`, `onPhaseChange`)
 - **Commits**: Conventional format (`feat:`, `fix:`, `test:`, `chore:`)
 - **Comments**: Write what code does, not why or how. Keep short and action-focused. Use `// Step N: <action>` for workflows. Avoid redundant explanations. When code is self-documenting (e.g., well-named functions/hooks), omit comments entirely.
 - **Simplicity**:
