@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-<video controls autoplay src="https://andyngdz.github.io/localai/LocalAI.mp4" title="LocalAI Demo"></video>
+https://github.com/user-attachments/assets/eada3ac2-b8d0-4a2f-a3ee-92851583742e
 
 ## About
 
