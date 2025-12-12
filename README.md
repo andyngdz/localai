@@ -4,8 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-<!-- Add your screenshot here -->
-<!-- ![LocalAI Dashboard](path/to/screenshot.png) -->
+<video controls autoplay src="https://andyngdz.github.io/localai/LocalAI.mp4" title="LocalAI Demo"></video>
 
 ## About
 
