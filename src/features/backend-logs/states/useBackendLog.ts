@@ -1,13 +1,12 @@
 'use client'
 
 import { useVirtualizer } from '@tanstack/react-virtual'
-import { useEffect, useLayoutEffect, useRef } from 'react'
+import { useLayoutEffect, useRef } from 'react'
 import { useBackendLogStore } from './useBackendLogStore'
 
 export const useBackendLog = () => {
   const scrollRef = useRef<HTMLDivElement>(null)
-  const { logs, isStreaming, addLog, clearLogs, setIsStreaming } =
-    useBackendLogStore()
+  const { logs, isStreaming, clearLogs } = useBackendLogStore()
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const rowVirtualizer = useVirtualizer({
@@ -17,16 +16,6 @@ export const useBackendLog = () => {
     overscan: 10,
     measureElement: (element) => element.getBoundingClientRect().height
   })
-
-  useEffect(() => {
-    globalThis.window.electronAPI.backend.isLogStreaming().then(setIsStreaming)
-
-    const unsubscribe = globalThis.window.electronAPI.backend.onLog((log) => {
-      addLog(log)
-    })
-
-    return unsubscribe
-  }, [addLog, setIsStreaming])
 
   useLayoutEffect(() => {
     if (scrollRef.current) {
