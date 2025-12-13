@@ -49,7 +49,7 @@ vi.mock('swiper/react', () => ({
 // Mock react-hook-form
 vi.mock('react-hook-form', () => ({
   useFormContext: () => ({
-    watch: (key: string) => (key === 'width' ? 512 : 512)
+    watch: () => 512
   })
 }))
 

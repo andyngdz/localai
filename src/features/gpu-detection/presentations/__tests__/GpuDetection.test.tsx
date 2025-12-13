@@ -168,7 +168,15 @@ describe('GpuDetection', () => {
     await setupRouterMock()
 
     const { api } = await import('@/services/api')
-    vi.mocked(api.selectDevice).mockResolvedValue(undefined)
+    vi.mocked(api.selectDevice).mockResolvedValue({
+      upscalers: [],
+      safety_check_enabled: true,
+      gpu_scale_factor: 0.8,
+      ram_scale_factor: 0.8,
+      total_gpu_memory: 12485197824,
+      total_ram_memory: 32943878144,
+      device_index: 0
+    })
 
     await renderWithAct(<GpuDetection />)
 

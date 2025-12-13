@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { dateFormatter } from '@/services'
 import { HistoryItem } from '@/types'
+import { UpscaleFactor, UpscalerType } from '@/cores/constants'
 import { HistoryPhotoviewCard } from '../HistoryPhotoviewCard'
 
 vi.mock('@/services', () => ({
@@ -61,7 +62,12 @@ describe('HistoryPhotoviewCard', () => {
       sampler: 'Euler a',
       seed: 12345,
       number_of_images: 4,
-      hires_fix: true,
+      hires_fix: {
+        upscale_factor: UpscaleFactor.TWO,
+        upscaler: UpscalerType.LANCZOS,
+        denoising_strength: 0.7,
+        steps: 20
+      },
       loras: [],
       prompt: 'A beautiful landscape',
       negative_prompt: 'blurry, low quality',
@@ -193,7 +199,7 @@ describe('HistoryPhotoviewCard', () => {
       ...mockHistory,
       config: {
         ...mockHistory.config,
-        hires_fix: false
+        hires_fix: undefined
       }
     }
 

@@ -7,12 +7,11 @@ describe('Generator Constants', () => {
       expect(FORM_DEFAULT_VALUES).toEqual({
         width: 512,
         height: 512,
-        hires_fix: false,
         number_of_images: 4,
         steps: 24,
         seed: -1,
         cfg_scale: 7.5,
-        clip_skip: 2,
+        clip_skip: 1,
         sampler: 'EULER_A',
         styles: [],
         loras: [],
@@ -26,7 +25,6 @@ describe('Generator Constants', () => {
       const requiredFields = [
         'width',
         'height',
-        'hires_fix',
         'number_of_images',
         'steps',
         'seed',
@@ -69,9 +67,8 @@ describe('Generator Constants', () => {
       expect(FORM_DEFAULT_VALUES.loras.length).toBe(0)
     })
 
-    it('should have boolean value for hires_fix', () => {
-      expect(typeof FORM_DEFAULT_VALUES.hires_fix).toBe('boolean')
-      expect(FORM_DEFAULT_VALUES.hires_fix).toBe(false)
+    it('should not have hires_fix by default (applied lazily when enabled)', () => {
+      expect(FORM_DEFAULT_VALUES.hires_fix).toBeUndefined()
     })
   })
 })

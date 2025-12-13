@@ -3,6 +3,7 @@ import nextVitals from 'eslint-config-next/core-web-vitals'
 import nextTs from 'eslint-config-next/typescript'
 import prettier from 'eslint-config-prettier/flat'
 import reactHooks from 'eslint-plugin-react-hooks'
+import sonarjs from 'eslint-plugin-sonarjs'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 const eslintConfig = defineConfig([
@@ -11,6 +12,7 @@ const eslintConfig = defineConfig([
   ...pluginQuery.configs['flat/recommended'],
   prettier,
   reactHooks.configs.flat.recommended,
+  sonarjs.configs.recommended,
   {
     rules: {
       '@next/next/no-img-element': 'off',

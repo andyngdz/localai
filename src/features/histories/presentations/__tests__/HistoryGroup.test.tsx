@@ -37,7 +37,7 @@ describe('HistoryGroup', () => {
         config: {
           width: 512,
           height: 512,
-          hires_fix: false,
+
           loras: [],
           number_of_images: 1,
           prompt: 'Test prompt 1',
@@ -60,7 +60,7 @@ describe('HistoryGroup', () => {
         config: {
           width: 512,
           height: 512,
-          hires_fix: false,
+
           loras: [],
           number_of_images: 1,
           prompt: 'Test prompt 2',

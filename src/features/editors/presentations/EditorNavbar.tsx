@@ -1,4 +1,4 @@
-import LocalAILogo from '@/assets/logo.png'
+import ExoGenLogo from '@/assets/logo.png'
 import { ModelSearchOpenIconButton } from '@/features/model-search'
 import { ModelSelector } from '@/features/model-selectors/presentations/ModelSelector'
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from '@heroui/react'
@@ -9,8 +9,8 @@ export const EditorNavbar = () => {
     <Navbar maxWidth="full" isBordered isBlurred>
       <NavbarBrand>
         <NextImage
-          src={LocalAILogo}
-          alt="LocalAI Logo"
+          src={ExoGenLogo}
+          alt="ExoGen Logo"
           width={32}
           height={32}
           priority

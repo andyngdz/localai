@@ -103,7 +103,7 @@ describe('Histories', () => {
             config: {
               width: 512,
               height: 512,
-              hires_fix: false,
+
               loras: [],
               number_of_images: 1,
               prompt: 'Test prompt',
@@ -131,7 +131,7 @@ describe('Histories', () => {
             config: {
               width: 512,
               height: 512,
-              hires_fix: false,
+
               loras: [],
               number_of_images: 1,
               prompt: 'Test prompt 2',

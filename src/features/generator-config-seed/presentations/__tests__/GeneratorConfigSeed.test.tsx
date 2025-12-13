@@ -37,7 +37,7 @@ const MockFormProvider = ({ children }: { children: ReactNode }) => {
     defaultValues: {
       width: 512,
       height: 512,
-      hires_fix: false,
+
       number_of_images: 1,
       steps: 20,
       cfg_scale: 7,
@@ -94,7 +94,7 @@ describe('GeneratorConfigSeed', () => {
         defaultValues: {
           width: 512,
           height: 512,
-          hires_fix: false,
+
           number_of_images: 1,
           steps: 20,
           cfg_scale: 7,

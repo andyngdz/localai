@@ -9,7 +9,12 @@ import {
 } from '@heroui/react'
 import { FC } from 'react'
 import { SettingsTab, useSettingsStore } from '../states/useSettingsStore'
-import { GeneralSettings, ModelManagement, UpdateSettings } from './tabs'
+import {
+  GeneralSettings,
+  MemorySettings,
+  ModelManagement,
+  UpdateSettings
+} from './tabs'
 
 interface SettingsModalProps {
   isOpen: boolean
@@ -38,13 +43,16 @@ export const SettingsModal: FC<SettingsModalProps> = ({ isOpen, onClose }) => {
             selectedKey={selectedTab}
             onSelectionChange={(key) => setSelectedTab(key as SettingsTab)}
           >
-            <Tab key="general" title="General">
+            <Tab key={SettingsTab.GENERAL} title="General">
               <GeneralSettings />
             </Tab>
-            <Tab key="models" title="Model Management">
+            <Tab key={SettingsTab.MEMORY} title="Memory">
+              <MemorySettings />
+            </Tab>
+            <Tab key={SettingsTab.MODELS} title="Model Management">
               <ModelManagement />
             </Tab>
-            <Tab key="updates" title="Updates">
+            <Tab key={SettingsTab.UPDATES} title="Updates">
               <UpdateSettings />
             </Tab>
           </Tabs>

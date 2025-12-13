@@ -2,6 +2,10 @@ import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { UpdateSettings } from '../UpdateSettings'
 
+// Helper to create a delayed promise
+const createDelayedPromise = <T,>(value: T, ms: number): Promise<T> =>
+  new Promise((resolve) => setTimeout(() => resolve(value), ms))
+
 // Mock HeroUI components
 vi.mock('@heroui/react', () => ({
   Button: ({
@@ -24,7 +28,8 @@ vi.mock('@heroui/react', () => ({
       {children}
     </button>
   ),
-  addToast: vi.fn()
+  addToast: vi.fn(),
+  Divider: () => <hr />
 }))
 
 describe('UpdateSettings', () => {
@@ -40,7 +45,7 @@ describe('UpdateSettings', () => {
 
     render(<UpdateSettings />)
 
-    expect(screen.getByText('Application updates')).toBeInTheDocument()
+    expect(screen.getByText('Updates')).toBeInTheDocument()
     expect(screen.getByText(/Current version:/)).toBeInTheDocument()
 
     // Wait for async effect to complete
@@ -113,10 +118,7 @@ describe('UpdateSettings', () => {
   it('shows loading state while checking for updates', async () => {
     vi.mocked(window.electronAPI.app.getVersion).mockResolvedValue('1.2.3')
     vi.mocked(window.electronAPI.updater.checkForUpdates).mockImplementation(
-      () =>
-        new Promise((resolve) =>
-          setTimeout(() => resolve({ updateAvailable: false }), 100)
-        )
+      () => createDelayedPromise({ updateAvailable: false }, 100)
     )
 
     render(<UpdateSettings />)
@@ -138,10 +140,7 @@ describe('UpdateSettings', () => {
   it('returns to normal state after check completes', async () => {
     vi.mocked(window.electronAPI.app.getVersion).mockResolvedValue('1.2.3')
     vi.mocked(window.electronAPI.updater.checkForUpdates).mockImplementation(
-      () =>
-        new Promise((resolve) =>
-          setTimeout(() => resolve({ updateAvailable: false }), 50)
-        )
+      () => createDelayedPromise({ updateAvailable: false }, 50)
     )
 
     render(<UpdateSettings />)

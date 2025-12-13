@@ -1,4 +1,5 @@
 export * from './api'
+export * from './generators'
 export * from './histories'
 export * from './image-generations'
 export * from './loras'

@@ -51,9 +51,9 @@ vi.mock('@tanstack/react-query', async () => {
 
 describe('DownloadWatcher', () => {
   let mockOnUpdateStep: MockInstance
-  let mockOnSetId: MockInstance
+  let mockOnSetModelId: MockInstance
   let mockOnResetStep: MockInstance
-  let mockOnResetId: MockInstance
+  let mockOnResetModelId: MockInstance
 
   const QueryClientWrapper = createQueryClientWrapper()
 
@@ -69,9 +69,9 @@ describe('DownloadWatcher', () => {
 
     // Create mock functions
     mockOnUpdateStep = vi.fn()
-    mockOnSetId = vi.fn()
+    mockOnSetModelId = vi.fn()
     mockOnResetStep = vi.fn()
-    mockOnResetId = vi.fn()
+    mockOnResetModelId = vi.fn()
 
     // Create real QueryClient with mock invalidateQueries
     mockQueryClient = new QueryClient({
@@ -84,12 +84,12 @@ describe('DownloadWatcher', () => {
       useDownloadWatcherStoreModule,
       'useDownloadWatcherStore'
     ).mockReturnValue({
-      id: undefined,
+      model_id: undefined,
       step: undefined,
       onUpdateStep: mockOnUpdateStep,
-      onSetId: mockOnSetId,
+      onSetModelId: mockOnSetModelId,
       onResetStep: mockOnResetStep,
-      onResetId: mockOnResetId
+      onResetModelId: mockOnResetModelId
     })
   })
 
@@ -141,7 +141,7 @@ describe('DownloadWatcher', () => {
     )
   })
 
-  it('handles download start event by calling onSetId', () => {
+  it('handles download start event by calling onSetModelId', () => {
     render(
       <QueryClientWrapper>
         <DownloadWatcher>
@@ -150,13 +150,13 @@ describe('DownloadWatcher', () => {
       </QueryClientWrapper>
     )
 
-    const startData: DownloadModelStartResponse = { id: 'model-123' }
+    const startData: DownloadModelStartResponse = { model_id: 'model-123' }
 
     // Simulate socket event
     capturedHandlers[SocketEvents.DOWNLOAD_START](startData)
 
-    expect(mockOnSetId).toHaveBeenCalledWith('model-123')
-    expect(mockOnSetId).toHaveBeenCalledTimes(1)
+    expect(mockOnSetModelId).toHaveBeenCalledWith('model-123')
+    expect(mockOnSetModelId).toHaveBeenCalledTimes(1)
   })
 
   it('handles download progress event by calling onUpdateStep', () => {
@@ -169,7 +169,7 @@ describe('DownloadWatcher', () => {
     )
 
     const progressData: DownloadStepProgressResponse = {
-      id: 'model-456',
+      model_id: 'model-456',
       step: 3,
       total: 10,
       downloaded_size: 1024,
@@ -197,7 +197,7 @@ describe('DownloadWatcher', () => {
     capturedHandlers[SocketEvents.DOWNLOAD_COMPLETED](undefined)
 
     expect(mockOnResetStep).toHaveBeenCalledTimes(1)
-    expect(mockOnResetId).toHaveBeenCalledTimes(1)
+    expect(mockOnResetModelId).toHaveBeenCalledTimes(1)
     // Note: invalidateQueries is tested at integration level
   })
 
@@ -212,7 +212,7 @@ describe('DownloadWatcher', () => {
 
     const progressUpdates: DownloadStepProgressResponse[] = [
       {
-        id: 'model-1',
+        model_id: 'model-1',
         step: 1,
         total: 5,
         downloaded_size: 512,
@@ -220,7 +220,7 @@ describe('DownloadWatcher', () => {
         phase: 'downloading'
       },
       {
-        id: 'model-1',
+        model_id: 'model-1',
         step: 2,
         total: 5,
         downloaded_size: 1024,
@@ -228,7 +228,7 @@ describe('DownloadWatcher', () => {
         phase: 'downloading'
       },
       {
-        id: 'model-1',
+        model_id: 'model-1',
         step: 3,
         total: 5,
         downloaded_size: 1536,
@@ -258,7 +258,7 @@ describe('DownloadWatcher', () => {
     )
 
     const edgeCaseData: DownloadStepProgressResponse = {
-      id: 'model-edge',
+      model_id: 'model-edge',
       step: 1,
       total: 0,
       downloaded_size: 0,
@@ -314,12 +314,12 @@ describe('DownloadWatcher', () => {
     )
 
     // 1. Download starts
-    capturedHandlers[SocketEvents.DOWNLOAD_START]({ id: 'model-full' })
-    expect(mockOnSetId).toHaveBeenCalledWith('model-full')
+    capturedHandlers[SocketEvents.DOWNLOAD_START]({ model_id: 'model-full' })
+    expect(mockOnSetModelId).toHaveBeenCalledWith('model-full')
 
     // 2. Progress updates
     capturedHandlers[SocketEvents.DOWNLOAD_STEP_PROGRESS]({
-      id: 'model-full',
+      model_id: 'model-full',
       step: 1,
       total: 2,
       downloaded_size: 500,
@@ -330,7 +330,7 @@ describe('DownloadWatcher', () => {
 
     // 3. More progress
     capturedHandlers[SocketEvents.DOWNLOAD_STEP_PROGRESS]({
-      id: 'model-full',
+      model_id: 'model-full',
       step: 2,
       total: 2,
       downloaded_size: 500,
@@ -342,7 +342,7 @@ describe('DownloadWatcher', () => {
     // 4. Download completes
     capturedHandlers[SocketEvents.DOWNLOAD_COMPLETED](undefined)
     expect(mockOnResetStep).toHaveBeenCalled()
-    expect(mockOnResetId).toHaveBeenCalled()
+    expect(mockOnResetModelId).toHaveBeenCalled()
   })
 
   describe('Auto-selection behavior', () => {

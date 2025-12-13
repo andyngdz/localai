@@ -1,5 +1,6 @@
 import { useDownloadedModels } from '@/features/settings/states/useDownloadedModels'
 import { Listbox, ListboxItem, Spinner } from '@heroui/react'
+import { SettingsBase } from '../SettingsBase'
 import { DeleteModelButton } from './DeleteModelButton'
 
 export const ModelManagement = () => {
@@ -14,8 +15,10 @@ export const ModelManagement = () => {
   }
 
   return (
-    <div>
-      <h3 className="text-lg font-medium mb-4">Installed Models</h3>
+    <SettingsBase
+      title="Model Management"
+      description="Manage your installed AI models"
+    >
       <Listbox aria-label="Models list">
         {data.map((model) => (
           <ListboxItem
@@ -26,6 +29,6 @@ export const ModelManagement = () => {
           </ListboxItem>
         ))}
       </Listbox>
-    </div>
+    </SettingsBase>
   )
 }

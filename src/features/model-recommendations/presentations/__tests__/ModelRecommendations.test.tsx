@@ -142,12 +142,12 @@ describe('ModelRecommendations', () => {
 
   const setDownloadWatcherState = (downloadingId: string | null) => {
     downloadWatcherState = {
-      id: downloadingId ?? undefined,
+      model_id: downloadingId ?? undefined,
       step: undefined,
       onUpdateStep: vi.fn(),
-      onSetId: vi.fn(),
+      onSetModelId: vi.fn(),
       onResetStep: vi.fn(),
-      onResetId: vi.fn()
+      onResetModelId: vi.fn()
     }
 
     vi.mocked(useDownloadWatcherStore).mockImplementation(((

@@ -75,7 +75,7 @@ describe('EditorNavbar', () => {
     expect(screen.getByTestId('mock-next-image')).toBeInTheDocument()
     expect(screen.getByTestId('mock-next-image')).toHaveAttribute(
       'data-alt',
-      'LocalAI Logo'
+      'ExoGen Logo'
     )
   })
 

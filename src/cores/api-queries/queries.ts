@@ -1,12 +1,13 @@
 import { api } from '@/services/api'
 import {
   ApiError,
+  BackendConfig,
   HardwareResponse,
   HealthResponse,
   HistoryItem,
   LoRA,
   LoRADeleteResponse,
-  MemoryResponse,
+  MaxMemoryParams,
   ModelDownloaded,
   ModelRecommendationResponse,
   Sampler,
@@ -27,13 +28,6 @@ const useHardwareQuery = () => {
   return useQuery<HardwareResponse, ApiError>({
     queryKey: ['getHardwareStatus'],
     queryFn: () => api.getHardwareStatus()
-  })
-}
-
-const useMemoryQuery = () => {
-  return useQuery<MemoryResponse, ApiError>({
-    queryKey: ['getMemory'],
-    queryFn: () => api.getMemory()
   })
 }
 
@@ -102,15 +96,49 @@ const useDeleteLoraMutation = () => {
   })
 }
 
+const useBackendConfigQuery = () => {
+  return useQuery<BackendConfig, ApiError>({
+    queryKey: ['config'],
+    queryFn: () => api.getConfig(),
+    staleTime: Infinity
+  })
+}
+
+const useSafetyCheckMutation = () => {
+  const queryClient = useQueryClient()
+  return useMutation<void, ApiError, boolean>({
+    mutationFn: (enabled: boolean) => api.setSafetyCheckEnabled(enabled),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['config'] })
+    }
+  })
+}
+
+const useMaxMemoryMutation = () => {
+  const queryClient = useQueryClient()
+  return useMutation<BackendConfig, ApiError, MaxMemoryParams>({
+    mutationFn: ({ gpuScaleFactor, ramScaleFactor }) =>
+      api.setMaxMemory({
+        gpu_scale_factor: gpuScaleFactor,
+        ram_scale_factor: ramScaleFactor
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['config'] })
+    }
+  })
+}
+
 export {
+  useBackendConfigQuery,
   useDeleteLoraMutation,
   useDownloadedModelsQuery,
   useHardwareQuery,
   useHealthQuery,
   useHistoriesQuery,
   useLorasQuery,
-  useMemoryQuery,
+  useMaxMemoryMutation,
   useModelRecommendationsQuery,
+  useSafetyCheckMutation,
   useSamplersQuery,
   useStyleSectionsQuery,
   useUploadLoraMutation

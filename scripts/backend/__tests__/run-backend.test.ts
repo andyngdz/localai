@@ -70,7 +70,7 @@ describe('runBackend', () => {
   })
 
   describe('successful backend startup', () => {
-    it('should start LocalAI Backend successfully when main.py exists', async () => {
+    it('should start ExoGen Backend successfully when main.py exists', async () => {
       await runBackend({
         backendPath: mockBackendPath,
         emit: mockEmit
@@ -92,7 +92,7 @@ describe('runBackend', () => {
 
       expect(mockEmit).toHaveBeenCalledWith({
         level: BackendStatusLevel.Info,
-        message: 'Starting LocalAI Backend on port 8000…'
+        message: 'Starting ExoGen Backend on port 8000…'
       })
 
       // Verify uvicorn command execution
@@ -100,7 +100,7 @@ describe('runBackend', () => {
 
       expect(mockEmit).toHaveBeenCalledWith({
         level: BackendStatusLevel.Info,
-        message: 'LocalAI Backend started successfully'
+        message: 'ExoGen Backend is starting'
       })
 
       expect(mockEmit).toHaveBeenCalledTimes(3)
@@ -177,12 +177,12 @@ describe('runBackend', () => {
       expect(mockEmit).toHaveBeenCalledWith({
         level: BackendStatusLevel.Error,
         message:
-          'Failed to start LocalAI Backend. Please restart the application.'
+          'Failed to start ExoGen Backend. Please restart the application.'
       })
 
       expect(mockNormalizeError).toHaveBeenCalledWith(
         startupError,
-        'Failed to start LocalAI Backend'
+        'Failed to start ExoGen Backend'
       )
     })
 
@@ -204,7 +204,7 @@ describe('runBackend', () => {
 
     it('should normalize non-Error objects thrown by uvicorn command', async () => {
       const stringError = 'String error message'
-      const normalizedError = new Error('Failed to start LocalAI Backend')
+      const normalizedError = new Error('Failed to start ExoGen Backend')
       mock$.mockImplementation(() => {
         throw stringError
       })
@@ -215,11 +215,11 @@ describe('runBackend', () => {
           backendPath: mockBackendPath,
           emit: mockEmit
         })
-      ).rejects.toThrow('Failed to start LocalAI Backend')
+      ).rejects.toThrow('Failed to start ExoGen Backend')
 
       expect(mockNormalizeError).toHaveBeenCalledWith(
         stringError,
-        'Failed to start LocalAI Backend'
+        'Failed to start ExoGen Backend'
       )
     })
 
@@ -237,7 +237,7 @@ describe('runBackend', () => {
       expect(mockEmit).toHaveBeenCalledWith({
         level: BackendStatusLevel.Error,
         message:
-          'Failed to start LocalAI Backend. Please restart the application.'
+          'Failed to start ExoGen Backend. Please restart the application.'
       })
     })
 
@@ -378,12 +378,12 @@ describe('runBackend', () => {
 
       expect(mockEmit).toHaveBeenNthCalledWith(2, {
         level: BackendStatusLevel.Info,
-        message: 'Starting LocalAI Backend on port 8000…'
+        message: 'Starting ExoGen Backend on port 8000…'
       })
 
       expect(mockEmit).toHaveBeenNthCalledWith(3, {
         level: BackendStatusLevel.Info,
-        message: 'LocalAI Backend started successfully'
+        message: 'ExoGen Backend is starting'
       })
 
       expect(mockEmit).toHaveBeenCalledTimes(3)
@@ -573,7 +573,7 @@ describe('runBackend', () => {
       expect(mockEmit).toHaveBeenCalledWith({
         level: BackendStatusLevel.Error,
         message:
-          'Failed to start LocalAI Backend. Please restart the application.'
+          'Failed to start ExoGen Backend. Please restart the application.'
       })
     })
   })
@@ -648,7 +648,7 @@ describe('runBackend', () => {
       expect(mockFindAvailablePort).toHaveBeenCalledWith(8000)
       expect(mockEmit).toHaveBeenCalledWith({
         level: BackendStatusLevel.Info,
-        message: 'Starting LocalAI Backend on port 8001…'
+        message: 'Starting ExoGen Backend on port 8001…'
       })
     })
 

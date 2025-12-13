@@ -56,12 +56,12 @@ const runBackend = async ({ backendPath, emit }: RunBackendOptions) => {
 
     emit({
       level: BackendStatusLevel.Info,
-      message: `Starting LocalAI Backend on port ${port}…`
+      message: `Starting ExoGen Backend on port ${port}…`
     })
 
     emit({
       level: BackendStatusLevel.Info,
-      message: 'LocalAI Backend started successfully'
+      message: 'ExoGen Backend is starting'
     })
 
     // Configure zx to stream output and run uvicorn
@@ -90,11 +90,10 @@ const runBackend = async ({ backendPath, emit }: RunBackendOptions) => {
   } catch (error) {
     emit({
       level: BackendStatusLevel.Error,
-      message:
-        'Failed to start LocalAI Backend. Please restart the application.'
+      message: 'Failed to start ExoGen Backend. Please restart the application.'
     })
 
-    throw normalizeError(error, 'Failed to start LocalAI Backend')
+    throw normalizeError(error, 'Failed to start ExoGen Backend')
   }
 }
 

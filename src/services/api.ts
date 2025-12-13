@@ -2,7 +2,7 @@ import { DEFAULT_BACKEND_URL } from '@/cores/constants'
 import { GeneratorConfigFormValues } from '@/features/generator-configs'
 import axios from 'axios'
 import type {
-  DeviceIndexResponse,
+  BackendConfig,
   HardwareResponse,
   HealthResponse,
   HistoryItem,
@@ -13,7 +13,6 @@ import type {
   LoRADeleteResponse,
   LoRAListResponse,
   MaxMemoryRequest,
-  MemoryResponse,
   ModelDetailsResponse,
   ModelDownloaded,
   ModelRecommendationResponse,
@@ -44,21 +43,16 @@ class API {
   }
 
   async setMaxMemory(request: MaxMemoryRequest) {
-    await client.post('/hardware/max-memory', request)
-  }
-
-  async getMemory() {
-    const { data } = await client.get<MemoryResponse>('/hardware/memory')
+    const { data } = await client.put<BackendConfig>(
+      '/config/max-memory',
+      request
+    )
 
     return data
   }
 
   async selectDevice(request: SelectDeviceRequest) {
-    await client.post('/hardware/device', request)
-  }
-
-  async getDeviceIndex() {
-    const { data } = await client.get<DeviceIndexResponse>('/hardware/device')
+    const { data } = await client.put<BackendConfig>('/config/device', request)
 
     return data
   }
@@ -93,14 +87,14 @@ class API {
 
   async modelDetails(model_id: string) {
     const { data } = await client.get<ModelDetailsResponse>(
-      `/models/details?id=${model_id}`
+      `/models/details?model_id=${model_id}`
     )
 
     return data
   }
 
-  async downloadModel(id: string) {
-    await client.post('/downloads/', { id })
+  async downloadModel(model_id: string) {
+    await client.post('/downloads/', { model_id })
   }
 
   async getDownloadedModels() {
@@ -170,6 +164,16 @@ class API {
     const { data } = await client.delete<LoRADeleteResponse>(`/loras/${id}`)
 
     return data
+  }
+
+  async getConfig() {
+    const { data } = await client.get<BackendConfig>('/config/')
+
+    return data
+  }
+
+  async setSafetyCheckEnabled(enabled: boolean) {
+    await client.put('/config/safety-check', { enabled })
   }
 }
 

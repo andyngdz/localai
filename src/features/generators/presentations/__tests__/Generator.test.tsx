@@ -274,9 +274,9 @@ describe('Generator', () => {
 
     // Simulate loading state
     useModelLoadProgressStore.setState({
-      id: 'model-123',
+      model_id: 'model-123',
       progress: {
-        id: 'model-123',
+        model_id: 'model-123',
         step: 1,
         total: 2,
         message: 'Loading...',

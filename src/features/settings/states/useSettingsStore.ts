@@ -2,7 +2,12 @@ import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
 import { SettingFormValues } from '../types'
 
-export type SettingsTab = 'general' | 'models' | 'updates'
+export enum SettingsTab {
+  GENERAL = 'general',
+  MEMORY = 'memory',
+  MODELS = 'models',
+  UPDATES = 'updates'
+}
 
 interface UseSettingsStore {
   values: SettingFormValues
@@ -20,19 +25,19 @@ const useSettingsStore = create<UseSettingsStore>()(
     persist(
       (set, _get, state) => ({
         values: {
-          safetyCheck: true
+          safety_check_enabled: true
         },
         setValues: (values) => set({ values }),
         reset: () => set(state.getInitialState()),
         isModalOpen: false,
-        selectedTab: 'general',
-        openModal: (tab = 'general') =>
+        selectedTab: SettingsTab.GENERAL,
+        openModal: (tab = SettingsTab.GENERAL) =>
           set({ isModalOpen: true, selectedTab: tab }),
         closeModal: () => set({ isModalOpen: false }),
         setSelectedTab: (tab) => set({ selectedTab: tab })
       }),
       {
-        name: 'app-settings',
+        name: 'app-config',
         partialize: (state) => ({ values: state.values })
       }
     )

@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { useSettingsStore } from '../useSettingsStore'
+import { SettingsTab, useSettingsStore } from '../useSettingsStore'
 import { SettingFormValues } from '../../types/settings'
 
 // Mock zustand/middleware to avoid localStorage issues in tests
@@ -15,7 +15,7 @@ vi.mock('zustand/middleware', async () => {
 
 describe('useSettingsStore', () => {
   const defaultValues: SettingFormValues = {
-    safetyCheck: true
+    safety_check_enabled: true
   }
 
   afterEach(() => {
@@ -52,21 +52,21 @@ describe('useSettingsStore', () => {
     it('should initialize with general tab selected', () => {
       const { result } = renderHook(() => useSettingsStore())
 
-      expect(result.current.selectedTab).toBe('general')
+      expect(result.current.selectedTab).toBe(SettingsTab.GENERAL)
     })
   })
 
   describe('setValues functionality', () => {
-    it('should update safetyCheck when setValues is called', () => {
+    it('should update safety_check_enabled when setValues is called', () => {
       const { result } = renderHook(() => useSettingsStore())
-      const newValues: SettingFormValues = { safetyCheck: false }
+      const newValues: SettingFormValues = { safety_check_enabled: false }
 
       act(() => {
         result.current.setValues(newValues)
       })
 
       expect(result.current.values).toEqual(newValues)
-      expect(result.current.values.safetyCheck).toBe(false)
+      expect(result.current.values.safety_check_enabled).toBe(false)
     })
   })
 
@@ -75,7 +75,7 @@ describe('useSettingsStore', () => {
       const { result } = renderHook(() => useSettingsStore())
 
       act(() => {
-        result.current.setValues({ safetyCheck: false })
+        result.current.setValues({ safety_check_enabled: false })
       })
 
       expect(result.current.values).not.toEqual(defaultValues)
@@ -97,18 +97,18 @@ describe('useSettingsStore', () => {
       })
 
       expect(result.current.isModalOpen).toBe(true)
-      expect(result.current.selectedTab).toBe('general')
+      expect(result.current.selectedTab).toBe(SettingsTab.GENERAL)
     })
 
     it('should open modal with specified tab', () => {
       const { result } = renderHook(() => useSettingsStore())
 
       act(() => {
-        result.current.openModal('models')
+        result.current.openModal(SettingsTab.MODELS)
       })
 
       expect(result.current.isModalOpen).toBe(true)
-      expect(result.current.selectedTab).toBe('models')
+      expect(result.current.selectedTab).toBe(SettingsTab.MODELS)
     })
 
     it('should close modal', () => {
@@ -133,10 +133,10 @@ describe('useSettingsStore', () => {
       const { result } = renderHook(() => useSettingsStore())
 
       act(() => {
-        result.current.setSelectedTab('updates')
+        result.current.setSelectedTab(SettingsTab.UPDATES)
       })
 
-      expect(result.current.selectedTab).toBe('updates')
+      expect(result.current.selectedTab).toBe(SettingsTab.UPDATES)
     })
   })
 })

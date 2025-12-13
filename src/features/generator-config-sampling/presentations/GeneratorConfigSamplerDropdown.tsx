@@ -34,7 +34,7 @@ export const GeneratorConfigSamplerDropdown = () => {
             <Select
               selectedKeys={[field.value]}
               onSelectionChange={(keys) => {
-                const selectedKey = Array.from(keys)[0] as string
+                const selectedKey = keys.currentKey
                 if (selectedKey) {
                   field.onChange(selectedKey)
                 }

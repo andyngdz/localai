@@ -21,7 +21,6 @@ const createWrapper = (
         steps: 20,
         seed: -1,
         sampler: 'euler_a',
-        hires_fix: false,
         styles: []
       }
     })
