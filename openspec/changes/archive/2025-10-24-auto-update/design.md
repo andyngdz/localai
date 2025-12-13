@@ -2,7 +2,7 @@
 
 ## Overview
 
-Auto-update functionality has been successfully implemented for the LocalAI Electron app using `electron-updater` and GitHub Releases as the distribution channel.
+Auto-update functionality has been successfully implemented for the ExoGen Electron app using `electron-updater` and GitHub Releases as the distribution channel.
 
 ## What Was Implemented
 
@@ -55,7 +55,7 @@ The publish configuration points to your GitHub repository:
 publish:
   provider: 'github'
   owner: 'andyngdz'
-  repo: 'localai'
+  repo: 'exogen'
   releaseType: 'release'
 ```
 

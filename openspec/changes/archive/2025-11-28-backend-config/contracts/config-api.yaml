@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: LocalAI Backend Config API
+  title: ExoGen Backend Config API
   version: 1.0.0
   description: Configuration endpoint for retrieving backend-controlled settings
 
