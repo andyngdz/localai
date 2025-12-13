@@ -1,16 +1,16 @@
-# LocalAI
+# ExoGen
 
 > A desktop application for generating AI images locally using Stable Diffusion models from HuggingFace
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-https://github.com/user-attachments/assets/eada3ac2-b8d0-4a2f-a3ee-92851583742e
+https://github.com/user-attachments/assets/909182ce-e921-4b94-a653-add58d5717d9
 
 ## About
 
-LocalAI is a privacy-focused desktop application that lets you generate AI images completely offline on your own machine. Download models from HuggingFace, configure generation parameters, and create stunning images without sending your data to the cloud.
+ExoGen is a privacy-focused desktop application that lets you generate AI images completely offline on your own machine. Download models from HuggingFace, configure generation parameters, and create stunning images without sending your data to the cloud.
 
-**Why LocalAI?**
+**Why ExoGen?**
 
 - 🔒 **100% Private** - Everything runs locally, your prompts and images never leave your computer
 - 💰 **Free Forever** - No API costs, no subscriptions, completely free and open-source
@@ -54,12 +54,12 @@ Before you begin, ensure you have the following installed:
 
 ## Installation
 
-1. Download the latest release for your platform from the [Releases](https://github.com/andyngdz/localai/releases) page:
+1. Download the latest release for your platform from the [Releases](https://github.com/andyngdz/exogen/releases) page:
    - Windows: `.exe` installer
    - macOS: `.dmg` installer
    - Linux: `.AppImage`, `.deb`, or `.rpm` package
 
-2. Run the installer and launch LocalAI
+2. Run the installer and launch ExoGen
 
 The application will automatically:
 
@@ -84,13 +84,13 @@ The application will automatically:
 
 ```bash
 # Clone the backend repository
-git clone https://github.com/andyngdz/localai_backend.git
+git clone https://github.com/andyngdz/exogen_backend.git
 
-# Start the backend (in the localai_backend directory)
-cd localai_backend
+# Start the backend (in the exogen_backend directory)
+cd exogen_backend
 # Follow the backend README for setup instructions
 
-# Start frontend development (in the localai directory)
+# Start frontend development (in the exogen directory)
 pnpm run desktop:local
 
 # Run tests
@@ -123,7 +123,7 @@ The build output will be in the `dist/` directory:
 
 ## Testing
 
-LocalAI uses **Vitest** and **React Testing Library** for comprehensive testing.
+ExoGen uses **Vitest** and **React Testing Library** for comprehensive testing.
 
 ```bash
 # Run all tests
@@ -174,7 +174,7 @@ docs: update installation instructions
 
 If you encounter any issues or have questions:
 
-1. Check the [Issues](https://github.com/andyngdz/localai/issues) page
+1. Check the [Issues](https://github.com/andyngdz/exogen/issues) page
 2. Open a new issue with detailed information
 
 ---

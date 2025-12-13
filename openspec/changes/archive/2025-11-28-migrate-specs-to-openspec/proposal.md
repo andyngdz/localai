@@ -10,7 +10,7 @@ The project has 9 feature specifications in `specs/` using a legacy format. Open
 - Convert file structure to OpenSpec format (spec.md → renamed, plan.md preserved as design.md)
 - Remove numbered prefixes from directory names (e.g., `001-model-load-progress` → `model-load-progress`)
 - Delete original `specs/` directory after migration
-- Update `project.md` with LocalAI project context
+- Update `project.md` with ExoGen project context
 
 ## Impact
 

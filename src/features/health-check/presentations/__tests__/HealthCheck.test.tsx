@@ -111,7 +111,7 @@ describe('HealthCheck', () => {
 
     expect(screen.getByText('Health Check')).toBeInTheDocument()
     expect(
-      screen.getByText('Checking the connection to your LocalAI backend server')
+      screen.getByText('Checking the connection to your ExoGen backend server')
     ).toBeInTheDocument()
   })
 

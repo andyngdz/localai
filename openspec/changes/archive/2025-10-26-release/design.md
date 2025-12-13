@@ -132,7 +132,7 @@ The release workflow performs these steps:
 
 All releases are available on GitHub:
 
-- [Releases Page](https://github.com/andyngdz/localai/releases)
+- [Releases Page](https://github.com/andyngdz/exogen/releases)
 - The `CHANGELOG.md` file in the repository
 
 ## Configuration

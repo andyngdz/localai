@@ -2,7 +2,7 @@
 
 ## 1. Preparation
 
-- [x] 1.1 Update `openspec/project.md` with LocalAI project context (tech stack, conventions)
+- [x] 1.1 Update `openspec/project.md` with ExoGen project context (tech stack, conventions)
 
 ## 2. Create Archive Directories
 

@@ -1,6 +1,6 @@
 {
-  "name": "localai",
-  "description": "LocalAI",
+  "name": "exogen",
+  "description": "A desktop application for generating AI images locally using Stable Diffusion models",
   "version": "1.16.0-beta.21",
   "private": true,
   "packageManager": "pnpm@10.23.0",
@@ -8,10 +8,12 @@
     "name": "Andy D. Nguyen",
     "email": "info@andyng.dev"
   },
+  "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/andyngdz/localai.git"
+    "url": "https://github.com/andyngdz/exogen.git"
   },
+  "homepage": "https://github.com/andyngdz/exogen",
   "main": "electron/main.js",
   "scripts": {
     "dev": "next dev --turbo",

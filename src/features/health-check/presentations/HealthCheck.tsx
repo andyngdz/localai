@@ -33,7 +33,7 @@ export const HealthCheck = () => {
   return (
     <SetupLayout
       title="Health Check"
-      description="Checking the connection to your LocalAI backend server"
+      description="Checking the connection to your ExoGen backend server"
       isNextDisabled={!isHealthy}
     >
       <HealthCheckContent isHealthy={isHealthy} statuses={entries} />

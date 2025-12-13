@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Automatic update detection, download, and installation for the LocalAI desktop application.
+Automatic update detection, download, and installation for the ExoGen desktop application.
 
 ## Requirements
 

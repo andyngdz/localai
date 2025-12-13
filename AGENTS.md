@@ -20,7 +20,7 @@ Keep this managed block so 'openspec update' can refresh the instructions.
 
 <!-- OPENSPEC:END -->
 
-# Agent Guide for LocalAI
+# Agent Guide for ExoGen
 
 ## Quick Commands
 

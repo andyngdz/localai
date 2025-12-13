@@ -24,9 +24,9 @@ The system SHALL display a loading spinner only on the most recent non-error bac
 
 ### Requirement: Accurate Startup Message
 
-The system SHALL emit "LocalAI Backend is starting" (not "started successfully") when initiating the uvicorn process, reflecting that startup is in progress rather than complete.
+The system SHALL emit "ExoGen Backend is starting" (not "started successfully") when initiating the uvicorn process, reflecting that startup is in progress rather than complete.
 
 #### Scenario: Backend startup message
 
 - **WHEN** the backend uvicorn process is initiated
-- **THEN** the status message reads "LocalAI Backend is starting"
+- **THEN** the status message reads "ExoGen Backend is starting"
