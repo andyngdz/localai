@@ -21,7 +21,6 @@ sonar-report.xml
 /out/
 
 # production
-/build
 /electron/**/*.js
 /electron/**/*.cjs
 /electron/.build
