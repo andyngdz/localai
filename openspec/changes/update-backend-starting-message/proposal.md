@@ -4,14 +4,14 @@
 
 Two improvements to backend status messages:
 
-1. Change the message from "LocalAI Backend started successfully" to "LocalAI Backend is starting" to more accurately reflect the state
+1. Change the message from "ExoGen Backend started successfully" to "ExoGen Backend is starting" to more accurately reflect the state
 2. Add a loading spinner icon to non-error status messages in the UI
 
 ## Motivation
 
 ### Message Text Change
 
-The current message "LocalAI Backend started successfully" is emitted immediately after the uvicorn command is executed, but before the backend has actually started responding to requests. This is misleading because the term "is starting" better represents the ongoing initialization state.
+The current message "ExoGen Backend started successfully" is emitted immediately after the uvicorn command is executed, but before the backend has actually started responding to requests. This is misleading because the term "is starting" better represents the ongoing initialization state.
 
 ### Loading Spinner
 

@@ -2,7 +2,7 @@
 
 ## Backend Message Change
 
-1. [x] Update status message in `scripts/backend/run-backend.ts:64` from `'LocalAI Backend started successfully'` to `'LocalAI Backend is starting'`
+1. [x] Update status message in `scripts/backend/run-backend.ts:64` from `'ExoGen Backend started successfully'` to `'ExoGen Backend is starting'`
 2. [x] Update test expectations in `scripts/backend/__tests__/run-backend.test.ts` to match new message
 
 ## UI Spinner Addition

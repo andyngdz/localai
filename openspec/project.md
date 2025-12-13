@@ -2,7 +2,7 @@
 
 ## Purpose
 
-LocalAI is a desktop application for running AI image generation locally. It provides a user-friendly interface for Stable Diffusion models with features like style presets, LoRA support, high-resolution upscaling, and generation history.
+ExoGen is a desktop application for running AI image generation locally. It provides a user-friendly interface for Stable Diffusion models with features like style presets, LoRA support, high-resolution upscaling, and generation history.
 
 ## Tech Stack
 

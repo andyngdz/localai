@@ -2,7 +2,7 @@
 
 ### Requirement: README Features Section
 
-The README SHALL list all major user-facing features of LocalAI.
+The README SHALL list all major user-facing features of ExoGen.
 
 #### Scenario: Features reflect current capabilities
 

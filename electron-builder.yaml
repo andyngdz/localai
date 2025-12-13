@@ -1,5 +1,5 @@
-appId: 'dev.andyng.localai'
-productName: 'LocalAI'
+appId: 'dev.andyng.exogen'
+productName: 'ExoGen'
 copyright: 'Copyright (c) 2025 Andy Ng'
 asar: true
 compression: 'normal'
@@ -17,7 +17,7 @@ files:
 publish:
   provider: 'github'
   owner: 'andyngdz'
-  repo: 'localai'
+  repo: 'exogen'
   releaseType: 'release'
 win:
   target: ['nsis', 'portable', 'zip']
