@@ -15,6 +15,7 @@ export interface ElectronAPI {
     getPort: () => Promise<number>
     isLogStreaming: () => Promise<boolean>
     onLog: (listener: (logEntry: LogEntry) => void) => () => void
+    openBackendFolder: () => Promise<string>
   }
   updater: {
     checkForUpdates: () => Promise<UpdateCheckResult>

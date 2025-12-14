@@ -12,16 +12,16 @@ class BackendLogsService {
     }
   }
 
-  onGetBorderColor(level: string) {
+  onGetBackgroundColor(level: string) {
     switch (level) {
       case 'error':
-        return 'border-l-danger'
+        return 'bg-danger'
       case 'warn':
-        return 'border-l-warning'
+        return 'bg-warning'
       case 'info':
       case 'log':
       default:
-        return 'border-l-success'
+        return 'bg-success'
     }
   }
 }
