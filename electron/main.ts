@@ -1,8 +1,8 @@
 import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron'
 import serve from 'electron-serve'
 import fixPath from 'fix-path'
-import path from 'path'
-import { startBackend, stopBackend } from '../scripts/backend'
+import path from 'node:path'
+import { BACKEND_DIRNAME, startBackend, stopBackend } from '../scripts/backend'
 import { setupBackendPortHandler } from './backend-port'
 import { isLogStreaming, startLogStreaming } from './log-streamer'
 import {
@@ -118,6 +118,13 @@ const onLogStreaming = () => {
   })
 }
 
+const onOpenBackendFolder = () => {
+  ipcMain.handle('backend:open-folder', () => {
+    const backendPath = path.join(app.getPath('userData'), BACKEND_DIRNAME)
+    return shell.openPath(backendPath)
+  })
+}
+
 const onBackendStatusHistory = () => {
   ipcMain.handle('backend-setup:get-history', () => getBackendStatusHistory())
 }
@@ -164,19 +171,20 @@ if (!gotLock) {
     onDownloadImage()
     onSelectFile()
     onLogStreaming()
+    onOpenBackendFolder()
     onBackendStatusHistory()
     onAppInfo()
     setupBackendPortHandler()
     onAutoUpdate()
 
-    if (process.env.SKIP_BACKEND !== 'true') {
+    if (process.env.SKIP_BACKEND === 'true') {
+      console.log('Skipping backend startup (SKIP_BACKEND=true)')
+    } else {
       console.log('Starting Python backend...')
       startBackend({
         userDataPath: app.getPath('userData'),
         externalEmit: broadcastBackendStatus
       })
-    } else {
-      console.log('Skipping backend startup (SKIP_BACKEND=true)')
     }
   })
 

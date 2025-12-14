@@ -67,7 +67,8 @@ const createElectronAPIMock = (): ElectronAPI => ({
   backend: {
     getPort: vi.fn().mockResolvedValue(8000),
     isLogStreaming: vi.fn().mockResolvedValue(false),
-    onLog: vi.fn().mockReturnValue(noop)
+    onLog: vi.fn().mockReturnValue(noop),
+    openBackendFolder: vi.fn().mockResolvedValue('')
   },
   updater: {
     checkForUpdates: vi
@@ -84,7 +85,7 @@ const createElectronAPIMock = (): ElectronAPI => ({
 
 beforeEach(() => {
   // Setup ElectronAPI mock on window object
-  Object.defineProperty(window, 'electronAPI', {
+  Object.defineProperty(globalThis, 'electronAPI', {
     configurable: true,
     writable: true,
     value: createElectronAPIMock()
@@ -93,5 +94,5 @@ beforeEach(() => {
 
 afterEach(() => {
   // Clean up ElectronAPI mock
-  Reflect.deleteProperty(window, 'electronAPI')
+  Reflect.deleteProperty(globalThis, 'electronAPI')
 })
