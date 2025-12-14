@@ -16,7 +16,7 @@ export const BackendLogItem: FC<BackendLogItemProps> = ({ log }) => {
     <div className="flex gap-1 text-sm font-medium py-1">
       <span
         className={clsx(
-          backendLogsService.onGetBorderColor(level),
+          backendLogsService.onGetBackgroundColor(level),
           'w-1 shrink-0 rounded-sm'
         )}
       />

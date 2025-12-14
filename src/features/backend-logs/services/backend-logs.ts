@@ -12,7 +12,7 @@ class BackendLogsService {
     }
   }
 
-  onGetBorderColor(level: string) {
+  onGetBackgroundColor(level: string) {
     switch (level) {
       case 'error':
         return 'bg-danger'

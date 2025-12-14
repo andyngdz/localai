@@ -30,29 +30,33 @@ describe('BackendLogsService', () => {
     })
   })
 
-  describe('onGetBorderColor', () => {
+  describe('onGetBackgroundColor', () => {
     it('should return "bg-danger" for "error" level', () => {
-      expect(backendLogsService.onGetBorderColor('error')).toBe('bg-danger')
+      expect(backendLogsService.onGetBackgroundColor('error')).toBe('bg-danger')
     })
 
     it('should return "bg-warning" for "warn" level', () => {
-      expect(backendLogsService.onGetBorderColor('warn')).toBe('bg-warning')
+      expect(backendLogsService.onGetBackgroundColor('warn')).toBe('bg-warning')
     })
 
     it('should return "bg-success" for "info" level', () => {
-      expect(backendLogsService.onGetBorderColor('info')).toBe('bg-success')
+      expect(backendLogsService.onGetBackgroundColor('info')).toBe('bg-success')
     })
 
     it('should return "bg-success" for "log" level', () => {
-      expect(backendLogsService.onGetBorderColor('log')).toBe('bg-success')
+      expect(backendLogsService.onGetBackgroundColor('log')).toBe('bg-success')
     })
 
     it('should return "bg-success" for unknown levels', () => {
-      expect(backendLogsService.onGetBorderColor('unknown')).toBe('bg-success')
+      expect(backendLogsService.onGetBackgroundColor('unknown')).toBe(
+        'bg-success'
+      )
     })
 
     it('should return "bg-success" for any other level', () => {
-      expect(backendLogsService.onGetBorderColor('debug')).toBe('bg-success')
+      expect(backendLogsService.onGetBackgroundColor('debug')).toBe(
+        'bg-success'
+      )
     })
   })
 })
