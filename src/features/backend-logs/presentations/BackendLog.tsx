@@ -9,14 +9,12 @@ import {
   useDisclosure
 } from '@heroui/react'
 import { FolderOpen, SquareChevronRight } from 'lucide-react'
+import { useBackendFolder } from '../states'
 import { BackendLogList } from './BackendLogList'
-
-const onOpenBackendFolder = () => {
-  globalThis.window.electronAPI.backend.openBackendFolder()
-}
 
 export const BackendLog = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const { onOpenBackendFolder } = useBackendFolder()
 
   return (
     <section>
