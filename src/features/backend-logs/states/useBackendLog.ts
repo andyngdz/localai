@@ -18,13 +18,15 @@ export const useBackendLog = () => {
   })
 
   useLayoutEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTo({
-        top: scrollRef.current.scrollHeight,
+    const lastLogIndex = logs.length - 1
+
+    if (lastLogIndex >= 0) {
+      rowVirtualizer.scrollToIndex(lastLogIndex, {
+        align: 'end',
         behavior: 'smooth'
       })
     }
-  }, [logs, scrollRef])
+  }, [logs.length, rowVirtualizer])
 
   return {
     logs,

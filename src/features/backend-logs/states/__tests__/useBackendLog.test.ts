@@ -8,11 +8,13 @@ vi.mock('../useBackendLogStore', () => ({
   useBackendLogStore: vi.fn()
 }))
 
+const mockScrollToIndex = vi.fn()
+
 vi.mock('@tanstack/react-virtual', () => ({
   useVirtualizer: vi.fn(() => ({
     getTotalSize: () => 1000,
     getVirtualItems: () => [],
-    scrollToIndex: vi.fn(),
+    scrollToIndex: mockScrollToIndex,
     measureElement: vi.fn()
   }))
 }))
@@ -22,6 +24,7 @@ describe('useBackendLog', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+    mockScrollToIndex.mockClear()
 
     vi.mocked(useBackendLogStore).mockReturnValue({
       logs: [],
@@ -93,25 +96,11 @@ describe('useBackendLog', () => {
       expect(result.current.scrollRef.current).toBeNull()
     })
 
-    it('should auto-scroll to bottom when logs change', async () => {
-      const { result, rerender } = renderHook(() => useBackendLog())
-
-      const mockScrollElement = {
-        scrollTop: 0,
-        scrollHeight: 1000,
-        scrollTo: vi.fn()
-      } as unknown as HTMLDivElement
-
-      mockScrollElement.scrollTo = vi.fn((options: ScrollToOptions) => {
-        if (options?.top) {
-          mockScrollElement.scrollTop = options.top
-        }
-      }) as typeof mockScrollElement.scrollTo
-
-      result.current.scrollRef.current = mockScrollElement
-
+    it('should auto-scroll to last log index when logs change', async () => {
       const newLogs: LogEntry[] = [
-        { timestamp: Date.now(), level: 'info', message: 'New log' }
+        { timestamp: Date.now(), level: 'info', message: 'Log 1' },
+        { timestamp: Date.now(), level: 'info', message: 'Log 2' },
+        { timestamp: Date.now(), level: 'info', message: 'Log 3' }
       ]
 
       vi.mocked(useBackendLogStore).mockReturnValue({
@@ -123,22 +112,19 @@ describe('useBackendLog', () => {
         reset: vi.fn()
       })
 
-      rerender()
+      renderHook(() => useBackendLog())
 
       await waitFor(() => {
-        expect(mockScrollElement.scrollTop).toBe(1000)
+        expect(mockScrollToIndex).toHaveBeenCalledWith(2, {
+          align: 'end',
+          behavior: 'smooth'
+        })
       })
     })
 
-    it('should not throw when scrollRef is null', () => {
-      const { rerender } = renderHook(() => useBackendLog())
-
-      const newLogs: LogEntry[] = [
-        { timestamp: Date.now(), level: 'info', message: 'New log' }
-      ]
-
+    it('should not call scrollToIndex when logs array is empty', () => {
       vi.mocked(useBackendLogStore).mockReturnValue({
-        logs: newLogs,
+        logs: [],
         isStreaming: false,
         addLog: vi.fn(),
         clearLogs: mockClearLogs,
@@ -146,7 +132,9 @@ describe('useBackendLog', () => {
         reset: vi.fn()
       })
 
-      expect(() => rerender()).not.toThrow()
+      renderHook(() => useBackendLog())
+
+      expect(mockScrollToIndex).not.toHaveBeenCalled()
     })
   })
 })
