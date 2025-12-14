@@ -26,7 +26,7 @@ vi.mock('../../services/backend-logs', () => ({
           return 'text-success'
       }
     }),
-    onGetBorderColor: vi.fn(() => 'border-l-success')
+    onGetBackgroundColor: vi.fn(() => 'bg-success')
   }
 }))
 
