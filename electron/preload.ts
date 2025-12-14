@@ -53,7 +53,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
       return () => {
         ipcRenderer.removeListener('backend:log', subscription)
       }
-    }
+    },
+    openBackendFolder: () => ipcRenderer.invoke('backend:open-folder')
   },
   updater: {
     checkForUpdates: (): Promise<UpdateCheckResult> =>
