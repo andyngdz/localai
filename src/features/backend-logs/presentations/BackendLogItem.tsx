@@ -13,11 +13,11 @@ export const BackendLogItem: FC<BackendLogItemProps> = ({ log }) => {
   const { timestamp, level, message } = log
 
   return (
-    <div className="flex gap-1 text-sm py-2">
+    <div className="flex gap-1 text-sm font-medium py-1">
       <span
         className={clsx(
           backendLogsService.onGetBorderColor(level),
-          'border-l-2'
+          'w-1 shrink-0 rounded-sm'
         )}
       />
       <span className="shrink-0 min-w-10 text-default">

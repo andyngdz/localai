@@ -31,40 +31,28 @@ describe('BackendLogsService', () => {
   })
 
   describe('onGetBorderColor', () => {
-    it('should return "border-l-danger" for "error" level', () => {
-      expect(backendLogsService.onGetBorderColor('error')).toBe(
-        'border-l-danger'
-      )
+    it('should return "bg-danger" for "error" level', () => {
+      expect(backendLogsService.onGetBorderColor('error')).toBe('bg-danger')
     })
 
-    it('should return "border-l-warning" for "warn" level', () => {
-      expect(backendLogsService.onGetBorderColor('warn')).toBe(
-        'border-l-warning'
-      )
+    it('should return "bg-warning" for "warn" level', () => {
+      expect(backendLogsService.onGetBorderColor('warn')).toBe('bg-warning')
     })
 
-    it('should return "border-l-success" for "info" level', () => {
-      expect(backendLogsService.onGetBorderColor('info')).toBe(
-        'border-l-success'
-      )
+    it('should return "bg-success" for "info" level', () => {
+      expect(backendLogsService.onGetBorderColor('info')).toBe('bg-success')
     })
 
-    it('should return "border-l-success" for "log" level', () => {
-      expect(backendLogsService.onGetBorderColor('log')).toBe(
-        'border-l-success'
-      )
+    it('should return "bg-success" for "log" level', () => {
+      expect(backendLogsService.onGetBorderColor('log')).toBe('bg-success')
     })
 
-    it('should return "border-l-success" for unknown levels', () => {
-      expect(backendLogsService.onGetBorderColor('unknown')).toBe(
-        'border-l-success'
-      )
+    it('should return "bg-success" for unknown levels', () => {
+      expect(backendLogsService.onGetBorderColor('unknown')).toBe('bg-success')
     })
 
-    it('should return "border-l-success" for any other level', () => {
-      expect(backendLogsService.onGetBorderColor('debug')).toBe(
-        'border-l-success'
-      )
+    it('should return "bg-success" for any other level', () => {
+      expect(backendLogsService.onGetBorderColor('debug')).toBe('bg-success')
     })
   })
 })
