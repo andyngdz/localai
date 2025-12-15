@@ -677,7 +677,7 @@ describe('runBackend', () => {
   })
 
   describe('stopBackend', () => {
-    it('should call fkill with correct options', async () => {
+    it('should call tree-kill with correct options', async () => {
       await runBackend({
         backendPath: mockBackendPath,
         emit: mockEmit
@@ -726,6 +726,9 @@ describe('runBackend', () => {
         'Failed to stop backend process:',
         expect.any(Error)
       )
+
+      // Verify port is reset even on error
+      expect(getBackendPort()).toBe(8000)
     })
 
     it('should handle missing child process gracefully', async () => {
