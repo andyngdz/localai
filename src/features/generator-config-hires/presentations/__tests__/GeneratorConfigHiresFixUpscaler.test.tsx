@@ -190,7 +190,9 @@ describe('GeneratorConfigHiresFixUpscaler', () => {
       ram_scale_factor: 0.8,
       total_gpu_memory: 12485197824,
       total_ram_memory: 32943878144,
-      device_index: 0
+      device_index: 0,
+      isLoading: false,
+      isHasDevice: true
     })
   })
 
@@ -295,7 +297,9 @@ describe('GeneratorConfigHiresFixUpscaler', () => {
       ram_scale_factor: 0.8,
       total_gpu_memory: 12485197824,
       total_ram_memory: 32943878144,
-      device_index: 0
+      device_index: 0,
+      isLoading: false,
+      isHasDevice: true
     })
 
     const user = userEvent.setup()
@@ -337,7 +341,9 @@ describe('GeneratorConfigHiresFixUpscaler', () => {
       ram_scale_factor: 0.8,
       total_gpu_memory: 12485197824,
       total_ram_memory: 32943878144,
-      device_index: 0
+      device_index: 0,
+      isLoading: false,
+      isHasDevice: true
     })
     render(<GeneratorConfigHiresFixUpscaler />)
 
@@ -393,7 +399,9 @@ describe('GeneratorConfigHiresFixUpscaler', () => {
         ram_scale_factor: 0.8,
         total_gpu_memory: 12485197824,
         total_ram_memory: 32943878144,
-        device_index: 0
+        device_index: 0,
+        isLoading: false,
+        isHasDevice: true
       })
 
       render(<GeneratorConfigHiresFixUpscaler />)

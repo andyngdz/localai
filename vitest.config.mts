@@ -6,9 +6,6 @@ export default defineConfig({
   plugins: [tsconfigPaths(), react()],
   test: {
     pool: 'forks',
-    maxConcurrency: 10,
-    maxWorkers: process.env.CI ? 8 : 4,
-    minWorkers: 1,
     environment: 'jsdom',
     setupFiles: ['./vitest.setup.ts'],
     globals: true,

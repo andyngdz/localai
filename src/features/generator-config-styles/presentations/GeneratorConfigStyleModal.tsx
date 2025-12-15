@@ -13,8 +13,10 @@ import { GeneratorConfigStyleEmptyState } from './GeneratorConfigStyleEmptyState
 import { GeneratorConfigStyleSearchInput } from './GeneratorConfigStyleSearchInput'
 import { GeneratorConfigStyleSection } from './GeneratorConfigStyleSection'
 
-export interface GeneratorConfigStyleModalProps
-  extends Omit<ModalProps, 'children'> {
+export interface GeneratorConfigStyleModalProps extends Omit<
+  ModalProps,
+  'children'
+> {
   styleSections: StyleSection[]
 }
 

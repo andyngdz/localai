@@ -268,9 +268,8 @@ describe('Generator', () => {
   })
 
   it('shows fullscreen loader when model is loading', async () => {
-    const { useModelLoadProgressStore } = await import(
-      '@/features/model-load-progress/states/useModelLoadProgressStore'
-    )
+    const { useModelLoadProgressStore } =
+      await import('@/features/model-load-progress/states/useModelLoadProgressStore')
 
     // Simulate loading state
     useModelLoadProgressStore.setState({
