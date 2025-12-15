@@ -286,6 +286,11 @@ describe('electron toolchain', () => {
     })
 
     it('surfaces Electron start failures', async () => {
+      // Suppress console.error for this error path test
+      const consoleErrorSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {})
+
       const electronError = new Error('Electron failed to start')
       mock$.mockImplementation(
         (pieces: TemplateStringsArray, ...args: unknown[]) => {
@@ -295,6 +300,8 @@ describe('electron toolchain', () => {
       )
 
       await expect(startElectron()).rejects.toThrow('Electron failed to start')
+
+      consoleErrorSpy.mockRestore()
     })
   })
 
@@ -318,6 +325,11 @@ describe('electron toolchain', () => {
     })
 
     it('surfaces Electron failures after successful compilation', async () => {
+      // Suppress console.error for this error path test
+      const consoleErrorSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {})
+
       const electronError = new Error('Electron startup failed')
       mock$.mockImplementation(
         (pieces: TemplateStringsArray, ...args: unknown[]) => {
@@ -332,6 +344,8 @@ describe('electron toolchain', () => {
 
       await expect(startDesktopDev()).rejects.toThrow('Electron startup failed')
       expect(mockBuild).toHaveBeenCalled()
+
+      consoleErrorSpy.mockRestore()
     })
   })
 

@@ -1,5 +1,5 @@
 import type { GeneratorConfigFormValues } from '@/features/generator-configs'
-import { renderHook, waitFor } from '@testing-library/react'
+import { act, renderHook, waitFor } from '@testing-library/react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useLoraCard } from '../useLoraCard'
@@ -58,7 +58,9 @@ describe('useLoraCard', () => {
     ])
     const { result } = renderHook(() => useLoraCard(1), { wrapper: Wrapper })
 
-    result.current.setWeight(0.75)
+    act(() => {
+      result.current.setWeight(0.75)
+    })
 
     await waitFor(() => {
       expect(result.current.weight).toBe(0.75)
@@ -74,7 +76,9 @@ describe('useLoraCard', () => {
     const { result: result1 } = renderHook(() => useLoraCard(1), { wrapper })
     const { result: result2 } = renderHook(() => useLoraCard(2), { wrapper })
 
-    result1.current.setWeight(0.75)
+    act(() => {
+      result1.current.setWeight(0.75)
+    })
 
     await waitFor(() => {
       expect(result2.current.weight).toBe(1.5)
@@ -92,7 +96,9 @@ describe('useLoraCard', () => {
     const Wrapper = createWrapper([{ lora_id: 1, weight: 1 }])
     const { result } = renderHook(() => useLoraCard(1), { wrapper: Wrapper })
 
-    result.current.setWeight(0)
+    act(() => {
+      result.current.setWeight(0)
+    })
 
     await waitFor(() => {
       expect(result.current.weight).toBe(0)
@@ -103,7 +109,9 @@ describe('useLoraCard', () => {
     const Wrapper = createWrapper([{ lora_id: 1, weight: 1 }])
     const { result } = renderHook(() => useLoraCard(1), { wrapper: Wrapper })
 
-    result.current.setWeight(2)
+    act(() => {
+      result.current.setWeight(2)
+    })
 
     await waitFor(() => {
       expect(result.current.weight).toBe(2)
@@ -114,7 +122,9 @@ describe('useLoraCard', () => {
     const Wrapper = createWrapper([{ lora_id: 1, weight: 1 }])
     const { result } = renderHook(() => useLoraCard(1), { wrapper: Wrapper })
 
-    result.current.setWeight(1.234567)
+    act(() => {
+      result.current.setWeight(1.234567)
+    })
 
     await waitFor(() => {
       expect(result.current.weight).toBe(1.234567)
