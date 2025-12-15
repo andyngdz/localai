@@ -18,6 +18,6 @@
 
 ## 4. Integration Testing
 
-- [ ] 4.1 Manual test on Windows: Run `pnpm run desktop`, close app, verify terminal returns to prompt
-- [ ] 4.2 Manual test on macOS/Linux: Verify same behavior
-- [ ] 4.3 Verify no orphaned Python processes remain after app shutdown
+- [x] 4.1 Manual test on Windows: Run `pnpm run desktop`, close app, verify terminal returns to prompt
+- [ ] 4.2 Manual test on Linux (macOS skipped - low priority)
+- [x] 4.3 Verify no orphaned Python processes remain after app shutdown
