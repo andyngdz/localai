@@ -5,6 +5,16 @@ import { BackendStatusLevel } from '@types'
 import * as utilsModule from '../utils'
 import { EventEmitter } from 'events'
 
+// Mock tree-kill
+const mockTreeKill = vi.fn()
+let mockTreeKillError: Error | undefined = undefined
+vi.mock('tree-kill', () => ({
+  default: (pid: number, signal: string, callback: (err?: Error) => void) => {
+    mockTreeKill(pid, signal)
+    callback(mockTreeKillError)
+  }
+}))
+
 // Mock dependencies
 const mockStdout = new EventEmitter()
 const mockStderr = new EventEmitter()
@@ -39,12 +49,14 @@ describe('runBackend', () => {
   const mockBackendPath = '/test/backend'
   const mockEmit = vi.fn()
 
-  beforeEach(() => {
+  beforeEach(async () => {
     // Stop any backend from previous tests
-    stopBackend()
+    await stopBackend()
 
     vi.clearAllMocks()
     mock$.mockReset()
+    mockTreeKill.mockReset()
+    mockTreeKillError = undefined
     mockStdout.removeAllListeners()
     mockStderr.removeAllListeners()
     mockProcessInstance.catch.mockClear()
@@ -665,91 +677,15 @@ describe('runBackend', () => {
   })
 
   describe('stopBackend', () => {
-    it('should kill process group on Unix/Linux systems', async () => {
-      const originalPlatform = process.platform
-      Object.defineProperty(process, 'platform', {
-        value: 'linux',
-        writable: true
-      })
-      const processKillSpy = vi
-        .spyOn(process, 'kill')
-        .mockImplementation(() => true)
-
+    it('should call tree-kill with correct options', async () => {
       await runBackend({
         backendPath: mockBackendPath,
         emit: mockEmit
       })
 
-      mockChildProcess.kill.mockClear()
+      await stopBackend()
 
-      stopBackend()
-
-      // Should use negative PID to kill process group
-      expect(processKillSpy).toHaveBeenCalledWith(-12345, 'SIGTERM')
-      expect(mockChildProcess.kill).not.toHaveBeenCalled()
-
-      Object.defineProperty(process, 'platform', {
-        value: originalPlatform,
-        writable: true
-      })
-      processKillSpy.mockRestore()
-    })
-
-    it('should use childProcess.kill on Windows', async () => {
-      const originalPlatform = process.platform
-      Object.defineProperty(process, 'platform', {
-        value: 'win32',
-        writable: true
-      })
-
-      await runBackend({
-        backendPath: mockBackendPath,
-        emit: mockEmit
-      })
-
-      mockChildProcess.kill.mockClear()
-
-      stopBackend()
-
-      expect(mockChildProcess.kill).toHaveBeenCalledWith('SIGTERM')
-
-      Object.defineProperty(process, 'platform', {
-        value: originalPlatform,
-        writable: true
-      })
-    })
-
-    it('should fallback to childProcess.kill if process.kill fails', async () => {
-      const originalPlatform = process.platform
-      Object.defineProperty(process, 'platform', {
-        value: 'linux',
-        writable: true
-      })
-      const processKillSpy = vi
-        .spyOn(process, 'kill')
-        .mockImplementation(() => {
-          throw new Error('Process kill failed')
-        })
-
-      await runBackend({
-        backendPath: mockBackendPath,
-        emit: mockEmit
-      })
-
-      mockChildProcess.kill.mockClear()
-
-      stopBackend()
-
-      // Should attempt process group kill first
-      expect(processKillSpy).toHaveBeenCalledWith(-12345, 'SIGTERM')
-      // Then fallback to child process kill
-      expect(mockChildProcess.kill).toHaveBeenCalledWith('SIGTERM')
-
-      Object.defineProperty(process, 'platform', {
-        value: originalPlatform,
-        writable: true
-      })
-      processKillSpy.mockRestore()
+      expect(mockTreeKill).toHaveBeenCalledWith(12345, 'SIGTERM')
     })
 
     it('should reset port to 8000 after stopping', async () => {
@@ -762,44 +698,37 @@ describe('runBackend', () => {
 
       expect(getBackendPort()).toBe(8002)
 
-      stopBackend()
+      await stopBackend()
 
       expect(getBackendPort()).toBe(8000)
     })
 
-    it('should not throw when stopping non-existent process', () => {
-      expect(() => stopBackend()).not.toThrow()
+    it('should not throw when stopping non-existent process', async () => {
+      await expect(stopBackend()).resolves.not.toThrow()
     })
 
-    it('should handle kill errors gracefully', async () => {
-      const originalPlatform = process.platform
-      Object.defineProperty(process, 'platform', {
-        value: 'win32',
-        writable: true
-      })
+    it('should handle tree-kill errors gracefully', async () => {
       const consoleErrorSpy = vi
         .spyOn(console, 'error')
         .mockImplementation(() => {})
-      mockChildProcess.kill.mockImplementation(() => {
-        throw new Error('Kill failed')
-      })
 
       await runBackend({
         backendPath: mockBackendPath,
         emit: mockEmit
       })
 
-      stopBackend()
+      // Set error for next tree-kill call
+      mockTreeKillError = new Error('Kill failed')
+
+      await stopBackend()
 
       expect(consoleErrorSpy).toHaveBeenCalledWith(
         'Failed to stop backend process:',
         expect.any(Error)
       )
 
-      Object.defineProperty(process, 'platform', {
-        value: originalPlatform,
-        writable: true
-      })
+      // Verify port is reset even on error
+      expect(getBackendPort()).toBe(8000)
     })
 
     it('should handle missing child process gracefully', async () => {
@@ -811,7 +740,11 @@ describe('runBackend', () => {
       // Remove child process
       delete mockProcessInstance.child
 
-      expect(() => stopBackend()).not.toThrow()
+      // Clear mock to only check stopBackend call
+      mockTreeKill.mockClear()
+
+      await expect(stopBackend()).resolves.not.toThrow()
+      expect(mockTreeKill).not.toHaveBeenCalled()
     })
 
     it('should handle missing PID gracefully', async () => {
@@ -823,7 +756,11 @@ describe('runBackend', () => {
       // Remove PID
       delete mockChildProcess.pid
 
-      expect(() => stopBackend()).not.toThrow()
+      // Clear mock to only check stopBackend call
+      mockTreeKill.mockClear()
+
+      await expect(stopBackend()).resolves.not.toThrow()
+      expect(mockTreeKill).not.toHaveBeenCalled()
     })
   })
 
@@ -846,55 +783,33 @@ describe('runBackend', () => {
 
   describe('process cleanup guard', () => {
     it('should stop existing process before starting new one', async () => {
-      const originalPlatform = process.platform
-      Object.defineProperty(process, 'platform', {
-        value: 'win32',
-        writable: true
+      await runBackend({
+        backendPath: mockBackendPath,
+        emit: mockEmit
       })
+
+      mockTreeKill.mockClear()
 
       await runBackend({
         backendPath: mockBackendPath,
         emit: mockEmit
       })
 
-      mockChildProcess.kill.mockClear()
-
-      await runBackend({
-        backendPath: mockBackendPath,
-        emit: mockEmit
-      })
-
-      expect(mockChildProcess.kill).toHaveBeenCalledTimes(1)
-
-      Object.defineProperty(process, 'platform', {
-        value: originalPlatform,
-        writable: true
-      })
+      expect(mockTreeKill).toHaveBeenCalledTimes(1)
     })
 
     it('should prevent process leaks on multiple calls', async () => {
-      const originalPlatform = process.platform
-      Object.defineProperty(process, 'platform', {
-        value: 'win32',
-        writable: true
-      })
-
       await runBackend({ backendPath: '/path1', emit: mockEmit })
 
-      mockChildProcess.kill.mockClear()
+      mockTreeKill.mockClear()
 
       await runBackend({ backendPath: '/path2', emit: mockEmit })
-      expect(mockChildProcess.kill).toHaveBeenCalledTimes(1)
+      expect(mockTreeKill).toHaveBeenCalledTimes(1)
 
-      mockChildProcess.kill.mockClear()
+      mockTreeKill.mockClear()
 
       await runBackend({ backendPath: '/path3', emit: mockEmit })
-      expect(mockChildProcess.kill).toHaveBeenCalledTimes(1)
-
-      Object.defineProperty(process, 'platform', {
-        value: originalPlatform,
-        writable: true
-      })
+      expect(mockTreeKill).toHaveBeenCalledTimes(1)
     })
   })
 })

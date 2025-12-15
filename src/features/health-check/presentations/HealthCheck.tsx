@@ -1,8 +1,7 @@
 'use client'
 
 import { SetupLayout } from '@/features/setup-layout/presentations'
-import { useBackendSetupStatus } from '../states/useBackendSetupStatus'
-import { useHealthCheck } from '../states/useHealthCheck'
+import { useBackendSetupStatus, useHealthCheck } from '../states'
 import { HealthCheckContent } from './HealthCheckContent'
 
 export const HealthCheck = () => {
