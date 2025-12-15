@@ -66,6 +66,7 @@
     "swiper": "^12.0.3",
     "tailwind-scrollbar": "^4.0.2",
     "tailwindcss": "^4.1.18",
+    "tree-kill": "^1.2.2",
     "zustand": "^5.0.9",
     "zx": "^8.8.5"
   },

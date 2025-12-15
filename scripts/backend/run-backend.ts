@@ -1,5 +1,6 @@
 import { BackendStatusEmitter, BackendStatusLevel, Nullable } from '@types'
 import * as path from 'node:path'
+import treeKill from 'tree-kill'
 import { $, type ProcessPromise } from '../zx-config'
 import { findAvailablePort, normalizeError, pathExists } from './utils'
 
@@ -28,7 +29,7 @@ const onLogOutput = (data: Buffer | string) => {
 const runBackend = async ({ backendPath, emit }: RunBackendOptions) => {
   // Stop any existing backend process before starting a new one
   if (backendProcess) {
-    stopBackend()
+    await stopBackend()
   }
 
   // Check if main.py exists
@@ -97,30 +98,26 @@ const runBackend = async ({ backendPath, emit }: RunBackendOptions) => {
   }
 }
 
-const stopBackend = () => {
-  if (backendProcess) {
+const stopBackend = async () => {
+  if (backendProcess?.child?.pid) {
+    const pid = backendProcess.child.pid
+
     try {
-      const childProcess = backendProcess.child
-
-      if (childProcess && childProcess.pid) {
-        const pid = childProcess.pid
-
-        if (process.platform === 'win32') {
-          childProcess.kill('SIGTERM')
-        } else {
-          try {
-            process.kill(-pid, 'SIGTERM')
-          } catch {
-            childProcess.kill('SIGTERM')
+      await new Promise<void>((resolve, reject) => {
+        treeKill(pid, 'SIGTERM', (err) => {
+          if (err) {
+            reject(err)
+          } else {
+            resolve()
           }
-        }
-      }
-
-      backendProcess = null
-      backendPort = 8000
+        })
+      })
     } catch (error) {
       console.error('Failed to stop backend process:', error)
     }
+
+    backendProcess = null
+    backendPort = 8000
   }
 }
 
