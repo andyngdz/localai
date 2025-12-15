@@ -163,6 +163,11 @@ describe('UpdateSettings', () => {
   })
 
   it('handles update check errors gracefully', async () => {
+    // Suppress console.error from the hook's error handling
+    const consoleErrorSpy = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {})
+
     vi.mocked(window.electronAPI.app.getVersion).mockResolvedValue('1.2.3')
     vi.mocked(window.electronAPI.updater.checkForUpdates).mockRejectedValue(
       new Error('Network error')
@@ -181,6 +186,8 @@ describe('UpdateSettings', () => {
       expect(button).toHaveAttribute('data-loading', 'false')
       expect(button).toHaveTextContent('Check for updates')
     })
+
+    consoleErrorSpy.mockRestore()
   })
 
   it('can be clicked multiple times', async () => {

@@ -28,10 +28,12 @@ vi.mock('@heroui/react', async () => {
     Button: ({
       children,
       onPress,
+      isIconOnly: _isIconOnly,
       ...props
     }: {
       children: React.ReactNode
       onPress?: () => void
+      isIconOnly?: boolean
       [key: string]: unknown
     }) => (
       <button onClick={onPress} {...props}>

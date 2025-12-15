@@ -141,13 +141,48 @@ const onAutoUpdate = () => {
   })
 }
 
-const gotLock = app.requestSingleInstanceLock()
+const onAppReady = async () => {
+  console.log('Electron app ready, initializing...')
+  onSetLinuxGpuFlags()
 
-if (!gotLock) {
-  console.log('Another instance is already running, exiting...')
-  app.quit()
-} else {
+  // Start log streaming early to capture backend initialization logs
+  startLogStreaming()
+
+  console.log('Creating main window...')
+  await onCreateWindow()
+  console.log('Main window created')
+
+  onDownloadImage()
+  onSelectFile()
+  onLogStreaming()
+  onOpenBackendFolder()
+  onBackendStatusHistory()
+  onAppInfo()
+  setupBackendPortHandler()
+  onAutoUpdate()
+
+  if (process.env.SKIP_BACKEND === 'true') {
+    console.log('Skipping backend startup (SKIP_BACKEND=true)')
+  } else {
+    console.log('Starting Python backend...')
+    startBackend({
+      userDataPath: app.getPath('userData'),
+      externalEmit: broadcastBackendStatus
+    })
+  }
+}
+
+const main = async () => {
+  const gotLock = app.requestSingleInstanceLock()
+
+  if (!gotLock) {
+    console.log('Another instance is already running, exiting...')
+    app.quit()
+    return
+  }
+
   console.log('Single instance lock acquired')
+
   app.on('second-instance', () => {
     const [win] = BrowserWindow.getAllWindows()
 
@@ -157,47 +192,23 @@ if (!gotLock) {
     }
   })
 
-  app.whenReady().then(async () => {
-    console.log('Electron app ready, initializing...')
-    onSetLinuxGpuFlags()
-
-    // Start log streaming early to capture backend initialization logs
-    startLogStreaming()
-
-    console.log('Creating main window...')
-    await onCreateWindow()
-    console.log('Main window created')
-
-    onDownloadImage()
-    onSelectFile()
-    onLogStreaming()
-    onOpenBackendFolder()
-    onBackendStatusHistory()
-    onAppInfo()
-    setupBackendPortHandler()
-    onAutoUpdate()
-
-    if (process.env.SKIP_BACKEND === 'true') {
-      console.log('Skipping backend startup (SKIP_BACKEND=true)')
-    } else {
-      console.log('Starting Python backend...')
-      startBackend({
-        userDataPath: app.getPath('userData'),
-        externalEmit: broadcastBackendStatus
-      })
-    }
-  })
-
   app.on('window-all-closed', () => {
     console.log('All windows closed')
-    if (process.platform !== 'darwin') {
-      console.log('Quitting app (not macOS)')
-      app.quit()
+    if (process.platform === 'darwin') {
+      return
     }
+    app.quit()
   })
 
-  app.on('before-quit', () => {
+  app.on('before-quit', async (event) => {
     console.log('App is quitting, stopping backend...')
-    stopBackend()
+    event.preventDefault()
+    await stopBackend()
+    app.exit(0)
   })
+
+  await app.whenReady()
+  await onAppReady()
 }
+
+main()

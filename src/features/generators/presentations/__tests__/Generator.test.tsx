@@ -1,6 +1,6 @@
 import { ModelLoadPhase } from '@/cores/sockets'
 import { GeneratorConfigFormValues } from '@/features/generator-configs'
-import { render, screen } from '@testing-library/react'
+import { act, render, screen } from '@testing-library/react'
 import { UseFormReturn } from 'react-hook-form'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { useGenerator, useGeneratorForm } from '../../states'
@@ -268,20 +268,21 @@ describe('Generator', () => {
   })
 
   it('shows fullscreen loader when model is loading', async () => {
-    const { useModelLoadProgressStore } = await import(
-      '@/features/model-load-progress/states/useModelLoadProgressStore'
-    )
+    const { useModelLoadProgressStore } =
+      await import('@/features/model-load-progress/states/useModelLoadProgressStore')
 
-    // Simulate loading state
-    useModelLoadProgressStore.setState({
-      model_id: 'model-123',
-      progress: {
+    // Simulate loading state wrapped in act
+    act(() => {
+      useModelLoadProgressStore.setState({
         model_id: 'model-123',
-        step: 1,
-        total: 2,
-        message: 'Loading...',
-        phase: ModelLoadPhase.INITIALIZATION
-      }
+        progress: {
+          model_id: 'model-123',
+          step: 1,
+          total: 2,
+          message: 'Loading...',
+          phase: ModelLoadPhase.INITIALIZATION
+        }
+      })
     })
 
     render(<Generator />)
@@ -292,6 +293,8 @@ describe('Generator', () => {
     )
 
     // Cleanup loading state
-    useModelLoadProgressStore.getState().reset()
+    act(() => {
+      useModelLoadProgressStore.getState().reset()
+    })
   })
 })

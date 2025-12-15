@@ -25,7 +25,9 @@ describe('MemoryScaleFactorPreview', () => {
       ram_scale_factor: 0.8,
       total_gpu_memory: 8000000000,
       total_ram_memory: 16000000000,
-      device_index: 0
+      device_index: 0,
+      isLoading: false,
+      isHasDevice: true
     })
   })
 
@@ -54,7 +56,9 @@ describe('MemoryScaleFactorPreview', () => {
       ram_scale_factor: 0,
       total_gpu_memory: 0,
       total_ram_memory: 0,
-      device_index: 0
+      device_index: 0,
+      isLoading: false,
+      isHasDevice: true
     })
 
     render(

@@ -13,6 +13,8 @@ interface ConfigResult {
   total_gpu_memory: number
   total_ram_memory: number
   device_index: number
+  isLoading: boolean
+  isHasDevice: boolean
 }
 
 /**
@@ -25,7 +27,7 @@ interface ConfigResult {
  * 3. Add field to return object with default value (e.g., `newField: data?.newField ?? []`)
  */
 export const useConfig = (): ConfigResult => {
-  const { data } = useBackendConfigQuery()
+  const { data, isLoading } = useBackendConfigQuery()
 
   const upscalers = data?.upscalers ?? []
   const upscalerOptions = upscalers.flatMap((section) => section.options)
@@ -35,6 +37,7 @@ export const useConfig = (): ConfigResult => {
   const total_gpu_memory = data?.total_gpu_memory ?? 0
   const total_ram_memory = data?.total_ram_memory ?? 0
   const device_index = data?.device_index ?? DeviceSelection.NOT_FOUND
+  const isHasDevice = device_index !== DeviceSelection.NOT_FOUND
 
   return {
     upscalers,
@@ -44,6 +47,8 @@ export const useConfig = (): ConfigResult => {
     ram_scale_factor,
     total_gpu_memory,
     total_ram_memory,
-    device_index
+    device_index,
+    isLoading,
+    isHasDevice
   }
 }

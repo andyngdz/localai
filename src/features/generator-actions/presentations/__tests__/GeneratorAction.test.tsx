@@ -58,16 +58,8 @@ vi.mock('@heroui/react', () => {
         </div>
       )
     },
-    SelectItem: ({
-      children,
-      key
-    }: {
-      children: React.ReactNode
-      key?: string
-    }) => (
-      <div data-testid="select-item" data-key={key}>
-        {children}
-      </div>
+    SelectItem: ({ children }: { children: React.ReactNode }) => (
+      <div data-testid="select-item">{children}</div>
     ),
     Selection: Set
   }
@@ -81,9 +73,8 @@ describe('GeneratorAction', () => {
     setViewModeMock.mockReset()
 
     // Update the mock implementation for useImageViewModeStore
-    const storeModule = await import(
-      '@/features/generator-previewers/states/useImageViewModeStore'
-    )
+    const storeModule =
+      await import('@/features/generator-previewers/states/useImageViewModeStore')
     const mockedStore = vi.mocked(storeModule.useImageViewModeStore)
     mockedStore.mockImplementation(() => ({
       viewMode: 'grid' as ImageViewMode,

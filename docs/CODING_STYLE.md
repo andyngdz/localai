@@ -1,6 +1,7 @@
 # Coding Style
 
 - **Language**: TypeScript with ES modules, path aliases (`@/*`, `@types`)
+- **Imports**: Prefer importing from feature barrel files (`../states`, `../presentations`) rather than individual files (`../states/useHealthCheck`). This keeps imports cleaner and allows internal refactoring without updating import paths.
 - **Format**: Prettier (2 spaces, single quotes, no semicolons, 100-char width)
 - **Naming**:
   - PascalCase for components, camelCase for functions/variables, kebab-case for directories

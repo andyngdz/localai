@@ -124,4 +124,113 @@ describe('useConfig', () => {
     expect(result.current.total_ram_memory).toBe(0)
     expect(result.current.device_index).toBe(DeviceSelection.NOT_FOUND)
   })
+
+  describe('isLoading', () => {
+    it('should return isLoading true when query is loading', () => {
+      // Arrange
+      vi.mocked(useBackendConfigQuery).mockReturnValue(
+        createMockQueryResult<BackendConfig>(undefined, { isLoading: true })
+      )
+
+      // Act
+      const { result } = renderHook(() => useConfig(), {
+        wrapper: createQueryClientWrapper()
+      })
+
+      // Assert
+      expect(result.current.isLoading).toBe(true)
+    })
+
+    it('should return isLoading false when query completes', () => {
+      // Arrange
+      const mockConfig: BackendConfig = {
+        upscalers: [],
+        safety_check_enabled: true,
+        gpu_scale_factor: 0.5,
+        ram_scale_factor: 0.5,
+        total_gpu_memory: 12485197824,
+        total_ram_memory: 32943878144,
+        device_index: 0
+      }
+
+      vi.mocked(useBackendConfigQuery).mockReturnValue(
+        createMockQueryResult(mockConfig, { isLoading: false })
+      )
+
+      // Act
+      const { result } = renderHook(() => useConfig(), {
+        wrapper: createQueryClientWrapper()
+      })
+
+      // Assert
+      expect(result.current.isLoading).toBe(false)
+    })
+  })
+
+  describe('isHasDevice', () => {
+    it('should return isHasDevice true when device_index is valid', () => {
+      // Arrange
+      const mockConfig: BackendConfig = {
+        upscalers: [],
+        safety_check_enabled: true,
+        gpu_scale_factor: 0.5,
+        ram_scale_factor: 0.5,
+        total_gpu_memory: 12485197824,
+        total_ram_memory: 32943878144,
+        device_index: 0
+      }
+
+      vi.mocked(useBackendConfigQuery).mockReturnValue(
+        createMockQueryResult(mockConfig)
+      )
+
+      // Act
+      const { result } = renderHook(() => useConfig(), {
+        wrapper: createQueryClientWrapper()
+      })
+
+      // Assert
+      expect(result.current.isHasDevice).toBe(true)
+    })
+
+    it('should return isHasDevice false when device_index is NOT_FOUND', () => {
+      // Arrange
+      const mockConfig: BackendConfig = {
+        upscalers: [],
+        safety_check_enabled: true,
+        gpu_scale_factor: 0.5,
+        ram_scale_factor: 0.5,
+        total_gpu_memory: 12485197824,
+        total_ram_memory: 32943878144,
+        device_index: DeviceSelection.NOT_FOUND
+      }
+
+      vi.mocked(useBackendConfigQuery).mockReturnValue(
+        createMockQueryResult(mockConfig)
+      )
+
+      // Act
+      const { result } = renderHook(() => useConfig(), {
+        wrapper: createQueryClientWrapper()
+      })
+
+      // Assert
+      expect(result.current.isHasDevice).toBe(false)
+    })
+
+    it('should return isHasDevice false when config is not loaded', () => {
+      // Arrange
+      vi.mocked(useBackendConfigQuery).mockReturnValue(
+        createMockQueryResult<BackendConfig>(undefined, { isLoading: true })
+      )
+
+      // Act
+      const { result } = renderHook(() => useConfig(), {
+        wrapper: createQueryClientWrapper()
+      })
+
+      // Assert
+      expect(result.current.isHasDevice).toBe(false)
+    })
+  })
 })

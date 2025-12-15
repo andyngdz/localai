@@ -1,6 +1,6 @@
 import { addToast } from '@heroui/react'
 import { act, renderHook, waitFor } from '@testing-library/react'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { useUpdaterSettings } from '../useUpdaterSettings'
 
 // Mock @heroui/react
@@ -205,6 +205,17 @@ describe('useUpdaterSettings', () => {
   })
 
   describe('onCheck - error handling', () => {
+    // Suppress console.error for error handling tests to keep test output clean
+    let consoleErrorSpy: ReturnType<typeof vi.spyOn>
+
+    beforeEach(() => {
+      consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    })
+
+    afterEach(() => {
+      consoleErrorSpy.mockRestore()
+    })
+
     it('should show error toast when check fails', async () => {
       const error = new Error('Network error')
       vi.mocked(
@@ -269,9 +280,6 @@ describe('useUpdaterSettings', () => {
     })
 
     it('should log error to console', async () => {
-      const consoleErrorSpy = vi
-        .spyOn(console, 'error')
-        .mockImplementation(() => {})
       const error = new Error('Test error')
       vi.mocked(
         global.window.electronAPI.updater.checkForUpdates
@@ -291,8 +299,6 @@ describe('useUpdaterSettings', () => {
         'Failed to check for updates',
         error
       )
-
-      consoleErrorSpy.mockRestore()
     })
   })
 
@@ -339,6 +345,17 @@ describe('useUpdaterSettings', () => {
   })
 
   describe('multiple checks', () => {
+    // Suppress console.error for tests that trigger error paths
+    let consoleErrorSpy: ReturnType<typeof vi.spyOn>
+
+    beforeEach(() => {
+      consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    })
+
+    afterEach(() => {
+      consoleErrorSpy.mockRestore()
+    })
+
     it('should handle multiple consecutive checks', async () => {
       const { result } = renderHook(() => useUpdaterSettings())
 

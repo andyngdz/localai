@@ -125,25 +125,21 @@ vi.mock('@heroui/react', () => {
     SelectItem: ({
       children,
       description,
-      'data-key': dataKey,
-      ...props
+      'data-key': dataKey
     }: {
       children: React.ReactNode
       description?: React.ReactNode
       'data-key'?: string
-      [key: string]: unknown
-    }) => (
-      <option
-        {...props}
-        value={dataKey}
-        data-description={description ? 'true' : undefined}
-      >
-        {children}
-        {description && (
-          <span data-testid="description-recommended">{description}</span>
-        )}
-      </option>
-    ),
+    }) => {
+      return (
+        <option
+          value={dataKey}
+          data-description={description ? 'true' : undefined}
+        >
+          {children}
+        </option>
+      )
+    },
     Skeleton: ({ className }: { className: string }) => (
       <div data-testid="skeleton" className={className}>
         Loading...
@@ -190,7 +186,9 @@ describe('GeneratorConfigHiresFixUpscaler', () => {
       ram_scale_factor: 0.8,
       total_gpu_memory: 12485197824,
       total_ram_memory: 32943878144,
-      device_index: 0
+      device_index: 0,
+      isLoading: false,
+      isHasDevice: true
     })
   })
 
@@ -295,7 +293,9 @@ describe('GeneratorConfigHiresFixUpscaler', () => {
       ram_scale_factor: 0.8,
       total_gpu_memory: 12485197824,
       total_ram_memory: 32943878144,
-      device_index: 0
+      device_index: 0,
+      isLoading: false,
+      isHasDevice: true
     })
 
     const user = userEvent.setup()
@@ -337,7 +337,9 @@ describe('GeneratorConfigHiresFixUpscaler', () => {
       ram_scale_factor: 0.8,
       total_gpu_memory: 12485197824,
       total_ram_memory: 32943878144,
-      device_index: 0
+      device_index: 0,
+      isLoading: false,
+      isHasDevice: true
     })
     render(<GeneratorConfigHiresFixUpscaler />)
 
@@ -360,15 +362,18 @@ describe('GeneratorConfigHiresFixUpscaler', () => {
       expect(screen.getByText('Real-ESRGAN 4x')).toBeInTheDocument()
     })
 
-    it('shows Recommended text for recommended upscalers', () => {
+    it('marks recommended upscalers with data attribute', () => {
       render(<GeneratorConfigHiresFixUpscaler />)
 
-      const recommendations = screen.getAllByTestId('description-recommended')
-      expect(recommendations.length).toBe(2) // Both AI upscalers are recommended
-      expect(recommendations[0]).toHaveTextContent('Recommended')
+      // Get all options with the data-description attribute (indicates recommendation)
+      const selectElement = screen.getByTestId('select-input')
+      const optionsWithDescription = selectElement.querySelectorAll(
+        'option[data-description="true"]'
+      )
+      expect(optionsWithDescription.length).toBe(2) // Both AI upscalers are recommended
     })
 
-    it('does not show Recommended for non-recommended upscalers', () => {
+    it('does not mark non-recommended upscalers with description', () => {
       const nonRecommendedSections = [
         {
           method: UpscalerMethod.TRADITIONAL,
@@ -393,14 +398,18 @@ describe('GeneratorConfigHiresFixUpscaler', () => {
         ram_scale_factor: 0.8,
         total_gpu_memory: 12485197824,
         total_ram_memory: 32943878144,
-        device_index: 0
+        device_index: 0,
+        isLoading: false,
+        isHasDevice: true
       })
 
       render(<GeneratorConfigHiresFixUpscaler />)
 
-      expect(
-        screen.queryByTestId('description-recommended')
-      ).not.toBeInTheDocument()
+      const selectElement = screen.getByTestId('select-input')
+      const optionsWithDescription = selectElement.querySelectorAll(
+        'option[data-description="true"]'
+      )
+      expect(optionsWithDescription.length).toBe(0)
     })
 
     it('includes AI upscalers with correct denoise strength in config', () => {
