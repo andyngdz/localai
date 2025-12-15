@@ -21,5 +21,5 @@
 ## 4. Validation
 
 - [x] 4.1 Run all tests and verify no regressions
-- [ ] 4.2 Manual test: fresh install shows setup flow correctly
-- [ ] 4.3 Manual test: subsequent app restarts go directly to editor
+- [x] 4.2 Manual test: fresh install shows setup flow correctly
+- [x] 4.3 Manual test: subsequent app restarts go directly to editor
