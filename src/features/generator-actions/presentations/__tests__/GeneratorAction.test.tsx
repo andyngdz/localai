@@ -58,16 +58,8 @@ vi.mock('@heroui/react', () => {
         </div>
       )
     },
-    SelectItem: ({
-      children,
-      key
-    }: {
-      children: React.ReactNode
-      key?: string
-    }) => (
-      <div data-testid="select-item" data-key={key}>
-        {children}
-      </div>
+    SelectItem: ({ children }: { children: React.ReactNode }) => (
+      <div data-testid="select-item">{children}</div>
     ),
     Selection: Set
   }

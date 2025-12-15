@@ -1,5 +1,5 @@
 import { StyleSection } from '@/types'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { GeneratorConfigStyleModal } from '../GeneratorConfigStyleModal'
@@ -18,6 +18,7 @@ vi.mock('@heroui/react', async () => {
       isOpen,
       backdrop,
       isDismissable,
+      onOpenChange: _onOpenChange,
       ...props
     }: {
       children: React.ReactNode
@@ -429,7 +430,7 @@ describe('GeneratorConfigStyleModal', () => {
       const searchInput = screen.getByTestId('search-input-field')
       await user.type(searchInput, 'nonexistent')
 
-      await vi.waitFor(
+      await waitFor(
         () => {
           expect(screen.queryByTestId('empty-state')).toBeInTheDocument()
         },

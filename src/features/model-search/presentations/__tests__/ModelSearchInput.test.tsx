@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { FormProvider, useForm, useWatch } from 'react-hook-form'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
@@ -246,9 +246,11 @@ describe('ModelSearchInput', () => {
         </TestWrapperWithValidation>
       )
 
-      const formState = screen.getByTestId('form-state')
-      // Just ensure the formState element is rendered (value may vary depending on React strict mode)
-      expect(formState).toBeInTheDocument()
+      // Wait for form state to stabilize to avoid act warnings
+      await waitFor(() => {
+        const formState = screen.getByTestId('form-state')
+        expect(formState).toBeInTheDocument()
+      })
     })
 
     it('maintains form state consistency', async () => {
